@@ -1,3 +1,12 @@
 @import "tailwindcss";
 
-
+@theme {
+    --color-lucerayellow: #FEE085ff;
+    --color-lucerablue: #4FCBDBff;
+    --color-lucerared: #FE6D6Dff;
+    --color-lucerarose: #F83E85ff;
+    --color-lucerabrown: #C79092ff;
+    --color-luceragreen: #3ec300ff;
+    --color-luceragray: #697480ff;
+    --color-luceraoffwhite: #D4D4D4ff;
+}
