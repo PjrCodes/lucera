@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Footer from "@/components/footer";
-import Navbar from "@/components/navbar";
+import MainFooter from "@/components/footer";
+import MainHeader from "@/components/header";
+import Navbar, { AppSidebar } from "@/components/sidenav";
+import { SessionProvider } from "next-auth/react";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +22,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SmartLMS",
+  title: "Lucera",
   description: "An AI-First, no-compromise Learning Management System.",
 };
 
@@ -26,15 +33,28 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Navbar/>
-        <div className="pl-64">
-        {children}
-        <Footer/>
-        </div>
-      </body>
+      <SessionProvider>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <div className="[--header-height:calc(--spacing(14))]">
+            <SidebarProvider className="flex flex-col">
+              <MainHeader />
+              <div className="flex flex-1">
+                <AppSidebar />
+                <SidebarInset>
+                  <main>
+                    <div className="relative min-h-svh bg-white">
+                      {children}
+                    </div>
+                  </main>
+                  <MainFooter />
+                </SidebarInset>
+              </div>
+            </SidebarProvider>
+          </div>
+        </body>
+      </SessionProvider>
     </html>
   );
 }

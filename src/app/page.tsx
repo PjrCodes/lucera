@@ -9,6 +9,7 @@ import Create from "@/components/Create";
 import StudentAlerts from "@/components/StudentAlerts";
 import Courses from "@/components/Courses";
 import UpcomingDeadlines from "@/components/UpcomingDeadlines";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export default async function Home() {
   const session = await auth();
@@ -18,6 +19,7 @@ export default async function Home() {
   if (!isLoggedIn) {
     return (
       <main className="h-screen w-full flex flex-col space-y-2 items-center justify-center">
+                  <SidebarTrigger />
         <SignIn />
         <p>You are not logged in. Please sign in to continue.</p>
       </main>
@@ -25,21 +27,10 @@ export default async function Home() {
   }
 
   return (
-    <main className="h-screen w-full flex flex-col px-4 py-4 bg-gray-100">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl">Hi, {session?.user?.name}</h1>
-        <div className="flex flex-row items-center justify-end space-x-2">
-          <SearchBarElement />
-          <IoMdNotifications size={32} className="cursor-pointer hover:text-gray-500" />
-          <CiEdit  size={32} className="cursor-pointer hover:text-gray-500" />
-          <div className="flex justify-center">
-            <ProfileCircle imageUrl={session?.user?.image} size={38} />
-          </div>
-        </div>
-      </div>
+    <main className="h-screen w-full flex flex-col px-4 py-4">
       <div className="flex flex-row w-full gap-4 flex-1">
         {/* Left Column */}
-        <div className="flex flex-col flex-1 gap-4">
+        <div className="flex flex-col flex-7 gap-4">
           {/* Upcoming Deadlines */}
           <UpcomingDeadlines />
           {/* Progress */}
@@ -48,7 +39,7 @@ export default async function Home() {
           <StudentAlerts />
         </div>
         {/* Right Column */}
-        <div className="flex flex-col w-[260px] gap-4">
+        <div className="flex flex-col flex-3 min-w-[100px] gap-4">
           <Bookmarks />
           <Create />
         </div>

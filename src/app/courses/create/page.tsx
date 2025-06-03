@@ -15,53 +15,20 @@ const CreateCoursePage: React.FC = () => {
             alert("Please upload at least one syllabus file.");
             return;
         }
-        // Here you can handle the syllabus files submission logic
         alert(`Syllabus files submitted:\n${Array.from(files).map(f => f.name).join(", ")}`);
     };
 
     return (
-        <div
-            style={{
-                minHeight: "100vh",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "#f5f7fa",
-            }}
-        >
-            <div
-                style={{
-                    background: "#fff",
-                    borderRadius: 12,
-                    boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
-                    padding: "2.5rem 2rem",
-                    width: "100%",
-                    maxWidth: 420,
-                }}
-            >
-                <h1
-                    style={{
-                        fontSize: "2rem",
-                        fontWeight: 700,
-                        marginBottom: "2rem",
-                        textAlign: "center",
-                        color: "#22223b",
-                        letterSpacing: 0.5,
-                    }}
-                >
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="bg-white rounded-xl shadow-lg px-8 py-10 w-full max-w-md">
+                <h1 className="text-3xl font-bold mb-8 text-center text-gray-800 tracking-tight">
                     Create Course
                 </h1>
                 <form onSubmit={handleSubmit}>
-                    <div style={{ marginBottom: "1.5rem" }}>
+                    <div className="mb-6">
                         <label
                             htmlFor="syllabus-files"
-                            style={{
-                                display: "block",
-                                marginBottom: 10,
-                                fontWeight: 600,
-                                color: "#4a4e69",
-                                fontSize: "1rem",
-                            }}
+                            className="block mb-2 font-semibold text-gray-700 text-base"
                         >
                             Syllabus Files (up to 5)
                         </label>
@@ -71,46 +38,20 @@ const CreateCoursePage: React.FC = () => {
                             multiple
                             accept=".pdf,.doc,.docx"
                             onChange={handleFileChange}
-                            style={{
-                                display: "block",
-                                width: "100%",
-                                padding: "0.5rem",
-                                border: "1px solid #c9c9c9",
-                                borderRadius: 6,
-                                background: "#f8f9fa",
-                                fontSize: "1rem",
-                                color: "#22223b",
-                                marginBottom: 10,
-                                cursor: "pointer",
-                            }}
+                            className="block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-800 text-base focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 cursor-pointer mb-2"
                             required
                         />
                         {files && files.length > 0 && (
-                            <ul style={{ paddingLeft: 18, margin: 0, color: "#22223b" }}>
+                            <ul className="pl-5 text-gray-700 text-sm">
                                 {Array.from(files).slice(0, 5).map((file, idx) => (
-                                    <li key={idx} style={{ fontSize: "0.97rem", marginBottom: 2 }}>
-                                        {file.name}
-                                    </li>
+                                    <li key={idx} className="mb-1">{file.name}</li>
                                 ))}
                             </ul>
                         )}
                     </div>
                     <button
                         type="submit"
-                        style={{
-                            width: "100%",
-                            padding: "0.75rem",
-                            background: "#4f8cff",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: 6,
-                            fontWeight: 700,
-                            fontSize: "1.08rem",
-                            letterSpacing: 0.5,
-                            cursor: "pointer",
-                            boxShadow: "0 2px 8px rgba(79,140,255,0.08)",
-                            transition: "background 0.2s",
-                        }}
+                        className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-base rounded-md shadow transition-colors"
                     >
                         Submit
                     </button>

@@ -1,4 +1,4 @@
-const Footer = () => (
+const MainFooter = () => (
   <footer className="bg-gray-800 text-white text-center py-4">
     <p className="text-sm">
       &copy; Lucera 2025. All rights reserved.
@@ -9,4 +9,4 @@ const Footer = () => (
   </footer>
 );
 
-export default Footer;
+export default MainFooter;
