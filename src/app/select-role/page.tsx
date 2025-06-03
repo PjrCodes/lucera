@@ -41,6 +41,7 @@ async function setUserRole(data: FormData) {
 
 export default function SelectRolePage() {
   return (
+    <main className="h-screen">
     <div className="max-w-md mx-auto my-12 p-8 border border-gray-200 rounded-lg">
       <h1 className="text-2xl font-bold mb-6">Select Your Role</h1>
       <Form action={setUserRole} className="space-y-4">
@@ -61,5 +62,6 @@ export default function SelectRolePage() {
         </button>
       </Form>
     </div>
+    </main>
   );
 }

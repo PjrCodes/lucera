@@ -1,7 +1,9 @@
 import ProfileCircle from "@/components/profileCircle";
 import { auth } from "../auth";
 import SignIn from "@/components/buttons/signInButton";
-
+import { IoMdNotifications } from "react-icons/io";
+import { CiEdit } from "react-icons/ci";
+import SearchBarElement from "@/components/SearchBarElement";
 
 export default async function Home() {
   const session = await auth();
@@ -18,21 +20,24 @@ export default async function Home() {
   }
 
   return (
-    <main className="h-screen w-full flex">
-      <div className="px-4 py-4">
-        <h1 className="text-3xl font-bold">Hi, {session?.user?.name}</h1>
-        <p className="text-lg mb-6">
-          {isLoggedIn ? "You are logged in!" : "Please log in to continue."}
-        </p>
-        <p className="text-lg mb-6">
-          {isLoggedIn ? "You are called " + session?.user?.name + "." : ""}
-        </p>
-        <div className="flex justify-center">
-          {isLoggedIn ? (
-            <ProfileCircle imageUrl={session?.user?.image}/>
-          ) : (
-            <SignIn />
-          )}
+    <main className="h-screen w-full flex flex-col px-4 py-4">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl">Hi, {session?.user?.name}</h1>
+        <div className="flex flex-row items-center justify-end space-x-2">
+          <SearchBarElement />
+          <IoMdNotifications size={32} className="cursor-pointer hover:text-gray-500" />
+          <CiEdit  size={32} className="cursor-pointer hover:text-gray-500" />
+          <div className="flex justify-center">
+            <ProfileCircle imageUrl={session?.user?.image} size={38} />
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-row w-full h-full gap-4">
+        <div className="flex-7 bg-blue-200 rounded-lg flex items-center justify-center">
+          <span className="text-lg font-semibold">Column 1</span>
+        </div>
+        <div className="flex-3 bg-green-200 rounded-lg flex items-center justify-center">
+          <span className="text-lg font-semibold">Column 2</span>
         </div>
       </div>
     </main>
