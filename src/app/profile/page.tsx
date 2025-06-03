@@ -2,11 +2,26 @@ import React from "react";
 import { auth } from "@/auth";
 import SignOut from "@/components/buttons/signOutButton";
 import { redirect } from 'next/navigation';
+import client from "@/lib/db";
 
 export default async function ProfilePage() {
   const session = await auth();
   const isLoggedIn = session?.user ? true : false;
+  type UserData = {
+    id: string;
+    role?: string;
+  };
 
+  const userData: UserData | null = await client
+    .db()
+    .collection<UserData>("user_data")
+    .findOne({ id: session?.user?.id });
+
+  if (isLoggedIn && !userData) {
+    // error - log out and show error message
+    alert("You need to select a role before accessing your profile.");
+    return redirect("/select-role");
+  }
   if (!isLoggedIn) {
     return redirect("/");
   }
@@ -22,7 +37,7 @@ export default async function ProfilePage() {
           <span className="font-semibold">Email:</span> {session?.user?.email || "No email provided"}
         </p>
         <p>
-          <span className="font-semibold">Role:</span> {session?.user?.role || "No role assigned"}
+          <span className="font-semibold">Role:</span> {userData?.role || "Role not set"}
         </p>
       </div>
       <div className="mt-8">
