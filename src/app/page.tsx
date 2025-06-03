@@ -4,6 +4,11 @@ import SignIn from "@/components/buttons/signInButton";
 import { IoMdNotifications } from "react-icons/io";
 import { CiEdit } from "react-icons/ci";
 import SearchBarElement from "@/components/SearchBarElement";
+import Bookmarks from "@/components/Bookmarks";
+import Create from "@/components/Create";
+import StudentAlerts from "@/components/StudentAlerts";
+import Courses from "@/components/Courses";
+import UpcomingDeadlines from "@/components/UpcomingDeadlines";
 
 export default async function Home() {
   const session = await auth();
@@ -20,7 +25,7 @@ export default async function Home() {
   }
 
   return (
-    <main className="h-screen w-full flex flex-col px-4 py-4">
+    <main className="h-screen w-full flex flex-col px-4 py-4 bg-gray-100">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl">Hi, {session?.user?.name}</h1>
         <div className="flex flex-row items-center justify-end space-x-2">
@@ -32,12 +37,20 @@ export default async function Home() {
           </div>
         </div>
       </div>
-      <div className="flex flex-row w-full h-full gap-4">
-        <div className="flex-7 bg-blue-200 rounded-lg flex items-center justify-center">
-          <span className="text-lg font-semibold">Column 1</span>
+      <div className="flex flex-row w-full gap-4 flex-1">
+        {/* Left Column */}
+        <div className="flex flex-col flex-1 gap-4">
+          {/* Upcoming Deadlines */}
+          <UpcomingDeadlines />
+          {/* Progress */}
+          <Courses />
+          {/* Student Alerts */}
+          <StudentAlerts />
         </div>
-        <div className="flex-3 bg-green-200 rounded-lg flex items-center justify-center">
-          <span className="text-lg font-semibold">Column 2</span>
+        {/* Right Column */}
+        <div className="flex flex-col w-[260px] gap-4">
+          <Bookmarks />
+          <Create />
         </div>
       </div>
     </main>
