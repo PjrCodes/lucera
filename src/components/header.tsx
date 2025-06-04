@@ -72,10 +72,12 @@ export default function Header() {
                 className="cursor-pointer hover:text-gray-500"
               />
             </span>
-            {/* Edit icon: always hidden on mobile */}
-            <span className="hidden sm:inline">
-              <CiEdit size={32} className="cursor-pointer hover:text-gray-500" />
-            </span>
+            {/* Edit icon: only show on Dashboard and never on mobile */}
+            {currentPage === "Dashboard" && (
+              <span className="hidden sm:inline">
+                <CiEdit size={32} className="cursor-pointer hover:text-gray-500" />
+              </span>
+            )}
             <div className="flex justify-center">
               <ProfileCircle imageUrl={session?.user?.image} size={38} />
             </div>

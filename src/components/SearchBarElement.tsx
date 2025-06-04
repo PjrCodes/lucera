@@ -53,7 +53,8 @@ export default function SearchBarElement({
   return (
     <div
       ref={containerRef}
-      className={`flex items-center border rounded-full px-2 py-1 bg-gray-200 transition-all duration-200
+      className={`flex items-center border rounded-full px-2 py-1 bg-gray-200
+        transition-all duration-300
         w-auto max-w-full sm:w-auto
         ${expanded ? "w-full" : ""}
       `}
@@ -65,7 +66,7 @@ export default function SearchBarElement({
       <div className="block sm:hidden w-full">
         {!expanded ? (
           <button
-            className="text-black hover:text-gray-500"
+            className="text-black hover:text-gray-500 transition-colors duration-200"
             onClick={() => setExpanded(true)}
             aria-label="Expand search"
           >
@@ -76,7 +77,15 @@ export default function SearchBarElement({
             <input
               ref={inputRef}
               type="text"
-              className="outline-none px-2 py-1 w-full transition-all duration-200"
+              className={`outline-none px-2 py-1 transition-all duration-300 ease-in-out
+                w-0 opacity-0
+                ${expanded ? "w-full opacity-100" : ""}
+              `}
+              style={{
+                minWidth: expanded ? "8rem" : "0",
+                width: expanded ? "100%" : "0",
+                opacity: expanded ? 1 : 0,
+              }}
               placeholder="Search with LISA..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -86,7 +95,7 @@ export default function SearchBarElement({
               }}
             />
             <button
-              className="ml-2 text-black hover:text-gray-500"
+              className="ml-2 text-black hover:text-gray-500 transition-colors duration-200"
               onClick={handleSend}
               aria-label="Send to LISA"
             >
@@ -99,7 +108,7 @@ export default function SearchBarElement({
       <div className="hidden sm:flex items-center w-auto">
         <input
           type="text"
-          className="outline-none px-2 py-1 w-64"
+          className="outline-none px-2 py-1 w-64 transition-all duration-300"
           placeholder="Search with LISA..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -108,7 +117,7 @@ export default function SearchBarElement({
           }}
         />
         <button
-          className="ml-2 text-black hover:text-gray-500"
+          className="ml-2 text-black hover:text-gray-500 transition-colors duration-200"
           onClick={handleSend}
           aria-label="Send to LISA"
         >
