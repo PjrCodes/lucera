@@ -7,13 +7,13 @@ import { CiEdit } from "react-icons/ci";
 import ProfileCircle from "./profileCircle";
 import SignIn from "./buttons/signInButton";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react"; // Remove this
 import { useSidebar } from "./ui/sidebar";
 import { Button } from "./ui/button";
 import { SidebarIcon } from "lucide-react";
 
-export default function Header() {
-  const session = useSession().data;
+// Accept session as a prop instead of fetching it on the client
+export default function Header({ session }: { session: any }) {
   const pathname = usePathname();
   const { toggleSidebar } = useSidebar();
   const [searchExpanded, setSearchExpanded] = useState(false);
