@@ -34,7 +34,7 @@ export default function RootLayout({
     <html lang="en">
       <SessionProvider>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <div className="flex flex-col min-h-svh w-full [--header-height:calc(--spacing(14))]">
+          <div className="flex flex-col min-h-screen w-full [--header-height:calc(--spacing(14))]">
             <SidebarProvider className="flex flex-col flex-1">
               <MainHeader />
               <div className="flex flex-1">
