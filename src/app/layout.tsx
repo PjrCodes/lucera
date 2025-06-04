@@ -3,12 +3,11 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import MainFooter from "@/components/footer";
 import MainHeader from "@/components/header";
-import Navbar, { AppSidebar } from "@/components/sidenav";
+import { AppSidebar } from "@/components/sidenav";
 import { SessionProvider } from "next-auth/react";
 import {
   SidebarInset,
   SidebarProvider,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 
 const geistSans = Geist({
@@ -34,17 +33,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SessionProvider>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <div className="[--header-height:calc(--spacing(14))]">
-            <SidebarProvider className="flex flex-col">
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          <div className="flex flex-col min-h-svh w-full [--header-height:calc(--spacing(14))]">
+            <SidebarProvider className="flex flex-col flex-1">
               <MainHeader />
               <div className="flex flex-1">
                 <AppSidebar />
-                <SidebarInset>
-                  <main>
-                    <div className="relative min-h-svh bg-white">
+                <SidebarInset className="flex flex-col flex-1">
+                  <main className="flex-1">
+                    <div className="relative bg-white mx-auto px-4 py-8">
                       {children}
                     </div>
                   </main>

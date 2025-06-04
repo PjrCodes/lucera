@@ -1,5 +1,5 @@
 const MainFooter = () => (
-  <footer className="bg-gray-800 text-white text-center py-4">
+  <footer className="bg-gray-800 text-white text-center py-4 w-full mt-auto">
     <p className="text-sm">
       &copy; Lucera 2025. All rights reserved.
     </p>

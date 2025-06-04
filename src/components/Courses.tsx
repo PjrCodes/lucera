@@ -29,18 +29,22 @@ export default async function Courses() {
       <div className="font-medium mb-2">PROGRESS</div>
       <div className="grid grid-cols-3 gap-4">
         {courses.map((course) => (
-          <div
+          <Link
+            href="/courses/view/[course_id]"
+            as={`/courses/view/${course._id.toString()}`}
+            className="hover:shadow-lg transition-shadow duration-200"
             key={course._id.toString()}
-            className="bg-white rounded-lg p-4 shadow-sm"
           >
-            <h3 className="text-lg font-semibold">{course.name}</h3>
-            <p className="text-gray-600">{course.description}</p>
-            <div className="mt-2">
-              <span className="text-sm text-gray-500">
-                Progress: {course.progress}%
-              </span>
+            <div className="bg-white rounded-lg p-4 shadow-sm">
+              <h3 className="text-lg font-semibold">{course.name}</h3>
+              <p className="text-gray-600">{course.shortDescription}</p>
+              <div className="mt-2">
+                <span className="text-sm text-gray-500">
+                  Progress: {course.progress}%
+                </span>
+              </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

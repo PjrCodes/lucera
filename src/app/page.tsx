@@ -1,9 +1,5 @@
-import ProfileCircle from "@/components/profileCircle";
 import { auth } from "../auth";
 import SignIn from "@/components/buttons/signInButton";
-import { IoMdNotifications } from "react-icons/io";
-import { CiEdit } from "react-icons/ci";
-import SearchBarElement from "@/components/SearchBarElement";
 import Bookmarks from "@/components/Bookmarks";
 import Create from "@/components/Create";
 import StudentAlerts from "@/components/StudentAlerts";
