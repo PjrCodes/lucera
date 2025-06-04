@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ObjectId } from "mongodb";
 import { notFound } from "next/navigation";
 import Markdown from "react-markdown";

@@ -6,6 +6,8 @@ import StudentAlerts from "@/components/StudentAlerts";
 import Courses from "@/components/Courses";
 import UpcomingDeadlines from "@/components/UpcomingDeadlines";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { checkTeacherhood } from "@/lib/databaseService";
+import { NextResponse } from "next/server";
 
 export default async function Home() {
   const session = await auth();
@@ -21,7 +23,7 @@ export default async function Home() {
       </main>
     );
   }
-
+  
   return (
     <main className="h-screen w-full flex flex-col px-4 py-4">
       <div className="flex flex-row w-full gap-4 flex-1">
