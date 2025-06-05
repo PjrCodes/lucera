@@ -7,7 +7,7 @@ import { ObjectId } from 'mongodb';
 export default async function EditCoursePage({ params }: { params: { course_id: string } }) {
   const { course_id } = await params;
 
-  // fetch coruse data
+  // fetch course data
     if (!course_id) {
         return notFound();
     }
@@ -19,5 +19,11 @@ export default async function EditCoursePage({ params }: { params: { course_id: 
         return notFound();
     }
 
-  return <EditCourseClient course={course} />;
+  // Convert ObjectId to string for client component
+  const courseForClient = {
+    ...course,
+    _id: course._id.toString()
+  };
+
+  return <EditCourseClient course={courseForClient} />;
 }
