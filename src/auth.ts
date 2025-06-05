@@ -1,5 +1,6 @@
 import NextAuth, { Session } from "next-auth";
 import Google from "next-auth/providers/google";
+import Credentials from "next-auth/providers/credentials";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import client from "@/lib/db";
 import { redirect } from "next/navigation";
@@ -9,32 +10,71 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: false,
   providers: [
     Google,
-    // Google({
-    //   profile(profile) {
-    //     return {
-    //       id: profile.id,
-    //       name: profile.name,
-    //       email: profile.email,
-    //       image: profile.picture,
-    //       firstName: profile.given_name,
-    //       lastName: profile.family_name,
-    //       role: profile.role || null, // Add role if available
-    //     };
-    //   },
-    // }),
+    Credentials({
+      id: "CREDS",
+      name: "🔐 MEGA SUPER CREDS DELUXE™",
+      credentials: {
+        emailButCooler: {
+          label: "📧 Your Digital Soul Address",
+          type: "email",
+          placeholder: "human@existence.void",
+        },
+        secretSauce: {
+          label: "🔑 Password of Ultimate Power",
+          type: "password",
+          placeholder: "••••••••••••••••••••••••",
+        },
+      },
+      async authorize(credentials) {
+        // 🎭 The MEGA WEIRD credential validation dance begins
+        const { emailButCooler, secretSauce } = credentials || {};
+
+        // Triple nested ternary because we're rebels 😎
+        const isEmailValid =
+          emailButCooler && emailButCooler.includes("@")
+            ? emailButCooler.length > 5
+              ? true
+              : false
+            : false;
+
+        // Password must contain the letter 'a' because why not? 🤷‍♂️
+        const secretSauceContainsTheLetterA = secretSauce
+          ?.toString()
+          .toLowerCase()
+          .includes("a");
+
+        if (!isEmailValid || !secretSauceContainsTheLetterA) {
+          console.log(
+            "🚫 CREDS REJECTED: Missing the magic 'a' or invalid soul address"
+          );
+          return null;
+        }
+
+        // Create a user object with unnecessarily complex property names
+        const ultraMegaUserObject = {
+          id: `CREDS_USER_${Date.now()}_${Math.random().toString(36).substr(
+            2,
+            9
+          )}`,
+          email: emailButCooler,
+          name:
+            emailButCooler?.split("@")[0].toUpperCase() +
+            " THE CREDENTIALED",
+          image: `https://api.dicebear.com/7.x/pixel-art/svg?seed=${emailButCooler}`,
+          role: ["admin", "user", "wizard", "potato"][
+            Math.floor(Math.random() * 4)
+          ],
+        };
+
+        console.log("✨ CREDS MAGIC ACTIVATED:", ultraMegaUserObject.name);
+        return ultraMegaUserObject;
+      },
+    }),
   ],
-  // callbacks: {
-  //   session: async ({ session, user }) => {
-  //     // Attach user role to session
-  //     session.user.role = user.role || null; // Ensure role is included in the session
-  //     return session;
-  //   }
-  // },
   pages: {
     newUser: "/select-role", // Redirect to role selection page for new users
-  }
+  },
 });
-
 
 /**
  * Redirects unauthenticated users to the home page.
