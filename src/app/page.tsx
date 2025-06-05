@@ -1,14 +1,22 @@
 import { auth } from "../auth";
-import Bookmarks from "@/components/Bookmarks";
-import Create from "@/components/Create";
-import StudentAlerts from "@/components/StudentAlerts";
-import Courses from "@/components/Courses";
-import UpcomingDeadlines from "@/components/UpcomingDeadlines";
+import Bookmarks from "@/components/bookmarks";
+import Create from "@/components/create";
+import StudentAlerts from "@/components/studentAlerts";
+import Courses from "@/components/courses";
+import UpcomingDeadlines from "@/components/upcomingDeadlines";
+import { checkTeacherhood } from "@/lib/databaseService";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth();
 
   const isLoggedIn = session?.user ? true : false;
+
+  if (!session?.user?.id) {
+    redirect("/"); // Redirect to home if no user ID is found
+  }
+  // userRole
+  const isTeacher = await checkTeacherhood(session?.user?.id);
 
   if (!isLoggedIn) {
     return (
@@ -26,7 +34,7 @@ export default async function Home() {
           {/* Upcoming Deadlines */}
           <UpcomingDeadlines />
           {/* Progress */}
-          <Courses />
+          <Courses isTeacher={isTeacher} user={session?.user} />
           {/* Student Alerts */}
           <StudentAlerts />
         </div>

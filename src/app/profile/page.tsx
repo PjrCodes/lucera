@@ -1,30 +1,26 @@
 import React from "react";
-import { auth } from "@/auth";
+import { redirectUnauthenticated } from "@/auth";
 import SignOut from "@/components/buttons/signOutButton";
 import { redirect } from "next/navigation";
 import client from "@/lib/db";
 import Link from "next/link";
 
 export default async function ProfilePage() {
-  const session = await auth();
-  const isLoggedIn = session?.user ? true : false;
+  
+  const session = await redirectUnauthenticated();
   type UserData = {
     id: string;
     role?: string;
   };
-
   const userData: UserData | null = await client
     .db()
     .collection<UserData>("user_data")
     .findOne({ id: session?.user?.id });
 
-  if (isLoggedIn && !userData) {
+  if (!userData) {
     // error - log out and show error message
     // alert("You need to select a role before accessing your profile."); // Remove alert for SSR
     return redirect("/select-role");
-  }
-  if (!isLoggedIn) {
-    return redirect("/");
   }
 
   return (

@@ -10,6 +10,7 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar";
 import { auth } from "@/auth";
+import Providers from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,22 +38,24 @@ export default async function RootLayout({
     <html lang="en">
       <SessionProvider>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <div className="flex flex-col min-h-screen w-full [--header-height:calc(--spacing(14))]">
-            <SidebarProvider className="flex flex-col flex-1">
-              <Header session={session} />
-              <div className="flex flex-1">
-                <AppSidebar />
-                <SidebarInset className="flex flex-col flex-1">
-                  <main className="flex-1">
-                    <div className="relative bg-white mx-auto px-4 py-8">
-                      {children}
-                    </div>
-                  </main>
-                  <MainFooter />
-                </SidebarInset>
-              </div>
-            </SidebarProvider>
-          </div>
+          <Providers>
+            <div className="flex flex-col min-h-screen w-full [--header-height:calc(--spacing(14))]">
+              <SidebarProvider className="flex flex-col flex-1">
+                <Header session={session} />
+                <div className="flex flex-1">
+                  <AppSidebar />
+                  <SidebarInset className="flex flex-col flex-1">
+                    <main className="flex-1">
+                      <div className="relative bg-white mx-auto px-4 py-8">
+                        {children}
+                      </div>
+                    </main>
+                    <MainFooter />
+                  </SidebarInset>
+                </div>
+              </SidebarProvider>
+            </div>
+          </Providers>
         </body>
       </SessionProvider>
     </html>

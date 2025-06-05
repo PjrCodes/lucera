@@ -48,6 +48,7 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
         { status: 500 }
       );
     }
+    console.log("File uploaded and record created:", insertedObject);
     return NextResponse.json(
       { status: "success", fileId: insertedObject.insertedId.toString() },
       { status: 200 }

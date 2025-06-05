@@ -1,6 +1,6 @@
 import React from "react";
 import Form from "next/form";
-import { auth } from "@/auth";
+import { auth, redirectUnauthenticated } from "@/auth";
 import client from "@/lib/db";
 import { redirect } from "next/navigation";
 
@@ -14,12 +14,11 @@ async function setUserRole(data: FormData) {
   
   // Get the current session - should exist after OAuth sign-in
   const session = await auth();
-  
-  if (!session?.user?.email) {
-    // If no session, redirect to sign in
-    return redirect("/api/auth/signin");
-  }
-  
+  if (!session?.user || !session.user.id) {
+    // This code will not be reached.
+    throw new Error("User not authenticated");
+  }  
+
   // Update the user's role in the database
   // The MongoDB adapter creates collections named "users", "accounts", etc.
   const db = client.db();
@@ -31,15 +30,28 @@ async function setUserRole(data: FormData) {
       { $set: { role: role } },
       { upsert: true } // Create a new document if it doesn't exist
     );  
-    // Redirect to the home page after successful role assignment
+    // Redirect to the profile page after successful role assignment
   } catch (error) {
     console.error("Error updating user role:", error);
     throw new Error("Failed to update user role");
   }
-  return redirect("/");
+  return redirect("/profile");
 }
 
-export default function SelectRolePage() {
+export default async function SelectRolePage() {
+
+  // restrict page to authenticated users only
+  const session = await redirectUnauthenticated();
+
+  // set role in the picker based on the database stored role
+  let currentRole: string | null = null;
+  if (session?.user?.id) {
+    const db = client.db();
+    const customUserDataCollection = db.collection("user_data");
+    const userData = await customUserDataCollection.findOne({ id: session.user.id });
+    currentRole = userData?.role ?? null;
+  }
+
   return (
     <main className="h-screen">
     <div className="max-w-md mx-auto my-12 p-8 border border-gray-200 rounded-lg">
@@ -47,13 +59,25 @@ export default function SelectRolePage() {
       <Form action={setUserRole} className="space-y-4">
         <div>
           <label className="inline-flex items-center">
-            <input type="radio" name="role" value="student" defaultChecked className="mr-2" />
+            <input
+              type="radio"
+              name="role"
+              value="student"
+              defaultChecked={currentRole === "student" || !currentRole}
+              className="mr-2"
+            />
             Student
           </label>
         </div>
         <div>
           <label className="inline-flex items-center">
-            <input type="radio" name="role" value="teacher" className="mr-2" />
+            <input
+              type="radio"
+              name="role"
+              value="teacher"
+              defaultChecked={currentRole === "teacher"}
+              className="mr-2"
+            />
             Teacher
           </label>
         </div>

@@ -20,7 +20,7 @@ export async function getUserData(userId: string) {
   const db = client.db();
   const user = await db
     .collection("user_data")
-    .findOne({ _id: new ObjectId(userId) });
+    .findOne({ id: userId });
   if (!user) {
     throw new NotFoundError("User");
   }
@@ -37,17 +37,19 @@ export async function getFileRecord(fileId: string, ownerId?: string) {
   const collection = db.collection("files");
   let fileRecord;
   if (ownerId) {
-    fileRecord = await collection.findOne({ _id: new ObjectId(fileId), userId: new ObjectId(ownerId) });
+    fileRecord = await collection.findOne({ _id: new ObjectId(fileId), userId: ownerId });
   } else {
     // public file access (maybe)
     fileRecord = await collection.findOne({ _id: new ObjectId(fileId) });
   }
   if (!fileRecord) {
+    console.error("File not found in database:", fileId);
     throw new NotFoundError("File");
   }
   // Validate the file record against the schema
   const parsedFileRecord = fileSchema.safeParse(fileRecord);
   if (!parsedFileRecord.success) {
+    console.error("Invalid file record format:", parsedFileRecord.error);
     throw new Error("Invalid file record format");
   }
   fileRecord = parsedFileRecord.data;
