@@ -82,7 +82,7 @@ export default function Header({ session }: { session: Session | null }) {
             </div>
             {/* Notification icon: hide on mobile when searchExpanded */}
             <span className={`${searchExpanded ? "hidden" : "inline"} sm:inline`}>
-              {/* <Bell></Bell> */}
+              <Bell></Bell>
             </span>
             {/* Edit icon: only show on Dashboard and never on mobile */}
             {currentPage === "Dashboard" && (
