@@ -26,9 +26,24 @@ async function setUserRole(data: FormData) {
 
   try {
     await customUserDataCollection.updateOne(
-      { id: session.user.id }, // Use user ID from session
-      { $set: { role: role } },
-      { upsert: true } // Create a new document if it doesn't exist
+      // Use user ID from session
+      { id: session.user.id },
+      {
+        $set: {
+          role: role,
+          dashboardLayout:
+        role === "student"
+          ? {
+          leftColumn: ["WHATS_NEXT", "PROGRESS", "YOUR_BADGES"],
+          rightColumn: ["BOOKMARKS", "UPCOMING_DEADLINES"],
+            }
+          : {
+          leftColumn: ["UPCOMING_DEADLINES", "PROGRESS", "STUDENT_ALERTS"],
+          rightColumn: ["BOOKMARKS", "CREATE"],
+            },
+        },
+      },
+      { upsert: true }
     );  
     // Redirect to the profile page after successful role assignment
   } catch (error) {

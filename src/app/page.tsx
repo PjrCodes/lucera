@@ -4,7 +4,7 @@ import Create from "@/components/create";
 import StudentAlerts from "@/components/studentAlerts";
 import Courses from "@/components/courses";
 import UpcomingDeadlines from "@/components/upcomingDeadlines";
-import { checkTeacherhood } from "@/lib/databaseService";
+import { checkTeacherhood, getUserData } from "@/lib/databaseService";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
@@ -17,6 +17,31 @@ export default async function Home() {
   }
   // userRole
   const isTeacher = await checkTeacherhood(session?.user?.id);
+  const userData = await getUserData(session?.user?.id);
+  const dashboardLayout = userData?.dashboardLayout;
+
+  // Component mapping
+  const componentMap = {
+    WHATS_NEXT: <UpcomingDeadlines key="whats-next" />,
+    PROGRESS: <Courses key="progress" isTeacher={isTeacher} user={session?.user} />,
+    YOUR_BADGES: <StudentAlerts key="your-badges" />,
+    BOOKMARKS: <Bookmarks key="bookmarks" />,
+    UPCOMING_DEADLINES: <UpcomingDeadlines key="upcoming-deadlines" />,
+    CREATE: <Create key="create" />
+  };
+
+  // Function to render components based on layout array
+  const renderComponents = (layoutArray: string[]) => {
+    return layoutArray?.map(componentKey => componentMap[componentKey as keyof typeof componentMap]).filter(Boolean) || [];
+  };
+
+  // Default layout if no dashboardLayout is found
+  const defaultLayout = {
+    leftColumn: ["UPCOMING_DEADLINES", "PROGRESS", "YOUR_BADGES"],
+    rightColumn: ["BOOKMARKS", "CREATE"]
+  };
+
+  const currentLayout = dashboardLayout || defaultLayout;
 
   if (!isLoggedIn) {
     return (
@@ -31,17 +56,11 @@ export default async function Home() {
       <div className="flex flex-row w-full gap-4 flex-1">
         {/* Left Column */}
         <div className="flex flex-col flex-7 gap-4">
-          {/* Upcoming Deadlines */}
-          <UpcomingDeadlines />
-          {/* Progress */}
-          <Courses isTeacher={isTeacher} user={session?.user} />
-          {/* Student Alerts */}
-          <StudentAlerts />
+          {renderComponents(currentLayout.leftColumn)}
         </div>
         {/* Right Column */}
         <div className="flex flex-col flex-3 min-w-[100px] gap-4">
-          <Bookmarks />
-          <Create />
+          {renderComponents(currentLayout.rightColumn)}
         </div>
       </div>
     </main>
