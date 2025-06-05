@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import SearchBarElement from "./searchBarElement";
-import { IoMdNotifications } from "react-icons/io";
 import { CiEdit } from "react-icons/ci";
 import ProfileCircle from "./profileCircle";
 import SignIn from "./buttons/signInButton";
@@ -13,6 +12,7 @@ import { SidebarIcon } from "lucide-react";
 import { IoMdHome } from "react-icons/io";
 import Link from "next/link";
 import { Session } from "next-auth";
+import Bell from "./bell";
 
 // Accept session as a prop instead of fetching it on the client
 export default function Header({ session }: { session: Session | null }) {
@@ -82,10 +82,7 @@ export default function Header({ session }: { session: Session | null }) {
             </div>
             {/* Notification icon: hide on mobile when searchExpanded */}
             <span className={`${searchExpanded ? "hidden" : "inline"} sm:inline`}>
-              <IoMdNotifications
-                size={32}
-                className="cursor-pointer hover:text-gray-500"
-              />
+              {/* <Bell></Bell> */}
             </span>
             {/* Edit icon: only show on Dashboard and never on mobile */}
             {currentPage === "Dashboard" && (
