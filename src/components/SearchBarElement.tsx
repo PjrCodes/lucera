@@ -5,11 +5,13 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 type Props = {
   expanded?: boolean;
   setExpanded?: (val: boolean) => void;
+  onSearch?: (query: string) => void;
 };
 
 export default function SearchBarElement({
   expanded: propExpanded,
   setExpanded: propSetExpanded,
+  onSearch,
 }: Props) {
   const [input, setInput] = useState("");
   // Use controlled expanded state if provided, else fallback to internal state
@@ -21,8 +23,12 @@ export default function SearchBarElement({
 
   const handleSend = () => {
     if (input.trim()) {
-      // Replace this with your LISA chat logic
-      alert(`Message to LISA: ${input}`);
+      if (onSearch) {
+        onSearch(input);
+      } else {
+        // Replace this with your LISA chat logic
+        alert(`Message to LISA: ${input}`);
+      }
       setInput("");
       setExpanded(false);
     }

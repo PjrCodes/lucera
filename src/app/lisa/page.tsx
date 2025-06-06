@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 // Lucera color palette
 const LUCERA = {
@@ -126,16 +127,31 @@ function ChatInput({ onSend, disabled }: { onSend: (msg: string) => void; disabl
 }
 
 export default function LisaPage() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      text: "Hello! I'm LISA, your study assistant. Ask me anything about your lessons. 📚",
-      sender: 'lisa',
-      timestamp: new Date(),
-      type: 'book'
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>(
+    [
+      {
+        id: '1',
+        text: "Hello! I'm LISA, your study assistant. Ask me anything about your lessons. 📚",
+        sender: 'lisa',
+        timestamp: new Date(),
+        type: 'book'
+      }
+    ]
+  );
   const [isLoading, setIsLoading] = useState(false);
+
+  const searchParams = useSearchParams();
+  const question = searchParams.get('question');
+  const hasSentInitialQuestion = useRef(false);
+
+  // Automatically send question from query param if present, only once
+  useEffect(() => {
+    if (question && messages.length === 1 && !hasSentInitialQuestion.current) {
+      handleSend(question);
+      hasSentInitialQuestion.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [question]);
 
   const handleSend = (msg: string) => {
     const userMessage: Message = {
