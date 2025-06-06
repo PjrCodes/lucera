@@ -17,14 +17,40 @@ const AuthDashboard: NextPage<Props> = ({ session, isTeacher, dashboardLayout })
 
   console.log("Auth Dashboard Rendering..");
   
+  // Dummy data
+  const dummyDeadlines = [
+    { id: 1, title: "Math Assignment 2", dueDate: "2024-06-10", course: "Mathematics" },
+    { id: 2, title: "History Project", dueDate: "2024-06-12", course: "History" }
+  ];
+
+  const dummyCourses = [
+    { id: 1, name: "Mathematics", progress: 80 },
+    { id: 2, name: "History", progress: 60 }
+  ];
+
+  const dummyAlerts = [
+    { id: 1, message: "You earned a badge: Quick Learner!", date: "2024-06-01" },
+    { id: 2, message: "Assignment overdue: Science Homework", date: "2024-05-30" }
+  ];
+
+  const dummyBookmarks = [
+    { id: 1, title: "Algebra Basics", url: "https://example.com/algebra" },
+    { id: 2, title: "World War II Documentary", url: "https://example.com/ww2" }
+  ];
+
+  const dummyCreateOptions = [
+    { id: 1, type: "Assignment", label: "Create Assignment" },
+    { id: 2, type: "Quiz", label: "Create Quiz" }
+  ];
+
   // Component mapping
   const componentMap = {
-    WHATS_NEXT: <UpcomingDeadlines key="whats-next" />,
-    PROGRESS: <Courses key="progress" isTeacher={isTeacher} user={session?.user} />,
-    YOUR_BADGES: <StudentAlerts key="your-badges" />,
-    BOOKMARKS: <Bookmarks key="bookmarks" />,
-    UPCOMING_DEADLINES: <UpcomingDeadlines key="upcoming-deadlines" />,
-    CREATE: <Create key="create" />
+    WHATS_NEXT: <UpcomingDeadlines key="whats-next" deadlines={dummyDeadlines} />,
+    PROGRESS: <Courses key="progress" isTeacher={isTeacher} user={session?.user} courses={dummyCourses} />,
+    YOUR_BADGES: <StudentAlerts key="your-badges" alerts={dummyAlerts} />,
+    BOOKMARKS: <Bookmarks key="bookmarks" bookmarks={dummyBookmarks} />,
+    UPCOMING_DEADLINES: <UpcomingDeadlines key="upcoming-deadlines" deadlines={dummyDeadlines} />,
+    CREATE: <Create key="create" options={dummyCreateOptions} />
   };
 
   // Function to render components based on layout array

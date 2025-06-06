@@ -3,17 +3,25 @@ import { User } from "next-auth";
 import Link from "next/link";
 import React from "react";
 
+interface Course {
+  id: number;
+  name: string;
+  progress: number;
+}
+
 interface CoursesProps {
   isTeacher: boolean;
   user: User | undefined;
+  courses: Course[];
 }
 
 export default async function Courses({
   isTeacher,
   user,
+  courses: initialCourses,
 }: CoursesProps) {
   const coursesData = client.db().collection("courses").find({}).limit(6);
-  const courses = await coursesData.toArray();
+  const courses = (await coursesData.toArray()) as Course[];
 
   if (!courses || courses.length === 0) {
     return (
@@ -54,8 +62,8 @@ export default async function Courses({
   };
 
   return (
-    <div className="bg-gray-300 rounded-xl p-4">
-      <div className="font-medium mb-2">PROGRESS</div>
+    <div className="bg-green-50 rounded shadow p-4 min-h-[220px]">
+      <div className="font-medium mb-2 text-green-900">PROGRESS</div>
       <div className={getGridClass()}>
         {courses.map((course) => (
           <Link

@@ -1,8 +1,27 @@
 import React from "react";
 
-const UpcomingDeadlines = () => (
-  <div className="bg-gray-300 rounded-xl p-4 min-h-[180px]">
-    <div className="font-medium mb-2">UPCOMING DEADLINES</div>
+interface Deadline {
+  id: number;
+  title: string;
+  dueDate: string;
+  course: string;
+}
+
+interface Props {
+  deadlines: Deadline[];
+}
+
+const UpcomingDeadlines: React.FC<Props> = ({ deadlines }) => (
+  <div className="bg-blue-50 rounded shadow p-4 min-h-[220px]">
+    <h2 className="font-bold mb-2 text-blue-900">Upcoming Deadlines</h2>
+    <ul>
+      {deadlines.map((dl) => (
+        <li key={dl.id} className="mb-1">
+          <span className="font-semibold">{dl.title}</span> ({dl.course}) -{" "}
+          <span className="text-red-500">{dl.dueDate}</span>
+        </li>
+      ))}
+    </ul>
   </div>
 );
 

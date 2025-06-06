@@ -164,6 +164,7 @@ async function CourseTimeline({ course_id }: { course_id: string }) {
   const course = await getCourseTimeline(course_id);
   if (!course) return null;
 
+  // Map event types to icons
   const getEventIcon = (type: string) => {
     switch (type.toLowerCase()) {
       case 'quiz':
@@ -174,11 +175,28 @@ async function CourseTimeline({ course_id }: { course_id: string }) {
         return '📚';
       case 'endsem_exam':
         return '🎓';
+      case 'exam':
+        return '🧾';
+      case 'lab_exam':
+        return '🧪';
+      case 'other':
+        return '🔖';
+      case 'project':
+        return '💡';
+      case 'case study':
+        return '📖';
+      case 'tutorial or workshop':
+        return '🛠️';
+      case 'field trip':
+        return '🚌';
+      case 'guest lecture':
+        return '🎤';
       default:
         return '📅';
     }
   };
 
+  // Map event types to colors
   const getEventColor = (type: string) => {
     switch (type.toLowerCase()) {
       case 'quiz':
@@ -189,10 +207,51 @@ async function CourseTimeline({ course_id }: { course_id: string }) {
         return 'bg-orange-500';
       case 'endsem_exam':
         return 'bg-red-500';
+      case 'exam':
+        return 'bg-purple-500';
+      case 'lab_exam':
+        return 'bg-teal-500';
+      case 'other':
+        return 'bg-gray-500';
+      case 'project':
+        return 'bg-yellow-600';
+      case 'case study':
+        return 'bg-pink-500';
+      case 'tutorial or workshop':
+        return 'bg-indigo-500';
+      case 'field trip':
+        return 'bg-lime-600';
+      case 'guest lecture':
+        return 'bg-cyan-600';
       default:
         return 'bg-gray-500';
     }
   };
+
+  // Helper to format partial dates
+  function formatPartialDate(dateStr: string) {
+    if (!dateStr) return 'N/A';
+    // YYYY-MM-DD
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      return new Date(dateStr).toLocaleDateString();
+    }
+    // YYYY-MM WEEK X
+    const weekMatch = dateStr.match(/^(\d{4})-(\d{2}) WEEK (\d)$/);
+    if (weekMatch) {
+      const [_, year, month, week] = weekMatch;
+      const monthName = new Date(`${year}-${month}-01`).toLocaleString('default', { month: 'long' });
+      return `Week ${week} of ${monthName} ${year}`;
+    }
+    // YYYY-MM
+    const monthMatch = dateStr.match(/^(\d{4})-(\d{2})$/);
+    if (monthMatch) {
+      const [_, year, month] = monthMatch;
+      const monthName = new Date(`${year}-${month}-01`).toLocaleString('default', { month: 'long' });
+      return `${monthName} ${year}`;
+    }
+    // fallback
+    return dateStr;
+  }
 
   return (
     <div>
@@ -221,10 +280,10 @@ async function CourseTimeline({ course_id }: { course_id: string }) {
                   
                   <div className="flex items-center text-sm text-gray-600">
                     <span className="mr-4">
-                      📅 <strong>Start:</strong> {new Date(item.start_date).toLocaleDateString()}
+                      📅 <strong>Start:</strong> {formatPartialDate(item.start_date)}
                     </span>
                     <span>
-                      ⏰ <strong>Due:</strong> {new Date(item.due_date).toLocaleDateString()}
+                      ⏰ <strong>Due:</strong> {formatPartialDate(item.due_date)}
                     </span>
                   </div>
                 </div>
