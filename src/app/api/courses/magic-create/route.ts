@@ -86,16 +86,29 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
 
     // const allText = await readPdfText(filePath);
 
-    // Call LLM parse apis
-    const {
-      timeline,
-      units,
-      courseStartDate,
-      courseEndDate,
-      name,
-      description,
-      shortDescription,
-    } = await LLMSyllabusParse(filePath);
+    // Call LLM parse apis with error handling
+    let timeline, units, courseStartDate, courseEndDate, name, description, shortDescription;
+    
+    try {
+      const llmResult = await LLMSyllabusParse(filePath);
+      timeline = llmResult.timeline;
+      units = llmResult.units;
+      courseStartDate = llmResult.courseStartDate;
+      courseEndDate = llmResult.courseEndDate;
+      name = llmResult.name;
+      description = llmResult.description;
+      shortDescription = llmResult.shortDescription;
+    } catch (llmError) {
+      console.error("LLM parsing failed:", llmError);
+      // Fallback values when LLM parsing fails
+      timeline = [];
+      units = [];
+      courseStartDate = null;
+      courseEndDate = null;
+      name = `Course from ${fileRecord.name || 'uploaded file'}`;
+      description = "Course description could not be automatically generated. Please edit this course to add details.";
+      shortDescription = "Auto-generated course";
+    }
 
     const db = client.db();
     const courseCollection = db.collection("courses");
@@ -114,6 +127,7 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
       isPublished: false,
       courseStartDate: courseStartDate || null,
       courseEndDate: courseEndDate || null,
+      llmParsingFailed: !timeline && !units, // Flag to indicate if LLM parsing failed
     });
     if (!courseRecord.acknowledged) {
       return NextResponse.json(

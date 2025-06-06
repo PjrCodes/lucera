@@ -1,0 +1,10 @@
+{
+    "role_restrictions": {
+        "student": [],
+        "teacher": []
+    },
+    "column_restrictions": {
+        "left": [],
+        "right": []
+    }
+}

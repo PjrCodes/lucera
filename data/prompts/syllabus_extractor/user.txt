@@ -1,0 +1,54 @@
+You are provided with one or many college syllabus files for a single course. Please parse the content and extract the following structured data:
+
+1. Course Name
+2. Course Code (if available, optional)
+3. Course Start Date and End Date (Format: `YYYY-MM-DD`)  
+4. Description (in Markdown format, see details below)
+5. Short Description (text, 50-100 words maximum) with keywords for a RAG system.
+5. Units (AKA Modules/ Major Topics - Not more than 10-12). These should be aligned to learning progress and each unit should have a short description. Don't create too many units, think of them like chapters in a textbook.
+6. Timeline: A detailed breakdown including:
+   - All Assignments, Quizzes, Tests, Midterms, Finals, Project milestones, etc.
+   - For each: include Start Date, Due Date, and Grade Releasing Date.
+   - If dates are missing, infer them based on academic calendar logic (assume a semester spans 18-22 weeks).
+   - If the course specifies "6 quizzes", but does not specify dates - try to evenly distribute them across the semester.
+   - If a due date is not specified, assume the assignment or quiz is DUE on the day specified as the start date.
+   - The timeline is used by Students to plan their semester, so it should be detailed and clear, and should include relevant *due dates* - which are the most important.
+   - If you find dates in the syllabus, use them directly as much as possible. Mostly, these will be DUE dates. Ensure these are correctly formatted.
+   - Clearly label inferred dates as such.
+   - If the dates are not specified, but a Month or something similar (e.g. "Mid-February") is mentioned, please do not return a specific date, return a partial date (see more details below).
+
+The course description should be well-structured using Markdown. Include the following sections (use `##` and `###` for formatting):
+
+- `## Course Overview`: A brief introduction to the course and its objectives.
+- `## Learning Outcomes`: Key takeaways or skills gained.
+- `## Grading Policy`: Use bullet points and **bold** text to highlight grading breakdown (assignments, quizzes, exams, participation, attendance, etc).
+- `## Examination Structure`: Detail midterm/final dates, duration, formats (MCQ, written, etc).
+- `## Teaching Assistants/ Instructors`: List of TAs or instructors with their contact information - if available.
+- `## References or Resources`: If textbooks or links are present.
+
+Use tables whenever you can and wherever they seem useful. Ensure the output is clear and easy to read when rendered in Markdown. Use bullet points, tables, and sections to organize the information effectively.
+
+Date-related instructions:
+
+The dates can be _partial_ if not specified exactly. Use the following format for partial dates:
+- For months without specific days, use `YYYY-MM` (e.g., `2025-02` for February 2025).
+- For weeks within a month, use `YYYY-MM WEEK X` (e.g., `2025-02 WEEK 2` for the second week of February 2025).
+- For vague references, such as "Mid February" or "End of March", output it as `YYYY-MM` or `YYYY-MM WEEK X` as appropriate.
+- If semester is mentioned (e.g., Spring 2025), assume:
+  - Spring: starts first Monday of January, ends mid-May.
+  - Fall / Monsoon: starts first Monday of August, ends mid-December.
+- Assignments and quizzes are typically due on the same day they are assigned unless specified otherwise.
+- Midtersm are in the middle of the 20-week semester, typically around week 8-10.
+- Finals are usually in the last week of the semester.
+- Grade release: 1 week after submission unless otherwise specified.
+
+KEY INSTRUCTIONS:
+
+* All dates must use `YYYY-MM-DD` format or the PARTIAL DATE format as specified. No other formats.
+* Markdown output should be visually clear, using appropriate lists, tables, and sections.
+* Markdown output should use CORRECT SYNTAX. All the output should be valid Markdown.
+* Do not omit any embedded or implied topics from the syllabus—even if not explicitly listed.
+* Do not add "Lectures", "Units" etc. to the timeline. Only include: assignments, quizzes, exams, field trips, etc. 
+* Do not include any personal information about instructors or TAs unless explicitly provided in the syllabus.
+- Ensure the timeline does not have any duplicates. 
+- ALWAYS output the structured output. Continue parsing until all syllabus content is processed. Do not stop. Do not give empty responses.

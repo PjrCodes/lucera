@@ -5,7 +5,7 @@ import React from "react";
 
 interface CoursesProps {
   isTeacher: boolean;
-  user: User | null;
+  user: User | undefined;
 }
 
 export default async function Courses({

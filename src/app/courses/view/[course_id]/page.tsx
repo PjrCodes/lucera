@@ -162,60 +162,83 @@ async function CourseUnits({ course_id }: { course_id: string }) {
 
 async function CourseTimeline({ course_id }: { course_id: string }) {
   const course = await getCourseTimeline(course_id);
-  if (!course) return null;return (
+  if (!course) return null;
+
+  const getEventIcon = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'quiz':
+        return '❓';
+      case 'assignment':
+        return '📝';
+      case 'midsem_exam':
+        return '📚';
+      case 'endsem_exam':
+        return '🎓';
+      default:
+        return '📅';
+    }
+  };
+
+  const getEventColor = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'quiz':
+        return 'bg-blue-500';
+      case 'assignment':
+        return 'bg-green-500';
+      case 'midsem_exam':
+        return 'bg-orange-500';
+      case 'endsem_exam':
+        return 'bg-red-500';
+      default:
+        return 'bg-gray-500';
+    }
+  };
+
+  return (
     <div>
-      <h2 className="text-xl font-semibold mb-2">Timeline</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full border text-sm">
-          <thead>
-            <tr>
-              <th className="border px-2 py-1">Type</th>
-              <th className="border px-2 py-1">Title</th>
-              <th className="border px-2 py-1">Start Date</th>
-              <th className="border px-2 py-1">Due Date</th>
-              <th className="border px-2 py-1">Grade Release</th>
-              <th className="border px-2 py-1">Inferred</th>
-            </tr>
-          </thead>
-          <tbody>
-            {course.timeline?.map(
-              (item: TimelineItem, idx: number) => (
-                <tr key={idx}>
-                  <td className="border px-2 py-1">{item.type}</td>
-                  <td className="border px-2 py-1">{item.title}</td>
-                  <td className="border px-2 py-1">
-                    {item.start_date}
-                    {item.start_date_inferred && (
-                      <span className="text-xs text-gray-400 ml-1">*</span>
-                    )}
-                  </td>
-                  <td className="border px-2 py-1">
-                    {item.due_date}
-                    {item.due_date_inferred && (
-                      <span className="text-xs text-gray-400 ml-1">*</span>
-                    )}
-                  </td>
-                  <td className="border px-2 py-1">
-                    {item.grade_release_date}
-                    {item.grade_release_date_inferred && (
-                      <span className="text-xs text-gray-400 ml-1">*</span>
-                    )}
-                  </td>
-                  <td className="border px-2 py-1">
-                    {item.start_date_inferred ||
-                    item.due_date_inferred ||
-                    item.grade_release_date_inferred
-                      ? "Yes"
-                      : "No"}
-                  </td>
-                </tr>
-              )
-            )}
-          </tbody>
-        </table>
-      </div>
-      <div className="text-xs text-gray-400 mt-2">
-        * Date marked with * is inferred.
+      <h2 className="text-xl font-semibold mb-4">Timeline</h2>
+      <div className="relative">
+        {/* Vertical line */}
+        <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-300"></div>
+        
+        <div className="space-y-6">
+          {course.timeline?.map((item: TimelineItem, idx: number) => (
+            <div key={idx} className="relative flex items-start">
+              {/* Icon circle */}
+              <div className={`relative z-10 flex items-center justify-center w-12 h-12 rounded-full ${getEventColor(item.type)} text-white text-xl shadow-lg`}>
+                {getEventIcon(item.type)}
+              </div>
+              
+              {/* Content */}
+              <div className="ml-6 flex-1">
+                <div className="bg-white rounded-lg shadow-md border border-gray-200 p-4 hover:shadow-lg transition-shadow duration-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-semibold text-lg text-gray-800">{item.title}</h3>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium text-white ${getEventColor(item.type)}`}>
+                      {item.type.replace('_', ' ').toUpperCase()}
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center text-sm text-gray-600">
+                    <span className="mr-4">
+                      📅 <strong>Start:</strong> {new Date(item.start_date).toLocaleDateString()}
+                    </span>
+                    <span>
+                      ⏰ <strong>Due:</strong> {new Date(item.due_date).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {course.timeline?.length === 0 && (
+          <div className="text-center py-8 text-gray-500">
+            <div className="text-4xl mb-2">📅</div>
+            <p>No timeline events available</p>
+          </div>
+        )}
       </div>
     </div>
   );
