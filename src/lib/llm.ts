@@ -75,7 +75,7 @@ async function callAI(filePath: string) {
             properties: {
               type: {
                 type: Type.STRING,
-                enum: ["assignment", "quiz", "midsem_exam", "endsem_exam", "exam", "lab_exam", "other"],
+                enum: ["assignment", "quiz", "midsem_exam", "endsem_exam", "exam", "lab_exam", "other", "project", "case study", "tutorial or workshop", "field trip", "guest lecture"],
               },
               title: {
                 type: Type.STRING,
