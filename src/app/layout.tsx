@@ -39,14 +39,14 @@ export default async function RootLayout({
       <SessionProvider>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <Providers>
-            <div className="flex flex-col min-h-screen w-full [--header-height:calc(--spacing(14))]">
+            <div className="flex flex-col min-h-screen w-full [--header-height:calc(--spacing(14))] bg-bgcolor">
               <SidebarProvider className="flex flex-col flex-1">
                 <Header session={session} />
                 <div className="flex flex-1">
                   <AppSidebar />
                   <SidebarInset className="flex flex-col flex-1">
                     <main className="flex-1">
-                      <div className="relative bg-white mx-auto px-4 py-8">
+                      <div className="relative mx-auto">
                         {children}
                       </div>
                     </main>

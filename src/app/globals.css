@@ -4,16 +4,45 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --color-lucerayellow: #FEE085ff;
-    --color-lucerablue: #4FCBDBff;
-    --color-lucerared: #FE6D6Dff;
-    --color-lucerarose: #F83E85ff;
-    --color-lucerabrown: #C79092ff;
-    --color-luceragreen: #3ec300ff;
-    --color-luceragray: #697480ff;
-    --color-luceraoffwhite: #D4D4D4ff;
+    --color-lucerayellow-1: #FFF8DC;
+    --color-lucerayellow-2: #FFE9A8;
+    --color-lucerayellow-3: #FEE085;
+    --color-lucerayellow-4: #E0B955;
+    --color-lucerayellow-5: #A57F21;
+    --color-lucerablue-1: #E1F9FC;
+    --color-lucerablue-2: #9DE4ED;
+    --color-lucerablue-3: #4FCBDB;
+    --color-lucerablue-4: #3BA3B0;
+    --color-lucerablue-5: #2D7882;
+    --color-lucerared-1: #FFE5E5;
+    --color-lucerared-2: #FFA5A5;
+    --color-lucerared-3: #FE6D6D;
+    --color-lucerared-4: #D64343;
+    --color-lucerared-5: #A52020;
+    --color-lucerarose-1: #FFD9E8;
+    --color-lucerarose-2: #FF92BC;
+    --color-lucerarose-3: #F83E85;
+    --color-lucerarose-4: #C12263;
+    --color-lucerarose-5: #841340;
+    --color-lucerabrown-1: #F2E5E7;
+    --color-lucerabrown-2: #DCAFB5;
+    --color-lucerabrown-3: #C79092;
+    --color-lucerabrown-4: #9F666A;
+    --color-lucerabrown-5: #6F3D3F;
+    --color-luceragreen-1: #E4FAD9;
+    --color-luceragreen-2: #A3EB66;
+    --color-luceragreen-3: #3EC300;
+    --color-luceragreen-4: #2E9C00;
+    --color-luceragreen-5: #1C6A00;
+    --color-lucerapurple-1: #F4E6F1;
+    --color-lucerapurple-2: #DBB2D6;
+    --color-lucerapurple-3: #C790BD;
+    --color-lucerapurple-4: #A16D98;
+    --color-lucerapurple-5: #704B69;
+    --color-bgcolor: #fffffa;
 }
 
+/* SHADCN-UI HAS ADDED SEVERAL CSS VARIABLES FOR THEMING. */
 @theme inline {
     --radius-sm: calc(var(--radius) - 4px);
     --radius-md: calc(var(--radius) - 2px);
@@ -52,6 +81,7 @@
     --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* SHADCN CONTD */
 :root {
     --radius: 0.625rem;
     --background: oklch(1 0 0);
@@ -88,9 +118,6 @@
 }
 
 @layer base {
-  /* * {
-    @apply border-border outline-ring/50;
-    } */
 
     /* Custom ka-table styling for better integration */
     .ka-table {

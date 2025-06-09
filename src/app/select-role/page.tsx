@@ -19,38 +19,7 @@ async function setUserRole(data: FormData) {
     throw new Error("User not authenticated");
   }  
 
-  // Update the user's role in the database
-  // The MongoDB adapter creates collections named "users", "accounts", etc.
-  const db = client.db();
-  const customUserDataCollection = db.collection("user_data");
-
-  try {
-    await customUserDataCollection.updateOne(
-      // Use user ID from session
-      { id: session.user.id },
-      {
-        $set: {
-          role: role,
-          dashboardLayout:
-        role === "student"
-          ? {
-          leftColumn: ["WHATS_NEXT", "PROGRESS", "YOUR_BADGES"],
-          rightColumn: ["BOOKMARKS", "UPCOMING_DEADLINES"],
-            }
-          : {
-          leftColumn: ["UPCOMING_DEADLINES", "PROGRESS", "STUDENT_ALERTS"],
-          rightColumn: ["BOOKMARKS", "CREATE"],
-            },
-        },
-      },
-      { upsert: true }
-    );  
-    // Redirect to the profile page after successful role assignment
-  } catch (error) {
-    console.error("Error updating user role:", error);
-    throw new Error("Failed to update user role");
-  }
-  return redirect("/profile");
+  return redirect("/");
 }
 
 export default async function SelectRolePage() {

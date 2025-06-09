@@ -11,7 +11,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Google,
   ],
   pages: {
-    newUser: "/select-role", // Redirect to role selection page for new users
+    newUser: '/select-role?reason=newuser', // Redirect to role selection page for new users
   },
 });
 

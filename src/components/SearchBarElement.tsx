@@ -1,7 +1,6 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
-import { FaMagnifyingGlass } from "react-icons/fa6";
-
+import SearchIcon from "@/components/customIcons/search";
 type Props = {
   expanded?: boolean;
   setExpanded?: (val: boolean) => void;
@@ -58,63 +57,57 @@ export default function SearchBarElement({
 
   return (
     <div
-      ref={containerRef}
-      className={`flex items-center border rounded-full px-2 py-1 bg-gray-200
-        transition-all duration-300
-        w-auto max-w-full sm:w-auto
-        ${expanded ? "w-full" : ""}
+      ref={containerRef} 
+      className={`flex items-center border rounded-full border-none px-2 py-1 sm:bg-lucerayellow-1  transition-all duration-300
+        text-black
+        w-full
+        sm:shadow-sm
       `}
-      style={{
-        width: expanded ? "100%" : undefined,
-      }}
     >
-      {/* Mobile: collapsed state */}
-      <div className="block sm:hidden w-full">
-        {!expanded ? (
+      {/* Mobile: animated expansion */}
+      <div className="block sm:hidden w-full relative h-10">
+        {/* Collapsed button */}
+        <button
+          className={`absolute right-0 top-1/2 -translate-y-1/2 text-black hover:text-gray-600
+            transition-all duration-300 ease-in-out hover:cursor-pointer
+            ${expanded ? "opacity-0 pointer-events-none" : "opacity-100"}
+          `}
+          onClick={() => setExpanded(true)}
+          aria-label="Expand search"
+        >
+          <SearchIcon size={24} fill="currentColor" />
+        </button>
+        {/* Expanded search container overlays the whole width */}
+        <div className={`absolute left-0 top-0 w-full h-full flex items-center bg-lucerayellow-1 shadow-sm rounded-full px-2 py-1
+          transition-all duration-300 ease-in-out
+          ${expanded ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}
+        `}>
+          <input
+            ref={inputRef}
+            type="text"
+            className="outline-none px-2 py-1 w-full bg-transparent transition-all duration-300 ease-in-out"
+            placeholder="Search with LISA..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSend();
+              if (e.key === "Escape") setExpanded(false);
+            }}
+          />
           <button
-            className="text-black hover:text-gray-500 transition-colors duration-200"
-            onClick={() => setExpanded(true)}
-            aria-label="Expand search"
+            className="ml-2 text-black hover:text-gray-600 transition-all duration-300 ease-in-out flex items-center justify-center hover:cursor-pointer"
+            onClick={handleSend}
+            aria-label="Send to LISA"
           >
-            <FaMagnifyingGlass size={20} />
+            <SearchIcon size={24}  fill="currentColor" />
           </button>
-        ) : (
-          <div className="flex items-center w-full">
-            <input
-              ref={inputRef}
-              type="text"
-              className={`outline-none px-2 py-1 transition-all duration-300 ease-in-out
-                w-0 opacity-0
-                ${expanded ? "w-full opacity-100" : ""}
-              `}
-              style={{
-                minWidth: expanded ? "8rem" : "0",
-                width: expanded ? "100%" : "0",
-                opacity: expanded ? 1 : 0,
-              }}
-              placeholder="Search with LISA..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleSend();
-                if (e.key === "Escape") setExpanded(false);
-              }}
-            />
-            <button
-              className="ml-2 text-black hover:text-gray-500 transition-colors duration-200"
-              onClick={handleSend}
-              aria-label="Send to LISA"
-            >
-              <FaMagnifyingGlass size={20} />
-            </button>
-          </div>
-        )}
+        </div>
       </div>
       {/* Desktop: always expanded */}
       <div className="hidden sm:flex items-center w-auto">
         <input
           type="text"
-          className="outline-none px-2 py-1 w-64 transition-all duration-300"
+          className="outline-none px-2 py-1 w-72 transition-all duration-300"
           placeholder="Search with LISA..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -123,11 +116,11 @@ export default function SearchBarElement({
           }}
         />
         <button
-          className="ml-2 text-black hover:text-gray-500 transition-colors duration-200"
+          className="ml-2 text-black hover:text-gray-600 transition-colors duration-200 flex items-center justify-center hover:cursor-pointer"
           onClick={handleSend}
           aria-label="Send to LISA"
         >
-          <FaMagnifyingGlass size={20} />
+          <SearchIcon size={24} fill="currentColor" />
         </button>
       </div>
     </div>

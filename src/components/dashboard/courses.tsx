@@ -77,13 +77,13 @@ export default async function Courses({
           <Link
             href="/courses/view/[course_id]"
             as={`/courses/view/${course._id.toString()}`}
-            className="hover:shadow-lg transition-shadow duration-200"
+            className="hover:shadow-lg transition-shadow duration-200 h-full"
             key={course._id.toString()}
           >
-            <div className="bg-white rounded-lg p-4 shadow-sm">
+            <div className="bg-white rounded-lg p-4 shadow-sm h-full flex flex-col">
               <h3 className="text-lg font-semibold">{course.name}</h3>
               <p className="text-gray-600">{course.courseCode}</p>
-              <div className="mt-2">
+              <div className="mt-2 mt-auto">
                 {/*for students: it show progress of topics completed. For teachers: it shows number of students completed type thing. */}
                 <span className="text-sm text-gray-500">
                   Progress: {course.progress}%
@@ -95,7 +95,7 @@ export default async function Courses({
         {showAddButton && (
           <Link
             href="/courses/create"
-            className="bg-white rounded-lg p-4 shadow-sm flex items-center justify-center hover:shadow-lg transition-shadow duration-200 border-2 border-dashed border-gray-300 hover:border-gray-400"
+            className="bg-white rounded-lg p-4 shadow-sm flex items-center justify-center hover:shadow-lg transition-shadow duration-200 border-2 border-dashed border-gray-300 hover:border-gray-400 h-full min-h-[120px]"
           >
             <div className="text-4xl text-gray-400 hover:text-gray-600 transition-colors">
               +

@@ -30,7 +30,7 @@ export default function Header({ session }: { session: Session | null }) {
   if (isLoggedIn) {
     if (pathname) {
       if (pathname === "/") {
-        currentPage = "Dashboard";
+        currentPage = "DASHBOARD";
       } else {
         const segments = pathname.split("/").filter(Boolean);
         currentPage =
@@ -38,11 +38,12 @@ export default function Header({ session }: { session: Session | null }) {
             ? segments[segments.length - 1]
                 .replace(/-/g, " ")
                 .replace(/\b\w/g, (c) => c.toUpperCase())
-            : "Knowhere.";
+                .toUpperCase()
+            : "KNOWHERE.";
       }
     }
   } else {
-    currentPage = "Lucera";
+    currentPage = "LUCERA";
   }
 
   // Handler for search submit
@@ -54,7 +55,7 @@ export default function Header({ session }: { session: Session | null }) {
   };
 
   return (
-    <header className="border-b border-yellow-600 sticky top-0 z-50 w-full bg-lucerayellow backdrop-blur-lg supports-[backdrop-filter]:bg-lucerayellow">
+    <header className="border-b border-yellow-600 sticky top-0 z-50 w-full bg-lucerayellow-3/80 backdrop-blur-lg supports-[backdrop-filter]:bg-lucerayellow-3/80">
       <div className="px-4 py-4 h-14 flex flex-row items-center justify-between">
         {/* Sidebar button always visible */}
         <div className="flex flex-row items-center space-x-2 flex-shrink-0">
@@ -66,29 +67,40 @@ export default function Header({ session }: { session: Session | null }) {
           >
             <SidebarIcon />
           </Button>
-          {/* Home icon: show when logged in and not on home page */}
           {isLoggedIn && !isHomePage && (
-            <Link href="/">
+            <Link href="/" passHref legacyBehavior>
               <Button
                 className="h-8 w-8"
                 variant="ghost"
                 size="icon"
+                tabIndex={-1}
               >
                 <IoMdHome size={20} />
               </Button>
             </Link>
           )}
-          {/* Heading: show on mobile only if search is not expanded, always show on sm+ */}
-          {!searchExpanded && (
-            <h1 className="text-xl md:text-3xl sm:hidden">{currentPage}</h1>
-          )}
-          <h1 className="hidden sm:block text-xl md:text-3xl">{currentPage}</h1>
+          {/* Heading: only render once, hide/show with CSS */}
+          <h1
+            className={`text-xl md:text-2xl tracking-wider font-bold ${
+              searchExpanded ? "hidden sm:block" : "block"
+            }`}
+          >
+            {currentPage}
+          </h1>
         </div>
         {isLoggedIn ? (
-          <div className={`flex flex-row items-center space-x-2 flex-1 ${searchExpanded ? "justify-center sm:justify-end" : "justify-end"}`}>
+          <div
+            className={`flex flex-row items-center space-x-2 flex-1 ${
+              searchExpanded ? "justify-center sm:justify-end" : "justify-end"
+            }`}
+          >
             {/* Search bar: on mobile, flex-1 when expanded */}
             {!isLisaPage && (
-              <div className={`${searchExpanded ? "flex-1 max-w-full" : ""} sm:static`}>
+              <div
+                className={`${
+                  searchExpanded ? "flex-1 max-w-full" : ""
+                } sm:static`}
+              >
                 <SearchBarElement
                   expanded={searchExpanded}
                   setExpanded={setSearchExpanded}
@@ -97,13 +109,18 @@ export default function Header({ session }: { session: Session | null }) {
               </div>
             )}
             {/* Notification icon: hide on mobile when searchExpanded */}
-            <span className={`${searchExpanded ? "hidden" : "inline"} sm:inline`}>
+            <span
+              className={`${searchExpanded ? "hidden" : "inline"} sm:inline`}
+            >
               <Bell></Bell>
             </span>
             {/* Edit icon: only show on Dashboard and never on mobile */}
             {currentPage === "Dashboard" && (
               <span className="hidden sm:inline">
-                <CiEdit size={32} className="cursor-pointer hover:text-gray-500" />
+                <CiEdit
+                  size={32}
+                  className="cursor-pointer hover:text-gray-500"
+                />
               </span>
             )}
             <div className="flex justify-center">
