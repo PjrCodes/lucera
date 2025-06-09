@@ -1,5 +1,5 @@
 import client from "@/lib/db";
-import { User } from "next-auth";
+import { Session } from "next-auth";
 import Link from "next/link";
 import React from "react";
 
@@ -7,21 +7,29 @@ interface Course {
   id: number;
   name: string;
   progress: number;
+  courseCode: string;
+  _id: string;
 }
 
 interface CoursesProps {
+  session: Session | null;
   isTeacher: boolean;
-  user: User | undefined;
-  courses: Course[];
 }
 
 export default async function Courses({
+  session,
   isTeacher,
-  user,
-  courses: initialCourses,
 }: CoursesProps) {
+  // Dummy data for courses - replace with actual data fetching later
   const coursesData = client.db().collection("courses").find({}).limit(6);
-  const courses = (await coursesData.toArray()) as Course[];
+  const rawCourses = await coursesData.toArray();
+  const courses: Course[] = rawCourses.map((doc, idx) => ({
+    id: doc.id ?? idx,
+    name: doc.name ?? "",
+    progress: doc.progress ?? 0,
+    courseCode: doc.courseCode ?? "",
+    _id: doc._id.toString(),
+  }));
 
   if (!courses || courses.length === 0) {
     return (

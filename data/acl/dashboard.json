@@ -1,10 +1,41 @@
 {
-    "role_restrictions": {
-        "student": [],
-        "teacher": []
-    },
-    "column_restrictions": {
-        "left": [],
-        "right": []
-    }
+  "role_restrictions": {
+    "student": [
+      "PROGRESS",
+      "BOOKMARKS",
+      "UPCOMING_DEADLINES",
+      "WHATS_NEXT",
+      "YOUR_BADGES",
+      "ANNOUNCEMENTS",
+      "RECENTLY_ACCESSED"
+    ],
+    "teacher": [
+      "STUDENT_ALERTS",
+      "CLASS_PROGRESS",
+      "BOOKMARKS",
+      "CREATE",
+      "UPCOMING_DEADLINES",
+      "ANNOUNCEMENTS",
+      "RECENTLY_ACCESSED"
+    ]
+  },
+  "column_restrictions": {
+    "leftColumn": [
+      "PROGRESS",
+      "WHATS_NEXT",
+      "CLASS_PROGRESS",
+      "CREATE",
+      "STUDENT_ALERTS",
+      "RECENTLY_ACCESSED",
+      "UPCOMING_DEADLINES",
+      "ANNOUNCEMENTS"
+    ],
+    "rightColumn": [
+      "BOOKMARKS",
+      "UPCOMING_DEADLINES",
+      "YOUR_BADGES",
+      "ANNOUNCEMENTS",
+      "CREATE"
+    ]
+  }
 }

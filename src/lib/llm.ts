@@ -1,7 +1,6 @@
 import fs from "fs";
 import { GoogleGenAI, Type } from "@google/genai";
 
-
 const syllabusUserPrompt = fs.readFileSync(
   "./data/prompts/syllabus_extractor/user.txt",
   "utf-8"
@@ -9,8 +8,111 @@ const syllabusUserPrompt = fs.readFileSync(
 const syllabusSystemPrompt = fs.readFileSync(
   "./data/prompts/syllabus_extractor/system.txt",
   "utf-8"
-);  
+);
 
+const syllabusDecoderSchema = {
+  type: Type.OBJECT,
+  required: [
+    "units",
+    "timeline",
+    "name",
+    "description",
+    "start_date",
+    "end_date",
+    "short_description",
+  ],
+  properties: {
+    units: {
+      type: Type.ARRAY,
+      items: {
+        type: Type.OBJECT,
+        required: ["name", "description"],
+        properties: {
+          name: {
+            type: Type.STRING,
+          },
+          description: {
+            type: Type.STRING,
+          },
+        },
+      },
+    },
+    timeline: {
+      type: Type.ARRAY,
+      items: {
+        type: Type.OBJECT,
+        required: [
+          "type",
+          "title",
+          "start_date",
+          "due_date",
+          "grade_release_date",
+          "start_date_inferred",
+          "due_date_inferred",
+          "grade_release_date_inferred",
+        ],
+        properties: {
+          type: {
+            type: Type.STRING,
+            enum: [
+              "assignment",
+              "quiz",
+              "midsem_exam",
+              "endsem_exam",
+              "exam",
+              "lab_exam",
+              "other",
+              "project",
+              "case study",
+              "tutorial or workshop",
+              "field trip",
+              "guest lecture",
+            ],
+          },
+          title: {
+            type: Type.STRING,
+          },
+          start_date: {
+            type: Type.STRING,
+          },
+          due_date: {
+            type: Type.STRING,
+          },
+          grade_release_date: {
+            type: Type.STRING,
+          },
+          start_date_inferred: {
+            type: Type.BOOLEAN,
+          },
+          due_date_inferred: {
+            type: Type.BOOLEAN,
+          },
+          grade_release_date_inferred: {
+            type: Type.BOOLEAN,
+          },
+        },
+      },
+    },
+    name: {
+      type: Type.STRING,
+    },
+    course_code: {
+      type: Type.STRING,
+    },
+    description: {
+      type: Type.STRING,
+    },
+    start_date: {
+      type: Type.STRING,
+    },
+    end_date: {
+      type: Type.STRING,
+    },
+    short_description: {
+      type: Type.STRING,
+    },
+  },
+};
 
 interface LLMSyllabusParseResponse {
   name: string;
@@ -26,7 +128,7 @@ export async function LLMSyllabusParse(
   filePath: string
 ): Promise<LLMSyllabusParseResponse> {
   // save the text to a file for debugging purposes
-  const result = await callAI(filePath);
+  const result = await callSyllabusParseLLM(filePath);
 
   return {
     name: result.name,
@@ -39,92 +141,20 @@ export async function LLMSyllabusParse(
   };
 }
 
-async function callAI(filePath: string) {
+async function callSyllabusParseLLM(filePath: string) {
   const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
   });
-   const config = {
+  const config = {
     thinkingConfig: {
       thinkingBudget: 0,
     },
-    responseMimeType: 'application/json',
-    responseSchema: {
-      type: Type.OBJECT,
-      required: ["units", "timeline", "name", "description", "start_date", "end_date", "short_description"],
-      properties: {
-        units: {
-          type: Type.ARRAY,
-          items: {
-            type: Type.OBJECT,
-            required: ["name", "description"],
-            properties: {
-              name: {
-                type: Type.STRING,
-              },
-              description: {
-                type: Type.STRING,
-              },
-            },
-          },
-        },
-        timeline: {
-          type: Type.ARRAY,
-          items: {
-            type: Type.OBJECT,
-            required: ["type", "title", "start_date", "due_date", "grade_release_date", "start_date_inferred", "due_date_inferred", "grade_release_date_inferred"],
-            properties: {
-              type: {
-                type: Type.STRING,
-                enum: ["assignment", "quiz", "midsem_exam", "endsem_exam", "exam", "lab_exam", "other", "project", "case study", "tutorial or workshop", "field trip", "guest lecture"],
-              },
-              title: {
-                type: Type.STRING,
-              },
-              start_date: {
-                type: Type.STRING,
-              },
-              due_date: {
-                type: Type.STRING,
-              },
-              grade_release_date: {
-                type: Type.STRING,
-              },
-              start_date_inferred: {
-                type: Type.BOOLEAN,
-              },
-              due_date_inferred: {
-                type: Type.BOOLEAN,
-              },
-              grade_release_date_inferred: {
-                type: Type.BOOLEAN,
-              },
-            },
-          },
-        },
-        name: {
-          type: Type.STRING,
-        },
-        course_code: {
-          type: Type.STRING,
-        },
-        description: {
-          type: Type.STRING,
-        },
-        start_date: {
-          type: Type.STRING,
-        },
-        end_date: {
-          type: Type.STRING,
-        },
-        short_description: {
-          type: Type.STRING,
-        },
-      },
-    },
+    responseMimeType: "application/json",
+    responseSchema: syllabusDecoderSchema,
     systemInstruction: [
-        {
-          text: syllabusSystemPrompt,
-        }
+      {
+        text: syllabusSystemPrompt,
+      },
     ],
   };
   const model = "gemini-2.5-flash-preview-05-20";
@@ -140,7 +170,7 @@ async function callAI(filePath: string) {
           },
         },
         {
-          text: syllabusUserPrompt
+          text: syllabusUserPrompt,
         },
       ],
     },
@@ -175,11 +205,6 @@ async function callAI(filePath: string) {
   }
 }
 
-
-
-
-
 // To run this code you need to install the following dependencies:
 // npm install @google/genai mime
 // npm install -D @types/node
-
