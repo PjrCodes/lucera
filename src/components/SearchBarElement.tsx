@@ -61,7 +61,9 @@ export default function SearchBarElement({
       className={`flex items-center border rounded-full border-none px-2 py-1 sm:bg-lucerayellow-1  transition-all duration-300
         text-black
         w-full
-        sm:shadow-sm
+        sm:shadow-sm outline-none 
+        sm:focus-within:outline-solid outline-2 outline-lucerayellow-5
+
       `}
     >
       {/* Mobile: animated expansion */}

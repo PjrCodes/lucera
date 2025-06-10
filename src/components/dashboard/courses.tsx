@@ -77,10 +77,10 @@ export default async function Courses({
           <Link
             href="/courses/view/[course_id]"
             as={`/courses/view/${course._id.toString()}`}
-            className="hover:shadow-lg transition-shadow duration-200 h-full"
+            className=" transition-shadow duration-200 h-full"
             key={course._id.toString()}
           >
-            <div className="bg-white rounded-lg p-4 shadow-sm h-full flex flex-col">
+            <div className="hover:shadow-lg bg-white rounded-lg p-4 shadow-sm h-full flex flex-col">
               <h3 className="text-lg font-semibold">{course.name}</h3>
               <p className="text-gray-600">{course.courseCode}</p>
               <div className="mt-2 mt-auto">

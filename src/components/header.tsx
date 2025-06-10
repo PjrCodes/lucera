@@ -68,7 +68,7 @@ export default function Header({ session }: { session: Session | null }) {
             <SidebarIcon />
           </Button>
           {isLoggedIn && !isHomePage && (
-            <Link href="/" passHref legacyBehavior>
+            <Link href="/" passHref>
               <Button
                 className="h-8 w-8"
                 variant="ghost"

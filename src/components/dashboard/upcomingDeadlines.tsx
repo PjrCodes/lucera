@@ -168,7 +168,7 @@ const UpcomingDeadlines: React.FC<Props> = ({ session, isTeacher }) => {
   // Dummy data for deadlines showing all deadline states
   const dummyDeadlines: Deadline[] = [
     {
-      id: 1,
+      id: 10,
       title: "Overdue Assignment",
       dueDate: formatDateToString(yesterday),
       course: "CS101"
@@ -216,7 +216,7 @@ const UpcomingDeadlines: React.FC<Props> = ({ session, isTeacher }) => {
   return (
     <div className="bg-lucerablue-2 rounded shadow p-4 min-h-[220px]">
       <h2 className="font-bold mb-4 text-blue-900 flex items-center gap-2">
-        ⏳ UPCOMING DEADLINES
+        UPCOMING DEADLINES
       </h2>
       <ul className="space-y-3">
         {deadlines.map((dl) => (
