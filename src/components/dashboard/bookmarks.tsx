@@ -2,6 +2,7 @@
 import React from "react";
 import { Session } from "next-auth";
 import { iconForType } from "@/constants";
+import { MdBookmarkBorder } from "react-icons/md";
 
 interface Bookmark {
   id: number;
@@ -50,29 +51,16 @@ const Bookmarks: React.FC<Props> = ({ session, isTeacher }) => {
   ];
 
   return (
-    <div className="bg-lucerapurple-1 rounded-lg shadow-md p-4 md:p-6 min-h-[300px] flex flex-col">
-      <div className="flex items-center justify-start mb-4"> {/* Changed justify-between to justify-start */}
+    <div className="bg-lucerapurple-1 rounded-lg shadow-md p-4 md:px-6 min-h-[300px] flex flex-col">
+      <div className="flex items-center justify-start mb-4">
         <h2 className="text-lg font-bold text-lucerapurple-5">BOOKMARKS</h2>
         {/* Removed Add New button */}
       </div>
       {bookmarks.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center text-lucerapurple-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-12 w-12 mb-2 text-lucerapurple-3"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-            />
-          </svg>
+          <MdBookmarkBorder className="text-5xl" />
           <p className="text-lg">No bookmarks yet.</p>
-          <p className="text-sm text-lucerapurple-3">
+          <p className="text-sm text-lucerapurple-3 text-center">
             You can add bookmarks from various parts of the application.
           </p>
         </div>
@@ -84,9 +72,9 @@ const Bookmarks: React.FC<Props> = ({ session, isTeacher }) => {
               href={bm.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white rounded-lg shadow p-3 hover:shadow-lg transition-shadow flex items-center space-x-3" // Item styling
+              className="bg-white/80 rounded-lg shadow p-3 hover:shadow-lg transition-shadow flex items-center space-x-3" // Item styling
             >
-              <div className="text-pink-500 text-2xl"> {/* Icon styling */}
+              <div className="text-lucerapurple-4 text-2xl"> {/* Icon styling */}
                 {React.createElement(iconForType(bm.type))}
               </div>
               <div className="flex-1 overflow-hidden"> {/* Container for text, allows truncation */}

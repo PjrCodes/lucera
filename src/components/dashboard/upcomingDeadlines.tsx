@@ -147,21 +147,22 @@ const UpcomingDeadlines: React.FC<Props> = ({ session, isTeacher }) => {
   
   // Dummy data for deadlines showing all deadline states
   const dummyDeadlines: Deadline[] = [
-    // {
-    //   id: 10,
-    //   title: "Overdue Assignment",
-    //   dueDate: formatDateToString(yesterday),
-    //   course: "CS101: Introduction to Programming",
-    //   type: "assignment",
-    //   courseColor: "bg-lucerablue-2 text-lucerablue-5"
-    // },
-    // {
-    //   id: 1,
-    //   title: "Overdue Exam", // Changed to Exam for variety
-    //   dueDate: "2025-06-09 20:00:00", // Overdue with time
-    //   course: "CS101",
-    //   type: "exam"
-    // },
+    {
+      id: 10,
+      title: "Overdue Assignment",
+      dueDate: formatDateToString(yesterday),
+      course: "CS101: Introduction to Programming",
+      type: "assignment",
+      courseColor: "bg-lucerablue-2 text-lucerablue-5"
+    },
+    {
+      id: 1,
+      title: "Overdue Exam", // Changed to Exam for variety
+      dueDate: "2025-06-09 20:00:00", // Overdue with time
+      course: "CS101",
+      type: "exam",
+      courseColor: "bg-lucerared-2 text-lucerared-5"
+    }
     // {
     //   id: 2,
     //   title: "Quiz Due Today", // Changed to Quiz
@@ -202,7 +203,7 @@ const UpcomingDeadlines: React.FC<Props> = ({ session, isTeacher }) => {
   const deadlines = dummyDeadlines;
 
   return (
-    <div className="bg-lucerablue-1 rounded-lg shadow-md p-4 md:px-6 min-h-[220px]">
+    <div className="bg-lucerablue-1 rounded-lg shadow-md p-4 md:px-6 min-h-[250px]">
       <h2 className="font-bold mb-4 text-lucerablue-5 flex items-center gap-2 text-lg">
         UPCOMING DEADLINES
       </h2>
@@ -230,11 +231,11 @@ const UpcomingDeadlines: React.FC<Props> = ({ session, isTeacher }) => {
         })}
       </ul>
       {deadlines.length === 0 && (
-        <div className="text-center py-8 text-gray-500">
-          <div className="text-4xl mb-2">
-            <PiConfetti className="inline-block text-lucerablue-4" />
+        <div className="text-center py-8 text-lucerablue-4">
+          <div className="text-5xl mb-2">
+            <PiConfetti className="inline-block" />
           </div>
-          <p>No upcoming deadlines!</p>
+          <p className="text-lg">No more deadlines!</p>
         </div>
       )}
     </div>

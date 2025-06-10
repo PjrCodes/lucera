@@ -20,7 +20,7 @@ export async function AppSidebar() {
   return (
     <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]! border-r border-yellow-600">
       <div className="px-4 pt-4 bg-lucerayellow-3/50 flex flex-col text-3xl font-bold">
-          <Link href="/university">Plaksha University</Link>
+          <Link href="/university">Sample University</Link>
       </div>
       <SidebarContent>
         {!isLoggedIn ? (

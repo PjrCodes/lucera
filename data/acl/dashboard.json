@@ -24,7 +24,6 @@
       "PROGRESS",
       "WHATS_NEXT",
       "CLASS_PROGRESS",
-      "CREATE",
       "STUDENT_ALERTS",
       "RECENTLY_ACCESSED",
       "UPCOMING_DEADLINES",
@@ -32,10 +31,10 @@
     ],
     "rightColumn": [
       "BOOKMARKS",
-      "UPCOMING_DEADLINES",
       "YOUR_BADGES",
       "ANNOUNCEMENTS",
-      "CREATE"
+      "CREATE",
+      "STUDENT_ALERTS"
     ]
   }
 }
