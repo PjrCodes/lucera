@@ -18,15 +18,15 @@ export async function AppSidebar() {
   const isLoggedIn = session?.user ? true : false;
 
   return (
-    <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!">
-      <div className="px-4 pt-4 bg-lucerayellow flex flex-col text-3xl font-bold">
+    <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]! border-r border-yellow-600">
+      <div className="px-4 pt-4 bg-lucerayellow-3/50 flex flex-col text-3xl font-bold">
           <Link href="/university">Plaksha University</Link>
       </div>
       <SidebarContent>
         {!isLoggedIn ? (
-          <div className="h-full bg-lucerayellow px-4 py-4">Log in to continue</div>
+          <div className="h-full bg-lucerayellow-3/50 px-4 py-4">Log in to continue</div>
         ) : (
-          <div className="h-full flex flex-col bg-lucerayellow">
+          <div className="h-full flex flex-col bg-lucerayellow-3/50">
           <nav className="flex-1">
             <div className="flex-1 px-4 py-6">
               <ul className="space-y-4">

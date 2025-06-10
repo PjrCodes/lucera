@@ -13,8 +13,8 @@ export default function Bell() {
     <IoMdNotifications
       size={32}
       className={
-        "cursor-pointer hover:text-gray-500 transition-colors duration-200 " +
-        (bellState ? " text-red-500" : " text-gray-400")
+        "cursor-pointer transition-colors duration-200 " +
+        (bellState ? " text-red-500 hover:text-red-700" : " text-gray-700 hover:text-gray-500")
       }
       onClick={() => {
         setBellState(false); // Reset bell state when clicked

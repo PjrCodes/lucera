@@ -1,14 +1,6 @@
 import React from "react";
 import { Session } from "next-auth";
-import { 
-  MdOutlineBook, 
-  MdOutlineClass, 
-  MdOutlineAssignment, 
-  MdOutlineAnnouncement,
-  MdOutlinePoll,
-  MdOutlineAssessment,
-  MdOutlineLibraryBooks
-} from "react-icons/md";
+import { iconForType } from "@/constants";
 
 interface Option {
   id: number;
@@ -29,43 +21,37 @@ const Create: React.FC<Props> = ({ session, isTeacher }) => {
       id: 1,
       type: "course",
       label: "New Course",
-      icon: <MdOutlineClass />
+      icon: React.createElement(iconForType("course")) // Render the icon as a React element
     },
     {
       id: 2, 
       type: "assignment",
       label: "New Assignment",
-      icon: <MdOutlineAssignment />
-    },
-    {
-      id: 3,
-      type: "quiz",
-      label: "New Quiz",
-      icon: <MdOutlineAssessment />
+      icon: React.createElement(iconForType("assignment"))
     },
     {
       id: 4,
       type: "announcement",
       label: "New Announcement",
-      icon: <MdOutlineAnnouncement />
+      icon: React.createElement(iconForType("announcement"))
     },
     {
       id: 5,
-      type: "courseContent",
+      type: "content",
       label: "Course Content",
-      icon: <MdOutlineLibraryBooks />
+      icon: React.createElement(iconForType("content"))
     },
     {
       id: 6,
       type: "poll",
       label: "New Poll",
-      icon: <MdOutlinePoll />
+      icon: React.createElement(iconForType("poll"))
     },
     {
       id: 7,
       type: "report",
       label: "Generate Report",
-      icon: <MdOutlineBook />
+      icon: React.createElement(iconForType("analytics"))
     }
   ];
 

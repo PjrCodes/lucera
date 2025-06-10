@@ -1,41 +1,21 @@
 import React from "react";
 import { Session } from "next-auth";
+import { iconForType } from "../../constants"; // Import the icons
+import { PiConfetti } from "react-icons/pi";
 
 interface Deadline {
   id: number;
   title: string;
   dueDate: string;
   course: string;
+  type: string;
+  courseColor: string;
 }
 
 interface Props {
   session: Session | null;
   isTeacher: boolean;
 }
-
-const typeIcon = (title: string) => {
-  const t = title.toLowerCase();
-  if (t.includes("assignment")) return "📝";
-  if (t.includes("exam")) return "🧾";
-  if (t.includes("project")) return "💡";
-  if (t.includes("quiz")) return "❓";
-  if (t.includes("lab")) return "🧪";
-  if (t.includes("case study")) return "📖";
-  if (t.includes("workshop") || t.includes("tutorial")) return "🛠️";
-  return "📅";
-};
-
-const typeColor = (title: string) => {
-  const t = title.toLowerCase();
-  if (t.includes("assignment")) return "bg-green-100 text-green-800";
-  if (t.includes("exam")) return "bg-purple-100 text-purple-800";
-  if (t.includes("project")) return "bg-yellow-100 text-yellow-800";
-  if (t.includes("quiz")) return "bg-blue-100 text-blue-800";
-  if (t.includes("lab")) return "bg-teal-100 text-teal-800";
-  if (t.includes("case study")) return "bg-pink-100 text-pink-800";
-  if (t.includes("workshop") || t.includes("tutorial")) return "bg-indigo-100 text-indigo-800";
-  return "bg-gray-100 text-gray-800";
-};
 
 function formatDate(dateStr: string) {
   if (!dateStr) return "N/A";
@@ -167,82 +147,93 @@ const UpcomingDeadlines: React.FC<Props> = ({ session, isTeacher }) => {
   
   // Dummy data for deadlines showing all deadline states
   const dummyDeadlines: Deadline[] = [
-    {
-      id: 10,
-      title: "Overdue Assignment",
-      dueDate: formatDateToString(yesterday),
-      course: "CS101"
-    },
-    {
-      id: 1,
-      title: "Overdue Assignment",
-      dueDate: "2025-06-09 20:00:00", // Overdue with time
-      course: "CS101"
-    },
-    {
-      id: 2,
-      title: "Due Today",
-      dueDate: formatDateToString(today),
-      course: "CS201"
-    },
-    {
-      id: 3,
-      title: "Due Tomorrow",
-      dueDate: formatDateToString(tomorrow),
-      course: "CS301"
-    },
-    {
-      id: 4,
-      title: "Project Presentation",
-      dueDate: formatDateToString(dayAfterTomorrow),
-      course: "CS401"
-    },
-    {
-      id: 5,
-      title: "Weekly Quiz",
-      dueDate: formatDateToString(nextWeek),
-      course: "CS501"
-    },
-    {
-      id: 6,
-      title: "Final Project",
-      dueDate: formatDateToString(farFuture),
-      course: "CS601"
-    }
+    // {
+    //   id: 10,
+    //   title: "Overdue Assignment",
+    //   dueDate: formatDateToString(yesterday),
+    //   course: "CS101: Introduction to Programming",
+    //   type: "assignment",
+    //   courseColor: "bg-lucerablue-2 text-lucerablue-5"
+    // },
+    // {
+    //   id: 1,
+    //   title: "Overdue Exam", // Changed to Exam for variety
+    //   dueDate: "2025-06-09 20:00:00", // Overdue with time
+    //   course: "CS101",
+    //   type: "exam"
+    // },
+    // {
+    //   id: 2,
+    //   title: "Quiz Due Today", // Changed to Quiz
+    //   dueDate: formatDateToString(today),
+    //   course: "CS201",
+    //   type: "quiz"
+    // },
+    // {
+    //   id: 3,
+    //   title: "Lab Due Tomorrow", // Changed to Lab
+    //   dueDate: formatDateToString(tomorrow),
+    //   course: "CS301",
+    //   type: "lab"
+    // },
+    // {
+    //   id: 4,
+    //   title: "Project Presentation",
+    //   dueDate: formatDateToString(dayAfterTomorrow),
+    //   course: "CS401",
+    //   type: "project"
+    // },
+    // {
+    //   id: 5,
+    //   title: "Weekly Quiz",
+    //   dueDate: formatDateToString(nextWeek),
+    //   course: "CS501",
+    //   type: "quiz"
+    // },
+    // {
+    //   id: 6,
+    //   title: "Final Project",
+    //   dueDate: formatDateToString(farFuture),
+    //   course: "CS601",
+    //   type: "project"
+    // }
   ];
 
   const deadlines = dummyDeadlines;
 
   return (
-    <div className="bg-lucerablue-2 rounded shadow p-4 min-h-[220px]">
-      <h2 className="font-bold mb-4 text-blue-900 flex items-center gap-2">
+    <div className="bg-lucerablue-1 rounded-lg shadow-md p-4 md:px-6 min-h-[220px]">
+      <h2 className="font-bold mb-4 text-lucerablue-5 flex items-center gap-2 text-lg">
         UPCOMING DEADLINES
       </h2>
       <ul className="space-y-3">
-        {deadlines.map((dl) => (
-          <li key={dl.id} className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 bg-lucerablue-1 rounded-lg shadow-sm px-3 py-2 hover:bg-lucerablue-1/70 transition">
-            <span className="text-2xl hidden sm:block">{typeIcon(dl.title)}</span>
-            
-            <div className="flex-1 flex flex-col sm:flex-row sm:items-center w-full">
-              <div className="flex items-center gap-2 mb-1 sm:mb-0">
-                <span className="text-xl sm:hidden mr-1">{typeIcon(dl.title)}</span>
-                <span className="font-semibold text-blue-900 text-sm sm:text-base">{dl.title}</span>
+        {deadlines.map((dl) => {
+          const IconComponent = iconForType(dl.type);
+          return (
+            <li key={dl.id} className="flex flex-col md:flex-row items-start md:items-center justify-center gap-2 md:gap-3 bg-white/80 rounded-lg shadow-sm px-3 py-2 hover:shadow-md transition-shadow hover:cursor-pointer">   
+              <div className="flex-1 flex flex-col md:flex-row md:items-center w-full">
+                <div className="flex items-center gap-2 mb-1 md:mb-0">
+                  <span className="text-xl md:text-3xl mr-1 text-lucerablue-4">
+                    <IconComponent />
+                  </span>
+                  <span className="font-semibold text-lucerablue-5 text-sm md:text-base">{dl.title}</span>
+                </div>
+                <span className={`self-start md:self-center md:ml-2 px-2 py-0.5 rounded text-xs font-medium ${dl.courseColor}`}>
+                  {dl.course}
+                </span>
               </div>
-              
-              <span className={`self-start sm:ml-2 px-2 py-0.5 rounded text-xs font-medium ${typeColor(dl.title)}`}>
-                {dl.course}
+              <span className={`text-xs md:text-sm ${getDeadlineColor(dl.dueDate)} mt-1 md:mt-0`}>
+                {formatDate(dl.dueDate)}
               </span>
-            </div>
-            
-            <span className={`text-xs sm:text-sm ${getDeadlineColor(dl.dueDate)} mt-1 sm:mt-0`}>
-              {formatDate(dl.dueDate)}
-            </span>
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
       {deadlines.length === 0 && (
         <div className="text-center py-8 text-gray-500">
-          <div className="text-4xl mb-2">🎉</div>
+          <div className="text-4xl mb-2">
+            <PiConfetti className="inline-block text-lucerablue-4" />
+          </div>
           <p>No upcoming deadlines!</p>
         </div>
       )}

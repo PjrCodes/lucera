@@ -55,7 +55,7 @@ export default function Header({ session }: { session: Session | null }) {
   };
 
   return (
-    <header className="border-b border-yellow-600 sticky top-0 z-50 w-full bg-lucerayellow-3/80 backdrop-blur-lg supports-[backdrop-filter]:bg-lucerayellow-3/80">
+    <header className="border-b border-yellow-600 sticky top-0 z-50 w-full bg-lucerayellow-3/50 backdrop-blur-lg supports-[backdrop-filter]:bg-lucerayellow-3/50">
       <div className="px-4 py-4 h-14 flex flex-row items-center justify-between">
         {/* Sidebar button always visible */}
         <div className="flex flex-row items-center space-x-2 flex-shrink-0">
