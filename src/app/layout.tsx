@@ -5,12 +5,13 @@ import MainFooter from "@/components/footer";
 import Header from "@/components/header";
 import { AppSidebar } from "@/components/sidenav";
 import { SessionProvider } from "next-auth/react";
+import { HeaderProvider } from "@/context/HeaderContext";
 import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar";
 import { auth } from "@/auth";
-import Providers from "./providers";
+import ClientProviders from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,29 +36,33 @@ export default async function RootLayout({
   const session = await auth();
 
   return (
-    <html lang="en">
-      <SessionProvider>
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <Providers>
-            <div className="flex flex-col min-h-screen w-full [--header-height:calc(--spacing(14))] bg-bgcolor">
-              <SidebarProvider className="flex flex-col flex-1">
-                <Header session={session} />
-                <div className="flex flex-1">
-                  <AppSidebar />
-                  <SidebarInset className="flex flex-col flex-1">
-                    <main className="flex-1">
-                      <div className="relative mx-auto">
-                        {children}
-                      </div>
-                    </main>
-                    <MainFooter />
-                  </SidebarInset>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <ClientProviders>
+            <SessionProvider>
+              <HeaderProvider>
+                <div className="flex flex-col min-h-screen w-full [--header-height:calc(--spacing(14))] bg-bgcolor">
+                  <SidebarProvider className="flex flex-col flex-1">
+                    <Header session={session} />
+                    <div className="flex flex-1">
+                      <AppSidebar />
+                      <SidebarInset className="flex flex-col flex-1">
+                        <main className="flex-1">
+                          <div className="relative mx-auto">
+                            {children}
+                          </div>
+                        </main>
+                        <MainFooter />
+                      </SidebarInset>
+                    </div>
+                  </SidebarProvider>
                 </div>
-              </SidebarProvider>
-            </div>
-          </Providers>
-        </body>
-      </SessionProvider>
+              </HeaderProvider>
+            </SessionProvider>
+        </ClientProviders>
+      </body>
     </html>
   );
 }

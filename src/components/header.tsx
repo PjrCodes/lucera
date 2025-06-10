@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Added useEffect
 import SearchBarElement from "./searchBarElement";
 import { CiEdit } from "react-icons/ci";
 import ProfileCircle from "./profileCircle";
@@ -13,6 +13,7 @@ import { IoMdHome } from "react-icons/io";
 import Link from "next/link";
 import { Session } from "next-auth";
 import Bell from "./bell";
+import { useHeader } from "@/context/HeaderContext"; // Added import
 
 // Accept session as a prop instead of fetching it on the client
 export default function Header({ session }: { session: Session | null }) {
@@ -20,31 +21,27 @@ export default function Header({ session }: { session: Session | null }) {
   const router = useRouter();
   const { toggleSidebar } = useSidebar();
   const [searchExpanded, setSearchExpanded] = useState(false);
+  const { headerTitle, setHeaderTitle } = useHeader(); // Consuming header context
 
   const isLoggedIn = session?.user ? true : false;
   const isHomePage = pathname === "/";
   const isLisaPage = pathname === "/lisa";
 
-  // Dynamically set currentPage based on the current route
-  let currentPage = "";
-  if (isLoggedIn) {
-    if (pathname) {
-      if (pathname === "/") {
-        currentPage = "DASHBOARD";
-      } else {
-        const segments = pathname.split("/").filter(Boolean);
-        currentPage =
-          segments.length > 0
-            ? segments[segments.length - 1]
-                .replace(/-/g, " ")
-                .replace(/\b\w/g, (c) => c.toUpperCase())
-                .toUpperCase()
-            : "KNOWHERE.";
-      }
+  // Set default header title if not logged in
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setHeaderTitle("LUCERA");
     }
-  } else {
-    currentPage = "LUCERA";
-  }
+    // If logged in, pages should set their own titles.
+    // As a fallback, or for pages not yet updated, we can set a default title here.
+    else if (isHomePage) {
+      setHeaderTitle("DASHBOARD");
+    }
+    // Add other general fallbacks if necessary
+    else {
+      setHeaderTitle("LUCERA"); // Default title for other pages
+    }
+  }, [isLoggedIn, isHomePage, setHeaderTitle, pathname]);
 
   // Handler for search submit
   const handleSearch = (query: string) => {
@@ -85,7 +82,7 @@ export default function Header({ session }: { session: Session | null }) {
               searchExpanded ? "hidden sm:block" : "block"
             }`}
           >
-            {currentPage}
+            {headerTitle} {/* Use headerTitle from context */}
           </h1>
         </div>
         {isLoggedIn ? (
@@ -115,7 +112,7 @@ export default function Header({ session }: { session: Session | null }) {
               <Bell></Bell>
             </span>
             {/* Edit icon: only show on Dashboard and never on mobile */}
-            {currentPage === "Dashboard" && (
+            {headerTitle === "DASHBOARD" && ( // Use headerTitle for conditional rendering
               <span className="hidden sm:inline">
                 <CiEdit
                   size={32}

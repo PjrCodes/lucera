@@ -1,21 +1,31 @@
 import React from "react";
 import { redirectUnauthenticated } from "@/auth";
-import SignOut from "@/components/buttons/signOutButton";
 import { redirect } from "next/navigation";
 import client from "@/lib/db";
-import Link from "next/link";
+import SetHeaderClientComponent from "./SetHeaderClientComponent"; // Added import
+import SignOut from "@/components/buttons/signOutButton";
+import { Link } from "lucide-react";
 
 export default async function ProfilePage() {
-  
   const session = await redirectUnauthenticated();
+
+  // Define UserData type locally or import from a shared file
   type UserData = {
     id: string;
     role?: string;
   };
+
+  // Ensure session and session.user exist before trying to access session.user.id
+  if (!session?.user?.id) {
+    // This case should ideally be handled by redirectUnauthenticated,
+    // but as a fallback, redirect to login or an error page.
+    return redirect("/"); // Or your login page
+  }
+
   const userData: UserData | null = await client
     .db()
     .collection<UserData>("user_data")
-    .findOne({ id: session?.user?.id });
+    .findOne({ id: session.user.id }); // session.user.id is now guaranteed to be a string
 
   if (!userData) {
     // error - log out and show error message
@@ -23,8 +33,11 @@ export default async function ProfilePage() {
     return redirect("/select-role");
   }
 
+  // Pass session and userData to the client component
   return (
-    <main className="h-screen w-full flex flex-col px-4 py-4">
+    <>
+      <SetHeaderClientComponent title="PROFILE" />
+      <main className="h-screen w-full flex flex-col px-4 py-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl">Your Profile</h1>
       </div>
@@ -53,5 +66,6 @@ export default async function ProfilePage() {
         </div>
       </div>
     </main>
+    </>
   );
 }

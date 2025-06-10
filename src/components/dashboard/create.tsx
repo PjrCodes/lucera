@@ -1,4 +1,6 @@
+"use client";
 import React from "react";
+import Link from "next/link";
 import { Session } from "next-auth";
 import { iconForType } from "@/constants";
 
@@ -7,6 +9,7 @@ interface Option {
   type: string;
   label: string;
   icon: React.ReactNode;
+  href: string;
 }
 
 interface Props {
@@ -21,84 +24,63 @@ const Create: React.FC<Props> = ({ session, isTeacher }) => {
       id: 1,
       type: "course",
       label: "New Course",
-      icon: React.createElement(iconForType("course")) // Render the icon as a React element
+      icon: React.createElement(iconForType("course")),
+      href: "/create/course"
     },
     {
       id: 2, 
       type: "assignment",
       label: "New Assignment",
-      icon: React.createElement(iconForType("assignment"))
+      icon: React.createElement(iconForType("assignment")),
+      href: "/create/assignment"
     },
     {
       id: 4,
       type: "announcement",
       label: "New Announcement",
-      icon: React.createElement(iconForType("announcement"))
+      icon: React.createElement(iconForType("announcement")),
+      href: "/create/announcement"
     },
     {
       id: 5,
       type: "content",
       label: "Course Content",
-      icon: React.createElement(iconForType("content"))
+      icon: React.createElement(iconForType("content")),
+      href: "/create/content"
     },
     {
       id: 6,
       type: "poll",
       label: "New Poll",
-      icon: React.createElement(iconForType("poll"))
+      icon: React.createElement(iconForType("poll")),
+      href: "/create/poll"
     },
     {
       id: 7,
       type: "report",
       label: "Generate Report",
-      icon: React.createElement(iconForType("analytics"))
+      icon: React.createElement(iconForType("analytics")),
+      href: "/create/report"
     }
   ];
 
   const options = dummyOptions;
 
   return (
-    <div className="bg-pink-50 rounded shadow p-4 min-h-[220px]">
-      <h2 className="font-bold mb-4 text-pink-900 text-lg">CREATE</h2>
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 auto-rows-fr">
-        {options.map((opt, index) => {
-          const isLastItem = index === options.length - 1;
-          const classParts = [];
-
-          if (isLastItem) {
-            const numItems = options.length;
-
-            // Default behavior (2 columns)
-            if (numItems % 2 === 1) {
-              classParts.push("col-span-2");
-            }
-
-            // MD behavior (3 columns)
-            if (numItems % 3 === 1) {
-              // Last item is alone in a 3-column layout row
-              classParts.push("md:col-span-3");
-            } else if (numItems % 3 === 2) {
-              // Last item is the second of two in a 3-column layout row
-              classParts.push("md:col-span-2");
-            } else {
-              // numItems % 3 === 0: Row is full for md, or it's a single item that needs specific handling.
-              // This ensures it takes md:col-span-1 if col-span-2 was applied for smaller screens
-              // and the md row is actually full or it's the only item in its row for md.
-              classParts.push("md:col-span-1");
-            }
-          }
-          const itemSpanClass = classParts.join(" ");
-
-          return (
-            <button 
-              key={opt.id} 
-              className={`flex flex-col items-center justify-center gap-2 bg-pink-500 text-white p-3 rounded-lg hover:bg-pink-600 transition-colors text-sm h-full min-h-[5rem] ${itemSpanClass}`}
+    <div className="bg-lucerarose-1 rounded shadow p-4 min-h-[220px]">
+      <h2 className="font-bold mb-4 text-lucerarose-5 text-lg">CREATE</h2>
+      <div className="grid grid-cols-2 grid-rows-3 gap-3 auto-rows-fr">
+        {options.map((opt) => (
+          <Link href={opt.href} key={opt.id} className="contents">
+            <button
+              className="flex flex-row items-center justify-start gap-3 bg-lucerarose-3 text-white p-3 rounded-lg hover:bg-lucerarose-4 transition-colors text-sm h-full min-h-[3.5rem] cursor-pointer w-full"
+              type="button"
             >
-              <span className="text-2xl">{opt.icon}</span>
-              <span className="text-center w-full line-clamp-2 overflow-ellipsis">{opt.label}</span>
+              <span className="text-2xl flex-shrink-0">{opt.icon}</span>
+              <span className="text-left w-full break-words">{opt.label}</span>
             </button>
-          );
-        })}
+          </Link>
+        ))}
       </div>
     </div>
   );
