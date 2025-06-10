@@ -6,6 +6,7 @@ import client from "@/lib/db";
 import { redirectUnauthenticated } from "@/auth";
 import { MyMarkdown } from "@/components/markdown";
 import { CoursePageSkeleton, CourseHeaderSkeleton, CourseDescriptionSkeleton, CourseUnitsSkeleton, CourseTimelineSkeleton } from "@/components/course-skeleton";
+import SetHeaderClientComponent from "@/app/profile/SetHeaderClientComponent";
 
 interface CourseUnit {
   name: string;
@@ -318,6 +319,8 @@ export default async function CourseViewPage({
   if (!courseExists) return notFound();
 
   return (
+    <>
+     <SetHeaderClientComponent title={courseExists.name.toUpperCase()} />
     <div className="max-w-3xl mx-auto py-8">
       <div className="space-y-6">
         <Suspense fallback={<CourseHeaderSkeleton />}>
@@ -337,5 +340,6 @@ export default async function CourseViewPage({
         </Suspense>
       </div>
     </div>
+    </>
   );
 }

@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/sidebar";
 import { auth } from "@/auth";
 import ClientProviders from "./providers";
+import React from "react";
+import { getUserData } from "@/lib/databaseService";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +36,20 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+  const userDataDoc = await getUserData(session?.user?.id || "");
+  const userData = {
+    role: userDataDoc?.role || "norole", // Default to 'user' if role is not defined
+    dashboardLayout: userDataDoc?.dashboardLayout || "default",
+  }  
+
+  const childrenNodeProps = {session: session, userData: userData};
+  // If you need to pass session to children components, you can do so here
+  const childrenWithProps = React.Children.map(children, (child) => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, childrenNodeProps);
+    }
+    return child;
+  });
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -45,13 +61,13 @@ export default async function RootLayout({
               <HeaderProvider>
                 <div className="flex flex-col min-h-screen w-full [--header-height:calc(--spacing(14))] bg-bgcolor">
                   <SidebarProvider className="flex flex-col flex-1">
-                    <Header session={session} />
+                    <Header session={session} userData={userData} />
                     <div className="flex flex-1">
                       <AppSidebar />
                       <SidebarInset className="flex flex-col flex-1">
                         <main className="flex-1">
-                          <div className="relative mx-auto">
-                            {children}
+                          <div className="flex flex-col items-center justify-start w-full h-full">
+                            {childrenWithProps}
                           </div>
                         </main>
                         <MainFooter />

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react"; // Added useEffect
+import React, { useState, useEffect } from "react";
 import SearchBarElement from "./searchBarElement";
 import { CiEdit } from "react-icons/ci";
 import ProfileCircle from "./profileCircle";
@@ -13,19 +13,26 @@ import { IoMdHome } from "react-icons/io";
 import Link from "next/link";
 import { Session } from "next-auth";
 import Bell from "./bell";
-import { useHeader } from "@/context/HeaderContext"; // Added import
+import { useHeader } from "@/context/HeaderContext";
+import DashboardEditModal from "./dashboard/DashboardEditModal";
 
 // Accept session as a prop instead of fetching it on the client
-export default function Header({ session }: { session: Session | null }) {
+export default function Header({ session, userData }: { session: Session | null, userData?: any }) {
   const pathname = usePathname();
   const router = useRouter();
   const { toggleSidebar } = useSidebar();
   const [searchExpanded, setSearchExpanded] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Add edit modal state
   const { headerTitle, setHeaderTitle } = useHeader(); // Consuming header context
 
   const isLoggedIn = session?.user ? true : false;
   const isHomePage = pathname === "/";
   const isLisaPage = pathname === "/lisa";
+
+  const cleanedUserData = {
+    role: userData?.role || "student", // Default to 'user' if role is not defined
+    dashboardLayout: userData?.dashboardLayout || "default", // Default to 'default' layout if not defined
+  }
 
   // Set default header title if not logged in
   useEffect(() => {
@@ -112,11 +119,12 @@ export default function Header({ session }: { session: Session | null }) {
               <Bell></Bell>
             </span>
             {/* Edit icon: only show on Dashboard and never on mobile */}
-            {headerTitle === "DASHBOARD" && ( // Use headerTitle for conditional rendering
+            {headerTitle === "DASHBOARD" && (
               <span className="hidden sm:inline">
                 <CiEdit
                   size={32}
                   className="cursor-pointer hover:text-gray-500"
+                  onClick={() => setIsEditModalOpen(true)} // Add click handler
                 />
               </span>
             )}
@@ -128,6 +136,14 @@ export default function Header({ session }: { session: Session | null }) {
           <SignIn />
         )}
       </div>
+
+      {/* Add Dashboard Edit Modal */}
+      <DashboardEditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        userData={cleanedUserData}
+        userId={session?.user?.id || ""} // Pass userId from session
+      />
     </header>
   );
 }

@@ -8,6 +8,7 @@ import Bookmarks from "./dashboard/bookmarks";
 import Create from "./dashboard/create";
 import defaults from "../../data/defaults.json";
 import dashboardControlList from "../../data/acl/dashboard.json";
+import { MdBrokenImage } from "react-icons/md";
 
 interface Props {
   session: Session | null;
@@ -16,6 +17,7 @@ interface Props {
     leftColumn: string[];
     rightColumn: string[];
   } | null;
+  onLayoutChange?: () => void; // Add callback for layout changes
 }
 
 interface ComponentProps {
@@ -116,6 +118,7 @@ const AuthDashboard: NextPage<Props> = ({
   session,
   isTeacher,
   dashboardLayout,
+  onLayoutChange,
 }) => {
 
   // Props object for component rendering - only session and role data
@@ -146,6 +149,20 @@ const AuthDashboard: NextPage<Props> = ({
     uncleanLayout,
     isTeacher
   );
+
+  if (currentLayout.leftColumn.length === 0 && currentLayout.rightColumn.length === 0) {
+    return (
+      <main className="w-full h-full px-4 py-4 bg-transparent">
+        <div className="w-full h-full flex flex-1 flex-col justify-center text-center text-gray-500">
+          <MdBrokenImage size={48} className="mx-auto mb-4" />
+          <h2 className="text-lg font-semibold mb-2">No Components Found</h2>
+          You have no components in your dashboard! Please use the edit button to add some!
+          <br></br>
+          You can also choose to reset your dashboard to the default layout.
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="w-full flex flex-col px-4 py-4 flex-1 bg-transparent">
