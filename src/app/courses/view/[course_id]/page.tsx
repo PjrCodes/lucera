@@ -6,7 +6,7 @@ import client from "@/lib/db";
 import { redirectUnauthenticated } from "@/auth";
 import { MyMarkdown } from "@/components/markdown";
 import { CoursePageSkeleton, CourseHeaderSkeleton, CourseDescriptionSkeleton, CourseUnitsSkeleton, CourseTimelineSkeleton } from "@/components/course-skeleton";
-import SetHeaderClientComponent from "@/app/profile/SetHeaderClientComponent";
+import SetHeaderClientComponent from "@/components/SetHeaderClientComponent";
 
 interface CourseUnit {
   name: string;

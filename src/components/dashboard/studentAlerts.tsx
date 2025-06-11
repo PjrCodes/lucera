@@ -46,12 +46,12 @@ const StudentAlerts: React.FC<Props> = ({ session, isTeacher }) => {
   const alerts = dummyAlerts.sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
 
   return (
-    <div className="bg-lucerayellow-1 rounded-lg shadow-md p-4 md:px-6 min-h-[220px] flex flex-col">
-      <h2 className="text-lg font-bold text-lucerayellow-5 mb-4 flex items-center gap-2">
+    <div className="bg-lucerared-1 rounded-lg shadow-md p-4 md:px-6 min-h-[220px] flex flex-col">
+      <h2 className="text-lg font-bold text-lucerared-5 mb-4 flex items-center gap-2">
         STUDENT ALERTS
       </h2>
       {alerts.length === 0 ? (
-        <div className="flex-1 flex flex-col items-center justify-center text-lucerayellow-4">
+        <div className="flex-1 flex flex-col items-center justify-center text-lucerared-4">
           <MdWarningAmber className="text-5xl mb-2" />
           <p className="text-lg">No major student issues detected.</p>
         </div>
@@ -80,7 +80,7 @@ const StudentAlerts: React.FC<Props> = ({ session, isTeacher }) => {
                   <MdWarningAmber />
                 </span>
                 <div className="flex-1">
-                  <div className="font-semibold text-lucerayellow-5 text-sm md:text-base">
+                  <div className="font-semibold text-lucerared-5 text-sm md:text-base">
                     {alert.message}
                   </div>
                   {alert.detail && (

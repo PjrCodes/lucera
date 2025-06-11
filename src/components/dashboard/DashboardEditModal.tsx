@@ -3,11 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent, useDraggable, DragOverlay, Active, defaultDropAnimation, useDroppable, DragStartEvent, DragMoveEvent } from '@dnd-kit/core';
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { createPortal } from 'react-dom';
+import { DndContext, pointerWithin, PointerSensor, useSensor, useSensors, DragEndEvent, useDraggable, DragOverlay, Active, useDroppable, DragStartEvent } from '@dnd-kit/core';
+import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import DraggableItem from './DraggableItem';
 import dashboardAcl from '../../../data/acl/dashboard.json';
+import defaultLayouts from '../../../data/defaults.json';
 import { DASHBOARD_ELEMENT_TO_NAME } from '@/constants';
 
 interface DashboardEditModalProps {
@@ -49,11 +51,11 @@ const SourceDraggableElement = ({ elementType, isOverlay, isDropAllowed }: { ele
       {...(isOverlay ? {} : listeners)} 
       {...(isOverlay ? {} : attributes)} 
       className={`px-4 py-2 border rounded-md text-sm font-medium whitespace-nowrap transition-all
-                  ${isOverlay && !isDropAllowed 
-                    ? 'border-red-500 bg-red-100 text-red-700 cursor-not-allowed shadow-lg' 
+                  ${isOverlay && !isDropAllowed
+                    ? 'border-lucerared-4 bg-lucerared-1 text-lucerared-4 cursor-not-allowed shadow-lg'
                     : isOverlay
-                    ? 'border-gray-300 bg-white text-gray-700 shadow-lg cursor-grabbing'
-                    : 'border-gray-300 bg-gray-100 text-gray-700 shadow-sm hover:shadow-md hover:bg-gray-200 cursor-grab'}`}
+                    ? 'border-[color:var(--color-lucerabrown-4)] bg-[color:var(--color-lucerabrown-1)] text-[color:var(--color-lucerabrown-5)] shadow-lg cursor-grabbing'
+                    : 'border-[color:var(--color-lucerabrown-3)] bg-[color:var(--color-lucerabrown-2)] text-[color:var(--color-lucerabrown-5)] shadow-sm hover:shadow-md hover:bg-[color:var(--color-lucerabrown-3)] cursor-grab'}`}
     >
       {DASHBOARD_ELEMENT_TO_NAME[elementType as keyof typeof DASHBOARD_ELEMENT_TO_NAME]}
     </div>
@@ -65,24 +67,25 @@ const DraggedItemOverlay = ({ label, isDropAllowed }: { label: string, isDropAll
   return (
     <div className={`p-3 border rounded-lg text-sm font-medium shadow-lg transition-all
                     ${!isDropAllowed 
-                      ? 'border-red-500 bg-red-100 text-red-700 cursor-not-allowed' 
-                      : 'border-gray-300 bg-white text-gray-700 cursor-grabbing'}`}>
+                      ? 'border-[color:var(--color-lucerared-4)] bg-[color:var(--color-lucerared-1)] text-[color:var(--color-lucerared-5)] cursor-not-allowed' 
+                      : 'border-[color:var(--color-lucerabrown-4)] bg-[color:var(--color-lucerabrown-1)] text-[color:var(--color-lucerabrown-5)] cursor-grabbing'}`}>
       {label}
     </div>
   );
 };
 
 // Droppable container component
-const DroppableColumn = ({ id, children, isEmpty }: { id: string, children: React.ReactNode, isEmpty: boolean }) => {
-  const { setNodeRef, isOver } = useDroppable({
-    id: id,
-  });
+const DroppableColumn = ({ id, children, isEmpty, activeColumn }: { id: string; children: React.ReactNode; isEmpty: boolean; activeColumn: 'left' | 'right' | null }) => {
+  const { setNodeRef, isOver } = useDroppable({ id });
+
+  const isColumnActive = (id === 'left-column-container' && activeColumn === 'left') ||
+                         (id === 'right-column-container' && activeColumn === 'right');
 
   return (
     <div 
       ref={setNodeRef}
       className={`min-h-[300px] p-4 border-2 border-dashed rounded-lg transition-colors
-                  ${isOver ? 'border-blue-400 bg-blue-50' : 'border-gray-300 bg-gray-50'}`}
+                  ${isOver || isColumnActive ? 'border-[color:var(--color-lucerabrown-5)] bg-[color:var(--color-lucerabrown-2)]' : 'border-[color:var(--color-lucerabrown-3)] bg-[color:var(--color-lucerabrown-1)]'}`}
     >
       {children}
       {isEmpty && (
@@ -100,11 +103,14 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
   const [activeDragData, setActiveDragData] = useState<Active | null>(null);
   const [isDropCurrentlyAllowed, setIsDropCurrentlyAllowed] = useState(true);
   const [nextUniqueCounter, setNextUniqueCounter] = useState(0); // Global counter for uniqueness
+  const [activeColumn, setActiveColumn] = useState<'left' | 'right' | null>(null); // Track which column is active
 
 
   const userRole = userData?.role || 'student';
 
-  const sensors = useSensor(PointerSensor);
+  const sensors = useSensors(
+    useSensor(PointerSensor)
+  );
 
   const roleAllowedElementTypes = dashboardAcl.role_restrictions[userRole as keyof typeof dashboardAcl.role_restrictions] || [];
   const leftColumnAllowedTypes = dashboardAcl.column_restrictions.leftColumn;
@@ -146,6 +152,43 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
       setNextUniqueCounter(globalCounter); // Set the next available counter
     } catch (error) {
       console.error('Failed to load dashboard layout:', error);
+    } finally {
+      setLoading(false);
+    }
+  };  // Added function to reset to default layout
+  const resetToDefault = () => {
+    setLoading(true);
+    try {
+      // Use the imported defaults directly
+      const defaultLayout = defaultLayouts.dashboardLayout;
+      
+      // Get default layout for user role
+      const layout = defaultLayout[userRole as keyof typeof defaultLayouts.dashboardLayout] || {
+        leftColumn: [],
+        rightColumn: []
+      };
+      
+      let globalCounter = 0;
+      
+      const leftItems = layout.leftColumn.map((type: string) => {
+        const instanceId = `left-${globalCounter}`;
+        const id = `${type}-${instanceId}`;
+        globalCounter++;
+        return { id, type, instanceId };
+      });
+
+      const rightItems = layout.rightColumn.map((type: string) => {
+        const instanceId = `right-${globalCounter}`;
+        const id = `${type}-${instanceId}`;
+        globalCounter++;
+        return { id, type, instanceId };
+      });
+      
+      setLeftColumn(leftItems);
+      setRightColumn(rightItems);
+      setNextUniqueCounter(globalCounter);
+    } catch (error) {
+      console.error('Failed to reset to default layout:', error);
     } finally {
       setLoading(false);
     }
@@ -205,6 +248,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
     if (!over || !active) {
       setIsDropCurrentlyAllowed(false);
       document.body.style.cursor = 'not-allowed';
+      setActiveColumn(null);
       return;
     }
 
@@ -223,6 +267,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
     if (!elementType) {
       setIsDropCurrentlyAllowed(false);
       document.body.style.cursor = 'not-allowed';
+      setActiveColumn(null);
       return;
     }
 
@@ -241,6 +286,9 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
         targetColumnName = overItem.column;
       }
     }
+
+    // Update the active column state
+    setActiveColumn(targetColumnName);
 
     let isAllowed = true;
 
@@ -273,12 +321,14 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
   const handleDragCancel = () => {
     setActiveDragData(null);
     setIsDropCurrentlyAllowed(true);
+    setActiveColumn(null);
     document.body.style.cursor = '';
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     setActiveDragData(null);
     setIsDropCurrentlyAllowed(true);
+    setActiveColumn(null);
     document.body.style.cursor = '';
 
     const { active, over } = event;
@@ -416,32 +466,15 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
   };
 
 
-  const handleDragMove = (event: DragMoveEvent) => {
-    // move the currently dragged item towards the left by
-    // screen width / 2 pixels
-    const { active, delta } = event;
-    if (active.data.current?.isSource) {
-      // For source items, we don't need to adjust position
-      return;
-    }
-    const item = findItemById(active.id as string);
-    
-    if (item) {
-      const shiftAmount = window.innerWidth / 2;
-      // Apply transform to shift the item left
-      const element = document.querySelector(`[data-dnd-kit-drag-overlay-wrapper]`);
-      if (element) {
-        (element as HTMLElement).style.transform = `translate3d(${delta.x - shiftAmount}px, ${delta.y}px, 0)`;
-      }
-    }
-  }
-
   if (loading) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="max-w-4xl border-2 border-[color:var(--color-lucerabrown-4)] bg-[color:var(--color-lucerabrown-1)]">
+          <DialogHeader>
+            <DialogTitle className="text-lucerabrown-5">Loading Dashboard Layout</DialogTitle>
+          </DialogHeader>
           <div className="flex items-center justify-center p-8">
-            <div className="text-lg">Loading dashboard layout...</div>
+            <span className="inline-block w-10 h-10 border-4 border-[color:var(--color-lucerabrown-4)] border-t-transparent rounded-full animate-spin" aria-label="Loading" />
           </div>
         </DialogContent>
       </Dialog>
@@ -450,16 +483,15 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] flex flex-col">
-        <DialogHeader>
-          <DialogTitle>Edit Dashboard Layout</DialogTitle>
+      <DialogContent className="max-w-6xl max-h-[90vh] flex flex-col border-2 border-[color:var(--color-lucerabrown-4)] bg-[color:var(--color-lucerabrown-1)]">
+        <DialogHeader className="rounded-t-lg">
+          <DialogTitle className="text-lucerabrown-5">Customise your Dashboard</DialogTitle>
         </DialogHeader>
         
         <DndContext
-          sensors={[sensors]}
-          collisionDetection={closestCenter}
+          sensors={sensors}
+          collisionDetection={pointerWithin}
           onDragStart={handleDragStart}
-          onDragMove={handleDragMove}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
           onDragCancel={handleDragCancel}
@@ -469,8 +501,8 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
             <div className="grid grid-cols-2 gap-6">
               {/* Left Column */}
               <div className="space-y-2">
-                <h3 className="font-semibold text-center">Left Column</h3>
-                <DroppableColumn id="left-column-container" isEmpty={leftColumn.length === 0}>
+                <h3 className="font-semibold text-center text-[color:var(--color-lucerabrown-5)]">Left Column</h3>
+                <DroppableColumn id="left-column-container" isEmpty={leftColumn.length === 0} activeColumn={activeColumn}>
                   <SortableContext id="left-column-sorter" items={leftColumn.map(item => item.id)} strategy={verticalListSortingStrategy}>
                     {leftColumn.map(item => (
                       <DraggableItem 
@@ -486,8 +518,8 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
 
               {/* Right Column */}
               <div className="space-y-2">
-                <h3 className="font-semibold text-center">Right Column</h3>
-                <DroppableColumn id="right-column-container" isEmpty={rightColumn.length === 0}>
+                <h3 className="font-semibold text-center text-[color:var(--color-lucerabrown-5)]">Right Column</h3>
+                <DroppableColumn id="right-column-container" isEmpty={rightColumn.length === 0} activeColumn={activeColumn}>
                   <SortableContext id="right-column-sorter" items={rightColumn.map(item => item.id)} strategy={verticalListSortingStrategy}>
                     {rightColumn.map(item => (
                       <DraggableItem 
@@ -503,10 +535,10 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
             </div>
 
             {/* Add Elements Panel - Fully Visible Grid */}
-            <div className="mt-6 pt-6 border-t">
-              <h3 className="font-semibold text-center mb-4">Add Elements (Drag to a column)</h3>
+            <div>
+              <h3 className="font-semibold text-center text-[color:var(--color-lucerabrown-5)] mb-4">Add Elements (Drag to a column)</h3>
               {roleAllowedElementTypes.length > 0 ? (
-                <div className="flex flex-wrap gap-3 p-3 justify-center bg-gray-50 rounded-lg shadow">
+                <div className="flex flex-wrap gap-3 p-3 justify-center bg-[color:var(--color-lucerabrown-1)] border-2 border-[color:var(--color-lucerabrown-3)] rounded-lg shadow">
                   {roleAllowedElementTypes.map(elementType => (
                     <SourceDraggableElement key={`source-${elementType}`} elementType={elementType} />
                   ))}
@@ -519,31 +551,40 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
             </div>
           </div>
           
-          <DragOverlay>
-            {activeDragData ? (
-              activeDragData.data.current?.isSource ? (
-                <SourceDraggableElement
-                  elementType={activeDragData.data.current.elementType}
-                  isOverlay
-                  isDropAllowed={isDropCurrentlyAllowed}
-                />
-              ) : (
-                <DraggedItemOverlay
-                  label={DASHBOARD_ELEMENT_TO_NAME[findItemById(activeDragData.id as string)?.item.type as keyof typeof DASHBOARD_ELEMENT_TO_NAME] || 'Unknown'}
-                  isDropAllowed={isDropCurrentlyAllowed}
-                />
-              )
-            ) : null}
-          </DragOverlay>
+          {typeof window !== 'undefined' && createPortal(
+            <DragOverlay>
+              {activeDragData ? (
+                activeDragData.data.current?.isSource ? (
+                  <SourceDraggableElement
+                    elementType={activeDragData.data.current.elementType}
+                    isOverlay
+                    isDropAllowed={isDropCurrentlyAllowed}
+                  />
+                ) : (
+                  <DraggedItemOverlay
+                    label={DASHBOARD_ELEMENT_TO_NAME[findItemById(activeDragData.id as string)?.item.type as keyof typeof DASHBOARD_ELEMENT_TO_NAME] || 'Unknown'}
+                    isDropAllowed={isDropCurrentlyAllowed}
+                  />
+                )
+              ) : null}
+            </DragOverlay>,
+            document.body
+          )}
         </DndContext>
-        
-        <DialogFooter className="mt-auto pt-6 border-t">
-          <Button variant="outline" onClick={onClose} disabled={saving}>
-            Cancel
-          </Button>
-          <Button onClick={handleSave} disabled={saving}>
-            {saving ? 'Saving...' : 'Save Layout'}
-          </Button>
+          <DialogFooter className="mt-auto pt-6">
+          <div className="flex items-center gap-2 w-full justify-between">
+            <Button variant="outline" onClick={resetToDefault} disabled={loading || saving} type="button" className="border-lucerared-2 text-lucerared-4 hover:bg-lucerared-2 hover:text-lucerared-5 cursor-pointer">
+              Reset to Default
+            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={onClose} disabled={saving} type="button" className="border-lucerabrown-4 text-lucerabrown-5 hover:bg-lucerabrown-2 cursor-pointer">
+                Cancel
+              </Button>
+              <Button onClick={handleSave} disabled={saving} type="button" className="bg-[color:var(--color-lucerabrown-4)] text-white hover:bg-[color:var(--color-lucerabrown-5)] cursor-pointer">
+                {saving ? 'Saving...' : 'Save Layout'}
+              </Button>
+            </div>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

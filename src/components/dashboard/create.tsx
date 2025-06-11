@@ -67,7 +67,7 @@ const Create: React.FC<Props> = ({ session, isTeacher }) => {
   const options = dummyOptions;
 
   return (
-    <div className="bg-lucerarose-1 rounded shadow p-4 min-h-[220px]">
+    <div className="bg-lucerarose-1 rounded-lg shadow-md p-4">
       <h2 className="font-bold mb-4 text-lucerarose-5 text-lg">CREATE</h2>
       <div className="grid grid-cols-2 grid-rows-3 gap-3 auto-rows-fr">
         {options.map((opt) => (
@@ -77,7 +77,7 @@ const Create: React.FC<Props> = ({ session, isTeacher }) => {
               type="button"
             >
               <span className="text-2xl flex-shrink-0">{opt.icon}</span>
-              <span className="text-left w-full break-words">{opt.label}</span>
+              <span className="text-left w-full line-clamp-2 overflow-hidden text-ellipsis">{opt.label}</span>
             </button>
           </Link>
         ))}

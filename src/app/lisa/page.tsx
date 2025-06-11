@@ -1,77 +1,224 @@
-'use client';
+// @ts-nocheck
+"use client"
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 
-import { useState, useRef, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-
-// Lucera color palette
-const LUCERA = {
-  yellow: 'bg-[#FEE085] text-[#7a5c00]',
-  blue: 'bg-[#4FCBDB] text-[#0a3a43]',
-  red: 'bg-[#FE6D6D] text-[#7a2323]',
-  rose: 'bg-[#F83E85] text-[#6d1b3a]',
-  brown: 'bg-[#C79092] text-[#4e2a2b]',
-  green: 'bg-[#3ec300] text-[#173d00]',
-  gray: 'bg-[#697480] text-[#23272e]',
-  offwhite: 'bg-[#D4D4D4] text-[#23272e]',
-};
+import { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import SetHeaderClientComponent from "@/components/SetHeaderClientComponent";
+import { useSession } from "next-auth/react";
+import {
+  PiChatTeardrop,
+  PiCaretUp,
+  PiBooks,
+  PiTag,
+} from "react-icons/pi";
+import { iconForType } from "@/constants";
+import { MultiSelect } from "@/components/ui/MultiSelect";
 
 interface Message {
   id: string;
   text: string;
-  sender: 'user' | 'lisa';
+  sender: "user" | "lisa";
   timestamp: Date;
-  type?: 'book' | 'letter' | 'info';
+  type?: "assignment" | "quiz" | "lecture" | "material" | "general";
+  course?: string;
 }
+
+interface FilterState {
+  assignments: boolean;
+  quizzes: boolean;
+  lectures: boolean;
+  materials: boolean;
+}
+
+interface Course {
+  id: string;
+  name: string;
+  color: keyof typeof COURSE_COLORS;
+}
+
+interface ContentType {
+  id: string;
+  name: string;
+  icon: string;
+}
+
+const COURSE_COLORS = {
+  blue: "bg-lucerablue-2 text-lucerablue-5 border-lucerablue-3",
+  green: "bg-luceragreen-2 text-luceragreen-5 border-luceragreen-3",
+  rose: "bg-lucerarose-2 text-lucerarose-5 border-lucerarose-3",
+  purple: "bg-lucerapurple-2 text-lucerapurple-5 border-lucerapurple-3",
+  brown: "bg-lucerabrown-2 text-lucerabrown-5 border-lucerabrown-3",
+  red: "bg-lucerared-2 text-lucerared-5 border-lucerared-3",
+};
+
+const MOCK_COURSES: Course[] = [
+  { id: "cs101", name: "Computer Science 101", color: "blue" },
+  { id: "math201", name: "Calculus II", color: "green" },
+  { id: "phys101", name: "Physics I", color: "rose" },
+  { id: "eng102", name: "English Literature", color: "purple" },
+  { id: "hist201", name: "World History", color: "brown" },
+];
+
+const CONTENT_TYPES: ContentType[] = [
+  { id: "assignment", name: "Assignment", icon: "assignment" },
+  { id: "quiz", name: "Quiz", icon: "quiz" },
+  { id: "exam", name: "Exam", icon: "exam" },
+  { id: "content", name: "Content", icon: "content" },
+  { id: "lab", name: "Lab", icon: "lab" },
+  { id: "project", name: "Project", icon: "project" },
+  { id: "announcement", name: "Announcement", icon: "announcement" },
+];
 
 function ChatHeader() {
   return (
-    <header className="w-full border-b bg-[#FEE085]">
-      <div className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-3">
-        <span className="text-2xl" role="img" aria-label="books">📚</span>
-        <div>
-          <h1 className="text-lg font-bold text-[#7a5c00] tracking-tight">LISA</h1>
-          <p className="text-xs text-[#7a5c00]">Learning Intelligence Study Assistant</p>
-        </div>
+    <header className="w-full border-b border-lucerablue-2 bg-white shadow-sm">
+      <div className="mx-auto p-4">
+        <h1 className="text-xl font-bold text-lucerablue-5 tracking-tight">
+          LISA
+        </h1>
       </div>
     </header>
+  );
+}
+
+function CourseTagSelector({
+  courses,
+  selectedCourses,
+  onToggleCourse,
+}: {
+  courses: Course[];
+  selectedCourses: string[];
+  onToggleCourse: (courseId: string) => void;
+}) {
+  return (
+    <div className="flex flex-wrap gap-2 mb-3">
+      <span className="text-sm text-lucerablue-4 py-1">Courses:</span>
+      {courses.map((course) => (
+        <button
+          key={course.id}
+          onClick={() => onToggleCourse(course.id)}
+          className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
+            selectedCourses.includes(course.id)
+              ? COURSE_COLORS[course.color]
+              : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
+          }`}
+        >
+          {course.name}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function ContentFilter({
+  filters,
+  onToggleFilter,
+}: {
+  filters: FilterState;
+  onToggleFilter: (filter: keyof FilterState) => void;
+}) {
+  const filterOptions = [
+    { key: "assignments" as const, label: "Assignments", icon: "📝" },
+    { key: "quizzes" as const, label: "Quizzes", icon: "❓" },
+    { key: "lectures" as const, label: "Lectures", icon: "🎓" },
+    { key: "materials" as const, label: "Materials", icon: "📚" },
+  ];
+
+  return (
+    <div className="flex flex-wrap gap-2 mb-3">
+      <span className="text-sm text-lucerablue-4 py-1">Filter by:</span>
+      {filterOptions.map((option) => (
+        <button
+          key={option.key}
+          onClick={() => onToggleFilter(option.key)}
+          className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
+            filters[option.key]
+              ? "bg-lucerablue-3 text-lucerablue-5 border-lucerablue-4"
+              : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
+          }`}
+        >
+          <span className="mr-1">{option.icon}</span>
+          {option.label}
+        </button>
+      ))}
+    </div>
   );
 }
 
 function MessageList({ messages }: { messages: Message[] }) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  // useEffect(() => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [messages]);
+
+  const getMessageTypeColor = (type: Message["type"]) => {
+    switch (type) {
+      case "assignment":
+        return "bg-luceragreen-1 text-luceragreen-5 border-l-4 border-luceragreen-3";
+      case "quiz":
+        return "bg-lucerablue-1 text-lucerablue-5 border-l-4 border-lucerablue-3";
+      case "lecture":
+        return "bg-lucerablue-1 text-lucerablue-5 border-l-4 border-lucerablue-3";
+      case "material":
+        return "bg-lucerabrown-1 text-lucerabrown-5 border-l-4 border-lucerabrown-3";
+      default:
+        return "bg-white text-gray-800 border-l-4 border-gray-300";
+    }
+  };
+
+  const getTypeIcon = (type: Message["type"]) => {
+    const iconMap = {
+      assignment: "assignment",
+      quiz: "quiz",
+      lecture: "content",
+      material: "content",
+      general: "content",
+    };
+    const iconType = iconMap[type || "general"];
+    const IconComponent = iconForType(iconType);
+    return <IconComponent className="w-4 h-4" />;
+  };
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-6 bg-[#FEE085]/30">
-      <div className="max-w-2xl mx-auto space-y-4">
+    <div className="flex-1 overflow-y-auto px-6 py-6 bg-gray-50">
+      <div className="max-w-4xl mx-auto space-y-4">
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`flex ${
+              message.sender === "user" ? "justify-end" : "justify-start"
+            }`}
           >
             <div
-              className={`rounded-xl px-4 py-3 max-w-[80%] shadow
-                ${message.sender === 'user'
-                  ? 'bg-[#4FCBDB] text-[#0a3a43] rounded-br-sm'
-                  : message.type === 'book'
-                    ? 'bg-[#FEE085] text-[#7a5c00] rounded-bl-sm flex items-center gap-2'
-                    : message.type === 'letter'
-                      ? 'bg-[#C79092] text-[#4e2a2b] rounded-bl-sm flex items-center gap-2'
-                      : 'bg-white text-[#23272e] rounded-bl-sm'
-                }`}
+              className={`rounded-lg px-4 py-3 max-w-[70%] shadow-sm ${
+                message.sender === "user"
+                  ? "bg-lucerablue-3 text-white"
+                  : getMessageTypeColor(message.type)
+              }`}
             >
-              {message.sender === 'lisa' && message.type === 'book' && (
-                <span className="text-xl mr-2" role="img" aria-label="book">📖</span>
+              {message.sender === "lisa" && message.type && (
+                <div className="flex items-center gap-2 mb-2 text-sm font-medium">
+                  {getTypeIcon(message.type)}
+                  <span className="capitalize">{message.type}</span>
+                  {message.course && (
+                    <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs">
+                      {MOCK_COURSES.find((c) => c.id === message.course)?.name}
+                    </span>
+                  )}
+                </div>
               )}
-              {message.sender === 'lisa' && message.type === 'letter' && (
-                <span className="text-xl mr-2" role="img" aria-label="letter">✉️</span>
-              )}
-              <span className="break-words whitespace-pre-line text-base">
+              <div className="break-words whitespace-pre-line text-sm leading-relaxed">
                 {message.text}
-              </span>
+              </div>
+              <div className="text-xs opacity-70 mt-2">
+                {message.timestamp.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </div>
             </div>
           </div>
         ))}
@@ -81,124 +228,376 @@ function MessageList({ messages }: { messages: Message[] }) {
   );
 }
 
-function ChatInput({ onSend, disabled }: { onSend: (msg: string) => void; disabled: boolean }) {
-  const [input, setInput] = useState('');
+function ChatInput({
+  onSend,
+  disabled,
+  selectedCourses,
+  selectedTypes,
+  onCoursesChange,
+  onTypesChange,
+}: {
+  onSend: (msg: string) => void;
+  disabled: boolean;
+  selectedCourses: string[];
+  selectedTypes: string[];
+  onCoursesChange: (selected: string[]) => void;
+  onTypesChange: (selected: string[]) => void;
+}) {
+  const [input, setInput] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSend = () => {
     if (input.trim()) {
       onSend(input);
-      setInput('');
+      setInput("");
     }
   };
 
+  // Auto-resize textarea but maintain minimum size
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "60px"; // Set minimum height
+      const scrollHeight = textareaRef.current.scrollHeight;
+      textareaRef.current.style.height =
+        Math.max(60, Math.min(scrollHeight, 200)) + "px";
+    }
+  }, [input]);
+
+  const getSearchContextText = () => {
+    const coursesText = selectedCourses.length > 0
+      ? `${selectedCourses.length} course${selectedCourses.length > 1 ? 's' : ''}`
+      : "all courses";
+
+    const typesText = selectedTypes.length > 0
+      ? selectedTypes.map(typeId => {
+          const type = CONTENT_TYPES.find(t => t.id === typeId);
+          return type?.name.toLowerCase();
+        }).join(", ")
+      : "all content";
+
+    return `Searching across ${coursesText}, ${typesText}`;
+  };
+
   return (
-    <div className="w-full border-t bg-white px-4 py-3">
-      <form
-        className="max-w-2xl mx-auto flex gap-2"
-        onSubmit={e => {
-          e.preventDefault();
-          handleSend();
-        }}
-      >
-        <textarea
-          className="flex-1 rounded-lg border border-[#FEE085] px-3 py-2 text-base resize-none focus:outline-none focus:ring-2 focus:ring-[#4FCBDB] bg-[#FEE085]/20"
-          rows={2}
-          placeholder="Type your question... (You can use emoji! 📚✉️)"
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          disabled={disabled}
-          onKeyDown={e => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleSend();
-            }
-          }}
-        />
+    <>
+      <div className="sticky bottom-0 w-full bg-white border-t border-gray-200 px-4 py-4">
+        <div className="max-w-4xl mx-auto">
+          {/* Course & Content type multi-select filters */}
+          {/* Selected course pills */}
+          {selectedCourses.length > 0 && (
+            <div className="mb-3 flex flex-wrap gap-2">
+              {selectedCourses.map((courseId) => {
+                const course = MOCK_COURSES.find((c) => c.id === courseId);
+                if (!course) return null;
+                return (
+                  <span
+                    key={courseId}
+                    className={`px-3 py-1 rounded-full text-xs font-medium border ${COURSE_COLORS[course.color]}`}
+                  >
+                    {course.name}
+                  </span>
+                );
+              })}
+            </div>
+          )}
+          {/* Selected type pills */}
+          {selectedTypes.length > 0 && (
+            <div className="mb-3 flex flex-wrap gap-2">
+              {selectedTypes.map((typeId) => {
+                const type = CONTENT_TYPES.find((t) => t.id === typeId);
+                if (!type) return null;
+                const IconComponent = iconForType(type.icon);
+                return (
+                  <span
+                    key={typeId}
+                    className="px-3 py-1 rounded-full text-xs font-medium bg-lucerablue-1 text-lucerablue-5 border border-lucerablue-3 flex items-center gap-1"
+                  >
+                    <IconComponent className="w-3 h-3" />
+                    {type.name}
+                  </span>
+                );
+              })}
+            </div>
+          )}
+          {/* Course & Content type selectors */}
+          <div className="flex items-center gap-4 mb-4">
+            <MultiSelect
+              options={MOCK_COURSES.map(c => ({ value: c.id, label: c.name }))}
+              selected={selectedCourses}
+              onChange={onCoursesChange}
+              placeholder="Courses"
+              icon={<PiBooks className="w-5 h-5 text-gray-600" />}
+            />
+            <MultiSelect
+              options={CONTENT_TYPES.map(t => ({ value: t.id, label: t.name }))}
+              selected={selectedTypes}
+              onChange={onTypesChange}
+              placeholder="Content types"
+              icon={<PiTag className="w-5 h-5 text-gray-600" />}
+            />
+          </div>
+
+          <div className="flex items-center gap-3">
+            {/* Chat input textarea and send button */}
+            <div className="flex-1">
+              <textarea
+                ref={textareaRef}
+                className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-lucerablue-3 focus:border-transparent bg-white placeholder-gray-500"
+                placeholder="Message LISA..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                disabled={disabled}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                  }
+                }}
+                rows={1}
+                style={{ minHeight: "60px", maxHeight: "200px" }}
+              />
+            </div>
+
+            {/* Right side - Send button */}
+            <button
+              type="button"
+              onClick={handleSend}
+              className="p-3 rounded-xl font-medium bg-lucerablue-3 text-white hover:bg-lucerablue-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+              disabled={disabled || !input.trim()}
+            >
+              <PiCaretUp className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Search context text below textarea */}
+          <div className="mt-2 text-xs text-gray-500">
+            {getSearchContextText()}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function InitialSplash({
+  userName,
+  onQuickAction,
+}: {
+  userName: string;
+  onQuickAction: (action: string) => void;
+}) {
+  const AssignmentIcon = iconForType("assignment");
+  const QuizIcon = iconForType("quiz");
+  const ContentIcon = iconForType("content");
+
+  return (
+    <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 text-gray-500">
+      <div className="text-center max-w-md">
+        <div className="flex items-center justify-center mb-4">
+          <PiChatTeardrop size={48} className="text-lucerablue-3" />
+          <span className="text-3xl tracking-wider font-bold text-lucerablue-5 ml-2">
+            LISA
+          </span>
+        </div>
+        <h2 className="text-xl font-semibold text-gray-700 mb-2">
+          Hi, {userName}
+        </h2>
+        <p className="text-gray-500 mb-8">What can I help you with today?</p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl w-full">
         <button
-          type="submit"
-          className="px-4 py-2 rounded-lg font-semibold bg-[#4FCBDB] text-[#0a3a43] hover:bg-[#FEE085] hover:text-[#7a5c00] transition-colors disabled:opacity-60"
-          disabled={disabled || !input.trim()}
+          onClick={() => onQuickAction("What assignments are due this week?")}
+          className="p-4 rounded-xl bg-white border border-gray-200 hover:border-lucerablue-3 hover:bg-lucerablue-1 text-gray-700 hover:text-lucerablue-5 transition-all text-sm font-medium text-left"
         >
-          <span role="img" aria-label="send">📨</span>
+          <div className="mb-2">
+            <AssignmentIcon className="w-6 h-6" />
+          </div>
+          What assignments are due this week?
         </button>
-      </form>
+        <button
+          onClick={() => onQuickAction("Show my upcoming quizzes")}
+          className="p-4 rounded-xl bg-white border border-gray-200 hover:border-lucerablue-3 hover:bg-lucerablue-1 text-gray-700 hover:text-lucerablue-5 transition-all text-sm font-medium text-left"
+        >
+          <div className="mb-2">
+            <QuizIcon className="w-6 h-6" />
+          </div>
+          Show my upcoming quizzes
+        </button>
+        <button
+          onClick={() => onQuickAction("Summarize today&apos;s lectures")}
+          className="p-4 rounded-xl bg-white border border-gray-200 hover:border-lucerablue-3 hover:bg-lucerablue-1 text-gray-700 hover:text-lucerablue-5 transition-all text-sm font-medium text-left"
+        >
+          <div className="mb-2">
+            <ContentIcon className="w-6 h-6" />
+          </div>
+          Summarize today&apos;s lectures
+        </button>
+      </div>
     </div>
   );
 }
 
 export default function LisaPage() {
-  const [messages, setMessages] = useState<Message[]>(
-    [
-      {
-        id: '1',
-        text: "Hello! I'm LISA, your study assistant. Ask me anything about your lessons. 📚",
-        sender: 'lisa',
-        timestamp: new Date(),
-        type: 'book'
-      }
-    ]
-  );
+  const session = useSession();
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 
   const searchParams = useSearchParams();
-  const question = searchParams.get('question');
+  const question = searchParams.get("question");
   const hasSentInitialQuestion = useRef(false);
 
-  // Automatically send question from query param if present, only once
   useEffect(() => {
     if (question && messages.length === 1 && !hasSentInitialQuestion.current) {
       handleSend(question);
       hasSentInitialQuestion.current = true;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question]);
+
+  const userName = session?.data?.user?.name || "Student";
+
+  const handleToggleCourse = (courseId: string) => {
+    setSelectedCourses((prev) =>
+      prev.includes(courseId)
+        ? prev.filter((id) => id !== courseId)
+        : [...prev, courseId]
+    );
+  };
+
+  const handleToggleType = (typeId: string) => {
+    setSelectedTypes((prev) =>
+      prev.includes(typeId)
+        ? prev.filter((id) => id !== typeId)
+        : [...prev, typeId]
+    );
+  };
+
+  const generateMockResponse = (userMessage: string): Message => {
+    let type: Message["type"] = "general";
+    let text = "";
+    let course: string | undefined;
+
+    // Determine response type based on selected types or message content
+    if (selectedTypes.length > 0) {
+      const typeMap: { [key: string]: Message["type"] } = {
+        assignment: "assignment",
+        quiz: "quiz",
+        exam: "quiz",
+        content: "material",
+        lab: "material",
+        project: "assignment",
+        announcement: "general",
+      };
+      type = typeMap[selectedTypes[0]] || "general";
+    } else if (userMessage.toLowerCase().includes("assignment")) {
+      type = "assignment";
+    } else if (userMessage.toLowerCase().includes("quiz")) {
+      type = "quiz";
+    } else if (userMessage.toLowerCase().includes("lecture")) {
+      type = "lecture";
+    } else if (userMessage.toLowerCase().includes("material")) {
+      type = "material";
+    }
+
+    // Select a course if any are selected
+    if (selectedCourses.length > 0) {
+      course =
+        selectedCourses[Math.floor(Math.random() * selectedCourses.length)];
+    }
+
+    // Generate appropriate response
+    switch (type) {
+      case "assignment":
+        text = `Here are your upcoming assignments${
+          course
+            ? ` for ${MOCK_COURSES.find((c) => c.id === course)?.name}`
+            : ""
+        }:\n\n• Essay on Modern Literature - Due Friday\n• Math Problem Set 7 - Due Monday\n• Physics Lab Report - Due Wednesday\n\nWould you like more details on any of these?`;
+        break;
+      case "quiz":
+        text = `Your upcoming quizzes${
+          course
+            ? ` for ${MOCK_COURSES.find((c) => c.id === course)?.name}`
+            : ""
+        }:\n\n• History Quiz Ch. 12-15 - Tomorrow at 2 PM\n• Biology Quiz on Cell Structure - Friday\n\nI can help you review the key topics. What would you like to focus on?`;
+        break;
+      case "lecture":
+        text = `Recent lectures${
+          course
+            ? ` from ${MOCK_COURSES.find((c) => c.id === course)?.name}`
+            : ""
+        }:\n\n• Introduction to Quantum Physics - Today\n• Shakespearean Sonnets Analysis - Yesterday\n• Calculus Integration Methods - Monday\n\nWould you like a summary of any specific lecture?`;
+        break;
+      case "material":
+        text = `Study materials${
+          course
+            ? ` for ${MOCK_COURSES.find((c) => c.id === course)?.name}`
+            : ""
+        }:\n\n• Textbook Chapter 8 - Molecular Biology\n• Video Lecture Series - Advanced Calculus\n• Practice Problems - Physics Mechanics\n\nI can help explain any concepts you're struggling with!`;
+        break;
+      default:
+        text = `I understand you're asking about your studies. I can help you with:\n\n• Finding assignments and due dates\n• Quiz preparation and review\n• Lecture summaries and notes\n• Study materials and resources\n\nWhat specific area would you like to explore?`;
+    }
+
+    return {
+      id: (Date.now() + 1).toString(),
+      text,
+      sender: "lisa",
+      timestamp: new Date(),
+      type,
+      course,
+    };
+  };
 
   const handleSend = (msg: string) => {
     const userMessage: Message = {
       id: Date.now().toString(),
       text: msg,
-      sender: 'user',
-      timestamp: new Date()
+      sender: "user",
+      timestamp: new Date(),
     };
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
 
-    // Simulate LISA's educational response
     setTimeout(() => {
-      // Pick a type for variety
-      const types: Message['type'][] = ['book', 'letter', 'info'];
-      const type = types[Math.floor(Math.random() * types.length)];
-      let text = '';
-      if (type === 'book') {
-        text = "Here's a helpful explanation from your textbook! 📖\n\nLearning is a journey, and I'm here to guide you step by step.";
-      } else if (type === 'letter') {
-        text = "You've got educational mail! ✉️\n\nWould you like some practice questions or a summary?";
-      } else {
-        text = "Let me help you with that! If you need more details, just ask. 😊";
-      }
-      const aiResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        text,
-        sender: 'lisa',
-        timestamp: new Date(),
-        type
-      };
-      setMessages(prev => [...prev, aiResponse]);
+      const aiResponse = generateMockResponse(msg);
+      setMessages((prev) => [...prev, aiResponse]);
       setIsLoading(false);
-    }, 900);
+    }, 1200);
+  };
+
+  const handleQuickAction = (action: string) => {
+    handleSend(action);
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#FEE085]/30">
-      <ChatHeader />
-      <MessageList messages={messages} />
-      {isLoading && (
-        <div className="max-w-2xl mx-auto px-4 py-2 text-center text-[#697480] flex items-center gap-2">
-          <span className="text-xl" role="img" aria-label="books">📚</span>
-          <span>Thinking...</span>
-        </div>
-      )}
-      <ChatInput onSend={handleSend} disabled={isLoading} />
-    </div>
+    <>
+      <SetHeaderClientComponent title="LISA" />
+      <div className="flex flex-col h-screen bg-gray-50">
+        {messages.length === 0 ? (
+          <InitialSplash userName={userName} onQuickAction={handleSend} />
+        ) : (
+          <MessageList messages={messages} />
+        )}
+
+        {isLoading && (
+          <div className="px-6 py-3 text-center text-lucerablue-4 flex items-center justify-center gap-2">
+            <div className="w-4 h-4 border-2 border-lucerablue-3 border-t-transparent rounded-full animate-spin"></div>
+            <span>LISA is thinking...</span>
+          </div>
+        )}
+
+        <ChatInput
+          onSend={handleSend}
+          disabled={isLoading}
+          selectedCourses={selectedCourses}
+          selectedTypes={selectedTypes}
+          onCoursesChange={setSelectedCourses}
+          onTypesChange={setSelectedTypes}
+        />
+      </div>
+    </>
   );
 }

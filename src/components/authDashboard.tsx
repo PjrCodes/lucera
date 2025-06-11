@@ -35,7 +35,11 @@ const componentMap: Record<string, (props: ComponentProps) => JSX.Element> = {
     />
   ),
   WHATS_NEXT: (props) => (
-    <UpcomingDeadlines key="whats-next" session={props.session} isTeacher={props.isTeacher} />
+    <UpcomingDeadlines
+      key="whats-next"
+      session={props.session}
+      isTeacher={props.isTeacher}
+    />
   ),
   CLASS_PROGRESS: (props) => (
     <Courses
@@ -45,7 +49,11 @@ const componentMap: Record<string, (props: ComponentProps) => JSX.Element> = {
     />
   ),
   STUDENT_ALERTS: (props) => (
-    <StudentAlerts key="student-alerts" session={props.session} isTeacher={props.isTeacher} />
+    <StudentAlerts
+      key="student-alerts"
+      session={props.session}
+      isTeacher={props.isTeacher}
+    />
   ),
   RECENTLY_ACCESSED: (props) => (
     <Courses
@@ -55,16 +63,32 @@ const componentMap: Record<string, (props: ComponentProps) => JSX.Element> = {
     />
   ),
   UPCOMING_DEADLINES: (props) => (
-    <UpcomingDeadlines key="upcoming-deadlines" session={props.session} isTeacher={props.isTeacher} />
+    <UpcomingDeadlines
+      key="upcoming-deadlines"
+      session={props.session}
+      isTeacher={props.isTeacher}
+    />
   ),
   ANNOUNCEMENTS: (props) => (
-    <StudentAlerts key="announcements" session={props.session} isTeacher={props.isTeacher} />
+    <StudentAlerts
+      key="announcements"
+      session={props.session}
+      isTeacher={props.isTeacher}
+    />
   ),
   BOOKMARKS: (props) => (
-    <Bookmarks key="bookmarks" session={props.session} isTeacher={props.isTeacher} />
+    <Bookmarks
+      key="bookmarks"
+      session={props.session}
+      isTeacher={props.isTeacher}
+    />
   ),
   YOUR_BADGES: (props) => (
-    <StudentAlerts key="your-badges" session={props.session} isTeacher={props.isTeacher} />
+    <StudentAlerts
+      key="your-badges"
+      session={props.session}
+      isTeacher={props.isTeacher}
+    />
   ),
   CREATE: (props) => (
     <Create key="create" session={props.session} isTeacher={props.isTeacher} />
@@ -120,7 +144,6 @@ const AuthDashboard: NextPage<Props> = ({
   dashboardLayout,
   onLayoutChange,
 }) => {
-
   // Props object for component rendering - only session and role data
   const componentProps: ComponentProps = {
     session,
@@ -150,13 +173,17 @@ const AuthDashboard: NextPage<Props> = ({
     isTeacher
   );
 
-  if (currentLayout.leftColumn.length === 0 && currentLayout.rightColumn.length === 0) {
+  if (
+    currentLayout.leftColumn.length === 0 &&
+    currentLayout.rightColumn.length === 0
+  ) {
     return (
       <main className="w-full h-full px-4 py-4 bg-transparent">
         <div className="w-full h-full flex flex-1 flex-col justify-center text-center text-gray-500">
           <MdBrokenImage size={48} className="mx-auto mb-4" />
           <h2 className="text-lg font-semibold mb-2">No Components Found</h2>
-          You have no components in your dashboard! Please use the edit button to add some!
+          You have no components in your dashboard! Please use the edit button
+          to add some!
           <br></br>
           You can also choose to reset your dashboard to the default layout.
         </div>
@@ -180,11 +207,25 @@ const AuthDashboard: NextPage<Props> = ({
       ) : null}
       <div className="flex flex-wrap w-full gap-4 flex-1">
         {/* Left Column - takes more space on large screens, full width on small */}
-        <div className="flex flex-col flex-1 basis-[60%] min-w-[300px] gap-4">
+        <div
+          className={
+            "flex flex-col flex-1 min-w-[300px] gap-4" +
+            (currentLayout.rightColumn.length > 0
+              ? "  basis-[60%]"
+              : " basis-full")
+          }
+        >
           {renderComponents(currentLayout.leftColumn)}
         </div>
         {/* Right Column - takes less space on large screens, full width on small */}
-        <div className="flex flex-col flex-1 basis-[30%] min-w-[250px] gap-4">
+        <div
+          className={
+            "flex flex-col flex-1 min-w-[250px] gap-4 " +
+            (currentLayout.leftColumn.length > 0
+              ? " basis-[30%]"
+              : " basis-full")
+          }
+        >
           {renderComponents(currentLayout.rightColumn)}
         </div>
       </div>

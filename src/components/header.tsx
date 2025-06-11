@@ -8,7 +8,7 @@ import SignIn from "./buttons/signInButton";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "./ui/sidebar";
 import { Button } from "./ui/button";
-import { SidebarIcon } from "lucide-react";
+import { House, SidebarIcon, SquarePen } from "lucide-react";
 import { IoMdHome } from "react-icons/io";
 import Link from "next/link";
 import { Session } from "next-auth";
@@ -17,7 +17,13 @@ import { useHeader } from "@/context/HeaderContext";
 import DashboardEditModal from "./dashboard/DashboardEditModal";
 
 // Accept session as a prop instead of fetching it on the client
-export default function Header({ session, userData }: { session: Session | null, userData?: any }) {
+export default function Header({
+  session,
+  userData,
+}: {
+  session: Session | null;
+  userData?: any;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const { toggleSidebar } = useSidebar();
@@ -32,7 +38,7 @@ export default function Header({ session, userData }: { session: Session | null,
   const cleanedUserData = {
     role: userData?.role || "student", // Default to 'user' if role is not defined
     dashboardLayout: userData?.dashboardLayout || "default", // Default to 'default' layout if not defined
-  }
+  };
 
   // Set default header title if not logged in
   useEffect(() => {
@@ -59,28 +65,19 @@ export default function Header({ session, userData }: { session: Session | null,
   };
 
   return (
-    <header className="border-b border-yellow-600 sticky top-0 z-50 w-full bg-lucerayellow-3/50 backdrop-blur-lg supports-[backdrop-filter]:bg-lucerayellow-3/50">
+    <header className="border-b border-red-950 sticky top-0 z-50 w-full bg-lucerabrown-3">
       <div className="px-4 py-4 h-14 flex flex-row items-center justify-between">
         {/* Sidebar button always visible */}
         <div className="flex flex-row items-center space-x-2 flex-shrink-0">
-          <Button
-            className="h-8 w-8"
-            variant="ghost"
-            size="icon"
+          <div
+          className="cursor-pointer rounded-lg p-2 transition hover:bg-lucerabrown-1"
             onClick={toggleSidebar}
           >
-            <SidebarIcon />
-          </Button>
+            <SidebarIcon size={20} />
+          </div>
           {isLoggedIn && !isHomePage && (
-            <Link href="/" passHref>
-              <Button
-                className="h-8 w-8"
-                variant="ghost"
-                size="icon"
-                tabIndex={-1}
-              >
-                <IoMdHome size={20} />
-              </Button>
+            <Link href="/" className="cursor-pointer rounded-lg p-2 transition hover:bg-lucerabrown-1">
+              <House size={20} />
             </Link>
           )}
           {/* Heading: only render once, hide/show with CSS */}
@@ -121,15 +118,18 @@ export default function Header({ session, userData }: { session: Session | null,
             {/* Edit icon: only show on Dashboard and never on mobile */}
             {headerTitle === "DASHBOARD" && (
               <span className="hidden sm:inline">
-                <CiEdit
-                  size={32}
-                  className="cursor-pointer hover:text-gray-500"
-                  onClick={() => setIsEditModalOpen(true)} // Add click handler
-                />
+                <div
+                  className={
+                    "cursor-pointer rounded-lg p-1 transition hover:bg-lucerabrown-1 text-black"
+                  }
+                  onClick={() => setIsEditModalOpen(true)}
+                >
+                  <SquarePen size={24} />
+                </div>
               </span>
             )}
             <div className="flex justify-center">
-              <ProfileCircle imageUrl={session?.user?.image} size={38} />
+              <ProfileCircle imageUrl={session?.user?.image} size={32} />
             </div>
           </div>
         ) : (

@@ -58,11 +58,11 @@ export default function SearchBarElement({
   return (
     <div
       ref={containerRef} 
-      className={`flex items-center border rounded-full border-none px-2 py-1 sm:bg-lucerayellow-1  transition-all duration-300
+      className={`flex items-center border rounded-full border-none px-2 py-1 sm:bg-lucerabrown-1  transition-all duration-300
         text-black
         w-full
         sm:shadow-sm outline-none 
-        sm:focus-within:outline-solid outline-2 outline-lucerayellow-5
+        sm:focus-within:outline-solid outline-2 outline-lucerabrown-5
 
       `}
     >
