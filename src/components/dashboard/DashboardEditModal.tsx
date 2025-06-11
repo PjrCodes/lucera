@@ -3,17 +3,23 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent, useDraggable, DragOverlay, Active, defaultDropAnimation, useDroppable } from '@dnd-kit/core';
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent, useDraggable, DragOverlay, Active, defaultDropAnimation, useDroppable, DragStartEvent, DragMoveEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import DraggableItem from './DraggableItem';
-import { Trash2 } from 'lucide-react';
 import dashboardAcl from '../../../data/acl/dashboard.json';
+import { DASHBOARD_ELEMENT_TO_NAME } from '@/constants';
 
 interface DashboardEditModalProps {
   isOpen: boolean;
   onClose: () => void;
-  userData: object;
+  userData: {
+    role: string;
+    dashboardLayout: {
+      leftColumn: string[];
+      rightColumn: string[];
+    }
+  };
   userId: string;
 }
 
@@ -22,19 +28,6 @@ interface DashboardItem {
   type: string; 
   instanceId: string; 
 }
-
-const DASHBOARD_ELEMENTS = {
-  PROGRESS: 'Progress',
-  BOOKMARKS: 'Bookmarks',
-  UPCOMING_DEADLINES: 'Upcoming Deadlines',
-  WHATS_NEXT: "What's Next",
-  YOUR_BADGES: 'Your Badges',
-  ANNOUNCEMENTS: 'Announcements',
-  RECENTLY_ACCESSED: 'Recently Accessed',
-  STUDENT_ALERTS: 'Student Alerts',
-  CLASS_PROGRESS: 'Class Progress',
-  CREATE: 'Create'
-};
 
 // Helper component for items in the "Add Elements" panel
 const SourceDraggableElement = ({ elementType, isOverlay, isDropAllowed }: { elementType: string, isOverlay?: boolean, isDropAllowed?: boolean }) => {
@@ -62,7 +55,7 @@ const SourceDraggableElement = ({ elementType, isOverlay, isDropAllowed }: { ele
                     ? 'border-gray-300 bg-white text-gray-700 shadow-lg cursor-grabbing'
                     : 'border-gray-300 bg-gray-100 text-gray-700 shadow-sm hover:shadow-md hover:bg-gray-200 cursor-grab'}`}
     >
-      {DASHBOARD_ELEMENTS[elementType as keyof typeof DASHBOARD_ELEMENTS]}
+      {DASHBOARD_ELEMENT_TO_NAME[elementType as keyof typeof DASHBOARD_ELEMENT_TO_NAME]}
     </div>
   );
 };
@@ -111,12 +104,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
 
   const userRole = userData?.role || 'student';
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
+  const sensors = useSensor(PointerSensor);
 
   const roleAllowedElementTypes = dashboardAcl.role_restrictions[userRole as keyof typeof dashboardAcl.role_restrictions] || [];
   const leftColumnAllowedTypes = dashboardAcl.column_restrictions.leftColumn;
@@ -206,7 +194,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
     return null;
   };
 
-  const handleDragStart = (event: { active: Active }) => {
+  const handleDragStart = (event: DragStartEvent) => {
     setActiveDragData(event.active);
     setIsDropCurrentlyAllowed(true);
     document.body.style.cursor = 'grabbing';
@@ -427,6 +415,27 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
     }
   };
 
+
+  const handleDragMove = (event: DragMoveEvent) => {
+    // move the currently dragged item towards the left by
+    // screen width / 2 pixels
+    const { active, delta } = event;
+    if (active.data.current?.isSource) {
+      // For source items, we don't need to adjust position
+      return;
+    }
+    const item = findItemById(active.id as string);
+    
+    if (item) {
+      const shiftAmount = window.innerWidth / 2;
+      // Apply transform to shift the item left
+      const element = document.querySelector(`[data-dnd-kit-drag-overlay-wrapper]`);
+      if (element) {
+        (element as HTMLElement).style.transform = `translate3d(${delta.x - shiftAmount}px, ${delta.y}px, 0)`;
+      }
+    }
+  }
+
   if (loading) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
@@ -447,9 +456,10 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
         </DialogHeader>
         
         <DndContext
-          sensors={sensors}
+          sensors={[sensors]}
           collisionDetection={closestCenter}
           onDragStart={handleDragStart}
+          onDragMove={handleDragMove}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
           onDragCancel={handleDragCancel}
@@ -466,9 +476,8 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
                       <DraggableItem 
                         key={item.id} 
                         id={item.id} 
-                        label={DASHBOARD_ELEMENTS[item.type as keyof typeof DASHBOARD_ELEMENTS]}
+                        label={DASHBOARD_ELEMENT_TO_NAME[item.type as keyof typeof DASHBOARD_ELEMENT_TO_NAME]}
                         onRemove={() => removeElement(item.id)}
-                        removeIcon={<Trash2 className="w-4 h-4" />}
                       />
                     ))}
                   </SortableContext>
@@ -484,9 +493,8 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
                       <DraggableItem 
                         key={item.id} 
                         id={item.id} 
-                        label={DASHBOARD_ELEMENTS[item.type as keyof typeof DASHBOARD_ELEMENTS]}
+                        label={DASHBOARD_ELEMENT_TO_NAME[item.type as keyof typeof DASHBOARD_ELEMENT_TO_NAME]}
                         onRemove={() => removeElement(item.id)}
-                        removeIcon={<Trash2 className="w-4 h-4" />}
                       />
                     ))}
                   </SortableContext>
@@ -511,7 +519,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
             </div>
           </div>
           
-          <DragOverlay className="!transform-none">
+          <DragOverlay>
             {activeDragData ? (
               activeDragData.data.current?.isSource ? (
                 <SourceDraggableElement
@@ -521,7 +529,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
                 />
               ) : (
                 <DraggedItemOverlay
-                  label={DASHBOARD_ELEMENTS[findItemById(activeDragData.id as string)?.item.type as keyof typeof DASHBOARD_ELEMENTS] || 'Unknown'}
+                  label={DASHBOARD_ELEMENT_TO_NAME[findItemById(activeDragData.id as string)?.item.type as keyof typeof DASHBOARD_ELEMENT_TO_NAME] || 'Unknown'}
                   isDropAllowed={isDropCurrentlyAllowed}
                 />
               )

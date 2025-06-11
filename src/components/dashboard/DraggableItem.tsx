@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, X } from 'lucide-react';
+import { GripVertical, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface DraggableItemProps {
@@ -47,7 +47,7 @@ export default function DraggableItem({ id, label, onRemove }: DraggableItemProp
           onClick={onRemove}
           className="opacity-0 group-hover:opacity-100 transition-opacity p-1 h-6 w-6"
         >
-          <X className="w-3 h-3" />
+          <Trash2 className="w-4 h-4" />
         </Button>
       )}
     </div>

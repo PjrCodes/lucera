@@ -4,6 +4,19 @@ import { PiExam } from "react-icons/pi";
 import { MdOutlineQuiz } from "react-icons/md";
 import { RiTestTubeLine } from "react-icons/ri";
 
+export const DASHBOARD_ELEMENT_TO_NAME = {
+  PROGRESS: 'Progress',
+  BOOKMARKS: 'Bookmarks',
+  UPCOMING_DEADLINES: 'Upcoming Deadlines',
+  WHATS_NEXT: "What's Next",
+  YOUR_BADGES: 'Your Badges',
+  ANNOUNCEMENTS: 'Announcements',
+  RECENTLY_ACCESSED: 'Recently Accessed',
+  STUDENT_ALERTS: 'Student Alerts',
+  CLASS_PROGRESS: 'Class Progress',
+  CREATE: 'Create'
+};
+
 export const ourIconWidgets = {
     "assignment": MdOutlineAssignment,
     "content": MdOutlineLibraryBooks,
