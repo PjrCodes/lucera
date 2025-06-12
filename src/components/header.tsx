@@ -83,7 +83,7 @@ export default function Header({
               searchExpanded ? "hidden sm:block" : "block"
             }`}
           >
-            {headerTitle} {/* Use headerTitle from context */}
+            {headerTitle.length > 16 ? headerTitle.slice(0, 13) + "..." : headerTitle} {/* Use headerTitle from context */}
           </h1>
         </div>
         {isLoggedIn ? (
