@@ -2,14 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import SearchBarElement from "./searchBarElement";
-import { CiEdit } from "react-icons/ci";
 import ProfileCircle from "./profileCircle";
 import SignIn from "./buttons/signInButton";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "./ui/sidebar";
-import { Button } from "./ui/button";
 import { House, SidebarIcon, SquarePen } from "lucide-react";
-import { IoMdHome } from "react-icons/io";
 import Link from "next/link";
 import { Session } from "next-auth";
 import Bell from "./bell";

@@ -1,5 +1,6 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import SearchIcon from "@/components/customIcons/search";
 type Props = {
   expanded?: boolean;
@@ -13,6 +14,7 @@ export default function SearchBarElement({
   onSearch,
 }: Props) {
   const [input, setInput] = useState("");
+  const router = useRouter();
   // Use controlled expanded state if provided, else fallback to internal state
   const [internalExpanded, setInternalExpanded] = useState(false);
   const expanded = propExpanded !== undefined ? propExpanded : internalExpanded;
@@ -25,8 +27,8 @@ export default function SearchBarElement({
       if (onSearch) {
         onSearch(input);
       } else {
-        // Replace this with your LISA chat logic
-        alert(`Message to LISA: ${input}`);
+        // Navigate to LISA page with the query
+        router.push(`/lisa?question=${encodeURIComponent(input)}`);
       }
       setInput("");
       setExpanded(false);

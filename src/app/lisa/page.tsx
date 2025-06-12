@@ -1,5 +1,5 @@
 // @ts-nocheck
-"use client"
+"use client";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 
@@ -7,12 +7,7 @@ import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import SetHeaderClientComponent from "@/components/SetHeaderClientComponent";
 import { useSession } from "next-auth/react";
-import {
-  PiChatTeardrop,
-  PiCaretUp,
-  PiBooks,
-  PiTag,
-} from "react-icons/pi";
+import { PiChatTeardrop, PiCaretUp, PiBooks, PiTag } from "react-icons/pi";
 import { iconForType } from "@/constants";
 import { MultiSelect } from "@/components/ui/MultiSelect";
 
@@ -150,40 +145,12 @@ function ContentFilter({
 function MessageList({ messages }: { messages: Message[] }) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // useEffect(() => {
-  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  // }, [messages]);
-
-  const getMessageTypeColor = (type: Message["type"]) => {
-    switch (type) {
-      case "assignment":
-        return "bg-luceragreen-1 text-luceragreen-5 border-l-4 border-luceragreen-3";
-      case "quiz":
-        return "bg-lucerablue-1 text-lucerablue-5 border-l-4 border-lucerablue-3";
-      case "lecture":
-        return "bg-lucerablue-1 text-lucerablue-5 border-l-4 border-lucerablue-3";
-      case "material":
-        return "bg-lucerabrown-1 text-lucerabrown-5 border-l-4 border-lucerabrown-3";
-      default:
-        return "bg-white text-gray-800 border-l-4 border-gray-300";
-    }
-  };
-
-  const getTypeIcon = (type: Message["type"]) => {
-    const iconMap = {
-      assignment: "assignment",
-      quiz: "quiz",
-      lecture: "content",
-      material: "content",
-      general: "content",
-    };
-    const iconType = iconMap[type || "general"];
-    const IconComponent = iconForType(iconType);
-    return <IconComponent className="w-4 h-4" />;
-  };
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto px-6 py-6 bg-gray-50">
+    <div className="w-full px-6 py-6">
       <div className="max-w-4xl mx-auto space-y-4">
         {messages.map((message) => (
           <div
@@ -195,21 +162,10 @@ function MessageList({ messages }: { messages: Message[] }) {
             <div
               className={`rounded-lg px-4 py-3 max-w-[70%] shadow-sm ${
                 message.sender === "user"
-                  ? "bg-lucerablue-3 text-white"
-                  : getMessageTypeColor(message.type)
+                  ? "bg-lucerablue-4 text-white"
+                  : "bg-white text-gray-800 border-l-4 border-gray-300"
               }`}
             >
-              {message.sender === "lisa" && message.type && (
-                <div className="flex items-center gap-2 mb-2 text-sm font-medium">
-                  {getTypeIcon(message.type)}
-                  <span className="capitalize">{message.type}</span>
-                  {message.course && (
-                    <span className="px-2 py-0.5 rounded-full bg-white/20 text-xs">
-                      {MOCK_COURSES.find((c) => c.id === message.course)?.name}
-                    </span>
-                  )}
-                </div>
-              )}
               <div className="break-words whitespace-pre-line text-sm leading-relaxed">
                 {message.text}
               </div>
@@ -264,81 +220,100 @@ function ChatInput({
   }, [input]);
 
   const getSearchContextText = () => {
-    const coursesText = selectedCourses.length > 0
-      ? `${selectedCourses.length} course${selectedCourses.length > 1 ? 's' : ''}`
-      : "all courses";
+    const coursesText =
+      selectedCourses.length === 0 ||
+      selectedCourses.length === MOCK_COURSES.length
+        ? "all courses"
+        : `${selectedCourses.length} course${
+            selectedCourses.length > 1 ? "s" : ""
+          }`;
 
-    const typesText = selectedTypes.length > 0
-      ? selectedTypes.map(typeId => {
-          const type = CONTENT_TYPES.find(t => t.id === typeId);
-          return type?.name.toLowerCase();
-        }).join(", ")
-      : "all content";
+    const typesText =
+      selectedTypes.length === 0 ||
+      selectedTypes.length === CONTENT_TYPES.length
+        ? "all content"
+        : selectedTypes
+            .map((typeId) => {
+              const type = CONTENT_TYPES.find((t) => t.id === typeId);
+              return type?.name.toLowerCase();
+            })
+            .join(", ");
 
     return `Searching across ${coursesText}, ${typesText}`;
   };
-
   return (
     <>
       <div className="sticky bottom-0 w-full bg-white border-t border-gray-200 px-4 py-4">
         <div className="max-w-4xl mx-auto">
-          {/* Course & Content type multi-select filters */}
           {/* Selected course pills */}
-          {selectedCourses.length > 0 && (
-            <div className="mb-3 flex flex-wrap gap-2">
-              {selectedCourses.map((courseId) => {
-                const course = MOCK_COURSES.find((c) => c.id === courseId);
-                if (!course) return null;
-                return (
-                  <span
-                    key={courseId}
-                    className={`px-3 py-1 rounded-full text-xs font-medium border ${COURSE_COLORS[course.color]}`}
-                  >
-                    {course.name}
-                  </span>
-                );
-              })}
-            </div>
-          )}
+          {selectedCourses.length > 0 &&
+            selectedCourses.length < MOCK_COURSES.length && (
+              <div className="mb-3 flex flex-wrap gap-2">
+                {selectedCourses.map((courseId) => {
+                  const course = MOCK_COURSES.find((c) => c.id === courseId);
+                  if (!course) return null;
+                  return (
+                    <span
+                      key={courseId}
+                      className={`px-3 py-1 rounded-full text-xs font-medium border ${
+                        COURSE_COLORS[course.color]
+                      }`}
+                    >
+                      {course.name}
+                    </span>
+                  );
+                })}
+              </div>
+            )}
           {/* Selected type pills */}
-          {selectedTypes.length > 0 && (
-            <div className="mb-3 flex flex-wrap gap-2">
-              {selectedTypes.map((typeId) => {
-                const type = CONTENT_TYPES.find((t) => t.id === typeId);
-                if (!type) return null;
-                const IconComponent = iconForType(type.icon);
-                return (
-                  <span
-                    key={typeId}
-                    className="px-3 py-1 rounded-full text-xs font-medium bg-lucerablue-1 text-lucerablue-5 border border-lucerablue-3 flex items-center gap-1"
-                  >
-                    <IconComponent className="w-3 h-3" />
-                    {type.name}
-                  </span>
-                );
-              })}
-            </div>
-          )}
+          {selectedTypes.length > 0 &&
+            selectedTypes.length < CONTENT_TYPES.length && (
+              <div className="mb-3 flex flex-wrap gap-2">
+                {selectedTypes.map((typeId) => {
+                  const type = CONTENT_TYPES.find((t) => t.id === typeId);
+                  if (!type) return null;
+                  const IconComponent = iconForType(type.icon);
+                  return (
+                    <span
+                      key={typeId}
+                      className="px-3 py-1 rounded-full text-xs font-medium bg-lucerablue-1 text-lucerablue-5 border border-lucerablue-3 flex items-center gap-1"
+                    >
+                      <IconComponent className="w-3 h-3" />
+                      {type.name}
+                    </span>
+                  );
+                })}
+              </div>
+            )}
           {/* Course & Content type selectors */}
-          <div className="flex items-center gap-4 mb-4">
-            <MultiSelect
-              options={MOCK_COURSES.map(c => ({ value: c.id, label: c.name }))}
-              selected={selectedCourses}
-              onChange={onCoursesChange}
-              placeholder="Courses"
-              icon={<PiBooks className="w-5 h-5 text-gray-600" />}
-            />
-            <MultiSelect
-              options={CONTENT_TYPES.map(t => ({ value: t.id, label: t.name }))}
-              selected={selectedTypes}
-              onChange={onTypesChange}
-              placeholder="Content types"
-              icon={<PiTag className="w-5 h-5 text-gray-600" />}
-            />
-          </div>
-
           <div className="flex items-center gap-3">
-            {/* Chat input textarea and send button */}
+            {/* Left side - Filter selectors */}
+            <div className="flex gap-2">
+              <MultiSelect
+                options={MOCK_COURSES.map((c) => ({
+                  value: c.id,
+                  label: c.name,
+                }))}
+                selected={selectedCourses}
+                onChange={onCoursesChange}
+                placeholder="Courses"
+                icon={<PiBooks className="w-5 h-5 text-gray-600" />}
+                className="w-10 h-10"
+              />
+              <MultiSelect
+                options={CONTENT_TYPES.map((t) => ({
+                  value: t.id,
+                  label: t.name,
+                }))}
+                selected={selectedTypes}
+                onChange={onTypesChange}
+                placeholder="Content types"
+                icon={<PiTag className="w-5 h-5 text-gray-600" />}
+                className="w-10 h-10"
+              />
+            </div>
+
+            {/* Center - Textarea */}
             <div className="flex-1">
               <textarea
                 ref={textareaRef}
@@ -391,8 +366,8 @@ function InitialSplash({
   const ContentIcon = iconForType("content");
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 text-gray-500">
-      <div className="text-center max-w-md">
+    <div className="min-h-full flex flex-col items-center justify-center px-6 py-12 text-gray-500">
+      <div className="text-center max-w-md mb-8">
         <div className="flex items-center justify-center mb-4">
           <PiChatTeardrop size={48} className="text-lucerablue-3" />
           <span className="text-3xl tracking-wider font-bold text-lucerablue-5 ml-2">
@@ -425,13 +400,13 @@ function InitialSplash({
           Show my upcoming quizzes
         </button>
         <button
-          onClick={() => onQuickAction("Summarize today&apos;s lectures")}
+          onClick={() => onQuickAction("Show recently uploaded class content")}
           className="p-4 rounded-xl bg-white border border-gray-200 hover:border-lucerablue-3 hover:bg-lucerablue-1 text-gray-700 hover:text-lucerablue-5 transition-all text-sm font-medium text-left"
         >
           <div className="mb-2">
             <ContentIcon className="w-6 h-6" />
           </div>
-          Summarize today&apos;s lectures
+          Show recently uploaded class content
         </button>
       </div>
     </div>
@@ -448,13 +423,12 @@ export default function LisaPage() {
   const searchParams = useSearchParams();
   const question = searchParams.get("question");
   const hasSentInitialQuestion = useRef(false);
-
   useEffect(() => {
-    if (question && messages.length === 1 && !hasSentInitialQuestion.current) {
+    if (question && messages.length === 0 && !hasSentInitialQuestion.current) {
       handleSend(question);
       hasSentInitialQuestion.current = true;
     }
-  }, [question]);
+  }, [question, messages.length]);
 
   const userName = session?.data?.user?.name || "Student";
 
@@ -575,20 +549,24 @@ export default function LisaPage() {
   return (
     <>
       <SetHeaderClientComponent title="LISA" />
-      <div className="flex flex-col h-screen bg-gray-50">
-        {messages.length === 0 ? (
-          <InitialSplash userName={userName} onQuickAction={handleSend} />
-        ) : (
-          <MessageList messages={messages} />
-        )}
+      <div className="w-full max-w-4xl flex flex-col min-h-screen bg-gray-50">
+        {/* Main scrollable content area */}
+        <div className="flex-1">
+          {messages.length === 0 ? (
+            <InitialSplash userName={userName} onQuickAction={handleSend} />
+          ) : (
+            <MessageList messages={messages} />
+          )}
 
-        {isLoading && (
-          <div className="px-6 py-3 text-center text-lucerablue-4 flex items-center justify-center gap-2">
-            <div className="w-4 h-4 border-2 border-lucerablue-3 border-t-transparent rounded-full animate-spin"></div>
-            <span>LISA is thinking...</span>
-          </div>
-        )}
+          {isLoading && (
+            <div className="w-full px-6 py-3 text-center text-lucerablue-4 flex items-center justify-center gap-2">
+              <div className="w-4 h-4 border-2 border-lucerablue-3 border-t-transparent rounded-full animate-spin"></div>
+              <span>LISA is thinking...</span>
+            </div>
+          )}
+        </div>
 
+        {/* Sticky chat input */}
         <ChatInput
           onSend={handleSend}
           disabled={isLoading}

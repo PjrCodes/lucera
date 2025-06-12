@@ -69,7 +69,7 @@ export function MultiSelect({
           role="combobox"
           aria-expanded={open}
           aria-label={placeholder}
-          className={cn("w-full justify-center", className)}
+          className={cn("justify-center", className)}
         >
           {icon ? (
             icon

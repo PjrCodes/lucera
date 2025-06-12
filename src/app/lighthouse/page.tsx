@@ -1,140 +1,160 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
+import { Trophy, Star, Users, GamepadIcon, BarChart3 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import StatsCard from "@/components/lighthouse/StatsCard";
+import BadgeGrid from "@/components/lighthouse/BadgeGrid";
+import CourseRankCard from "@/components/lighthouse/CourseRankCard";
+import ActionButton from "@/components/lighthouse/ActionButton";
+import BadgeDetailModal from "@/components/lighthouse/BadgeDetailModal";
+import PointsInfoModal from "@/components/lighthouse/PointsInfoModal";
+import SetHeaderClientComponent from "@/components/SetHeaderClientComponent";
+
+interface Badge {
+  id: number;
+  name: string;
+  emoji: string;
+  collected: boolean;
+  description?: string;
+}
 
 export default function LighthouseHome() {
+  const router = useRouter();
   const [currentPoints] = useState(2847);
   const [currentRank] = useState(15);
-  const [collectedBadges] = useState([
-    { id: 1, name: "First Steps", emoji: "👶", collected: true },
-    { id: 2, name: "Speed Demon", emoji: "⚡", collected: true },
-    { id: 3, name: "Scholar", emoji: "🎓", collected: true },
-    { id: 4, name: "Night Owl", emoji: "🦉", collected: false },
-    { id: 5, name: "Perfectionist", emoji: "💎", collected: false },
-    { id: 6, name: "Team Player", emoji: "🤝", collected: false },
-    { id: 7, name: "Mastermind", emoji: "🧠", collected: true },
-    { id: 8, name: "Explorer", emoji: "🗺️", collected: false },
-  ]);
+  const [totalStudents] = useState(1250);
+  
+  // Modal states
+  const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
+  const [isBadgeModalOpen, setIsBadgeModalOpen] = useState(false);
+  const [isPointsModalOpen, setIsPointsModalOpen] = useState(false);
+  
+  const [collectedBadges] = useState<Badge[]>(
+    [
+      { id: 1, name: "First Steps", emoji: "👶", collected: true, description: "Completed first course" },
+      { id: 2, name: "Speed Demon", emoji: "⚡", collected: true, description: "Fast assignment completion" },
+      { id: 3, name: "Scholar", emoji: "🎓", collected: true, description: "High academic performance" },
+      { id: 4, name: "Night Owl", emoji: "🦉", collected: false },
+      { id: 5, name: "Perfectionist", emoji: "💎", collected: false },
+      { id: 6, name: "Team Player", emoji: "🤝", collected: false },
+      { id: 7, name: "Mastermind", emoji: "🧠", collected: true, description: "Problem solving expert" },
+      { id: 8, name: "Explorer", emoji: "🗺️", collected: false },
+    ]
+  );
+
+  const [courseRanks] = useState(
+    [
+      { courseCode: "CS101", courseName: "Introduction to Programming", rank: 5, points: 425, totalStudents: 85 },
+      { courseCode: "CS201", courseName: "Data Structures", rank: 12, points: 380, totalStudents: 72 },
+      { courseCode: "CS301", courseName: "Algorithms", rank: 8, points: 402, totalStudents: 65 },
+      { courseCode: "CS401", courseName: "Software Engineering", rank: 3, points: 445, totalStudents: 58 },
+    ]
+  );
+
+  const handleBadgeClick = (badge: Badge) => {
+    setSelectedBadge(badge);
+    setIsBadgeModalOpen(true);
+  };
+
+  const handleRankClick = () => {
+    router.push("/lighthouse/leaderboard");
+  };
+
+  const handleBadgesClick = () => {
+    const badgesSection = document.getElementById("badges-section");
+    if (badgesSection) {
+      badgesSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handlePointsClick = () => {
+    setIsPointsModalOpen(true);
+  };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-6 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-80 h-80 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-20 animate-pulse"></div>
-        <div className="absolute top-20 right-20 w-60 h-60 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full opacity-15 animate-bounce delay-1000"></div>
-        <div className="absolute bottom-20 left-20 w-40 h-40 bg-gradient-to-r from-green-400 to-blue-500 rounded-full opacity-25 animate-ping delay-500"></div>
-      </div>
-
-      <div className="relative z-10 max-w-6xl mx-auto">
-        {/* Header with Stats */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-8 py-4 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300">
-            <span className="text-4xl animate-spin">🗼</span>
-            <div>
-              <h1 className="text-3xl font-black">LIGHTHOUSE</h1>
-              <p className="text-sm font-bold opacity-80">Ready to dominate?</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Stats Dashboard */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Rank Points */}
-          <div className="bg-gradient-to-br from-yellow-400 to-orange-600 p-6 rounded-2xl shadow-xl text-black transform hover:rotate-2 transition-all duration-300">
-            <div className="flex items-center justify-between">
+    <>
+      <SetHeaderClientComponent title={"LIGHTHOUSE"} />
+      <main className="min-h-screen bg-gray-50 p-6">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-3 bg-lucerayellow-1 text-lucerayellow-5 px-8 py-4 rounded-lg shadow-md border border-lucerayellow-2">
+              <Trophy className="w-8 h-8" />
               <div>
-                <h3 className="text-lg font-bold">Rank Points</h3>
-                <p className="text-3xl font-black">
-                  {currentPoints.toLocaleString()}
-                </p>
+                <h1 className="text-2xl font-bold">Lighthouse</h1>
+                <p className="text-sm opacity-80">Earn Points. Get Badges!</p>
               </div>
-              <span className="text-4xl animate-bounce">✨</span>
             </div>
           </div>
 
-          {/* Current Rank */}
-          <div className="bg-gradient-to-br from-purple-500 to-pink-600 p-6 rounded-2xl shadow-xl text-white transform hover:-rotate-2 transition-all duration-300">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-bold">Current Rank</h3>
-                <p className="text-3xl font-black">#{currentRank}</p>
-              </div>
-              <span className="text-4xl animate-pulse">🏆</span>
+          {/* Stats Dashboard */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <StatsCard
+              title="Total Points"
+              value={currentPoints.toLocaleString()}
+              icon={Star}
+              color="yellow"
+              clickable={true}
+              onClick={handlePointsClick}
+            />
+            <StatsCard
+              title="University Rank"
+              value={`#${currentRank}`}
+              icon={Trophy}
+              color="blue"
+              subtitle={`of ${totalStudents.toLocaleString()} students`}
+              clickable={true}
+              onClick={handleRankClick}
+            />
+            <StatsCard
+              title="Badges Earned"
+              value={`${collectedBadges.filter((b) => b.collected).length}/${collectedBadges.length}`}
+              icon={Users}
+              color="purple"
+              clickable={true}
+              onClick={handleBadgesClick}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            {/* Course Rankings */}
+            <CourseRankCard courseRanks={courseRanks} />
+            
+            {/* Action Buttons */}
+            <div className="space-y-4">
+              <h2 className="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
+              <ActionButton
+                href="/lighthouse/minigames"
+                icon={GamepadIcon}
+                title="Play Minigames"
+                description="Earn points through games"
+                color="rose"
+              />
+              <ActionButton
+                href="/lighthouse/leaderboard"
+                icon={BarChart3}
+                title="View Leaderboards"
+                description="See how you compare"
+                color="blue"
+              />
             </div>
           </div>
 
-          {/* Badges Collected */}
-          <div className="bg-gradient-to-br from-green-400 to-blue-500 p-6 rounded-2xl shadow-xl text-white transform hover:rotate-1 transition-all duration-300">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-bold">Badges</h3>
-                <p className="text-3xl font-black">
-                  {
-                    collectedBadges.filter((b) => b.collected).length
-                  }/{collectedBadges.length}
-                </p>
-              </div>
-              <span className="text-4xl animate-spin">🏅</span>
-            </div>
-          </div>
+          {/* Badges Collection */}
+          <BadgeGrid badges={collectedBadges} onBadgeClick={handleBadgeClick} />
         </div>
+      </main>
 
-        {/* Action Buttons */}
-        <div className="flex flex-wrap justify-center gap-4 mb-8">
-          <Link
-            href="/lighthouse/minigames"
-            className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-8 py-4 rounded-full font-bold shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-300 flex items-center gap-2"
-          >
-            <span className="text-2xl">🎮</span>
-            Play Minigames
-          </Link>
-          <Link
-            href="/lighthouse/leaderboard"
-            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-full font-bold shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-300 flex items-center gap-2"
-          >
-            <span className="text-2xl">📊</span>
-            Leaderboards
-          </Link>
-        </div>
-
-        {/* Badges Collection */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl">
-          <h2 className="text-2xl font-bold text-white mb-6 text-center">
-            Badge Collection
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {collectedBadges.map((badge) => (
-              <div
-                key={badge.id}
-                className={`p-4 rounded-xl text-center transition-all duration-300 cursor-pointer ${
-                  badge.collected
-                    ? "bg-gradient-to-br from-yellow-400 to-orange-500 text-black shadow-lg transform hover:scale-105"
-                    : "bg-gray-700/50 text-gray-400 hover:bg-gray-600/50"
-                }`}
-              >
-                <div
-                  className={`text-4xl mb-2 ${
-                    badge.collected ? "animate-bounce" : "grayscale"
-                  }`}
-                >
-                  {badge.emoji}
-                </div>
-                <p className="font-bold text-sm">{badge.name}</p>
-                {!badge.collected && (
-                  <p className="text-xs opacity-70 mt-1">Not collected</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="mt-8 flex justify-center">
-          <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-full font-bold shadow-xl animate-pulse">
-            <span className="text-lg">⚡ Ready for your next challenge?</span>
-          </div>
-        </div>
-      </div>
-    </main>
+      {/* Modals */}
+      <BadgeDetailModal
+        badge={selectedBadge}
+        isOpen={isBadgeModalOpen}
+        onClose={() => setIsBadgeModalOpen(false)}
+      />
+      <PointsInfoModal
+        isOpen={isPointsModalOpen}
+        onClose={() => setIsPointsModalOpen(false)}
+      />
+    </>
   );
 }
