@@ -79,8 +79,8 @@ export default function CreateCoursePage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white rounded-xl shadow-lg px-8 py-10 w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="bg-lucerabrown-1 rounded-xl shadow-lg px-8 py-10 w-full max-w-md">
         <h1 className="text-3xl font-bold mb-8 text-center text-gray-800 tracking-tight">
           Create Course
         </h1>
@@ -104,7 +104,7 @@ export default function CreateCoursePage() {
           </div>
           <button
             type="submit"
-            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-base rounded-md shadow transition-colors"
+            className="w-full py-3 bg-lucerabrown-4 hover:bg-lucerabrown-3 text-white font-bold text-base rounded-md shadow transition-colors cursor-pointer"
             onClick={uploadFile}
           >
             Submit

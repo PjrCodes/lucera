@@ -1,8 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Markdown from "react-markdown";
+import Markdown, { MarkdownProps } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
-export function MyMarkdown(props: React.ComponentProps<typeof Markdown>) {
+interface MyMarkdownProps extends MarkdownProps {
+  children: string;
+  components?: Record<string, React.ComponentType<any>>;
+}
+
+export function MyMarkdown({ children, components, ...props }: MyMarkdownProps) {
   return (
     <Markdown
       components={{
@@ -27,10 +33,24 @@ export function MyMarkdown(props: React.ComponentProps<typeof Markdown>) {
           return <span className="italic" {...rest}></span>;
         },
         // ...add more overrides if needed...
-        ...props.components,
+        a(props) {
+          const { node, ...rest } = props;
+          return (
+            <a
+              className="text-blue-600 hover:underline"
+              {...rest}
+              target="_blank"
+              rel="noopener noreferrer"
+            />
+          );
+        },
+        ...components,
       }}
       remarkPlugins={[remarkGfm, ...(props.remarkPlugins ?? [])]}
+      rehypePlugins={[rehypeRaw]}
       {...props}
-    />
+    >
+      {children}
+    </Markdown>
   );
 }

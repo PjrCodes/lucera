@@ -1,7 +1,8 @@
 "use client";
 
+import SetHeaderClientComponent from "@/components/SetHeaderClientComponent";
 import React, { useState, useRef, useEffect } from "react";
-import { FaBullhorn, FaEnvelope, FaChevronRight, FaPaperPlane } from "react-icons/fa";
+import { FaBullhorn, FaEnvelope, FaChevronRight, FaPaperPlane, FaChevronDown } from "react-icons/fa";
 
 const announcements = [
   {
@@ -10,6 +11,7 @@ const announcements = [
     content: "The final exam schedule is now available. Please check the portal.",
     date: "2024-06-10",
     from: "Prof. Smith",
+    course: "Computer Science 101",
   },
   {
     id: 2,
@@ -17,6 +19,7 @@ const announcements = [
     content: "The deadline for Assignment 3 has been extended by 2 days.",
     date: "2024-06-08",
     from: "Dr. Lee",
+    course: "Data Structures",
   },
 ];
 
@@ -87,402 +90,267 @@ export default function MessagesPage() {
   }, [selectedDmId, dmHistory]);
 
   return (
-    <div style={{
-      display: "flex",
-      height: "80vh",
-      border: "1px solid #e0e0e0",
-      borderRadius: 8,
-      overflow: "hidden",
-      background: "#fff"
-    }}>
-      {/* Sidebar */}
-      <aside style={{
-        width: 220,
-        background: "#f7f7fa",
-        borderRight: "1px solid #e0e0e0",
-        display: "flex",
-        flexDirection: "column",
-        padding: "1rem 0"
-      }}>
-        {sidebarItems.map(item => (
-          <button
-            key={item.key}
-            onClick={() => setSelected(item.key as any)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              padding: "0.75rem 1.5rem",
-              background: selected === item.key ? "#e3e7ff" : "transparent",
-              border: "none",
-              outline: "none",
-              fontWeight: selected === item.key ? 600 : 400,
-              color: "#222",
-              fontSize: 16,
-              cursor: "pointer",
-              width: "100%",
-              textAlign: "left"
-            }}
-          >
-            {item.icon}
-            {item.label}
-            {item.key === "announcements" && (
-              <span style={{
-                marginLeft: "auto",
-                background: "#6c63ff",
-                color: "#fff",
-                borderRadius: 12,
-                fontSize: 12,
-                padding: "2px 8px"
-              }}>{announcements.length}</span>
-            )}
-            {item.key === "dms" && (
-              <span style={{
-                marginLeft: "auto",
-                background: "#ff6b6b",
-                color: "#fff",
-                borderRadius: 12,
-                fontSize: 12,
-                padding: "2px 8px"
-              }}>{dms.filter(dm => dm.unread).length}</span>
-            )}
-          </button>
-        ))}
-      </aside>
-      {/* Main Content */}
-      <main style={{ flex: 1, padding: "2rem", overflowY: "auto", position: "relative" }}>
-        {/* Announcements List */}
-        {selected === "announcements" && selectedAnnouncementId === null && (
-          <section>
-            <h2 style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <FaBullhorn style={{ color: "#6c63ff" }} /> Announcements
-            </h2>
-            <ul style={{ listStyle: "none", padding: 0, marginTop: 24 }}>
-              {announcements.map(a => (
-                <li
-                  key={a.id}
-                  style={{
-                    background: "#f1f3fa",
-                    borderRadius: 8,
-                    marginBottom: 18,
-                    padding: "1rem 1.5rem",
-                    boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
-                    display: "flex",
-                    alignItems: "center",
-                    cursor: "pointer"
-                  }}
-                  onClick={() => setSelectedAnnouncementId(a.id)}
-                >
-                  <img
-                    src={professors[a.from]?.img}
-                    alt={a.from}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: "50%",
-                      marginRight: 16,
-                      objectFit: "cover",
-                      border: "2px solid #e0e0e0"
-                    }}
-                  />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 600, fontSize: 17, marginBottom: 4 }}>
-                      {a.title}
-                    </div>
-                    <div style={{ color: "#444", marginBottom: 6, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 300 }}>
-                      {a.content}
-                    </div>
-                    <div style={{ fontSize: 13, color: "#888", display: "flex", alignItems: "center", gap: 12 }}>
-                      <span>From: {a.from}</span>
-                      <span>•</span>
-                      <span>{a.date}</span>
-                    </div>
-                  </div>
-                  <FaChevronRight style={{ color: "#bbb", marginLeft: 12 }} />
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-        {/* Announcement Focused View */}
-        {selected === "announcements" && selectedAnnouncementId !== null && (() => {
-          const a = announcements.find(x => x.id === selectedAnnouncementId);
-          if (!a) return null;
-          return (
-            <div style={{
-              position: "absolute",
-              top: 0, left: 0, right: 0, bottom: 0,
-              background: "rgba(255,255,255,0.98)",
-              zIndex: 10,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 32
-            }}>
-              <div style={{
-                background: "#fff",
-                borderRadius: 12,
-                boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
-                padding: "2rem 2.5rem",
-                maxWidth: 480,
-                width: "100%",
-                textAlign: "center",
-                position: "relative"
-              }}>
-                <button
-                  onClick={() => setSelectedAnnouncementId(null)}
-                  style={{
-                    position: "absolute",
-                    top: 16,
-                    right: 16,
-                    background: "none",
-                    border: "none",
-                    fontSize: 22,
-                    color: "#888",
-                    cursor: "pointer"
-                  }}
-                  aria-label="Close"
-                >×</button>
-                <img
-                  src={professors[a.from]?.img}
-                  alt={a.from}
-                  style={{
-                    width: 64,
-                    height: 64,
-                    borderRadius: "50%",
-                    marginBottom: 18,
-                    objectFit: "cover",
-                    border: "2px solid #e0e0e0"
-                  }}
-                />
-                <h2 style={{ fontWeight: 700, marginBottom: 10 }}>{a.title}</h2>
-                <div style={{ color: "#444", marginBottom: 18, fontSize: 17 }}>{a.content}</div>
-                <div style={{ fontSize: 14, color: "#888" }}>
-                  From: {a.from} • {a.date}
-                </div>
+    <>
+    <SetHeaderClientComponent title={"MESSAGES"} />
+    <div className="w-full max-w-6xl mx-auto p-6">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden min-h-[80vh] flex">
+        {/* Sidebar */}
+        <aside className="w-64 bg-gray-50 border-r border-gray-200 flex flex-col">
+          <div className="p-6 border-b border-gray-200">
+            <h1 className="text-2xl font-bold text-gray-900">Messages</h1>
+          </div>
+          <nav className="flex-1 p-4">
+            {sidebarItems.map(item => (
+              <button
+                key={item.key}
+                onClick={() => {
+                  setSelected(item.key as any);
+                  setSelectedAnnouncementId(null);
+                  setSelectedDmId(null);
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-left transition-all duration-200 ${
+                  selected === item.key 
+                    ? "bg-blue-50 text-blue-700 font-medium" 
+                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                }`}
+              >
+                <span className={`text-lg ${selected === item.key ? "text-blue-600" : "text-gray-500"}`}>
+                  {item.icon}
+                </span>
+                <span className="flex-1">{item.label}</span>
+                {item.key === "announcements" && announcements.length > 0 && (
+                  <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full font-medium">
+                    {announcements.length}
+                  </span>
+                )}
+                {item.key === "dms" && dms.filter(dm => dm.unread).length > 0 && (
+                  <span className="bg-red-100 text-red-700 text-xs px-2 py-1 rounded-full font-medium">
+                    {dms.filter(dm => dm.unread).length}
+                  </span>
+                )}
+              </button>
+            ))}
+          </nav>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 bg-gray-50 relative">
+          {/* Announcements List */}
+          {selected === "announcements" && (
+            <section className="p-6 h-full overflow-y-auto">
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                  Announcements
+                </h2>
+                <p className="text-gray-600 text-sm">Stay updated with the latest announcements from your instructors</p>
               </div>
-            </div>
-          );
-        })()}
-        {/* DMs List */}
-        {selected === "dms" && selectedDmId === null && (
-          <section>
-            <h2 style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <FaEnvelope style={{ color: "#ff6b6b" }} /> Direct Messages
-            </h2>
-            <ul style={{ listStyle: "none", padding: 0, marginTop: 24 }}>
-              {dms.map(dm => (
-                <li
-                  key={dm.id}
-                  style={{
-                    background: dm.unread ? "#ffeaea" : "#f7f7fa",
-                    borderRadius: 8,
-                    marginBottom: 16,
-                    padding: "1rem 1.5rem",
-                    boxShadow: "0 1px 2px rgba(0,0,0,0.02)",
-                    display: "flex",
-                    alignItems: "center",
-                    cursor: "pointer"
-                  }}
-                  onClick={() => setSelectedDmId(dm.id)}
-                >
-                  <img
-                    src={professors[dm.from]?.img}
-                    alt={dm.from}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: "50%",
-                      marginRight: 16,
-                      objectFit: "cover",
-                      border: "2px solid #e0e0e0"
-                    }}
-                  />
-                  <div style={{
-                    flex: 1,
-                    fontWeight: dm.unread ? 600 : 400,
-                    color: "#222"
-                  }}>
-                    <div style={{ fontSize: 15 }}>
-                      <span style={{ color: "#6c63ff", fontWeight: 500 }}>{dm.from}</span>
-                      <span style={{ marginLeft: 12, color: "#888", fontSize: 13 }}>{dm.date}</span>
-                    </div>
-                    <div style={{ marginTop: 4, color: "#444", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 220 }}>
-                      {dm.message}
-                    </div>
-                  </div>
-                  <FaChevronRight style={{ color: "#bbb", marginLeft: 12 }} />
-                  {dm.unread && (
-                    <span style={{
-                      marginLeft: 10,
-                      width: 10,
-                      height: 10,
-                      background: "#ff6b6b",
-                      borderRadius: "50%",
-                      display: "inline-block"
-                    }} />
-                  )}
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-        {/* DM Chat Screen */}
-        {selected === "dms" && selectedDmId !== null && (() => {
-          const dm = dms.find(x => x.id === selectedDmId);
-          if (!dm) return null;
-          const history = dmHistory[selectedDmId] || [];
-          const prof = professors[dm.from];
-          return (
-            <div style={{
-              position: "absolute",
-              top: 0, left: 0, right: 0, bottom: 0,
-              background: "rgba(255,255,255,0.98)",
-              zIndex: 10,
-              display: "flex",
-              flexDirection: "column",
-              height: "100%"
-            }}>
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                padding: "1rem 2rem",
-                borderBottom: "1px solid #e0e0e0",
-                background: "#f7f7fa"
-              }}>
-                <button
-                  onClick={() => setSelectedDmId(null)}
-                  style={{
-                    marginRight: 18,
-                    background: "none",
-                    border: "none",
-                    fontSize: 22,
-                    color: "#888",
-                    cursor: "pointer"
-                  }}
-                  aria-label="Back"
-                >←</button>
-                <img
-                  src={prof.img}
-                  alt={prof.name}
-                  style={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: "50%",
-                    marginRight: 16,
-                    objectFit: "cover",
-                    border: "2px solid #e0e0e0"
-                  }}
-                />
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: 18 }}>{prof.name}</div>
-                  <div style={{ color: "#888", fontSize: 13 }}>{dm.date}</div>
-                </div>
-              </div>
-              <div style={{
-                flex: 1,
-                overflowY: "auto",
-                padding: "1.5rem 2rem",
-                background: "#f9f9fc",
-                display: "flex",
-                flexDirection: "column"
-              }}>
-                {history.map((msg, idx) => (
+              <div className="space-y-3">
+                {announcements.map(a => (
                   <div
-                    key={idx}
-                    style={{
-                      alignSelf: msg.from === "You" ? "flex-end" : "flex-start",
-                      background: msg.from === "You" ? "#e3e7ff" : "#fff",
-                      color: "#222",
-                      borderRadius: 12,
-                      padding: "0.7rem 1.2rem",
-                      marginBottom: 12,
-                      maxWidth: 320,
-                      boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
-                      position: "relative"
-                    }}
+                    key={a.id}
+                    className="bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-200"
                   >
-                    {msg.from !== "You" && (
-                      <img
-                        src={prof.img}
-                        alt={prof.name}
-                        style={{
-                          width: 24,
-                          height: 24,
-                          borderRadius: "50%",
-                          position: "absolute",
-                          left: -32,
-                          top: 6,
-                          objectFit: "cover",
-                          border: "1px solid #e0e0e0"
-                        }}
-                      />
+                    {/* Announcement Header */}
+                    <div
+                      className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${
+                        selectedAnnouncementId === a.id ? 'bg-blue-50 border-b border-gray-200' : ''
+                      }`}
+                      onClick={() => setSelectedAnnouncementId(selectedAnnouncementId === a.id ? null : a.id)}
+                    >
+                      <div className="flex items-start gap-3">
+                        <img
+                          src={professors[a.from]?.img}
+                          alt={a.from}
+                          className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between mb-1">
+                            <h3 className="font-medium text-gray-900 text-sm">{a.title}</h3>
+                            {selectedAnnouncementId === a.id ? (
+                              <FaChevronDown className="text-gray-400 text-xs mt-1 flex-shrink-0 transition-transform" />
+                            ) : (
+                              <FaChevronRight className="text-gray-400 text-xs mt-1 flex-shrink-0 transition-transform" />
+                            )}
+                          </div>
+                          <p className="text-gray-600 text-sm mb-2 line-clamp-2">{a.content}</p>
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <span>{a.from}</span>
+                            <span>•</span>
+                            <span>{a.course}</span>
+                            <span>•</span>
+                            <span>{new Date(a.date).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Announcement Expanded Content */}
+                    {selectedAnnouncementId === a.id && (
+                      <div className="px-4 pb-4 bg-blue-50">
+                        <div className="bg-white rounded-lg p-6 border border-blue-100">
+                          <div className="mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">{a.title}</h3>
+                            <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+                              <span className="font-medium">{a.from}</span>
+                              <span>•</span>
+                              <span>{a.course}</span>
+                              <span>•</span>
+                              <span>{new Date(a.date).toLocaleDateString()}</span>
+                            </div>
+                          </div>
+                          <div className="prose prose-sm max-w-none">
+                            <div className="text-gray-700 leading-relaxed">{a.content}</div>
+                          </div>
+                        </div>
+                      </div>
                     )}
-                    <div style={{ fontSize: 15 }}>{msg.message}</div>
-                    <div style={{ fontSize: 11, color: "#888", marginTop: 4, textAlign: "right" }}>{msg.date}</div>
                   </div>
                 ))}
-                <div ref={chatEndRef} />
               </div>
-              <form
-                onSubmit={e => {
-                  e.preventDefault();
-                  if (!dmInput.trim()) return;
-                  setDmHistory(prev => ({
-                    ...prev,
-                    [selectedDmId]: [
-                      ...(prev[selectedDmId] || []),
-                      { from: "You", message: dmInput, date: new Date().toISOString().slice(0, 10) }
-                    ]
-                  }));
-                  setDmInput("");
-                }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "1rem 2rem",
-                  borderTop: "1px solid #e0e0e0",
-                  background: "#fff"
-                }}
-              >
-                <input
-                  type="text"
-                  value={dmInput}
-                  onChange={e => setDmInput(e.target.value)}
-                  placeholder="Type your message..."
-                  style={{
-                    flex: 1,
-                    padding: "0.7rem 1rem",
-                    borderRadius: 8,
-                    border: "1px solid #e0e0e0",
-                    fontSize: 15,
-                    marginRight: 12
+            </section>
+          )}
+
+          {/* DMs List */}
+          {selected === "dms" && selectedDmId === null && (
+            <section className="p-6 h-full overflow-y-auto">
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                  Direct Messages
+                </h2>
+                <p className="text-gray-600 text-sm">Private conversations with your instructors</p>
+              </div>
+              <div className="space-y-3">
+                {dms.map(dm => (
+                  <div
+                    key={dm.id}
+                    className={`bg-white rounded-lg p-4 border transition-all duration-200 cursor-pointer hover:shadow-sm ${
+                      dm.unread 
+                        ? "border-red-200 bg-red-50" 
+                        : "border-gray-200 hover:border-blue-200"
+                    }`}
+                    onClick={() => setSelectedDmId(dm.id)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <img
+                          src={professors[dm.from]?.img}
+                          alt={dm.from}
+                          className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                        />
+                        {dm.unread && (
+                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border border-white"></div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-medium text-gray-900 text-sm">{dm.from}</span>
+                          <span className="text-xs text-gray-500">{new Date(dm.date).toLocaleDateString()}</span>
+                        </div>
+                        <p className="text-gray-600 text-sm truncate">{dm.message}</p>
+                      </div>
+                      <FaChevronRight className="text-gray-400 text-xs flex-shrink-0" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* DM Chat Screen */}
+          {selected === "dms" && selectedDmId !== null && (() => {
+            const dm = dms.find(x => x.id === selectedDmId);
+            if (!dm) return null;
+            const history = dmHistory[selectedDmId] || [];
+            const prof = professors[dm.from];
+            return (
+              <div className="h-full flex flex-col bg-white">
+                {/* Chat Header */}
+                <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center gap-4">
+                  <button
+                    onClick={() => setSelectedDmId(null)}
+                    className="text-gray-600 hover:text-gray-900 transition-colors"
+                    aria-label="Back"
+                  >
+                    ←
+                  </button>
+                  <img
+                    src={prof.img}
+                    alt={prof.name}
+                    className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                  />
+                  <div>
+                    <h3 className="font-medium text-gray-900">{prof.name}</h3>
+                    <p className="text-xs text-gray-600">Active now</p>
+                  </div>
+                </div>
+
+                {/* Chat Messages */}
+                <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
+                  <div className="max-w-2xl mx-auto space-y-4">
+                    {history.map((msg, idx) => (
+                      <div
+                        key={idx}
+                        className={`flex ${msg.from === "You" ? "justify-end" : "justify-start"}`}
+                      >
+                        <div className={`max-w-xs rounded-lg px-4 py-3 shadow-sm ${
+                          msg.from === "You" 
+                            ? "bg-blue-500 text-white" 
+                            : "bg-white text-gray-800 border border-gray-200"
+                        }`}>
+                          <div className="break-words whitespace-pre-line text-sm leading-relaxed">
+                            {msg.message}
+                          </div>
+                          <div className={`text-xs mt-2 ${
+                            msg.from === "You" ? "text-blue-100" : "text-gray-500"
+                          }`}>
+                            {new Date(msg.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <div ref={chatEndRef} />
+                  </div>
+                </div>
+
+                {/* Message Input */}
+                <form
+                  onSubmit={e => {
+                    e.preventDefault();
+                    if (!dmInput.trim()) return;
+                    setDmHistory(prev => ({
+                      ...prev,
+                      [selectedDmId]: [
+                        ...(prev[selectedDmId] || []),
+                        { from: "You", message: dmInput, date: new Date().toISOString().slice(0, 10) }
+                      ]
+                    }));
+                    setDmInput("");
                   }}
-                />
-                <button
-                  type="submit"
-                  style={{
-                    background: "#6c63ff",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: 8,
-                    padding: "0.7rem 1.2rem",
-                    fontSize: 16,
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6
-                  }}
+                  className="bg-white border-t border-gray-200 p-4"
                 >
-                  <FaPaperPlane />
-                  Send
-                </button>
-              </form>
-            </div>
-          );
-        })()}
-      </main>
+                  <div className="max-w-2xl mx-auto flex items-center gap-3">
+                    <input
+                      type="text"
+                      value={dmInput}
+                      onChange={e => setDmInput(e.target.value)}
+                      placeholder="Type your message..."
+                      className="flex-1 px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    />
+                    <button
+                      type="submit"
+                      className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full transition-colors flex items-center justify-center"
+                      disabled={!dmInput.trim()}
+                    >
+                      <FaPaperPlane className="text-sm" />
+                    </button>
+                  </div>
+                </form>
+              </div>
+            );
+          })()}
+        </main>
+      </div>
     </div>
+    </>
   );
 }

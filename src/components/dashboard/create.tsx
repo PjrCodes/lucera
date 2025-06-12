@@ -25,7 +25,7 @@ const Create: React.FC<Props> = ({ session, isTeacher }) => {
       type: "course",
       label: "New Course",
       icon: React.createElement(iconForType("course")),
-      href: "/create/course"
+      href: "/courses/create"
     },
     {
       id: 2, 
