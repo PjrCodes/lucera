@@ -4,12 +4,12 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import client from "@/lib/db";
 import { redirectUnauthenticated } from "@/auth";
-import SetHeaderClientComponent from "@/components/SetHeaderClientComponent";
-import CourseHeader from "@/components/course/CourseHeader";
-import CourseDescription from "@/components/course/CourseDescription";
-import CourseUnits from "@/components/course/CourseUnits";
-import CourseTimeline from "@/components/course/CourseTimeline";
-import CourseSidebar from "@/components/course/CourseSidebar";
+import SetHeaderClientComponent from "@/components/set-header-client-component";
+import CourseHeader from "@/components/feature/course/course-header";
+import CourseDescription from "@/components/feature/course/course-description";
+import CourseUnits from "@/components/feature/course/course-units";
+import CourseTimeline from "@/components/feature/course/course-timeline";
+import CourseSidebar from "@/components/feature/course/course-sidebar";
 import { CourseHeaderSkeleton, CourseDescriptionSkeleton, CourseUnitsSkeleton, CourseTimelineSkeleton } from "@/components/course-skeleton";
 
 export interface CourseUnit {
@@ -43,11 +43,11 @@ async function getCourse(course_id: string): Promise<Course | null> {
   const course = await db
     .collection("courses")
     .findOne({ _id: new ObjectId(course_id) });
-  
+
   if (process.env.NODE_ENV === 'development') {
     await new Promise(resolve => setTimeout(resolve, 500));
   }
-  
+
   return course as Course | null;
 }
 
@@ -58,7 +58,7 @@ export default async function CourseViewPage({
 }) {
   const session = await redirectUnauthenticated();
   const { course_id } = await params;
-  
+
   const course = await getCourse(course_id);
   if (!course) return notFound();
 
@@ -73,15 +73,15 @@ export default async function CourseViewPage({
               <Suspense fallback={<CourseHeaderSkeleton />}>
                 <CourseHeader course={course} />
               </Suspense>
-              
+
               <Suspense fallback={<CourseDescriptionSkeleton />}>
                 <CourseDescription course={course} />
               </Suspense>
-              
+
               <Suspense fallback={<CourseUnitsSkeleton />}>
                 <CourseUnits course={course} />
               </Suspense>
-              
+
               <Suspense fallback={<CourseTimelineSkeleton />}>
                 <CourseTimeline course={course} />
               </Suspense>

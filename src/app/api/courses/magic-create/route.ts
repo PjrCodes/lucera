@@ -6,7 +6,7 @@ import client from "@/lib/db";
 
 import { PdfReader } from "pdfreader";
 import { LLMSyllabusParse } from "@/lib/llm";
-import { checkTeacherhood, getFileRecord } from "@/lib/databaseService";
+import { checkTeacherhood, getFileRecord } from "@/lib/database-service";
 
 import { z } from "zod";
 
@@ -88,7 +88,7 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
 
     // Call LLM parse apis with error handling
     let timeline, units, courseStartDate, courseEndDate, name, description, shortDescription;
-    
+
     try {
       const llmResult = await LLMSyllabusParse(filePath);
       timeline = llmResult.timeline;

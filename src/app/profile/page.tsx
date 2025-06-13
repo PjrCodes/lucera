@@ -1,8 +1,8 @@
 import React from "react";
 import { redirectUnauthenticated } from "@/auth";
 import client from "@/lib/db";
-import SetHeaderClientComponent from "../../components/SetHeaderClientComponent"; // Added import
-import SignOut from "@/components/buttons/signOutButton";
+import SetHeaderClientComponent from "../../components/set-header-client-component"; // Added import
+import SignOut from "@/components/buttons/sign-out-button";
 import Link from "next/link";
 
 export default async function ProfilePage() {

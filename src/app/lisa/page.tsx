@@ -5,7 +5,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import SetHeaderClientComponent from "@/components/SetHeaderClientComponent";
+import SetHeaderClientComponent from "@/components/set-header-client-component";
 import { useSession } from "next-auth/react";
 import { PiChatTeardrop, PiCaretUp, PiBooks, PiTag } from "react-icons/pi";
 import { iconForType } from "@/constants";

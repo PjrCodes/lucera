@@ -1,9 +1,9 @@
 import { JSX } from "react";
 import { NextPage } from "next";
 import { Session } from "next-auth";
-import UpcomingDeadlines from "./dashboard/upcomingDeadlines";
+import UpcomingDeadlines from "./dashboard/upcoming-deadlines";
 import Courses from "./dashboard/courses";
-import StudentAlerts from "./dashboard/studentAlerts";
+import StudentAlerts from "./dashboard/student-alerts";
 import Bookmarks from "./dashboard/bookmarks";
 import Create from "./dashboard/create";
 import defaults from "../../data/defaults.json";

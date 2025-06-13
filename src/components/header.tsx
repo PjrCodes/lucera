@@ -3,14 +3,14 @@
 import React, { useState, useEffect } from "react";
 import SearchBarElement from "./searchBarElement";
 import ProfileCircle from "./profileCircle";
-import SignIn from "./buttons/signInButton";
+import SignIn from "./buttons/sign-in-button";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "./ui/sidebar";
 import { House, SidebarIcon, SquarePen } from "lucide-react";
 import Link from "next/link";
 import { Session } from "next-auth";
 import Bell from "./bell";
-import { useHeader } from "@/context/HeaderContext";
+import { useHeader } from "@/context/header-context";
 import DashboardEditModal from "./dashboard/DashboardEditModal";
 
 // Accept session as a prop instead of fetching it on the client

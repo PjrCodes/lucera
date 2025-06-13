@@ -2,13 +2,13 @@
 import React, { useState } from "react";
 import { Trophy, Star, Users, GamepadIcon, BarChart3 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import StatsCard from "@/components/lighthouse/StatsCard";
-import BadgeGrid from "@/components/lighthouse/BadgeGrid";
-import CourseRankCard from "@/components/lighthouse/CourseRankCard";
-import ActionButton from "@/components/lighthouse/ActionButton";
-import BadgeDetailModal from "@/components/lighthouse/BadgeDetailModal";
-import PointsInfoModal from "@/components/lighthouse/PointsInfoModal";
-import SetHeaderClientComponent from "@/components/SetHeaderClientComponent";
+import StatsCard from "@/components/lighthouse/stats-card";
+import BadgeGrid from "@/components/lighthouse/badge-grid";
+import CourseRankCard from "@/components/lighthouse/course-rank-card";
+import ActionButton from "@/components/lighthouse/action-buttons";
+import BadgeDetailModal from "@/components/lighthouse/badge-detail-modal";
+import PointsInfoModal from "@/components/lighthouse/points-info-modal";
+import SetHeaderClientComponent from "@/components/set-header-client-component";
 
 interface Badge {
   id: number;
@@ -23,12 +23,12 @@ export default function LighthouseHome() {
   const [currentPoints] = useState(2847);
   const [currentRank] = useState(15);
   const [totalStudents] = useState(1250);
-  
+
   // Modal states
   const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
   const [isBadgeModalOpen, setIsBadgeModalOpen] = useState(false);
   const [isPointsModalOpen, setIsPointsModalOpen] = useState(false);
-  
+
   const [collectedBadges] = useState<Badge[]>(
     [
       { id: 1, name: "First Steps", emoji: "👶", collected: true, description: "Completed first course" },
@@ -119,7 +119,7 @@ export default function LighthouseHome() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {/* Course Rankings */}
             <CourseRankCard courseRanks={courseRanks} />
-            
+
             {/* Action Buttons */}
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>

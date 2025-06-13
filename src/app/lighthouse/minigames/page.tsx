@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { ArrowLeft, Puzzle, Zap, Brain } from "lucide-react";
 import Link from "next/link";
-import SetHeaderClientComponent from "@/components/SetHeaderClientComponent";
+import SetHeaderClientComponent from "@/components/set-header-client-component";
 import WordWhizGame from "@/components/lighthouse/games/WordWhizGame";
 import ConceptMatchGame from "@/components/lighthouse/games/ConceptMatchGame";
 import QuizBlitzGame from "@/components/lighthouse/games/QuizBlitzGame";

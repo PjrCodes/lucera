@@ -1,5 +1,5 @@
 import { auth } from "../../auth";
-import { checkTeacherhood } from "@/lib/databaseService";
+import { checkTeacherhood } from "@/lib/database-service";
 import Courses from "@/components/dashboard/courses";
 import React from "react";
 

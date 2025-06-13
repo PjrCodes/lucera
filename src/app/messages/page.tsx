@@ -1,6 +1,6 @@
 "use client";
 
-import SetHeaderClientComponent from "@/components/SetHeaderClientComponent";
+import SetHeaderClientComponent from "@/components/set-header-client-component";
 import React, { useState, useRef, useEffect } from "react";
 import { FaBullhorn, FaEnvelope, FaChevronRight, FaPaperPlane, FaChevronDown } from "react-icons/fa";
 
@@ -109,8 +109,8 @@ export default function MessagesPage() {
                   setSelectedDmId(null);
                 }}
                 className={`w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-left transition-all duration-200 ${
-                  selected === item.key 
-                    ? "bg-blue-50 text-blue-700 font-medium" 
+                  selected === item.key
+                    ? "bg-blue-50 text-blue-700 font-medium"
                     : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                 }`}
               >
@@ -224,8 +224,8 @@ export default function MessagesPage() {
                   <div
                     key={dm.id}
                     className={`bg-white rounded-lg p-4 border transition-all duration-200 cursor-pointer hover:shadow-sm ${
-                      dm.unread 
-                        ? "border-red-200 bg-red-50" 
+                      dm.unread
+                        ? "border-red-200 bg-red-50"
                         : "border-gray-200 hover:border-blue-200"
                     }`}
                     onClick={() => setSelectedDmId(dm.id)}
@@ -293,8 +293,8 @@ export default function MessagesPage() {
                         className={`flex ${msg.from === "You" ? "justify-end" : "justify-start"}`}
                       >
                         <div className={`max-w-xs rounded-lg px-4 py-3 shadow-sm ${
-                          msg.from === "You" 
-                            ? "bg-blue-500 text-white" 
+                          msg.from === "You"
+                            ? "bg-blue-500 text-white"
                             : "bg-white text-gray-800 border border-gray-200"
                         }`}>
                           <div className="break-words whitespace-pre-line text-sm leading-relaxed">

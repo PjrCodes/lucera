@@ -183,7 +183,7 @@ export function EditCourseClient({ course }: { course: Course }) {
                   width: 300,
                 },
                 {
-                  key: "description", 
+                  key: "description",
                   title: "Description",
                   dataType: DataType.String,
                   isEditable: true,
@@ -229,7 +229,7 @@ export function EditCourseClient({ course }: { course: Course }) {
                         </div>
                       );
                     }
-                    
+
                     // Only allow editing if this row is in edit mode
                     if (editingUnit !== props.rowData.id) {
                       return (
@@ -238,14 +238,14 @@ export function EditCourseClient({ course }: { course: Course }) {
                         </span>
                       );
                     }
-                    
+
                     return undefined;
                   }
                 },
                 cellEditor: {
                   content: (props) => {
                     // Only show editor if this row is in edit mode
-                    if (editingUnit === props.rowData.id && 
+                    if (editingUnit === props.rowData.id &&
                         (props.column.key === "name" || props.column.key === "description")) {
                       return (
                         <input
@@ -308,7 +308,7 @@ export function EditCourseClient({ course }: { course: Course }) {
               rowKeyField="id"
               columns={[                {
                   key: "type",
-                  title: "Type", 
+                  title: "Type",
                   dataType: DataType.String,
                   isEditable: true,
                   width: 120,
@@ -328,7 +328,7 @@ export function EditCourseClient({ course }: { course: Course }) {
                   width: 130,
                 },
                 {
-                  key: "due_date", 
+                  key: "due_date",
                   title: "Due Date",
                   dataType: DataType.String,
                   isEditable: true,
@@ -350,7 +350,7 @@ export function EditCourseClient({ course }: { course: Course }) {
                 },
                 {
                   key: "due_date_inferred",
-                  title: "Due Inferred", 
+                  title: "Due Inferred",
                   dataType: DataType.Boolean,
                   isEditable: true,
                   width: 100,
@@ -403,7 +403,7 @@ export function EditCourseClient({ course }: { course: Course }) {
                         </div>
                       );
                     }
-                    
+
                     // Show read-only content when not editing
                     if (editingTimeline !== props.rowData.id) {
                       // Add placeholders for date fields
@@ -418,7 +418,7 @@ export function EditCourseClient({ course }: { course: Course }) {
                         </span>
                       );
                     }
-                    
+
                     return undefined;
                   }
                 },
@@ -451,7 +451,7 @@ export function EditCourseClient({ course }: { course: Course }) {
                           />
                         );
                       }
-                      
+
                       // Custom editor for boolean fields
                       if (props.column.key.includes("_inferred")) {
                         return (
@@ -479,7 +479,7 @@ export function EditCourseClient({ course }: { course: Course }) {
                           </select>
                         );
                       }
-                      
+
                       // Default text input for other fields
                       return (
                         <input
@@ -522,7 +522,7 @@ export function EditCourseClient({ course }: { course: Course }) {
             />
           </div>
         </div>
-        
+
         <button
           type="submit"
           className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-semibold transition-colors"

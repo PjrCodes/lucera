@@ -5,12 +5,12 @@ import MainFooter from "@/components/footer";
 import Header from "@/components/header";
 import { AppSidebar } from "@/components/sidenav";
 import { SessionProvider } from "next-auth/react";
-import { HeaderProvider } from "@/context/HeaderContext";
+import { HeaderProvider } from "@/context/header-context";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { auth } from "@/auth";
 import ClientProviders from "./providers";
 import React from "react";
-import { getUserData } from "@/lib/databaseService";
+import { getUserData } from "@/lib/database-service";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

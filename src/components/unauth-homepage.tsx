@@ -1,4 +1,4 @@
-import SetHeaderClientComponent from "@/components/SetHeaderClientComponent";
+import SetHeaderClientComponent from "@/components/set-header-client-component";
 import { NextPage } from "next";
 
 const UnauthHomepage: NextPage = ({}) => {

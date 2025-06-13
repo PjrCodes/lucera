@@ -3,7 +3,7 @@ import {
   checkTeacherhood,
   getUserData,
   setDefaultDashboardLayout,
-} from "@/lib/databaseService";
+} from "@/lib/database-service";
 import UnauthHomepage from "@/components/unauthHomepage";
 import AuthDashboard from "@/components/authDashboard";
 

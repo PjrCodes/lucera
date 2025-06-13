@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Trophy, Medal, Star, Filter } from "lucide-react";
-import SetHeaderClientComponent from "@/components/SetHeaderClientComponent";
+import SetHeaderClientComponent from "@/components/set-header-client-component";
 
 interface LeaderboardEntry {
   id: number;
@@ -20,7 +20,7 @@ interface Course {
 
 export default function LeaderboardPage() {
   const [selectedCourse, setSelectedCourse] = useState<string>("university");
-  
+
   const courses: Course[] = [
     { code: "CS101", name: "Introduction to Programming" },
     { code: "CS201", name: "Data Structures" },
@@ -145,8 +145,8 @@ export default function LeaderboardPage() {
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-4 bg-lucerablue-1 border-b">
               <h2 className="font-bold text-lucerablue-5">
-                {selectedCourse === "university" 
-                  ? "University Leaderboard" 
+                {selectedCourse === "university"
+                  ? "University Leaderboard"
                   : `${selectedCourse} Leaderboard`}
               </h2>
             </div>

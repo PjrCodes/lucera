@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from 'react';
-import { useHeader } from '@/context/HeaderContext';
+import { useHeader } from '@/context/header-context';
 
 interface SetHeaderClientComponentProps {
   title: string;
