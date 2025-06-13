@@ -1,4 +1,4 @@
-import { EditCourseClient } from '@/components/editCourseClient';
+import { EditCourseClient } from '@/components/edit-course-client';
 import { notFound } from 'next/navigation';
 import client from '@/lib/db';
 import { ObjectId } from 'mongodb';
@@ -14,7 +14,7 @@ export default async function EditCoursePage({ params }: { params: { course_id: 
 
     const db = client.db();
     const course = await db.collection('courses').findOne({ _id: new ObjectId(course_id) });
-    
+
     if (!course) {
         return notFound();
     }

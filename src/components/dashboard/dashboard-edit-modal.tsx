@@ -7,7 +7,7 @@ import { createPortal } from 'react-dom';
 import { DndContext, pointerWithin, PointerSensor, useSensor, useSensors, DragEndEvent, useDraggable, DragOverlay, Active, useDroppable, DragStartEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
-import DraggableItem from './DraggableItem';
+import DraggableItem from './draggable-item';
 import dashboardAcl from '../../../data/acl/dashboard.json';
 import defaultLayouts from '../../../data/defaults.json';
 import { DASHBOARD_ELEMENT_TO_NAME } from '@/constants';
@@ -26,9 +26,9 @@ interface DashboardEditModalProps {
 }
 
 interface DashboardItem {
-  id: string; 
-  type: string; 
-  instanceId: string; 
+  id: string;
+  type: string;
+  instanceId: string;
 }
 
 // Helper component for items in the "Add Elements" panel
@@ -48,8 +48,8 @@ const SourceDraggableElement = ({ elementType, isOverlay, isDropAllowed }: { ele
     <div
       ref={setNodeRef}
       style={style}
-      {...(isOverlay ? {} : listeners)} 
-      {...(isOverlay ? {} : attributes)} 
+      {...(isOverlay ? {} : listeners)}
+      {...(isOverlay ? {} : attributes)}
       className={`px-4 py-2 border rounded-md text-sm font-medium whitespace-nowrap transition-all
                   ${isOverlay && !isDropAllowed
                     ? 'border-lucerared-4 bg-lucerared-1 text-lucerared-4 cursor-not-allowed shadow-lg'
@@ -66,8 +66,8 @@ const SourceDraggableElement = ({ elementType, isOverlay, isDropAllowed }: { ele
 const DraggedItemOverlay = ({ label, isDropAllowed }: { label: string, isDropAllowed: boolean }) => {
   return (
     <div className={`p-3 border rounded-lg text-sm font-medium shadow-lg transition-all
-                    ${!isDropAllowed 
-                      ? 'border-[color:var(--color-lucerared-4)] bg-[color:var(--color-lucerared-1)] text-[color:var(--color-lucerared-5)] cursor-not-allowed' 
+                    ${!isDropAllowed
+                      ? 'border-[color:var(--color-lucerared-4)] bg-[color:var(--color-lucerared-1)] text-[color:var(--color-lucerared-5)] cursor-not-allowed'
                       : 'border-[color:var(--color-lucerabrown-4)] bg-[color:var(--color-lucerabrown-1)] text-[color:var(--color-lucerabrown-5)] cursor-grabbing'}`}>
       {label}
     </div>
@@ -82,7 +82,7 @@ const DroppableColumn = ({ id, children, isEmpty, activeColumn }: { id: string; 
                          (id === 'right-column-container' && activeColumn === 'right');
 
   return (
-    <div 
+    <div
       ref={setNodeRef}
       className={`min-h-[300px] p-4 border-2 border-dashed rounded-lg transition-colors
                   ${isOver || isColumnActive ? 'border-[color:var(--color-lucerabrown-5)] bg-[color:var(--color-lucerabrown-2)]' : 'border-[color:var(--color-lucerabrown-3)] bg-[color:var(--color-lucerabrown-1)]'}`}
@@ -130,9 +130,9 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
         throw new Error('Failed to fetch layout');
       }
       const layout = await response.json();
-      
+
       let globalCounter = 0;
-      
+
       const leftItems = layout.leftColumn.map((type: string) => {
         const instanceId = `left-${globalCounter}`;
         const id = `${type}-${instanceId}`;
@@ -146,7 +146,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
         globalCounter++;
         return { id, type, instanceId };
       });
-      
+
       setLeftColumn(leftItems);
       setRightColumn(rightItems);
       setNextUniqueCounter(globalCounter); // Set the next available counter
@@ -161,15 +161,15 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
     try {
       // Use the imported defaults directly
       const defaultLayout = defaultLayouts.dashboardLayout;
-      
+
       // Get default layout for user role
       const layout = defaultLayout[userRole as keyof typeof defaultLayouts.dashboardLayout] || {
         leftColumn: [],
         rightColumn: []
       };
-      
+
       let globalCounter = 0;
-      
+
       const leftItems = layout.leftColumn.map((type: string) => {
         const instanceId = `left-${globalCounter}`;
         const id = `${type}-${instanceId}`;
@@ -183,7 +183,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
         globalCounter++;
         return { id, type, instanceId };
       });
-      
+
       setLeftColumn(leftItems);
       setRightColumn(rightItems);
       setNextUniqueCounter(globalCounter);
@@ -207,7 +207,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
     const newItem: DashboardItem = {
       id: `${elementType}-${instanceId}`, // This ensures unique React keys
       type: elementType,
-      instanceId: instanceId, 
+      instanceId: instanceId,
     };
 
     const setColumn = column === 'left' ? setLeftColumn : setRightColumn;
@@ -228,12 +228,12 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
     if (leftIndex !== -1) {
       return { item: leftColumn[leftIndex], column: 'left', index: leftIndex };
     }
-    
+
     const rightIndex = rightColumn.findIndex(item => item.id === id);
     if (rightIndex !== -1) {
       return { item: rightColumn[rightIndex], column: 'right', index: rightIndex };
     }
-    
+
     return null;
   };
 
@@ -317,7 +317,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
     setIsDropCurrentlyAllowed(isAllowed);
     document.body.style.cursor = isAllowed ? 'grabbing' : 'not-allowed';
   };
-  
+
   const handleDragCancel = () => {
     setActiveDragData(null);
     setIsDropCurrentlyAllowed(true);
@@ -350,13 +350,13 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
         targetColumnName = 'left';
         targetIndex = overData?.sortable?.index;
         if (overId === 'left-column-container' && targetIndex === undefined) {
-          targetIndex = leftColumn.length; 
+          targetIndex = leftColumn.length;
         }
       } else if (overId === 'right-column-container' || overData?.sortable?.containerId === 'right-column-sorter') {
         targetColumnName = 'right';
         targetIndex = overData?.sortable?.index;
         if (overId === 'right-column-container' && targetIndex === undefined) {
-          targetIndex = rightColumn.length; 
+          targetIndex = rightColumn.length;
         }
       }
 
@@ -393,13 +393,13 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
             targetColumnName = overLocation.column;
             targetIndex = overLocation.index;
         } else {
-            return; 
+            return;
         }
       }
-      
+
       if (!targetColumnName) return;
-      
-      if (targetIndex === undefined) { 
+
+      if (targetIndex === undefined) {
         targetIndex = targetColumnName === 'left' ? leftColumn.length : rightColumn.length;
       }
 
@@ -425,7 +425,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
           id: `${itemToMove.type}-${newInstanceId}`, // New unique ID
           instanceId: newInstanceId,
         };
-        
+
         const destSetColumn = targetColumnName === 'left' ? setLeftColumn : setRightColumn;
         destSetColumn(items => {
             const newArray = [...items];
@@ -435,7 +435,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
       }
     }
   };
-  
+
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -443,7 +443,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
         leftColumn: leftColumn.map(item => item.type),
         rightColumn: rightColumn.map(item => item.type)
       };
-      
+
       const response = await fetch('/api/dashboard/layout', {
         method: 'POST',
         headers: {
@@ -455,7 +455,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
       if (!response.ok) {
         throw new Error('Failed to save layout');
       }
-      
+
       onClose();
       window.location.reload(); // Reload the page
     } catch (error) {
@@ -487,7 +487,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
         <DialogHeader className="rounded-t-lg">
           <DialogTitle className="text-lucerabrown-5">Customise your Dashboard</DialogTitle>
         </DialogHeader>
-        
+
         <DndContext
           sensors={sensors}
           collisionDetection={pointerWithin}
@@ -495,7 +495,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
           onDragCancel={handleDragCancel}
-          modifiers={[restrictToWindowEdges]} 
+          modifiers={[restrictToWindowEdges]}
         >
           <div className="flex-grow overflow-y-auto pr-2 space-y-6">
             <div className="grid grid-cols-2 gap-6">
@@ -505,9 +505,9 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
                 <DroppableColumn id="left-column-container" isEmpty={leftColumn.length === 0} activeColumn={activeColumn}>
                   <SortableContext id="left-column-sorter" items={leftColumn.map(item => item.id)} strategy={verticalListSortingStrategy}>
                     {leftColumn.map(item => (
-                      <DraggableItem 
-                        key={item.id} 
-                        id={item.id} 
+                      <DraggableItem
+                        key={item.id}
+                        id={item.id}
                         label={DASHBOARD_ELEMENT_TO_NAME[item.type as keyof typeof DASHBOARD_ELEMENT_TO_NAME]}
                         onRemove={() => removeElement(item.id)}
                       />
@@ -522,9 +522,9 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
                 <DroppableColumn id="right-column-container" isEmpty={rightColumn.length === 0} activeColumn={activeColumn}>
                   <SortableContext id="right-column-sorter" items={rightColumn.map(item => item.id)} strategy={verticalListSortingStrategy}>
                     {rightColumn.map(item => (
-                      <DraggableItem 
-                        key={item.id} 
-                        id={item.id} 
+                      <DraggableItem
+                        key={item.id}
+                        id={item.id}
                         label={DASHBOARD_ELEMENT_TO_NAME[item.type as keyof typeof DASHBOARD_ELEMENT_TO_NAME]}
                         onRemove={() => removeElement(item.id)}
                       />
@@ -550,7 +550,7 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
               )}
             </div>
           </div>
-          
+
           {typeof window !== 'undefined' && createPortal(
             <DragOverlay>
               {activeDragData ? (

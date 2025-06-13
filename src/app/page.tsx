@@ -4,8 +4,8 @@ import {
   getUserData,
   setDefaultDashboardLayout,
 } from "@/lib/database-service";
-import UnauthHomepage from "@/components/unauthHomepage";
-import AuthDashboard from "@/components/authDashboard";
+import UnauthHomepage from "@/components/unauth-homepage";
+import AuthDashboard from "@/components/auth-dashboard";
 
 export default async function Home() {
   const session = await auth();

@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import SearchBarElement from "./searchBarElement";
-import ProfileCircle from "./profileCircle";
+import SearchBarElement from "./search-bar-element";
+import ProfileCircle from "./profile-circle";
 import SignIn from "./buttons/sign-in-button";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "./ui/sidebar";
@@ -11,7 +11,7 @@ import Link from "next/link";
 import { Session } from "next-auth";
 import Bell from "./bell";
 import { useHeader } from "@/context/header-context";
-import DashboardEditModal from "./dashboard/DashboardEditModal";
+import DashboardEditModal from "./dashboard/dashboard-edit-modal";
 
 // Accept session as a prop instead of fetching it on the client
 export default function Header({

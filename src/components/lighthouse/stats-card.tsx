@@ -13,7 +13,7 @@ interface StatsCardProps {
 
 const colorClasses = {
   blue: "bg-lucerablue-1 text-lucerablue-5 border-lucerablue-2",
-  green: "bg-luceragreen-1 text-luceragreen-5 border-luceragreen-2", 
+  green: "bg-luceragreen-1 text-luceragreen-5 border-luceragreen-2",
   purple: "bg-lucerapurple-1 text-lucerapurple-5 border-lucerapurple-2",
   red: "bg-lucerared-1 text-lucerared-5 border-lucerared-2",
   yellow: "bg-lucerayellow-1 text-lucerayellow-5 border-lucerayellow-2",
@@ -22,27 +22,27 @@ const colorClasses = {
 const iconColorClasses = {
   blue: "text-lucerablue-4",
   green: "text-luceragreen-4",
-  purple: "text-lucerapurple-4", 
+  purple: "text-lucerapurple-4",
   red: "text-lucerared-4",
   yellow: "text-lucerayellow-4",
 };
 
-const StatsCard: React.FC<StatsCardProps> = ({ 
-  title, 
-  value, 
-  icon: Icon, 
-  color, 
-  subtitle, 
-  onClick, 
-  clickable = false 
+const StatsCard: React.FC<StatsCardProps> = ({
+  title,
+  value,
+  icon: Icon,
+  color,
+  subtitle,
+  onClick,
+  clickable = false
 }) => {
   const baseClasses = `${colorClasses[color]} rounded-lg shadow-md p-6 border transition-all duration-200`;
-  const interactiveClasses = clickable 
-    ? "hover:shadow-lg cursor-pointer hover:scale-105 active:scale-95" 
+  const interactiveClasses = clickable
+    ? "hover:shadow-lg cursor-pointer hover:scale-105 active:scale-95"
     : "hover:shadow-lg";
 
   return (
-    <div 
+    <div
       className={`${baseClasses} ${interactiveClasses}`}
       onClick={clickable ? onClick : undefined}
       role={clickable ? "button" : undefined}

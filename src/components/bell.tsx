@@ -1,6 +1,6 @@
 "use client";
 // This component listens for changes in the 'messages' collection
-import NotificationListener from "@/components/notificationListener";
+import NotificationListener from "@/components/notification-listener";
 
 import { useState } from "react";
 import { Bell as LucideBell, BellDot } from "lucide-react";
