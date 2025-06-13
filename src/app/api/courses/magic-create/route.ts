@@ -6,7 +6,7 @@ import client from "@/lib/db";
 
 import { PdfReader } from "pdfreader";
 import { LLMSyllabusParse } from "@/lib/llm";
-import { checkTeacherhood, getFileRecord } from "@/lib/database-service";
+import { checkTeacherhood, getFileRecord } from "@/lib/database/auth";
 
 import { z } from "zod";
 

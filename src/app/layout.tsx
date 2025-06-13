@@ -10,7 +10,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { auth } from "@/auth";
 import ClientProviders from "./providers";
 import React from "react";
-import { getUserData } from "@/lib/database-service";
+import { getUserData } from "@/lib/database/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

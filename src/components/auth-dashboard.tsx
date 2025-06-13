@@ -6,8 +6,8 @@ import Courses from "./dashboard/courses";
 import StudentAlerts from "./dashboard/student-alerts";
 import Bookmarks from "./dashboard/bookmarks";
 import Create from "./dashboard/create";
-import defaults from "../../data/defaults.json";
-import dashboardControlList from "../../data/acl/dashboard.json";
+import defaults from "@/appdata/defaults.json";
+import dashboardControlList from "@/appdata/acl/dashboard.json";
 import { MdBrokenImage } from "react-icons/md";
 
 interface Props {

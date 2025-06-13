@@ -1,6 +1,6 @@
-import { getUserData } from "@/lib/database-service";
+import { getUserData } from "@/lib/database/auth";
 import client from "@/lib/db";
-import defaults from "@/../data/defaults.json";
+import defaults from "@/appdata/defaults.json";
 
 export interface DashboardLayout {
   leftColumn: string[];

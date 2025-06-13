@@ -1,33 +1,20 @@
 import client from "@/lib/db";
 import { ObjectId } from "mongodb";
 import { NotFoundError } from "@/lib/errors";
-import { z } from "zod";
-import defaults from "@/../data/defaults.json";
-
-const fileSchema = z.object({
-  _id: z.instanceof(ObjectId),
-  name: z.string(),
-  size: z.number(),
-  file_type: z.string(),
-  path: z.string(),
-  userId: z.string(),
-  createdAt: z.date(),
-  lastModified: z.date(),
-  type: z.string(),
-});
+import { fileSchema } from "@/lib/schemas";
+import defaults from "@/appdata/defaults.json";
 
 export async function getUserData(userId: string) {
   const db = client.db();
   const user = await db.collection("user_data").findOne({ id: userId });
-  // if (!user) {
-  //   throw new NotFoundError("User");
-  // }
+  if (!user) {
+    throw new NotFoundError("User");
+  }
   return user;
 }
 
 export async function checkTeacherhood(userId: string) {
   const user = await getUserData(userId);
-  return true;
   return user.role === "teacher";
 }
 

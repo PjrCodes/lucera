@@ -7,10 +7,10 @@ import { createPortal } from 'react-dom';
 import { DndContext, pointerWithin, PointerSensor, useSensor, useSensors, DragEndEvent, useDraggable, DragOverlay, Active, useDroppable, DragStartEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
-import DraggableItem from './draggable-item';
-import dashboardAcl from '../../../data/acl/dashboard.json';
-import defaultLayouts from '../../../data/defaults.json';
-import { DASHBOARD_ELEMENT_TO_NAME } from '@/constants';
+import DraggableItem from '@/components/dashboard/draggable-item';
+import dashboardAcl from '@/appdata/acl/dashboard.json';
+import defaultLayouts from '@/appdata/defaults.json';
+import { DASHBOARD_ELEMENT_TO_NAME } from '@/constants/constants';
 
 interface DashboardEditModalProps {
   isOpen: boolean;
