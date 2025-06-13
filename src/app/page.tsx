@@ -2,8 +2,10 @@ import { auth } from "../auth";
 import {
   checkTeacherhood,
   getUserData,
-  setDefaultDashboardLayout,
 } from "@/lib/database/auth";
+import {
+  setDefaultDashboardLayout,
+} from "@/lib/database/dashboard";
 import UnauthHomepage from "@/components/unauth-homepage";
 import AuthDashboard from "@/components/auth-dashboard";
 

@@ -48,3 +48,32 @@ export async function saveDashboardLayout(userId: string, layout: DashboardLayou
     throw new Error("Failed to save dashboard layout");
   }
 }
+
+
+export async function setDefaultDashboardLayout(
+  userId: string,
+  isTeacher: boolean
+) {
+  const db = client.db();
+  const customUserDataCollection = db.collection("user_data");
+
+  try {
+    await customUserDataCollection.updateOne(
+      // Use user ID from session
+      { id: userId },
+      {
+        $set: {
+          dashboardLayout:
+            !isTeacher
+              ? defaults.dashboardLayout.student
+              : defaults.dashboardLayout.teacher,
+        },
+      },
+      { upsert: true }
+    );
+    // Redirect to the profile page after successful role assignment
+  } catch (error) {
+    console.error("Error updating user data with dashboard layout:", error);
+    throw new Error("Failed to set default dashboard layout");
+  }
+}

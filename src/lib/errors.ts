@@ -5,3 +5,11 @@ export class NotFoundError extends Error {
         Object.setPrototypeOf(this, NotFoundError.prototype);
     }
 }
+
+export class InvalidDataError extends Error {
+    constructor(message?: string) {
+        super(message || 'Invalid data retrieved / provided / processed. Likely database issue.');
+        this.name = 'InvalidData';
+        Object.setPrototypeOf(this, InvalidDataError.prototype);
+    }
+}

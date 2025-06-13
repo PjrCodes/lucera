@@ -1,8 +1,6 @@
 import client from "@/lib/db";
-import { ObjectId } from "mongodb";
-import { NotFoundError } from "@/lib/errors";
-import { fileSchema } from "@/lib/schemas";
-import defaults from "@/appdata/defaults.json";
+import { NotFoundError, InvalidDataError } from "@/lib/errors";
+import { userDataSchema } from "@/lib/schemas";
 
 export async function getUserData(userId: string) {
   const db = client.db();
@@ -10,65 +8,19 @@ export async function getUserData(userId: string) {
   if (!user) {
     throw new NotFoundError("User");
   }
-  return user;
+
+  // Validate the user data against the schema
+  const parsedUser = userDataSchema.safeParse(user);
+
+  if (!parsedUser.success) {
+    console.error("Invalid user data format:", parsedUser.error);
+    throw new InvalidDataError("Invalid user data format");
+  }
+
+  return parsedUser.data;
 }
 
 export async function checkTeacherhood(userId: string) {
   const user = await getUserData(userId);
   return user.role === "teacher";
-}
-
-export async function getFileRecord(fileId: string, ownerId?: string) {
-  const db = client.db();
-  const collection = db.collection("files");
-  let fileRecord;
-  if (ownerId) {
-    fileRecord = await collection.findOne({
-      _id: new ObjectId(fileId),
-      userId: ownerId,
-    });
-  } else {
-    // public file access (maybe)
-    fileRecord = await collection.findOne({ _id: new ObjectId(fileId) });
-  }
-  if (!fileRecord) {
-    console.error("File not found in database:", fileId);
-    throw new NotFoundError("File");
-  }
-  // Validate the file record against the schema
-  const parsedFileRecord = fileSchema.safeParse(fileRecord);
-  if (!parsedFileRecord.success) {
-    console.error("Invalid file record format:", parsedFileRecord.error);
-    throw new Error("Invalid file record format");
-  }
-  fileRecord = parsedFileRecord.data;
-  return fileRecord;
-}
-
-export async function setDefaultDashboardLayout(
-  userId: string,
-  isTeacher: boolean
-) {
-  const db = client.db();
-  const customUserDataCollection = db.collection("user_data");
-
-  try {
-    await customUserDataCollection.updateOne(
-      // Use user ID from session
-      { id: userId },
-      {
-        $set: {
-          dashboardLayout:
-            !isTeacher
-              ? defaults.dashboardLayout.student
-              : defaults.dashboardLayout.teacher,
-        },
-      },
-      { upsert: true }
-    );
-    // Redirect to the profile page after successful role assignment
-  } catch (error) {
-    console.error("Error updating user data with dashboard layout:", error);
-    throw new Error("Failed to set default dashboard layout");
-  }
 }
