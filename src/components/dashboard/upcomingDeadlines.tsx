@@ -158,7 +158,7 @@ const UpcomingDeadlines: React.FC<Props> = ({ session, isTeacher }) => {
     {
       id: 1,
       title: "Overdue Exam", // Changed to Exam for variety
-      dueDate: "2025-06-09 20:00:00", // Overdue with time
+      dueDate: "2025-06-12 20:00:00", // Overdue with time
       course: "CS101",
       type: "exam",
       courseColor: "bg-lucerared-2 text-lucerared-5"

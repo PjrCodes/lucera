@@ -12,6 +12,7 @@ import {
   MdTrendingUp,
 } from "react-icons/md";
 import Link from "next/link";
+import { BotMessageSquare, LayoutDashboard, Lightbulb, MessageCircleMore, Settings, TrendingUp } from "lucide-react";
 
 export async function AppSidebar() {
   const session = await auth();
@@ -35,7 +36,7 @@ export async function AppSidebar() {
                     href="/"
                     className="flex items-center gap-3 px-4 py-2 text-black  hover:bg-lucerabrown-2 rounded-md transition-colors"
                   >
-                    <MdDashboard size={20} />
+                    <LayoutDashboard  size={20} />
                     Dashboard
                   </Link>
                 </li>
@@ -44,7 +45,7 @@ export async function AppSidebar() {
                     href="/lisa"
                     className="flex items-center gap-3 px-4 py-2 text-black hover:bg-lucerabrown-2 rounded-md transition-colors"
                   >
-                    <MdChat size={20} />
+                    <BotMessageSquare size={20} />
                     LISA
                   </Link>
                 </li>
@@ -53,7 +54,7 @@ export async function AppSidebar() {
                     href="/progress"
                     className="flex items-center gap-3 px-4 py-2 text-black  hover:bg-lucerabrown-2 rounded-md transition-colors"
                   >
-                    <MdTrendingUp size={20} />
+                    <TrendingUp size={20} />
                     Progress
                   </Link>
                 </li>
@@ -62,7 +63,7 @@ export async function AppSidebar() {
                     href="/lighthouse"
                     className="flex items-center gap-3 px-4 py-2 text-black hover:bg-lucerabrown-2 rounded-md transition-colors"
                   >
-                    <MdLightbulb size={20} />
+                    <Lightbulb size={20} />
                     Lighthouse
                   </Link>
                 </li>
@@ -71,7 +72,7 @@ export async function AppSidebar() {
                     href="/messages"
                     className="flex items-center gap-3 px-4 py-2 text-black  hover:bg-lucerabrown-2 rounded-md transition-colors"
                   >
-                    <MdMessage size={20} />
+                    <MessageCircleMore size={20} />
                     Messages
                   </Link>
                 </li>
@@ -85,7 +86,7 @@ export async function AppSidebar() {
               href="/settings"
               className="flex items-center gap-3 px-4 py-2 text-black hover:bg-lucerabrown-2 rounded-md transition-colors mb-4"
             >
-              <MdSettings size={20} />
+              <Settings size={20} />
               Settings
             </Link>
           ) : null}
