@@ -1,6 +1,5 @@
-import { auth } from "../auth";
+import { auth } from "../../auth";
 import {
-  checkTeacherhood,
   getUserData,
 } from "@/lib/database/auth";
 import {
@@ -8,6 +7,7 @@ import {
 } from "@/lib/database/dashboard";
 import UnauthHomepage from "@/components/unauth-homepage";
 import AuthDashboard from "@/components/auth-dashboard";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth();
@@ -18,10 +18,15 @@ export default async function Home() {
     return <UnauthHomepage />;
   }
 
-  // userRole
-  const isTeacher = await checkTeacherhood(session?.user?.id || "");
-  const userData = await getUserData(session?.user?.id || "");
-  const dashboardLayout = userData?.dashboardLayout;
+  let isTeacher = false;
+  let dashboardLayout;
+  try {
+    const userData = await getUserData(session?.user?.id || "");
+    isTeacher = userData.role === "teacher";
+    dashboardLayout = userData?.dashboardLayout;
+  } catch {
+    redirect("/handle-invalid-user");
+  }
 
   if (!dashboardLayout) {
     await setDefaultDashboardLayout(session?.user?.id || "", isTeacher);

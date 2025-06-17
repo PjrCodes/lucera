@@ -11,17 +11,12 @@ import DraggableItem from '@/components/dashboard/draggable-item';
 import dashboardAcl from '@/appdata/acl/dashboard.json';
 import defaultLayouts from '@/appdata/defaults.json';
 import { DASHBOARD_ELEMENT_TO_NAME } from '@/constants/constants';
+import { UserData } from '@/lib/schemas';
 
 interface DashboardEditModalProps {
   isOpen: boolean;
   onClose: () => void;
-  userData: {
-    role: string;
-    dashboardLayout: {
-      leftColumn: string[];
-      rightColumn: string[];
-    }
-  };
+  userData: UserData;
   userId: string;
 }
 
@@ -134,6 +129,9 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
       let globalCounter = 0;
 
       const leftItems = layout.leftColumn.map((type: string) => {
+        if (type === "") {
+          return null; // Skip empty types
+        }
         const instanceId = `left-${globalCounter}`;
         const id = `${type}-${instanceId}`;
         globalCounter++;
@@ -141,14 +139,21 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
       });
 
       const rightItems = layout.rightColumn.map((type: string) => {
+        if (type === "") {
+          return null; // Skip empty types
+        }
         const instanceId = `right-${globalCounter}`;
         const id = `${type}-${instanceId}`;
         globalCounter++;
         return { id, type, instanceId };
       });
 
-      setLeftColumn(leftItems);
-      setRightColumn(rightItems);
+      // remove null values from arrays
+      const filteredLeftItems = leftItems.filter((item: null) => item !== null) as DashboardItem[];
+      const filteredRightItems = rightItems.filter((item: null) => item !== null) as DashboardItem[];
+
+      setLeftColumn(filteredLeftItems);
+      setRightColumn(filteredRightItems);
       setNextUniqueCounter(globalCounter); // Set the next available counter
     } catch (error) {
       console.error('Failed to load dashboard layout:', error);

@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -65,82 +64,6 @@ const CONTENT_TYPES: ContentType[] = [
   { id: "project", name: "Project", icon: "project" },
   { id: "announcement", name: "Announcement", icon: "announcement" },
 ];
-
-function ChatHeader() {
-  return (
-    <header className="w-full border-b border-lucerablue-2 bg-white shadow-sm">
-      <div className="mx-auto p-4">
-        <h1 className="text-xl font-bold text-lucerablue-5 tracking-tight">
-          LISA
-        </h1>
-      </div>
-    </header>
-  );
-}
-
-function CourseTagSelector({
-  courses,
-  selectedCourses,
-  onToggleCourse,
-}: {
-  courses: Course[];
-  selectedCourses: string[];
-  onToggleCourse: (courseId: string) => void;
-}) {
-  return (
-    <div className="flex flex-wrap gap-2 mb-3">
-      <span className="text-sm text-lucerablue-4 py-1">Courses:</span>
-      {courses.map((course) => (
-        <button
-          key={course.id}
-          onClick={() => onToggleCourse(course.id)}
-          className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
-            selectedCourses.includes(course.id)
-              ? COURSE_COLORS[course.color]
-              : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
-          }`}
-        >
-          {course.name}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function ContentFilter({
-  filters,
-  onToggleFilter,
-}: {
-  filters: FilterState;
-  onToggleFilter: (filter: keyof FilterState) => void;
-}) {
-  const filterOptions = [
-    { key: "assignments" as const, label: "Assignments", icon: "📝" },
-    { key: "quizzes" as const, label: "Quizzes", icon: "❓" },
-    { key: "lectures" as const, label: "Lectures", icon: "🎓" },
-    { key: "materials" as const, label: "Materials", icon: "📚" },
-  ];
-
-  return (
-    <div className="flex flex-wrap gap-2 mb-3">
-      <span className="text-sm text-lucerablue-4 py-1">Filter by:</span>
-      {filterOptions.map((option) => (
-        <button
-          key={option.key}
-          onClick={() => onToggleFilter(option.key)}
-          className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
-            filters[option.key]
-              ? "bg-lucerablue-3 text-lucerablue-5 border-lucerablue-4"
-              : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
-          }`}
-        >
-          <span className="mr-1">{option.icon}</span>
-          {option.label}
-        </button>
-      ))}
-    </div>
-  );
-}
 
 function MessageList({ messages }: { messages: Message[] }) {
   const messagesEndRef = useRef<HTMLDivElement>(null);

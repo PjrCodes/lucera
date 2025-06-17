@@ -2,10 +2,6 @@ import { getUserData } from "@/lib/database/auth";
 import client from "@/lib/db";
 import defaults from "@/appdata/defaults.json";
 
-export interface DashboardLayout {
-  leftColumn: string[];
-  rightColumn: string[];
-}
 
 export async function getUserDashboardLayout(userId: string): Promise<DashboardLayout> {
   try {
@@ -24,7 +20,7 @@ export async function getUserDashboardLayout(userId: string): Promise<DashboardL
   } catch (error) {
     console.error("Error fetching dashboard layout:", error);
     // Fallback to student default if user data fetch fails
-    return defaults.dashboardLayout.student;
+    throw new Error("Failed to fetch dashboard layout");
   }
 }
 

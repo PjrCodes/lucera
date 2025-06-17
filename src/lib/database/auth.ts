@@ -17,6 +17,8 @@ export async function getUserData(userId: string) {
     throw new InvalidDataError("Invalid user data format");
   }
 
+  // remove the _id field from the parsed user data
+  delete parsedUser.data._id;
   return parsedUser.data;
 }
 

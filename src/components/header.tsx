@@ -12,6 +12,7 @@ import { Session } from "next-auth";
 import Bell from "./bell";
 import { useHeader } from "@/context/header-context";
 import DashboardEditModal from "./dashboard/dashboard-edit-modal";
+import type { UserData } from "@/lib/schemas"; // Adjust the import path as needed
 
 // Accept session as a prop instead of fetching it on the client
 export default function Header({
@@ -19,7 +20,7 @@ export default function Header({
   userData,
 }: {
   session: Session | null;
-  userData?: any;
+  userData: UserData | null;
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -31,11 +32,6 @@ export default function Header({
   const isLoggedIn = session?.user ? true : false;
   const isHomePage = pathname === "/";
   const isLisaPage = pathname === "/lisa";
-
-  const cleanedUserData = {
-    role: userData?.role || "student", // Default to 'user' if role is not defined
-    dashboardLayout: userData?.dashboardLayout || "default", // Default to 'default' layout if not defined
-  };
 
   // Set default header title if not logged in
   useEffect(() => {
@@ -138,7 +134,7 @@ export default function Header({
       <DashboardEditModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        userData={cleanedUserData}
+        userData={userData!}
         userId={session?.user?.id || ""} // Pass userId from session
       />
     </header>
