@@ -4,7 +4,7 @@ import {
   getUserDashboardLayout,
   saveDashboardLayout,
 } from "@/lib/database/dashboard";
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 
 export const GET = auth(async function GET(request: NextAuthRequest) {
   try {

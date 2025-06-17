@@ -3,14 +3,14 @@ import { ObjectId } from "mongodb";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import client from "@/lib/db";
-import { redirectUnauthenticated } from "@/auth";
-import SetHeaderClientComponent from "@/components/set-header-client-component";
-import CourseHeader from "@/components/feature/course/course-header";
-import CourseDescription from "@/components/feature/course/course-description";
-import CourseUnits from "@/components/feature/course/course-units";
-import CourseTimeline from "@/components/feature/course/course-timeline";
-import CourseSidebar from "@/components/feature/course/course-sidebar";
-import { CourseHeaderSkeleton, CourseDescriptionSkeleton, CourseUnitsSkeleton, CourseTimelineSkeleton } from "@/components/course-skeleton";
+import { redirectUnauthenticated } from "@/lib/auth";
+import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
+import CourseHeader from "@/components/feature/course/cards/course-header";
+import CourseDescription from "@/components/feature/course/cards/course-description";
+import CourseUnits from "@/components/feature/course/cards/course-units";
+import CourseTimeline from "@/components/feature/course/cards/course-timeline";
+import CourseSidebar from "@/components/feature/course/cards/course-sidebar";
+import { CourseHeaderSkeleton, CourseDescriptionSkeleton, CourseUnitsSkeleton, CourseTimelineSkeleton } from "@/components/feature/course/course-skeleton";
 
 export interface CourseUnit {
   name: string;

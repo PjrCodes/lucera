@@ -1,4 +1,4 @@
-import { EditCourseClient } from '@/components/edit-course-client';
+import { EditCourseClient } from '@/components/feature/course/edit-course-client';
 import { notFound } from 'next/navigation';
 import client from '@/lib/db';
 import { ObjectId } from 'mongodb';

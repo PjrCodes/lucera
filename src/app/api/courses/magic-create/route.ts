@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import fs from "fs/promises";
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import { NextAuthRequest } from "next-auth";
 import client from "@/lib/db";
 
 import { PdfReader } from "pdfreader";
-import { LLMSyllabusParse } from "@/lib/llm";
+import { LLMSyllabusParse } from "@/lib/llm/llm";
 import { checkTeacherhood, getFileRecord } from "@/lib/database/auth";
 
 import { z } from "zod";

@@ -1,6 +1,6 @@
 "use client";
 
-import SetHeaderClientComponent from "@/components/set-header-client-component";
+import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
 import React, { useState, useRef, useEffect } from "react";
 import { FaBullhorn, FaEnvelope, FaChevronRight, FaPaperPlane, FaChevronDown } from "react-icons/fa";
 

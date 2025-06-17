@@ -4,11 +4,11 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import SetHeaderClientComponent from "@/components/set-header-client-component";
+import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
 import { useSession } from "next-auth/react";
 import { PiChatTeardrop, PiCaretUp, PiBooks, PiTag } from "react-icons/pi";
 import { iconForType } from "@/constants";
-import { MultiSelect } from "@/components/ui/MultiSelect";
+import { MultiSelect } from "@/components/core/multi-select";
 
 interface Message {
   id: string;

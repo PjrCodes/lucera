@@ -1,6 +1,6 @@
 import React from "react";
 import Form from "next/form";
-import { auth, redirectUnauthenticated } from "@/auth";
+import { auth, redirectUnauthenticated } from "@/lib/auth";
 import client from "@/lib/db";
 import { redirect } from "next/navigation";
 import defaults from "@/appdata/defaults.json";

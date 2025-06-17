@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import { getUserData } from "@/lib/database/auth";
 import { redirect } from "next/navigation";
 

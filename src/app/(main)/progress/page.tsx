@@ -1,6 +1,6 @@
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import { checkTeacherhood } from "@/lib/database/auth";
-import Courses from "@/components/dashboard/courses";
+import Courses from "@/components/feature/dashboard/cards/courses";
 import React from "react";
 
 export default async function ProgressPage() {

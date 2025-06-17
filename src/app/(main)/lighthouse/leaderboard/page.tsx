@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Trophy, Medal, Star, Filter } from "lucide-react";
-import SetHeaderClientComponent from "@/components/set-header-client-component";
+import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
 
 interface LeaderboardEntry {
   id: number;

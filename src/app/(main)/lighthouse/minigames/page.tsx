@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import { ArrowLeft, Puzzle, Zap, Brain } from "lucide-react";
 import Link from "next/link";
-import SetHeaderClientComponent from "@/components/set-header-client-component";
-import WordWhizGame from "@/components/lighthouse/games/WordWhizGame";
-import ConceptMatchGame from "@/components/lighthouse/games/ConceptMatchGame";
-import QuizBlitzGame from "@/components/lighthouse/games/QuizBlitzGame";
+import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
+import WordWhizGame from "@/components/feature/lighthouse/games/WordWhizGame";
+import ConceptMatchGame from "@/components/feature/lighthouse/games/ConceptMatchGame";
+import QuizBlitzGame from "@/components/feature/lighthouse/games/QuizBlitzGame";
 
 type GameType = "menu" | "word-whiz" | "concept-match" | "quiz-blitz";
 

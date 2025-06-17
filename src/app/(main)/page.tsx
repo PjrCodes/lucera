@@ -1,12 +1,12 @@
-import { auth } from "../../auth";
+import { auth } from "../../lib/auth";
 import {
   getUserData,
 } from "@/lib/database/auth";
 import {
   setDefaultDashboardLayout,
 } from "@/lib/database/dashboard";
-import UnauthHomepage from "@/components/unauth-homepage";
-import AuthDashboard from "@/components/auth-dashboard";
+import UnauthHomepage from "@/components/feature/dashboard/unauth-homepage";
+import AuthDashboard from "@/components/feature/dashboard/auth-dashboard";
 import { redirect } from "next/navigation";
 
 export default async function Home() {

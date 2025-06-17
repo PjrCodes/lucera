@@ -2,13 +2,13 @@
 import React, { useState } from "react";
 import { Trophy, Star, Users, GamepadIcon, BarChart3 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import StatsCard from "@/components/lighthouse/stats-card";
-import BadgeGrid from "@/components/lighthouse/badge-grid";
-import CourseRankCard from "@/components/lighthouse/course-rank-card";
-import ActionButton from "@/components/lighthouse/action-buttons";
-import BadgeDetailModal from "@/components/lighthouse/badge-detail-modal";
-import PointsInfoModal from "@/components/lighthouse/points-info-modal";
-import SetHeaderClientComponent from "@/components/set-header-client-component";
+import StatsCard from "@/components/feature/lighthouse/stats-card";
+import BadgeGrid from "@/components/feature/lighthouse/badge-grid";
+import CourseRankCard from "@/components/feature/lighthouse/course-rank-card";
+import ActionButton from "@/components/feature/lighthouse/action-buttons";
+import BadgeDetailModal from "@/components/feature/lighthouse/badge-detail-modal";
+import PointsInfoModal from "@/components/feature/lighthouse/points-info-modal";
+import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
 
 interface Badge {
   id: number;

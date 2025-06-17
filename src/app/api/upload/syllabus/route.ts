@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import fs from "node:fs/promises";
 import client from "@/lib/db";
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import { NextAuthRequest } from "next-auth";
 
 export const POST = auth(async function POST(req: NextAuthRequest) {

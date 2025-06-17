@@ -1,29 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Urbanist } from "next/font/google";
-import "../globals.css";
-import MainFooter from "@/components/footer";
-import HeaderWrapper from "@/components/header-wrapper";
-import { AppSidebar } from "@/components/sidenav";
+import "@/app/globals.css";
+import MainFooter from "@/components/feature/footer";
+import HeaderWrapper from "@/components/feature/header/header-wrapper";
+import { AppSidebar } from "@/components/feature/sidenav";
 import { SessionProvider } from "next-auth/react";
 import { HeaderProvider } from "@/context/header-context";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import ClientProviders from "../providers";
 import React from "react";
 
-const geistSans = Urbanist({
-  variable: "--font-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "Lucera",
-  description: "An AI-First, no-compromise Learning Management System.",
-};
 
 export default async function RootLayout({
   children,
@@ -32,33 +16,27 @@ export default async function RootLayout({
 }>) {
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ClientProviders>
-          <SessionProvider>
+        // <ClientProviders>
+          // <SessionProvider>
             <HeaderProvider>
-              <div className="font-sans flex flex-col min-h-screen w-full [--header-height:calc(--spacing(14))] bg-yellow-50">
-                <SidebarProvider className="flex flex-col flex-1">
-                  <HeaderWrapper />
-                  <div className="flex flex-1">
-                    <AppSidebar />
-                    <SidebarInset className="flex flex-col flex-1">
-                      <main className="flex-1">
-                        <div className="flex flex-col items-center justify-start w-full h-full">
-                          {children}
-                        </div>
-                      </main>
-                      <MainFooter />
-                    </SidebarInset>
-                  </div>
+              {/* <div className="font-sans flex min-h-screen w-full bg-yellow-50"> */}
+                <SidebarProvider className="flex flex-1">
+                  <AppSidebar />
+                  <SidebarInset className="flex flex-col flex-1">
+                    <HeaderWrapper />
+                    <main className="flex-1">
+                      <div className="flex flex-col items-center justify-start w-full h-full">
+                        {children}
+                      </div>
+                    </main>
+                    <MainFooter />
+                  </SidebarInset>
                 </SidebarProvider>
-              </div>
+              {/* </div> */}
             </HeaderProvider>
-          </SessionProvider>
-        </ClientProviders>
-      </body>
-    </html>
+          // </SessionProvider>
+        // </ClientProviders>
+      // </body>
+    // </html>
   );
 }
