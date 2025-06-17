@@ -28,7 +28,7 @@ const Create: React.FC<Props> = ({ session, isTeacher }) => {
       href: "/courses/create"
     },
     {
-      id: 2, 
+      id: 2,
       type: "assignment",
       label: "New Assignment",
       icon: React.createElement(iconForType("assignment")),
@@ -67,13 +67,13 @@ const Create: React.FC<Props> = ({ session, isTeacher }) => {
   const options = dummyOptions;
 
   return (
-    <div className="bg-lucerarose-1 rounded-lg shadow-md p-4">
-      <h2 className="font-bold mb-4 text-lucerarose-5 text-lg">CREATE</h2>
+    <div className="bg-yellow-100 rounded-lg shadow-md p-4">
+      <h2 className="font-bold mb-4 text-yellow-700 text-lg">CREATE</h2>
       <div className="grid grid-cols-2 grid-rows-3 gap-3 auto-rows-fr">
         {options.map((opt) => (
           <Link href={opt.href} key={opt.id} className="contents">
             <button
-              className="flex flex-row items-center justify-start gap-3 bg-lucerarose-3 text-white p-3 rounded-lg hover:bg-lucerarose-4 transition-colors text-sm h-full min-h-[3.5rem] cursor-pointer w-full"
+              className="flex flex-row items-center justify-start gap-3 bg-yellow-400 text-yellow-900 p-3 rounded-lg hover:bg-yellow-500 transition-colors text-sm h-full min-h-[3.5rem] cursor-pointer w-full"
               type="button"
             >
               <span className="text-2xl flex-shrink-0">{opt.icon}</span>

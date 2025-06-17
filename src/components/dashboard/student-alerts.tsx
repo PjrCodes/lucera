@@ -46,12 +46,12 @@ const StudentAlerts: React.FC<Props> = ({ session, isTeacher }) => {
   const alerts = dummyAlerts.sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
 
   return (
-    <div className="bg-lucerared-1 rounded-lg shadow-md p-4 md:px-6 min-h-[220px] flex flex-col">
-      <h2 className="text-lg font-bold text-lucerared-5 mb-4 flex items-center gap-2">
+    <div className="bg-yellow-100 rounded-lg shadow-md p-4 md:px-6 min-h-[220px] flex flex-col">
+      <h2 className="text-lg font-bold text-yellow-700 mb-4 flex items-center gap-2">
         STUDENT ALERTS
       </h2>
       {alerts.length === 0 ? (
-        <div className="flex-1 flex flex-col items-center justify-center text-lucerared-4">
+        <div className="flex-1 flex flex-col items-center justify-center text-yellow-500">
           <MdWarningAmber className="text-5xl mb-2" />
           <p className="text-lg">No major student issues detected.</p>
         </div>
@@ -66,21 +66,19 @@ const StudentAlerts: React.FC<Props> = ({ session, isTeacher }) => {
                 aria-label={alert.message + (alert.detail ? `: ${alert.detail}` : "")}
               >
                 <span
-                  className={
-                    `flex items-center h-full text-2xl ${
-                      alert.severity === "high"
-                        ? "text-lucerared-4"
-                        : alert.severity === "medium"
-                        ? "text-lucerayellow-4"
-                        : "text-lucerablue-4"
-                    }`
-                  }
+                  className={`flex items-center h-full text-2xl ${
+                    alert.severity === "high"
+                      ? "text-yellow-700"
+                      : alert.severity === "medium"
+                      ? "text-yellow-600"
+                      : "text-yellow-400"
+                  }`}
                   style={{ minHeight: "2.5rem" }}
                 >
                   <MdWarningAmber />
                 </span>
                 <div className="flex-1">
-                  <div className="font-semibold text-lucerared-5 text-sm md:text-base">
+                  <div className="font-semibold text-yellow-700 text-sm md:text-base">
                     {alert.message}
                   </div>
                   {alert.detail && (

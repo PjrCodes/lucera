@@ -1,4 +1,4 @@
-import { auth } from "../../auth";
+import { auth } from "@/auth";
 import { checkTeacherhood } from "@/lib/database/auth";
 import Courses from "@/components/dashboard/courses";
 import React from "react";
@@ -20,7 +20,7 @@ export default async function ProgressPage() {
       <h1 className="text-3xl font-bold mb-6 text-center">Progress Dashboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <section className="md:col-span-2">
-          <Courses isTeacher={isTeacher} user={session.user} />
+          <Courses isTeacher={isTeacher} />
         </section>
         <aside className="md:col-span-1">
           {isTeacher ? (

@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import SearchIcon from "@/components/customIcons/search";
+import { Search } from "lucide-react";
 type Props = {
   expanded?: boolean;
   setExpanded?: (val: boolean) => void;
@@ -59,11 +59,11 @@ export default function SearchBarElement({
 
   return (
     <div
-      ref={containerRef} 
+      ref={containerRef}
       className={`flex items-center border rounded-full border-none px-2 py-1 sm:bg-lucerabrown-1  transition-all duration-300
         text-black
         w-full
-        sm:shadow-sm outline-none 
+        sm:shadow-sm outline-none
         sm:focus-within:outline-solid outline-2 outline-lucerabrown-5
 
       `}
@@ -79,7 +79,7 @@ export default function SearchBarElement({
           onClick={() => setExpanded(true)}
           aria-label="Expand search"
         >
-          <SearchIcon size={24} fill="currentColor" />
+          <Search size={24} />
         </button>
         {/* Expanded search container overlays the whole width */}
         <div className={`absolute left-0 top-0 w-full h-full flex items-center bg-lucerayellow-1 shadow-sm rounded-full px-2 py-1
@@ -103,7 +103,7 @@ export default function SearchBarElement({
             onClick={handleSend}
             aria-label="Send to LISA"
           >
-            <SearchIcon size={24}  fill="currentColor" />
+            <Search size={24} />
           </button>
         </div>
       </div>
@@ -124,7 +124,7 @@ export default function SearchBarElement({
           onClick={handleSend}
           aria-label="Send to LISA"
         >
-          <SearchIcon size={24} fill="currentColor" />
+          <Search size={24} />
         </button>
       </div>
     </div>

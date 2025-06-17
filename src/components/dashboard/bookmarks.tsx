@@ -51,16 +51,16 @@ const Bookmarks: React.FC<Props> = ({ session, isTeacher }) => {
   ];
 
   return (
-    <div className="bg-lucerapurple-1 rounded-lg shadow-md p-4 md:px-6 min-h-[300px] flex flex-col">
+    <div className="bg-yellow-100 rounded-lg shadow-md p-4 md:px-6 min-h-[300px] flex flex-col">
       <div className="flex items-center justify-start mb-4">
-        <h2 className="text-lg font-bold text-lucerapurple-5">BOOKMARKS</h2>
+        <h2 className="text-lg font-bold text-yellow-700">BOOKMARKS</h2>
         {/* Removed Add New button */}
       </div>
       {bookmarks.length === 0 ? (
-        <div className="flex-1 flex flex-col items-center justify-center text-lucerapurple-4">
+        <div className="flex-1 flex flex-col items-center justify-center text-yellow-700">
           <MdBookmarkBorder className="text-5xl" />
           <p className="text-lg">No bookmarks yet.</p>
-          <p className="text-sm text-lucerapurple-3 text-center">
+          <p className="text-sm text-yellow-600 text-center">
             You can add bookmarks from various parts of the application.
           </p>
         </div>
@@ -74,18 +74,18 @@ const Bookmarks: React.FC<Props> = ({ session, isTeacher }) => {
               rel="noopener noreferrer"
               className="bg-white/80 rounded-lg shadow p-3 hover:shadow-lg transition-shadow flex items-center space-x-3" // Item styling
             >
-              <div className="text-lucerapurple-4 text-2xl"> {/* Icon styling */}
+              <div className="text-yellow-700 text-2xl"> {/* Icon styling */}
                 {React.createElement(iconForType(bm.type))}
               </div>
               <div className="flex-1 overflow-hidden"> {/* Container for text, allows truncation */}
                 <h3
-                  className="font-semibold text-lucerapurple-5 truncate"
+                  className="font-semibold text-yellow-700 truncate"
                   title={bm.title}
                 >
                   {bm.title}
                 </h3>
                 <p
-                  className="text-sm text-lucerapurple-4 truncate"
+                  className="text-sm text-yellow-600 truncate"
                   title={bm.subtitle}
                 >
                   {bm.subtitle}

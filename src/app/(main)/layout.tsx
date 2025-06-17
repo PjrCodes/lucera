@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Urbanist } from "next/font/google";
 import "../globals.css";
 import MainFooter from "@/components/footer";
 import HeaderWrapper from "@/components/header-wrapper";
@@ -10,8 +10,8 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import ClientProviders from "../providers";
 import React from "react";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const geistSans = Urbanist({
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
@@ -39,7 +39,7 @@ export default async function RootLayout({
         <ClientProviders>
           <SessionProvider>
             <HeaderProvider>
-              <div className="flex flex-col min-h-screen w-full [--header-height:calc(--spacing(14))] bg-bgcolor">
+              <div className="font-sans flex flex-col min-h-screen w-full [--header-height:calc(--spacing(14))] bg-yellow-50">
                 <SidebarProvider className="flex flex-col flex-1">
                   <HeaderWrapper />
                   <div className="flex flex-1">

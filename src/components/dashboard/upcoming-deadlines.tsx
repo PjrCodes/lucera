@@ -21,19 +21,19 @@ function formatDate(dateStr: string) {
   if (!dateStr) return "N/A";
   const date = new Date(dateStr);
   if (isNaN(date.getTime())) return dateStr;
-  
+
   const now = new Date();
   // Reset time to compare just dates
   const nowDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  
+
   // Calculate difference in days
   const diffTime = dateOnly.getTime() - nowDateOnly.getTime();
   const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-  
+
   // Check if time is present in the date string (not midnight)
   const hasTime = date.getHours() !== 0 || date.getMinutes() !== 0;
-  
+
   // Format time
   let timeStr = "";
   if (hasTime) {
@@ -43,14 +43,14 @@ function formatDate(dateStr: string) {
     const hour12 = hours % 12 || 12; // Convert 0 to 12 for 12-hour format
     timeStr = `${hour12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
   }
-  
+
   // Handle overdue for same day events by comparing time
   if (diffDays === 0 && hasTime) {
     if (date.getTime() < now.getTime()) {
       return `Overdue (Today at ${timeStr})`;
     }
   }
-  
+
   // Handle special cases
   if (diffDays < 0) {
     // Overdue
@@ -75,7 +75,7 @@ function formatDate(dateStr: string) {
     // Within a month but beyond a week - don't show time
     return `In ${diffDays} days`;
   }
-  
+
   // For other dates, show formatted date without time for far future
   const day = date.getDate();
   const month = date.toLocaleString('default', { month: 'short' });
@@ -88,29 +88,29 @@ function formatDate(dateStr: string) {
 // Add a function to determine the color based on deadline proximity
 const getDeadlineColor = (dateStr: string) => {
   if (!dateStr) return "text-gray-600";
-  
+
   const date = new Date(dateStr);
   if (isNaN(date.getTime())) return "text-gray-600";
-  
+
   const now = new Date();
   // Reset time to compare just dates
   const nowDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  
+
   // Calculate difference in days
   const diffTime = dateOnly.getTime() - nowDateOnly.getTime();
   const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-  
+
   // Same-day deadline with time passed
   if (diffDays === 0 && date.getTime() < now.getTime()) {
     return "text-lucerared-3 font-bold";
   }
-  
+
   // Past deadlines
   if (diffDays < 0) {
     return "text-lucerared-3 font-bold";
   }
-  
+
   // Today, tomorrow, or day after tomorrow
   if (diffDays === 0) return "text-lucerared-3 font-semibold";
   if (diffDays === 1) return "text-lucerayellow-5 font-semibold";
@@ -124,32 +124,32 @@ const UpcomingDeadlines: React.FC<Props> = ({ session, isTeacher }) => {
   const today = new Date("2025-06-09T19:00:00Z"); // Fixed date for consistency in examples
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
-  
+
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
-  
+
   const dayAfterTomorrow = new Date(today);
   dayAfterTomorrow.setDate(today.getDate() + 2);
-  
+
   const nextWeek = new Date(today);
   nextWeek.setDate(today.getDate() + 6);
-  
+
   const farFuture = new Date(today);
   farFuture.setDate(today.getDate() + 30);
-  
+
   // Format dates as strings
   const formatDateToString = (date: Date) => {
-    return date.toISOString().split('T')[0] + 
-      (date === today ? " 08:00:00" : 
-       date === yesterday ? " 15:00:00" : 
+    return date.toISOString().split('T')[0] +
+      (date === today ? " 08:00:00" :
+       date === yesterday ? " 15:00:00" :
        date === tomorrow ? " 10:00:00" : "");
   };
-  
+
   // Dummy data for deadlines showing all deadline states
   const dummyDeadlines: Deadline[] = [
     {
       id: 10,
-      title: "Overdue Assignment",
+      title: "Assignment 24: Recursion",
       dueDate: formatDateToString(yesterday),
       course: "CS101: Introduction to Programming",
       type: "assignment",
@@ -157,7 +157,7 @@ const UpcomingDeadlines: React.FC<Props> = ({ session, isTeacher }) => {
     },
     {
       id: 1,
-      title: "Overdue Exam", // Changed to Exam for variety
+      title: "Mid-sem Take-Home Examination", // Changed to Exam for variety
       dueDate: "2025-06-12 20:00:00", // Overdue with time
       course: "CS101",
       type: "exam",
@@ -203,21 +203,21 @@ const UpcomingDeadlines: React.FC<Props> = ({ session, isTeacher }) => {
   const deadlines = dummyDeadlines;
 
   return (
-    <div className="bg-lucerablue-1 rounded-lg shadow-md p-4 md:px-6 min-h-[250px]">
-      <h2 className="font-bold mb-4 text-lucerablue-5 flex items-center gap-2 text-lg">
+    <div className="bg-yellow-100 rounded-lg shadow-md p-4 md:px-6 min-h-[250px]">
+      <h2 className="font-bold mb-4 text-yellow-700 flex items-center gap-2 text-lg">
         UPCOMING DEADLINES
       </h2>
       <ul className="space-y-3">
         {deadlines.map((dl) => {
           const IconComponent = iconForType(dl.type);
           return (
-            <li key={dl.id} className="flex flex-col md:flex-row items-start md:items-center justify-center gap-2 md:gap-3 bg-white/80 rounded-lg shadow-sm px-3 py-2 hover:shadow-md transition-shadow hover:cursor-pointer">   
+            <li key={dl.id} className="flex flex-col md:flex-row items-start md:items-center justify-center gap-2 md:gap-3 bg-white/80 rounded-lg shadow-sm px-3 py-2 hover:shadow-md transition-shadow hover:cursor-pointer">
               <div className="flex-1 flex flex-col md:flex-row md:items-center w-full">
                 <div className="flex items-center gap-2 mb-1 md:mb-0">
-                  <span className="text-xl md:text-3xl mr-1 text-lucerablue-4">
+                  <span className="text-xl md:text-3xl mr-1 text-yellow-700">
                     <IconComponent />
                   </span>
-                  <span className="font-semibold text-lucerablue-5 text-sm md:text-base">{dl.title}</span>
+                  <span className="font-semibold text-yellow-700 text-sm md:text-base">{dl.title}</span>
                 </div>
                 <span className={`self-start md:self-center md:ml-2 px-2 py-0.5 rounded text-xs font-medium ${dl.courseColor}`}>
                   {dl.course}

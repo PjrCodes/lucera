@@ -474,12 +474,12 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
   if (loading) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-4xl border-2 border-[color:var(--color-lucerabrown-4)] bg-[color:var(--color-lucerabrown-1)]">
+        <DialogContent className="max-w-4xl border-2 border-yellow-400 bg-yellow-100">
           <DialogHeader>
-            <DialogTitle className="text-lucerabrown-5">Loading Dashboard Layout</DialogTitle>
+            <DialogTitle className="text-yellow-700">Loading Dashboard Layout</DialogTitle>
           </DialogHeader>
           <div className="flex items-center justify-center p-8">
-            <span className="inline-block w-10 h-10 border-4 border-[color:var(--color-lucerabrown-4)] border-t-transparent rounded-full animate-spin" aria-label="Loading" />
+            <span className="inline-block w-10 h-10 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin" aria-label="Loading" />
           </div>
         </DialogContent>
       </Dialog>
@@ -488,9 +488,9 @@ export default function DashboardEditModal({ isOpen, onClose, userId, userData }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] flex flex-col border-2 border-[color:var(--color-lucerabrown-4)] bg-[color:var(--color-lucerabrown-1)]">
+      <DialogContent className="max-w-6xl max-h-[90vh] flex flex-col border-2 border-yellow-400 bg-yellow-100">
         <DialogHeader className="rounded-t-lg">
-          <DialogTitle className="text-lucerabrown-5">Customise your Dashboard</DialogTitle>
+          <DialogTitle className="text-yellow-700">Customise your Dashboard</DialogTitle>
         </DialogHeader>
 
         <DndContext

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import SearchBarElement from "./search-bar-element";
 import ProfileCircle from "./profile-circle";
-import SignIn from "./buttons/sign-in-button";
+import SignIn from "@/components/core/buttons/sign-in-button";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "./ui/sidebar";
 import { House, SidebarIcon, SquarePen } from "lucide-react";
@@ -58,7 +58,7 @@ export default function Header({
   };
 
   return (
-    <header className="border-b border-red-950 sticky top-0 z-50 w-full bg-lucerabrown-3">
+    <header className="sticky top-0 z-50 w-full bg-yellow-50">
       <div className="px-4 py-4 h-14 flex flex-row items-center justify-between">
         {/* Sidebar button always visible */}
         <div className="flex flex-row items-center space-x-2 flex-shrink-0">

@@ -40,7 +40,7 @@
     --color-lucerapurple-4: #A16D98;
     --color-lucerapurple-5: #704B69;
     --color-bgcolor: #fffffa;
-    --color-sidebar-border: #e2e8f0;
+    --color-sidebar-border: transparent;
 }
 
 /* SHADCN-UI HAS ADDED SEVERAL CSS VARIABLES FOR THEMING. */
