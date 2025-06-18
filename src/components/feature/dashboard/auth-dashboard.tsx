@@ -6,6 +6,7 @@ import Courses from "./cards/courses";
 import StudentAlerts from "./cards/student-alerts";
 import Bookmarks from "./cards/bookmarks";
 import Create from "./cards/create";
+import RecentlyAccessed from "./cards/recently-accessed";
 import defaults from "@/appdata/defaults.json";
 import dashboardControlList from "@/appdata/acl/dashboard.json";
 import { MdBrokenImage } from "react-icons/md";
@@ -55,12 +56,8 @@ const componentMap: Record<string, (props: ComponentProps) => JSX.Element> = {
       isTeacher={props.isTeacher}
     />
   ),
-  RECENTLY_ACCESSED: (props) => (
-    <Courses
-      key="recently-accessed"
-      session={props.session}
-      isTeacher={props.isTeacher}
-    />
+  RECENTLY_ACCESSED: () => (
+    <RecentlyAccessed key="recently-accessed" />
   ),
   UPCOMING_DEADLINES: (props) => (
     <UpcomingDeadlines
@@ -180,6 +177,9 @@ const AuthDashboard: NextPage<Props> = ({
     return (
       <main className="w-full h-full px-4 py-4 bg-transparent">
         <div className="w-full h-full flex flex-1 flex-col justify-center text-center text-gray-500">
+          <div className="text-6xl font-bold text-primary-800 mb-4">
+            Hi, {session?.user?.name || "there"}! Start by adding items to your dashboard.
+          </div>
           <MdBrokenImage size={48} className="mx-auto mb-4" />
           <h2 className="text-lg font-semibold mb-2">No Components Found</h2>
           You have no components in your dashboard! Please use the edit button
@@ -215,6 +215,9 @@ const AuthDashboard: NextPage<Props> = ({
               : " basis-full")
           }
         >
+          <div className="text-2xl md:text-5xl font-bold text-secondary-600 mb-4">
+            Hi, {session?.user?.name || "there"}!<br></br>Welcome to your dashboard.
+          </div>
           {renderComponents(currentLayout.leftColumn)}
         </div>
         {/* Right Column - takes less space on large screens, full width on small */}

@@ -4,6 +4,7 @@ import { auth, redirectUnauthenticated } from "@/lib/auth";
 import client from "@/lib/db";
 import { redirect } from "next/navigation";
 import defaults from "@/appdata/defaults.json";
+import { SecondaryButton } from "@/components/core/buttons/secondary";
 
 async function setUserRole(data: FormData) {
   "use server";
@@ -112,12 +113,9 @@ export default async function SelectRolePage({
               Teacher
             </label>
           </div>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-black text-white rounded hover:bg-lucerayellow hover:text-black font-semibold transition"
-          >
+            <SecondaryButton type="submit">
             Continue
-          </button>
+            </SecondaryButton>
         </Form>
       </div>
     </main>

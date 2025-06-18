@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import { ArrowLeft, Puzzle, Zap, Brain } from "lucide-react";
 import Link from "next/link";
 import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
-import WordWhizGame from "@/components/feature/lighthouse/games/WordWhizGame";
-import ConceptMatchGame from "@/components/feature/lighthouse/games/ConceptMatchGame";
-import QuizBlitzGame from "@/components/feature/lighthouse/games/QuizBlitzGame";
+import WordWhizGame from "@/components/feature/lighthouse/games/word-whiz-game";
+import ConceptMatchGame from "@/components/feature/lighthouse/games/concept-match-game";
+import QuizBlitzGame from "@/components/feature/lighthouse/games/quiz-blitz-game";
 
 type GameType = "menu" | "word-whiz" | "concept-match" | "quiz-blitz";
 

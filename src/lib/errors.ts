@@ -13,3 +13,11 @@ export class InvalidDataError extends Error {
         Object.setPrototypeOf(this, InvalidDataError.prototype);
     }
 }
+
+export class InvalidCredentials extends Error {
+    constructor(message?: string) {
+        super(message || 'Invalid credentials provided');
+        this.name = 'InvalidCredentials';
+        Object.setPrototypeOf(this, InvalidCredentials.prototype);
+    }
+}
