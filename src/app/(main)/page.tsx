@@ -12,30 +12,29 @@ import { redirect } from "next/navigation";
 export default async function Home() {
   const session = await auth();
 
-  const isLoggedIn = session?.user ? true : false;
-
-  if (!isLoggedIn) {
-    return <UnauthHomepage />;
+  if (!session || !session.user) {
+    // If the session is not valid, redirect to the homepage
+    redirect("/");
   }
 
-  let isTeacher = false;
-  let dashboardLayout;
+  // let isTeacher = false;
+  // let dashboardLayout;
+  let userData;
   try {
-    const userData = await getUserData(session?.user?.id || "");
-    isTeacher = userData.role === "teacher";
-    dashboardLayout = userData?.dashboardLayout;
+    userData = await getUserData(session?.user?.id || "");
+    // isTeacher = userData.role === "teacher";
+    // dashboardLayout = userData?.dashboardLayout;
+
+    // if (!dashboardLayout) {
+    //   await setDefaultDashboardLayout(session?.user?.id || "", isTeacher);
+    // }
   } catch {
     redirect("/handle-invalid-user");
   }
 
-  if (!dashboardLayout) {
-    await setDefaultDashboardLayout(session?.user?.id || "", isTeacher);
-  }
-
   return (
     <AuthDashboard
-      isTeacher={isTeacher}
-      dashboardLayout={dashboardLayout}
+      userData={userData}
       session={session}
     />
   );

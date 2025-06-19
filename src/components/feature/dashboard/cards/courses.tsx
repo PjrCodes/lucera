@@ -3,32 +3,45 @@ import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
+import { courseSchema } from "@/lib/schemas";
+import { ObjectId } from "mongodb";
+import { Course } from "@/lib/schemas";
+import { PropsForEveryDashboardCard } from "@/lib/interfaces";
 
-interface Course {
-  id: number;
-  name: string;
-  progress: number;
-  courseCode: string;
-  _id: string;
-  thumbnailUrl: string;
-}
+export default async function Courses({
+  userData,
+}: PropsForEveryDashboardCard) {
 
-interface CoursesProps {
-  isTeacher: boolean;
-}
+  const isTeacher = userData.role === "teacher";
 
-export default async function Courses({ isTeacher }: CoursesProps) {
+  const relatedCourseIDs = userData.relatedCourses.map(
+    (course) => new ObjectId(course)
+  );
+
   // Dummy data for courses - replace with actual data fetching later
-  const coursesData = client.db().collection("courses").find({}).limit(6);
+  const coursesData = client
+    .db()
+    .collection("courses")
+    .find({
+      _id: { $in: relatedCourseIDs },
+    })
+    .limit(6); // either courses created by the user or courses the user is enrolled in
+
   const rawCourses = await coursesData.toArray();
-  const courses: Course[] = rawCourses.map((doc, idx) => ({
-    id: doc.id ?? idx,
-    name: doc.name ?? "Untitled Course",
-    progress: doc.progress ?? (Math.round(Math.random()) > 0.5 ? 100 : 60),
-    courseCode: doc.courseCode ?? "CS101",
-    _id: doc._id.toString(),
-    thumbnailUrl: doc.thumbnailUrl ?? "https://placehold.co/300x200/png", // Updated placeholder image
-  }));
+  let courses: Course[] = [];
+  try {
+    courses = rawCourses.map((course) => courseSchema.parse(course));
+  } catch (error) {
+    console.error("Error parsing courses:", error);
+    return (
+      <div className="bg-red-100 rounded-xl p-4">
+        <div className="font-medium mb-2 text-red-700">Error</div>
+        <div className="text-red-700">
+          There was an error loading your courses. Please try again later.
+        </div>
+      </div>
+    );
+  }
 
   if (!courses || courses.length === 0) {
     return (
@@ -68,11 +81,23 @@ export default async function Courses({ isTeacher }: CoursesProps) {
     return "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4";
   };
 
+  // calculate courseProgress
+  const courseProgress: number[] = courses.map((course) => {
+    if (isTeacher) {
+      return (
+        (course.completedStudentCount / course.enrolledStudentCount) * 100 || 0
+      );
+    } else {
+      // TODO: implementation required
+      return -999;
+    }
+  });
+
   return (
     <div className="bg-yellow-100 rounded-lg shadow-md p-4 md:px-6 min-h-[220px] flex flex-col">
       <div className="text-lg font-bold text-yellow-700 mb-4">PROGRESS</div>
       <div className={getGridClass()}>
-        {courses.map((course) => (
+        {courses.map((course, idx) => (
           <Link
             href="/courses/view/[course_id]"
             as={`/courses/view/${course._id.toString()}`}
@@ -83,12 +108,14 @@ export default async function Courses({ isTeacher }: CoursesProps) {
               <Image
                 width={300}
                 height={300}
-                src={course.thumbnailUrl}
+                src={course.cover_image || "/placeholder.jpg"}
                 alt={`Thumbnail for ${course.name}`}
                 className="w-full h-32 object-cover"
               />
               <div className="p-4 flex flex-col flex-grow">
-                <h3 className="text-base font-semibold mb-1 text-yellow-700">{course.name}</h3>
+                <h3 className="text-base font-semibold mb-1 text-yellow-700">
+                  {course.name}
+                </h3>
                 <p className="text-sm text-yellow-700 mb-2">
                   {course.courseCode}
                 </p>
@@ -99,27 +126,29 @@ export default async function Courses({ isTeacher }: CoursesProps) {
                     </span>
                     <span
                       className={`text-xs font-medium ${
-                        course.progress === 100
+                        courseProgress[idx] === 100
                           ? "text-yellow-600"
                           : "text-yellow-500"
                       }`}
                     >
-                      {course.progress}%
+                      {courseProgress[idx]}%
                     </span>
                   </div>
                   <div
                     className="w-full bg-yellow-200 rounded-full h-2.5"
                     role="progressbar"
-                    aria-valuenow={course.progress}
+                    aria-valuenow={courseProgress[idx]}
                     aria-valuemin={0}
                     aria-valuemax={100}
-                    aria-label={`Course progress: ${course.progress}%`}
+                    aria-label={`Course progress: ${courseProgress[idx]}%`}
                   >
                     <div
                       className={`h-2.5 rounded-full ${
-                        course.progress === 100 ? "bg-yellow-600" : "bg-yellow-400"
+                        courseProgress[idx] === 100
+                          ? "bg-yellow-600"
+                          : "bg-yellow-400"
                       }`}
-                      style={{ width: `${course.progress}%` }}
+                      style={{ width: `${courseProgress[idx]}%` }}
                     ></div>
                   </div>
                 </div>

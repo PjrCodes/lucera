@@ -10,50 +10,42 @@ import RecentlyAccessed from "./cards/recently-accessed";
 import defaults from "@/appdata/defaults.json";
 import dashboardControlList from "@/appdata/acl/dashboard.json";
 import { MdBrokenImage } from "react-icons/md";
+import { UserData } from "@/lib/schemas";
+import { PropsForEveryDashboardCard } from "@/lib/interfaces";
 
 interface Props {
-  session: Session | null;
-  isTeacher: boolean;
-  dashboardLayout: {
-    leftColumn: string[];
-    rightColumn: string[];
-  } | null;
-  onLayoutChange?: () => void; // Add callback for layout changes
-}
-
-interface ComponentProps {
-  session: Session | null;
-  isTeacher: boolean;
+  session: Session
+  userData: UserData
 }
 
 // Component map to hold the components for the dashboard
-const componentMap: Record<string, (props: ComponentProps) => JSX.Element> = {
+const componentMap: Record<string, (props: PropsForEveryDashboardCard) => JSX.Element> = {
   PROGRESS: (props) => (
     <Courses
       key="progress"
       session={props.session}
-      isTeacher={props.isTeacher}
+      userData={props.userData}
     />
   ),
   WHATS_NEXT: (props) => (
     <UpcomingDeadlines
       key="whats-next"
       session={props.session}
-      isTeacher={props.isTeacher}
+      userData={props.userData}
     />
   ),
   CLASS_PROGRESS: (props) => (
     <Courses
       key="class-progress"
       session={props.session}
-      isTeacher={props.isTeacher}
+      userData={props.userData}
     />
   ),
   STUDENT_ALERTS: (props) => (
     <StudentAlerts
       key="student-alerts"
       session={props.session}
-      isTeacher={props.isTeacher}
+      userData={props.userData}
     />
   ),
   RECENTLY_ACCESSED: () => (
@@ -63,32 +55,32 @@ const componentMap: Record<string, (props: ComponentProps) => JSX.Element> = {
     <UpcomingDeadlines
       key="upcoming-deadlines"
       session={props.session}
-      isTeacher={props.isTeacher}
+      userData={props.userData}
     />
   ),
   ANNOUNCEMENTS: (props) => (
     <StudentAlerts
       key="announcements"
       session={props.session}
-      isTeacher={props.isTeacher}
+      userData={props.userData}
     />
   ),
   BOOKMARKS: (props) => (
     <Bookmarks
       key="bookmarks"
       session={props.session}
-      isTeacher={props.isTeacher}
+      userData={props.userData}
     />
   ),
   YOUR_BADGES: (props) => (
     <StudentAlerts
       key="your-badges"
       session={props.session}
-      isTeacher={props.isTeacher}
+      userData={props.userData}
     />
   ),
   CREATE: (props) => (
-    <Create key="create" session={props.session} isTeacher={props.isTeacher} />
+    <Create key="create" session={props.session} userData={props.userData} />
   ),
 };
 
@@ -137,14 +129,12 @@ function checkAndCleanLayout(
 
 const AuthDashboard: NextPage<Props> = ({
   session,
-  isTeacher,
-  dashboardLayout,
-  onLayoutChange,
+  userData,
 }) => {
   // Props object for component rendering - only session and role data
-  const componentProps: ComponentProps = {
+  const componentProps: PropsForEveryDashboardCard = {
     session,
-    isTeacher,
+    userData,
   };
 
   // Function to render components based on layout array
@@ -158,6 +148,9 @@ const AuthDashboard: NextPage<Props> = ({
         .filter(Boolean) || []
     );
   };
+
+  const dashboardLayout = userData.dashboardLayout;
+  const isTeacher = userData.role === "teacher";
 
   // get default layour for user type from data/defaults.json
   const uncleanLayout =

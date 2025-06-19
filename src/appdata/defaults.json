@@ -7,7 +7,7 @@
         },
         "student": {
             "leftColumn":  ["WHATS_NEXT", "RECENTLY_ACCESSED", "PROGRESS"],
-            "rightColumn": ["UPCOMING_DEADLINES", "BOOKMARKS", "YOUR_BADGES"]
+            "rightColumn": ["BOOKMARKS", "YOUR_BADGES"]
         }
     }
 }

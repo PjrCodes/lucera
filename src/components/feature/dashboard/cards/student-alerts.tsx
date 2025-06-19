@@ -1,6 +1,6 @@
 import React from "react";
-import { Session } from "next-auth";
 import { MdWarningAmber } from "react-icons/md";
+import { PropsForEveryDashboardCard } from "@/lib/interfaces";
 
 interface Alert {
   id: number;
@@ -10,12 +10,8 @@ interface Alert {
   severity: "high" | "medium" | "low";
 }
 
-interface Props {
-  session: Session | null;
-  isTeacher: boolean;
-}
 
-const StudentAlerts: React.FC<Props> = ({ session, isTeacher }) => {
+export default function StudentAlerts({ session, userData }: PropsForEveryDashboardCard) {
   // Example alerts for teachers, sorted by severity
   const dummyAlerts: Alert[] = [
     {
@@ -96,5 +92,3 @@ const StudentAlerts: React.FC<Props> = ({ session, isTeacher }) => {
     </div>
   );
 };
-
-export default StudentAlerts;

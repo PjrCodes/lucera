@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import { Session } from "next-auth";
 import { iconForType } from "@/constants";
 import { MdBookmarkBorder } from "react-icons/md";
+import { PropsForEveryDashboardCard } from "@/lib/interfaces";
 
 interface Bookmark {
   id: number;
@@ -12,42 +12,10 @@ interface Bookmark {
   subtitle: string;
 }
 
-interface Props {
-  session: Session | null;
-  isTeacher: boolean;
-}
-
-const Bookmarks: React.FC<Props> = ({ session, isTeacher }) => {
+export default function Bookmarks({ session, userData }: PropsForEveryDashboardCard) {
   // Dummy data for bookmarks - replace with actual data fetching later
   const bookmarks: Bookmark[] = [
-    {
-      id: 1,
-      title: "Summative assignment: Design Document",
-      url: "https://example.com/assignment-design-doc",
-      type: "assignment",
-      subtitle: "Resilience"
-    },
-    {
-      id: 2,
-      title: "Summative quiz: Test your knowledge",
-      url: "https://example.com/quiz-resilience",
-      type: "quiz", // Assuming 'quiz' type exists or maps to a suitable icon
-      subtitle: "Resilience"
-    },
-    {
-      id: 3,
-      title: "Summative Assessment quiz: The Lake Poets",
-      url: "https://example.com/quiz-lake-poets",
-      type: "quiz",
-      subtitle: "English: The Lake Poets"
-    },
-    {
-      id: 4,
-      title: "Course Materials: Week 5",
-      url: "https://example.com/materials-week5",
-      type: "content",
-      subtitle: "Introduction to Programming"
-    }
+
   ];
 
   return (
@@ -97,5 +65,3 @@ const Bookmarks: React.FC<Props> = ({ session, isTeacher }) => {
     </div>
   );
 };
-
-export default Bookmarks;

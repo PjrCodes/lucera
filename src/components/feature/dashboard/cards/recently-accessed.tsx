@@ -1,5 +1,5 @@
+import { PropsForEveryDashboardCard } from "@/lib/interfaces";
 import React from "react";
-import { FaClock } from "react-icons/fa";
 
 // Mocked data for recently accessed courses/resources
 const recentlyAccessed = [
@@ -26,21 +26,21 @@ const recentlyAccessed = [
 	},
 ];
 
-const RecentlyAccessed: React.FC = () => {
+
+export default function RecentlyAccessed({ session, userData }: PropsForEveryDashboardCard) {
 	return (
-		<div className="bg-primary-50 border border-primary-200 shadow-md rounded-lg">
+		<div className="bg-primary-100 border border-primary-200 shadow-md rounded-lg">
 			<div className="p-5">
 				<div className="flex items-center mb-4">
-					<FaClock className="text-primary-600 mr-2 text-xl" />
-					<h2 className="text-xl font-semibold text-primary-800">
-						Recently Accessed
+					<h2 className="text-lg font-bold text-primary-800">
+						RECENTLY ACCESSED
 					</h2>
 				</div>
 				<ul className="space-y-3">
 					{recentlyAccessed.map((item) => (
 						<li
 							key={item.id}
-							className="flex flex-col md:flex-row md:items-center md:justify-between bg-white/80 hover:bg-primary-100 transition rounded-md px-4 py-2"
+							className="flex flex-col md:flex-row md:items-center md:justify-between bg-white/80 transition rounded-md px-4 py-2 cursor-pointer shadow-sm hover:shadow-md"
 						>
 							<div>
 								<a
@@ -63,5 +63,3 @@ const RecentlyAccessed: React.FC = () => {
 		</div>
 	);
 };
-
-export default RecentlyAccessed;

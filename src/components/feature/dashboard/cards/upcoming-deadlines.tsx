@@ -2,6 +2,7 @@ import React from "react";
 import { Session } from "next-auth";
 import { iconForType } from "../../../../constants"; // Import the icons
 import { PiConfetti } from "react-icons/pi";
+import { PropsForEveryDashboardCard } from "@/lib/interfaces";
 
 interface Deadline {
   id: number;
@@ -119,7 +120,8 @@ const getDeadlineColor = (dateStr: string) => {
   return "text-lucerablue-5";
 };
 
-export const UpcomingDeadlines: React.FC<Props> = ({ session, isTeacher }) => {
+
+export default function UpcomingDeadlines({ session, userData }: PropsForEveryDashboardCard) {
   // Create deadlines with varied dates to showcase different colors
   const today = new Date("2025-06-09T19:00:00Z"); // Fixed date for consistency in examples
   const yesterday = new Date(today);
@@ -241,5 +243,3 @@ export const UpcomingDeadlines: React.FC<Props> = ({ session, isTeacher }) => {
     </div>
   );
 };
-
-export default UpcomingDeadlines;

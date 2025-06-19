@@ -6,7 +6,8 @@ import client from "@/lib/db";
 
 import { PdfReader } from "pdfreader";
 import { LLMSyllabusParse } from "@/lib/llm/llm";
-import { checkTeacherhood, getFileRecord } from "@/lib/database/auth";
+import { checkTeacherhood } from "@/lib/database/auth";
+import { getFileRecord } from "@/lib/database/files";
 
 import { z } from "zod";
 
@@ -128,6 +129,8 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
       courseStartDate: courseStartDate || null,
       courseEndDate: courseEndDate || null,
       llmParsingFailed: !timeline && !units, // Flag to indicate if LLM parsing failed
+      enrolledStudentCount: 0,
+      completedStudentCount: 0,
     });
     if (!courseRecord.acknowledged) {
       return NextResponse.json(

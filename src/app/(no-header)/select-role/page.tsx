@@ -37,6 +37,8 @@ async function setUserRole(data: FormData) {
                 ? defaults.dashboardLayout.teacher
                 : defaults.dashboardLayout.student,
             createdAt: new Date(),
+            relatedCourses: [],
+            relatedFiles: [],
           },
         }
       : {
@@ -71,6 +73,12 @@ export default async function SelectRolePage({
       id: session.user.id,
     });
     currentRole = userData?.role ?? null;
+
+    if (searchParams?.reason === "newuser" && userData) {
+      // If the user is new but user data already exists, then something is fishy.
+      // Redirect to home page.
+      return redirect("/");
+    }
   }
 
   return (
