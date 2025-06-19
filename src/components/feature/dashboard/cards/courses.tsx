@@ -1,47 +1,16 @@
-import client from "@/lib/db";
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
-import { courseSchema } from "@/lib/schemas";
-import { ObjectId } from "mongodb";
-import { Course } from "@/lib/schemas";
 import { PropsForEveryDashboardCard } from "@/lib/interfaces";
+import { getCoursesForUser } from "@/lib/database/courses";
 
 export default async function Courses({
   userData,
 }: PropsForEveryDashboardCard) {
 
   const isTeacher = userData.role === "teacher";
-
-  const relatedCourseIDs = userData.relatedCourses.map(
-    (course) => new ObjectId(course)
-  );
-
-  // Dummy data for courses - replace with actual data fetching later
-  const coursesData = client
-    .db()
-    .collection("courses")
-    .find({
-      _id: { $in: relatedCourseIDs },
-    })
-    .limit(6); // either courses created by the user or courses the user is enrolled in
-
-  const rawCourses = await coursesData.toArray();
-  let courses: Course[] = [];
-  try {
-    courses = rawCourses.map((course) => courseSchema.parse(course));
-  } catch (error) {
-    console.error("Error parsing courses:", error);
-    return (
-      <div className="bg-red-100 rounded-xl p-4">
-        <div className="font-medium mb-2 text-red-700">Error</div>
-        <div className="text-red-700">
-          There was an error loading your courses. Please try again later.
-        </div>
-      </div>
-    );
-  }
+  const courses = await getCoursesForUser(userData.id);
 
   if (!courses || courses.length === 0) {
     return (

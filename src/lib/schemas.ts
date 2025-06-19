@@ -55,7 +55,7 @@ export const courseTimelineItemSchema = z.object({
 export type CourseTimelineItem = z.infer<typeof courseTimelineItemSchema>;
 
 export const courseSchema = z.object({
-  _id: z.instanceof(ObjectId),
+  _id: z.instanceof(ObjectId).or(z.string()),
   name: z.string(),
   courseCode: z.string(),
   description: z.string(),

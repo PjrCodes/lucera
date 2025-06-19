@@ -16,7 +16,7 @@ export default function CourseTabs({ course, assignments, materials, pollsAndAnn
       <Tabs defaultValue="description" className="w-full">
         {/* Responsive scrollable tab bar */}
         <div className="relative rounded-lg overflow-x-auto h-12 bg-primary-100 border border-primary-200 w-full min-w-0 max-w-full sm:min-w-[22rem] md:min-w-[36rem] lg:min-w-[48rem] xl:min-w-[64rem] sm:max-w-5xl mx-auto">
-          <TabsList className="absolute flex flex-row justify-stretch w-max min-w-full">
+          <TabsList className="absolute flex flex-row justify-stretch w-max min-w-full bg-transparent">
             <TabsTrigger value="description" className="data-[state=active]:bg-primary-50 data-[state=active]:text-primary-900 text-primary-700 whitespace-nowrap flex items-center px-3 py-2"> <FiBookOpen className="mr-1"/>Description</TabsTrigger>
             <TabsTrigger value="units" className="data-[state=active]:bg-secondary-50 data-[state=active]:text-secondary-900 text-secondary-700 whitespace-nowrap flex items-center px-3 py-2"> <FiList className="mr-1"/>Units</TabsTrigger>
             <TabsTrigger value="timeline" className="data-[state=active]:bg-info-50 data-[state=active]:text-info-900 text-info-700 whitespace-nowrap flex items-center px-3 py-2"> <FiClock className="mr-1"/>Timeline</TabsTrigger>
