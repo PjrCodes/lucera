@@ -30,22 +30,22 @@ export default function CourseSidebar({ course }: CourseSidebarProps) {
   return (
     <div className="space-y-4">
       {/* Quick Actions */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-        <h3 className="font-semibold text-gray-900 mb-3">Quick Actions</h3>
+      <div className="bg-primary-50 rounded-xl shadow border border-primary-100 p-4">
+        <h3 className="font-semibold text-primary-900 mb-3">Quick Actions</h3>
         <div className="grid grid-cols-2 gap-2">
-          <button className="flex items-center justify-center gap-2 p-2 text-sm bg-lucerablue-1 text-lucerablue-5 rounded-lg hover:bg-lucerablue-2 transition-colors">
+          <button className="flex items-center justify-center gap-2 p-2 text-sm bg-secondary-50 text-secondary-700 rounded-lg hover:bg-secondary-100 transition-colors cursor-pointer">
             <FiUsers className="w-4 h-4" />
             Students
           </button>
-          <button className="flex items-center justify-center gap-2 p-2 text-sm bg-luceragreen-1 text-luceragreen-5 rounded-lg hover:bg-luceragreen-2 transition-colors">
+          <button className="flex items-center justify-center gap-2 p-2 text-sm bg-success-50 text-success-700 rounded-lg hover:bg-success-100 transition-colors cursor-pointer">
             <FiBookOpen className="w-4 h-4" />
             Materials
           </button>
-          <button className="flex items-center justify-center gap-2 p-2 text-sm bg-lucerayellow-1 text-lucerayellow-5 rounded-lg hover:bg-lucerayellow-2 transition-colors">
+          <button className="flex items-center justify-center gap-2 p-2 text-sm bg-primary-200 text-primary-800 rounded-lg hover:bg-primary-300 transition-colors cursor-pointer">
             <FiClipboard className="w-4 h-4" />
             Assignments
           </button>
-          <button className="flex items-center justify-center gap-2 p-2 text-sm bg-lucerared-1 text-lucerared-5 rounded-lg hover:bg-lucerared-2 transition-colors">
+          <button className="flex items-center justify-center gap-2 p-2 text-sm bg-accent-50 text-accent-700 rounded-lg hover:bg-accent-100 transition-colors cursor-pointer">
             <FiBarChart2 className="w-4 h-4" />
             Grades
           </button>
@@ -53,10 +53,10 @@ export default function CourseSidebar({ course }: CourseSidebarProps) {
       </div>
 
       {/* Course Materials */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div className="bg-primary-50 rounded-xl shadow border border-primary-100 p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-gray-900">Course Materials</h3>
-          <span className="text-xs text-gray-500">{courseMaterials.length} files</span>
+          <h3 className="font-semibold text-primary-900">Course Materials</h3>
+          <span className="text-xs text-primary-500">{courseMaterials.length} files</span>
         </div>
         <div className="space-y-2">
           {courseMaterials.map((material) => (
@@ -75,14 +75,14 @@ export default function CourseSidebar({ course }: CourseSidebarProps) {
       </div>
 
       {/* Assignments */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div className="bg-primary-50 rounded-xl shadow border border-primary-100 p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-gray-900">Assignments</h3>
-          <span className="text-xs text-gray-500">{assignments.length} total</span>
+          <h3 className="font-semibold text-primary-900">Assignments</h3>
+          <span className="text-xs text-primary-500">{assignments.length} total</span>
         </div>
         <div className="space-y-3">
           {assignments.map((assignment) => (
-            <div key={assignment.id} className="border-l-4 border-lucerablue-3 pl-3 py-2">
+            <div key={assignment.id} className="border-l-4 border-secondary-300 pl-3 py-2">
               <h4 className="text-sm font-medium text-gray-900 mb-1">{assignment.name}</h4>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-gray-500">Due: {assignment.due}</span>
@@ -105,10 +105,10 @@ export default function CourseSidebar({ course }: CourseSidebarProps) {
       </div>
 
       {/* Polls and Announcements */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div className="bg-primary-50 rounded-xl shadow border border-primary-100 p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-gray-900">Polls & Announcements</h3>
-          <span className="text-xs text-gray-500">{pollsAndAnnouncements.filter(p => p.active).length} active</span>
+          <h3 className="font-semibold text-primary-900">Polls & Announcements</h3>
+          <span className="text-xs text-primary-500">{pollsAndAnnouncements.filter(p => p.active).length} active</span>
         </div>
         <div className="space-y-3">
           {pollsAndAnnouncements.map((item) => (

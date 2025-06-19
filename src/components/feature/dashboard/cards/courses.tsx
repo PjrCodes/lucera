@@ -46,7 +46,7 @@ export default async function Courses({
   if (!courses || courses.length === 0) {
     return (
       <div className="bg-yellow-100 rounded-xl p-4">
-        <div className="font-medium mb-2 text-yellow-700">PROGRESS</div>
+        <div className="font-medium mb-2 text-yellow-700">{isTeacher ? "CLASS PROGRESS" : "PROGRESS"}</div>
         <div className="grid gap-4">
           {isTeacher && (
             <Link
@@ -95,7 +95,7 @@ export default async function Courses({
 
   return (
     <div className="bg-yellow-100 rounded-lg shadow-md p-4 md:px-6 min-h-[220px] flex flex-col">
-      <div className="text-lg font-bold text-yellow-700 mb-4">PROGRESS</div>
+      <div className="text-lg font-bold text-yellow-700 mb-4">{isTeacher ? "CLASS PROGRESS" : "PROGRESS"}</div>
       <div className={getGridClass()}>
         {courses.map((course, idx) => (
           <Link

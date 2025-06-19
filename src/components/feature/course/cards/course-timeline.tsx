@@ -9,38 +9,38 @@ interface CourseTimelineProps {
 const getEventColor = (type: string) => {
   switch (type.toLowerCase()) {
     case 'quiz':
-      return 'bg-lucerablue-1 text-lucerablue-5 border-lucerablue-3';
+      return 'bg-secondary-50 text-secondary-700 border-secondary-300';
     case 'assignment':
-      return 'bg-luceragreen-1 text-luceragreen-5 border-luceragreen-3';
+      return 'bg-success-50 text-success-700 border-success-300';
     case 'midsem_exam':
     case 'endsem_exam':
     case 'exam':
-      return 'bg-lucerared-1 text-lucerared-5 border-lucerared-3';
+      return 'bg-accent-50 text-accent-700 border-accent-300';
     case 'lab_exam':
-      return 'bg-lucerayellow-1 text-lucerayellow-5 border-lucerayellow-3';
+      return 'bg-primary-50 text-primary-700 border-primary-300';
     case 'project':
-      return 'bg-purple-100 text-purple-700 border-purple-300';
+      return 'bg-purple-50 text-purple-700 border-purple-300';
     default:
-      return 'bg-gray-100 text-gray-700 border-gray-300';
+      return 'bg-gray-50 text-gray-700 border-gray-200';
   }
 };
 
 const getIconColor = (type: string) => {
   switch (type.toLowerCase()) {
     case 'quiz':
-      return 'border-lucerablue-3 text-lucerablue-4';
+      return 'border-secondary-300 text-secondary-400';
     case 'assignment':
-      return 'border-luceragreen-3 text-luceragreen-4';
+      return 'border-success-300 text-success-400';
     case 'midsem_exam':
     case 'endsem_exam':
     case 'exam':
-      return 'border-lucerared-3 text-lucerared-4';
+      return 'border-accent-300 text-accent-400';
     case 'lab_exam':
-      return 'border-lucerayellow-3 text-lucerayellow-4';
+      return 'border-primary-300 text-primary-400';
     case 'project':
       return 'border-purple-300 text-purple-500';
     default:
-      return 'border-gray-300 text-gray-500';
+      return 'border-gray-200 text-gray-400';
   }
 };
 

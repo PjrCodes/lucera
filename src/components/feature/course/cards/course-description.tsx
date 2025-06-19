@@ -9,7 +9,7 @@ interface CourseDescriptionProps {
 const CustomTable = ({ children, ...props }: React.HTMLProps<HTMLTableElement>) => (
   <div className="overflow-x-auto my-4">
     <table
-      className="min-w-full border-collapse border border-gray-300 bg-white rounded-lg shadow-sm"
+      className="min-w-full border-collapse border-primary-100 bg-primary-50 rounded-lg shadow-sm"
       {...props}
     >
       {children}
@@ -18,14 +18,14 @@ const CustomTable = ({ children, ...props }: React.HTMLProps<HTMLTableElement>) 
 );
 
 const CustomThead = ({ children, ...props }: React.HTMLProps<HTMLTableSectionElement>) => (
-  <thead className="bg-gray-50" {...props}>
+  <thead className="bg-primary-100" {...props}>
     {children}
   </thead>
 );
 
 const CustomTh = ({ children, ...props }: React.HTMLProps<HTMLTableCellElement>) => (
   <th
-    className="border border-gray-300 px-4 py-3 text-left text-sm font-semibold text-gray-900"
+    className="border border-primary-100 px-4 py-3 text-left text-sm font-semibold text-primary-900"
     {...props}
   >
     {children}
@@ -34,7 +34,7 @@ const CustomTh = ({ children, ...props }: React.HTMLProps<HTMLTableCellElement>)
 
 const CustomTd = ({ children, ...props }: React.HTMLProps<HTMLTableCellElement>) => (
   <td
-    className="border border-gray-300 px-4 py-3 text-sm text-gray-700"
+    className="border border-primary-100 px-4 py-3 text-sm text-primary-700"
     {...props}
   >
     {children}

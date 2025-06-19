@@ -1,5 +1,4 @@
 import React from "react";
-import { Session } from "next-auth";
 import { iconForType } from "../../../../constants"; // Import the icons
 import { PiConfetti } from "react-icons/pi";
 import { PropsForEveryDashboardCard } from "@/lib/interfaces";
@@ -11,11 +10,6 @@ interface Deadline {
   course: string;
   type: string;
   courseColor: string;
-}
-
-interface Props {
-  session: Session | null;
-  isTeacher: boolean;
 }
 
 function formatDate(dateStr: string) {

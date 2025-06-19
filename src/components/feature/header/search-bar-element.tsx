@@ -60,7 +60,7 @@ export default function SearchBarElement({
   return (
     <div
       ref={containerRef}
-      className={`flex items-center border rounded-full border-none px-2 py-1 sm:bg-lucerabrown-1  transition-all duration-300
+      className={`flex items-center border rounded-full border-none px-2 py-1 sm:bg-secondary-50  transition-all duration-300
         text-black
         w-full
         sm:shadow-sm outline-none
@@ -82,7 +82,7 @@ export default function SearchBarElement({
           <Search size={24} />
         </button>
         {/* Expanded search container overlays the whole width */}
-        <div className={`absolute left-0 top-0 w-full h-full flex items-center bg-lucerayellow-1 shadow-sm rounded-full px-2 py-1
+        <div className={`absolute left-0 top-0 w-full h-full flex items-center bg-secondary-50 shadow-sm rounded-full px-2 py-1
           transition-all duration-300 ease-in-out
           ${expanded ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}
         `}>

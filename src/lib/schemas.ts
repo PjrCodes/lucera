@@ -34,28 +34,45 @@ export const userDataSchema = z.object({
 })
 
 export type UserData = z.infer<typeof userDataSchema>;
+export const courseUnitSchema = z.object({
+  name: z.string(),
+  description: z.string().optional(),
+});
 
-  export const courseSchema = z.object({
-    _id: z.instanceof(ObjectId),
-    name: z.string(),
-    courseCode: z.string(),
-    description: z.string(),
-    shortDescription: z.string(),
-    syllabusFileId: z.string().optional(),
-    createdAt: z.date(),
-    updatedAt: z.date(),
-    userId: z.string(),
-    timeline: z.array(z.any()),
-    units: z.array(z.any()),
-    cover_image: z.string().nullable(),
-    status: z.enum(["draft", "published"]).default("draft"),
-    isPublished: z.boolean(),
-    courseStartDate: z.date().nullable(),
-    courseEndDate: z.date().nullable(),
-    llmParsingFailed: z.boolean(),
-    enrolledStudentCount: z.number(),
-    completedStudentCount: z.number(),
-    relatedContent: z.array(z.string()).default([]),
-  });
+export type CourseUnit = z.infer<typeof courseUnitSchema>;
 
-  export type Course = z.infer<typeof courseSchema>;
+export const courseTimelineItemSchema = z.object({
+  type: z.string(),
+  title: z.string(),
+  start_date: z.string(),
+  due_date: z.string(),
+  grade_release_date: z.string(),
+  start_date_inferred: z.boolean().optional(),
+  due_date_inferred: z.boolean().optional(),
+  grade_release_date_inferred: z.boolean().optional(),
+});
+
+export type CourseTimelineItem = z.infer<typeof courseTimelineItemSchema>;
+
+export const courseSchema = z.object({
+  _id: z.instanceof(ObjectId),
+  name: z.string(),
+  courseCode: z.string(),
+  description: z.string(),
+  shortDescription: z.string(),
+  syllabusFileId: z.string().optional(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  userId: z.string(),
+  timeline: z.array(courseTimelineItemSchema),
+  units: z.array(courseUnitSchema),
+  cover_image: z.string().nullable(),
+  status: z.enum(["draft", "published"]).default("draft"),
+  courseStartDate: z.date().nullable(),
+  courseEndDate: z.date().nullable(),
+  llmParsingFailed: z.boolean(),
+  enrolledStudentCount: z.number(),
+  completedStudentCount: z.number(),
+});
+
+export type Course = z.infer<typeof courseSchema>;
