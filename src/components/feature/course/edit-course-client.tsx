@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Table } from "ka-table";
 import { DataType, EditingMode } from "ka-table/enums";
 import { Trash2, Edit3 } from "lucide-react";
 import "ka-table/style.css";
+import { FileDropInput } from "@/components/core/inputs/file-drop-input";
 
 type Unit = { name: string; description?: string };
 type TimelineItem = {
@@ -30,8 +31,16 @@ interface Course {
 }
 
 // Client component
-export function EditCourseClient({ course }: { course: Course }) {
+interface EditCourseClientProps {
+  course: any;
+  isNew?: boolean;
+  userData?: any;
+  session?: any;
+}
+
+export function EditCourseClient({ course, isNew = false, userData, session }: EditCourseClientProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Form state
@@ -42,6 +51,8 @@ export function EditCourseClient({ course }: { course: Course }) {
   const [description, setDescription] = useState(course?.description || "");
   const [units, setUnits] = useState<Unit[]>(course?.units || []);
   const [timeline, setTimeline] = useState<TimelineItem[]>(course?.timeline || []);
+  const [uploadedFile, setUploadedFile] = useState<{name: string, disabled: boolean} | null>(null);
+  const [optionalFile, setOptionalFile] = useState<File | null>(null);
 
   // Editing state
   const [editingUnit, setEditingUnit] = useState<number | null>(null);
@@ -123,13 +134,43 @@ export function EditCourseClient({ course }: { course: Course }) {
     }
   };
 
+  useEffect(() => {
+    if (isNew) {
+      // Initialize with empty data for new course
+      // Set default values or leave empty
+      // Check if file was uploaded in create flow
+      const hasFile = searchParams.get('hasFile') === 'true';
+      const fileName = searchParams.get('fileName');
+
+      if (hasFile && fileName) {
+        setUploadedFile({ name: decodeURIComponent(fileName), disabled: true });
+      } else {
+        setUploadedFile(null);
+      }
+    } else if (course) {
+      // Load existing course data
+      // Check if course has an associated file
+      if (course.syllabusFileName) {
+        setUploadedFile({ name: course.syllabusFileName, disabled: true });
+      }
+      setName(course.name || "");
+      setShortDescription(course.short_description || course.shortDescription || "");
+      setDescription(course.description || "");
+      setUnits(course.units || []);
+      setTimeline(course.timeline || []);
+    }
+  }, [course, isNew, searchParams]);
+
   if (loading) return <div className="p-8">Loading...</div>;
   if (error) return <div className="p-8 text-red-600">{error}</div>;
 
   return (
-    <div className="max-w-6xl mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-4">Edit Course</h1>
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="max-w-xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">
+        {isNew ? "Create Course" : "Edit Course"}
+      </h1>
+
+      <form className="space-y-6">
         <div>
           <label className="block font-semibold mb-1">Name</label>
           <input
@@ -521,6 +562,30 @@ export function EditCourseClient({ course }: { course: Course }) {
               }}
             />
           </div>
+        </div>
+
+        <div>
+          <label className="block mb-2 font-medium">
+            Syllabus File (PDF) {!uploadedFile ? "(Optional)" : ""}:
+          </label>
+          {uploadedFile ? (
+            <div className="p-3 border-2 border-gray-300 rounded-lg bg-gray-50">
+              <div className="text-sm text-gray-600">
+                Uploaded: {uploadedFile.name}
+              </div>
+            </div>
+          ) : (
+            <FileDropInput
+              accept="application/pdf"
+              file={optionalFile}
+              onFileChange={setOptionalFile}
+            />
+          )}
+          {optionalFile && (
+            <div className="mt-1 text-sm text-gray-600">
+              Selected: {optionalFile.name}
+            </div>
+          )}
         </div>
 
         <button

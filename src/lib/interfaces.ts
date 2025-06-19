@@ -5,3 +5,7 @@ export interface PropsForEveryDashboardCard {
   session: Session;
   userData: UserData;
 }
+
+export interface lLMResponse {
+  text: string;
+};

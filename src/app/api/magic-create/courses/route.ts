@@ -3,34 +3,10 @@ import fs from "fs/promises";
 import { auth } from "@/lib/auth";
 import { NextAuthRequest } from "next-auth";
 import client from "@/lib/db";
-
-import { PdfReader } from "pdfreader";
-import { LLMSyllabusParse } from "@/lib/llm/llm";
+import { LLMSyllabusParse } from "@/lib/llm/syllabus";
 import { checkTeacherhood } from "@/lib/database/auth";
 import { getFileRecord } from "@/lib/database/files";
-
-import { z } from "zod";
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function readPdfText(filePath: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    let allText = "";
-    new PdfReader().parseFileItems(filePath, (err, item) => {
-      if (err) {
-        reject(err);
-      } else if (!item) {
-        // End of file
-        resolve(allText);
-      } else if (item.text) {
-        allText += item.text + " ";
-      }
-    });
-  });
-}
-
-const schema = z.object({
-  fileId: z.string().min(1, "File ID is required"),
-});
+import { fileIdSchema } from "@/lib/api-schemas";
 
 // Example: Parse a course file and create a course object
 export const POST = auth(async function POST(req: NextAuthRequest) {
@@ -55,7 +31,7 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
 
   try {
     const body = await req.json();
-    const parsedBody = schema.safeParse(body);
+    const parsedBody = fileIdSchema.safeParse(body);
     if (!parsedBody.success) {
       return NextResponse.json(
         { error: parsedBody.error.message },

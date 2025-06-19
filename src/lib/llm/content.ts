@@ -2,11 +2,11 @@ import fs from "fs";
 import { GoogleGenAI, Type } from "@google/genai";
 
 const syllabusUserPrompt = fs.readFileSync(
-  "./data/prompts/syllabus_extractor/user.txt",
+  "./src/appdata/prompts/syllabus_extractor/user.txt",
   "utf-8"
 );
 const syllabusSystemPrompt = fs.readFileSync(
-  "./data/prompts/syllabus_extractor/system.txt",
+  "./src/appdata/prompts/syllabus_extractor/system.txt",
   "utf-8"
 );
 
@@ -122,6 +122,12 @@ interface LLMSyllabusParseResponse {
   courseStartDate: Date;
   courseEndDate: Date;
   shortDescription: string;
+}
+
+export async function LLMContentParse(
+  filePath: string): Promise<LLMSyllabusParseResponse> {
+
+
 }
 
 export async function LLMSyllabusParse(

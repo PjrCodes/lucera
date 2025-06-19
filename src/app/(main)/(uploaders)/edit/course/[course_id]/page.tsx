@@ -2,28 +2,52 @@ import { EditCourseClient } from '@/components/feature/course/edit-course-client
 import { notFound } from 'next/navigation';
 import client from '@/lib/db';
 import { ObjectId } from 'mongodb';
+import { getUserData } from "@/lib/database/auth";
+import { auth } from "@/lib/auth";
 
 // Async wrapper to await params
 export default async function EditCoursePage({ params }: { params: { course_id: string } }) {
   const { course_id } = await params;
 
-  // fetch course data
-    if (!course_id) {
-        return notFound();
-    }
+  if (!course_id) {
+    return notFound();
+  }
 
+  const session = await auth();
+  if (!session?.user?.id) {
+    return null;
+  }
+
+  const userData = await getUserData(session.user.id);
+  if (!userData) {
+    return null;
+  }
+
+  const isNewCourse = course_id === "new";
+  let courseForClient = null;
+
+  if (!isNewCourse) {
+    // Fetch existing course data
     const db = client.db();
     const course = await db.collection('courses').findOne({ _id: new ObjectId(course_id) });
 
     if (!course) {
-        return notFound();
+      return notFound();
     }
 
-  // Convert ObjectId to string for client component
-  const courseForClient = {
-    ...course,
-    _id: course._id.toString()
-  };
+    // Convert ObjectId to string for client component
+    courseForClient = {
+      ...course,
+      _id: course._id.toString()
+    };
+  }
 
-  return <EditCourseClient course={courseForClient} />;
+  return (
+    <EditCourseClient
+      course={courseForClient}
+      isNew={isNewCourse}
+      userData={userData}
+      session={session}
+    />
+  );
 }
