@@ -39,12 +39,12 @@ interface ContentType {
 }
 
 const COURSE_COLORS = {
-  blue: "bg-lucerablue-2 text-lucerablue-5 border-lucerablue-3",
-  green: "bg-luceragreen-2 text-luceragreen-5 border-luceragreen-3",
-  rose: "bg-lucerarose-2 text-lucerarose-5 border-lucerarose-3",
-  purple: "bg-lucerapurple-2 text-lucerapurple-5 border-lucerapurple-3",
-  brown: "bg-lucerabrown-2 text-lucerabrown-5 border-lucerabrown-3",
-  red: "bg-lucerared-2 text-lucerared-5 border-lucerared-3",
+  blue: "bg-primary-100 text-primary-700 border-primary-300",
+  green: "bg-secondary-100 text-secondary-700 border-secondary-300", 
+  rose: "bg-accent-100 text-accent-700 border-accent-300",
+  purple: "bg-primary-200 text-primary-800 border-primary-400",
+  brown: "bg-secondary-200 text-secondary-800 border-secondary-400",
+  red: "bg-accent-200 text-accent-800 border-accent-400",
 };
 
 const MOCK_COURSES: Course[] = [
@@ -73,7 +73,7 @@ function MessageList({ messages }: { messages: Message[] }) {
   }, [messages]);
 
   return (
-    <div className="w-full px-6 py-6">
+    <div className="bg-primary-50 w-full px-6 py-6">
       <div className="max-w-4xl mx-auto space-y-4">
         {messages.map((message) => (
           <div
@@ -85,8 +85,8 @@ function MessageList({ messages }: { messages: Message[] }) {
             <div
               className={`rounded-lg px-4 py-3 max-w-[70%] shadow-sm ${
                 message.sender === "user"
-                  ? "bg-lucerablue-4 text-white"
-                  : "bg-white text-gray-800 border-l-4 border-gray-300"
+                  ? "bg-primary-600 text-white"
+                  : "bg-white text-gray-800 border-l-4 border-primary-300"
               }`}
             >
               <div className="break-words whitespace-pre-line text-sm leading-relaxed">
@@ -166,7 +166,7 @@ function ChatInput({
   };
   return (
     <>
-      <div className="sticky bottom-0 w-full bg-white border-t border-gray-200 px-4 py-4">
+      <div className="sticky bottom-0 w-full bg-primary-50 border-t border-gray-200 px-4 py-4">
         <div className="max-w-4xl mx-auto">
           {/* Selected course pills */}
           {selectedCourses.length > 0 &&
@@ -199,7 +199,7 @@ function ChatInput({
                   return (
                     <span
                       key={typeId}
-                      className="px-3 py-1 rounded-full text-xs font-medium bg-lucerablue-1 text-lucerablue-5 border border-lucerablue-3 flex items-center gap-1"
+                      className="px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-700 border border-primary-300 flex items-center gap-1"
                     >
                       <IconComponent className="w-3 h-3" />
                       {type.name}
@@ -240,7 +240,7 @@ function ChatInput({
             <div className="flex-1">
               <textarea
                 ref={textareaRef}
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-lucerablue-3 focus:border-transparent bg-white placeholder-gray-500"
+                className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent bg-secondary-50 placeholder-gray-500"
                 placeholder="Message LISA..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -260,7 +260,7 @@ function ChatInput({
             <button
               type="button"
               onClick={handleSend}
-              className="p-3 rounded-xl font-medium bg-lucerablue-3 text-white hover:bg-lucerablue-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+              className="primarybutton p-3 rounded-xl flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={disabled || !input.trim()}
             >
               <PiCaretUp className="w-5 h-5" />
@@ -292,8 +292,8 @@ function InitialSplash({
     <div className="min-h-full flex flex-col items-center justify-center px-6 py-12 text-gray-500">
       <div className="text-center max-w-md mb-8">
         <div className="flex items-center justify-center mb-4">
-          <PiChatTeardrop size={48} className="text-lucerablue-3" />
-          <span className="text-3xl tracking-wider font-bold text-lucerablue-5 ml-2">
+          <PiChatTeardrop size={48} className="text-primary-600" />
+          <span className="text-3xl tracking-wider font-bold text-primary-700 ml-2">
             LISA
           </span>
         </div>
@@ -306,7 +306,7 @@ function InitialSplash({
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl w-full">
         <button
           onClick={() => onQuickAction("What assignments are due this week?")}
-          className="p-4 rounded-xl bg-white border border-gray-200 hover:border-lucerablue-3 hover:bg-lucerablue-1 text-gray-700 hover:text-lucerablue-5 transition-all text-sm font-medium text-left"
+          className="secondarybutton p-4 rounded-xl text-sm font-medium text-left hover:bg-primary-50 hover:border-primary-300 hover:text-primary-700 transition-all"
         >
           <div className="mb-2">
             <AssignmentIcon className="w-6 h-6" />
@@ -315,7 +315,7 @@ function InitialSplash({
         </button>
         <button
           onClick={() => onQuickAction("Show my upcoming quizzes")}
-          className="p-4 rounded-xl bg-white border border-gray-200 hover:border-lucerablue-3 hover:bg-lucerablue-1 text-gray-700 hover:text-lucerablue-5 transition-all text-sm font-medium text-left"
+          className="secondarybutton p-4 rounded-xl text-sm font-medium text-left hover:bg-primary-50 hover:border-primary-300 hover:text-primary-700 transition-all"
         >
           <div className="mb-2">
             <QuizIcon className="w-6 h-6" />
@@ -324,7 +324,7 @@ function InitialSplash({
         </button>
         <button
           onClick={() => onQuickAction("Show recently uploaded class content")}
-          className="p-4 rounded-xl bg-white border border-gray-200 hover:border-lucerablue-3 hover:bg-lucerablue-1 text-gray-700 hover:text-lucerablue-5 transition-all text-sm font-medium text-left"
+          className="secondarybutton p-4 rounded-xl text-sm font-medium text-left hover:bg-primary-50 hover:border-primary-300 hover:text-primary-700 transition-all"
         >
           <div className="mb-2">
             <ContentIcon className="w-6 h-6" />
@@ -472,7 +472,7 @@ export default function LisaPage() {
   return (
     <>
       <SetHeaderClientComponent title="LISA" />
-      <div className="w-full max-w-4xl flex flex-col min-h-screen bg-gray-50">
+      <div className="w-full max-w-4xl flex flex-col min-h-screen bg-primary-50">
         {/* Main scrollable content area */}
         <div className="flex-1">
           {messages.length === 0 ? (
@@ -482,8 +482,8 @@ export default function LisaPage() {
           )}
 
           {isLoading && (
-            <div className="w-full px-6 py-3 text-center text-lucerablue-4 flex items-center justify-center gap-2">
-              <div className="w-4 h-4 border-2 border-lucerablue-3 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-full px-6 py-3 text-center text-primary-600 flex items-center justify-center gap-2">
+              <div className="w-4 h-4 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
               <span>LISA is thinking...</span>
             </div>
           )}

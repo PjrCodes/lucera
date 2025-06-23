@@ -13,6 +13,7 @@ import { MdBrokenImage } from "react-icons/md";
 import { UserData } from "@/lib/schemas";
 import { PropsForEveryDashboardCard } from "@/lib/interfaces";
 import YourBadges from "./cards/your-badges";
+import WhatsNext from "./cards/whats-next";
 
 interface Props {
   session: Session
@@ -29,7 +30,7 @@ const componentMap: Record<string, (props: PropsForEveryDashboardCard) => JSX.El
     />
   ),
   WHATS_NEXT: (props) => (
-    <UpcomingDeadlines
+    <WhatsNext
       key="whats-next"
       session={props.session}
       userData={props.userData}
