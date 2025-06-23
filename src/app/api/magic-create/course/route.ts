@@ -7,6 +7,7 @@ import { LLMSyllabusParse } from "@/lib/llm/syllabus";
 import { checkTeacherhood } from "@/lib/database/auth";
 import { getFileRecord } from "@/lib/database/files";
 import { fileIdSchema } from "@/lib/api-schemas";
+import { ObjectId } from "mongodb";
 
 // Example: Parse a course file and create a course object
 export const POST = auth(async function POST(req: NextAuthRequest) {
@@ -113,6 +114,26 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
         { error: "Failed to create course record" },
         { status: 500 }
       );
+    }
+
+    if (!courseRecord.insertedId) {
+      return NextResponse.json(
+        { error: "Failed to create course record" },
+        { status: 500 }
+      );
+    }
+    
+    // Update user's relatedCourses array
+    try {
+      const userCollection = db.collection("user_data");
+      await userCollection.updateOne(
+        { _id: new ObjectId(session.user.id) },
+        { $push: { relatedCourses: courseRecord.insertedId.toString() } }
+      );
+    } catch (userUpdateError) {
+      console.error("Failed to update user relatedCourses:", userUpdateError);
+      // Note: Course was created successfully, but user update failed
+      // You might want to log this or handle it according to your business logic
     }
 
     return NextResponse.json({
