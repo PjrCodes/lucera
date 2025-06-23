@@ -21,7 +21,7 @@ function isViewableFile(fileType: string): boolean {
   const viewableTypes = [
     "application/pdf",
     "image/jpeg",
-    "image/jpg", 
+    "image/jpg",
     "image/png",
     "image/gif",
     "image/webp",
@@ -57,7 +57,7 @@ export default function CourseMaterialsCard({ courseMaterialsData }: { courseMat
           <FiBookOpen />
           Course Syllabus
         </h2>
-        <div 
+        <div
           className="flex items-center gap-3 p-3 bg-accent-100 rounded-lg cursor-pointer hover:bg-accent-200 transition-colors group"
           onClick={() => handleFileClick(syllabus.viewUrl, syllabus.downloadUrl, syllabus.fileName, syllabus.fileType)}
         >
