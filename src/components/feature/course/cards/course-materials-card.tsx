@@ -92,7 +92,7 @@ export default function CourseMaterialsCard({ courseMaterialsData }: { courseMat
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-primary-900 truncate max-w-[10rem] sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg" title={content.file?.fileName || content.title}>{content.title}</p>
                   {content.description && (
-                    <p className="text-xs text-primary-600 mt-1 truncate">{content.description}</p>
+                    <p className="text-xs text-primary-600 mt-1 wrap-balance">{content.description}</p>
                   )}
                   <p className="text-xs text-primary-500 mt-1">Added: {formatDate(content.createdAt)}</p>
                 </div>

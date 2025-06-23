@@ -75,11 +75,11 @@ export default function Header({
           )}
           {/* Heading: only render once, hide/show with CSS */}
           <h1
-            className={`text-xl md:text-2xl tracking-wider font-bold ${
+            className={`text-xl md:text-2xl tracking-wider font-bold truncate max-w-[150px] sm:max-w-[200px] md:max-w-none ${
               searchExpanded ? "hidden sm:block" : "block"
             }`}
           >
-            {headerTitle.length > 16 ? headerTitle.slice(0, 13) + "..." : headerTitle} {/* Use headerTitle from context */}
+            {headerTitle} {/* Remove character limit logic, use CSS truncation */}
           </h1>
         </div>
         {isLoggedIn ? (
