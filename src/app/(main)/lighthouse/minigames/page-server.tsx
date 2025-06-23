@@ -1,10 +1,10 @@
 import React from "react";
-import { auth } from "../../../../lib/auth";
+import { auth } from "../../../lib/auth";
 import { getUserData } from "@/lib/database/auth";
 import { redirect } from "next/navigation";
-import LeaderboardHome from "@/components/feature/lighthouse/leaderboard-home";
+import MinigamesHome from "@/components/feature/lighthouse/minigames-home";
 
-export default async function LeaderboardPage() {
+export default async function MinigamesPage() {
   const session = await auth();
 
   if (!session || !session.user) {
@@ -20,9 +20,13 @@ export default async function LeaderboardPage() {
 
   const isTeacher = userData.role === "teacher";
 
+  // Redirect teachers away from minigames
+  if (isTeacher) {
+    redirect("/lighthouse?error=teacher-access-denied");
+  }
+
   return (
-    <LeaderboardHome
-      isTeacher={isTeacher}
+    <MinigamesHome
       userData={userData}
       session={session}
     />

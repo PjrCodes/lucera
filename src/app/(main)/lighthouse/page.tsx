@@ -1,160 +1,32 @@
-"use client";
-import React, { useState } from "react";
-import { Trophy, Star, Users, GamepadIcon, BarChart3 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import StatsCard from "@/components/feature/lighthouse/stats-card";
-import BadgeGrid from "@/components/feature/lighthouse/badge-grid";
-import CourseRankCard from "@/components/feature/lighthouse/course-rank-card";
-import ActionButton from "@/components/feature/lighthouse/action-buttons";
-import BadgeDetailModal from "@/components/feature/lighthouse/badge-detail-modal";
-import PointsInfoModal from "@/components/feature/lighthouse/points-info-modal";
-import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
+import React from "react";
+import { auth } from "../../../lib/auth";
+import { getUserData } from "@/lib/database/auth";
+import { redirect } from "next/navigation";
+import LighthouseHome from "@/components/feature/lighthouse/lighthouse-home";
 
-interface Badge {
-  id: number;
-  name: string;
-  emoji: string;
-  collected: boolean;
-  description?: string;
-}
+export default async function LighthousePage() {
+  const session = await auth();
 
-export default function LighthouseHome() {
-  const router = useRouter();
-  const [currentPoints] = useState(2847);
-  const [currentRank] = useState(15);
-  const [totalStudents] = useState(1250);
+  if (!session || !session.user) {
+    redirect("/auth/signin");
+  }
 
-  // Modal states
-  const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
-  const [isBadgeModalOpen, setIsBadgeModalOpen] = useState(false);
-  const [isPointsModalOpen, setIsPointsModalOpen] = useState(false);
+  let userData;
+  try {
+    userData = await getUserData(session?.user?.id || "");
+  } catch {
+    redirect("/handle-invalid-user");
+  }
 
-  const [collectedBadges] = useState<Badge[]>(
-    [
-      { id: 1, name: "First Steps", emoji: "👶", collected: true, description: "Completed first course" },
-      { id: 2, name: "Speed Demon", emoji: "⚡", collected: true, description: "Fast assignment completion" },
-      { id: 3, name: "Scholar", emoji: "🎓", collected: true, description: "High academic performance" },
-      { id: 4, name: "Night Owl", emoji: "🦉", collected: false },
-      { id: 5, name: "Perfectionist", emoji: "💎", collected: false },
-      { id: 6, name: "Team Player", emoji: "🤝", collected: false },
-      { id: 7, name: "Mastermind", emoji: "🧠", collected: true, description: "Problem solving expert" },
-      { id: 8, name: "Explorer", emoji: "🗺️", collected: false },
-    ]
-  );
-
-  const [courseRanks] = useState(
-    [
-      { courseCode: "CS101", courseName: "Introduction to Programming", rank: 5, points: 425, totalStudents: 85 },
-      { courseCode: "CS201", courseName: "Data Structures", rank: 12, points: 380, totalStudents: 72 },
-      { courseCode: "CS301", courseName: "Algorithms", rank: 8, points: 402, totalStudents: 65 },
-      { courseCode: "CS401", courseName: "Software Engineering", rank: 3, points: 445, totalStudents: 58 },
-    ]
-  );
-
-  const handleBadgeClick = (badge: Badge) => {
-    setSelectedBadge(badge);
-    setIsBadgeModalOpen(true);
-  };
-
-  const handleRankClick = () => {
-    router.push("/lighthouse/leaderboard");
-  };
-
-  const handleBadgesClick = () => {
-    const badgesSection = document.getElementById("badges-section");
-    if (badgesSection) {
-      badgesSection.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  const handlePointsClick = () => {
-    setIsPointsModalOpen(true);
-  };
+  const isTeacher = userData.role === "teacher";
 
   return (
-    <>
-      <SetHeaderClientComponent title={"LIGHTHOUSE"} />
-      <main className="min-h-screen bg-primary-50 p-6">
-        <div className="max-w-6xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-3 bg-primary-100 text-primary-800 px-8 py-4 rounded-lg shadow-md border border-primary-200">
-              <Trophy className="w-8 h-8" />
-              <div>
-                <h1 className="text-2xl font-bold">Lighthouse</h1>
-                <p className="text-sm opacity-80">Earn Points. Get Badges!</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Stats Dashboard */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <StatsCard
-              title="Total Points"
-              value={currentPoints.toLocaleString()}
-              icon={Star}
-              color="primary"
-              clickable={true}
-              onClick={handlePointsClick}
-            />
-            <StatsCard
-              title="University Rank"
-              value={`#${currentRank}`}
-              icon={Trophy}
-              color="secondary"
-              subtitle={`of ${totalStudents.toLocaleString()} students`}
-              clickable={true}
-              onClick={handleRankClick}
-            />
-            <StatsCard
-              title="Badges Earned"
-              value={`${collectedBadges.filter((b) => b.collected).length}/${collectedBadges.length}`}
-              icon={Users}
-              color="primary"
-              clickable={true}
-              onClick={handleBadgesClick}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            {/* Course Rankings */}
-            <CourseRankCard courseRanks={courseRanks} />
-
-            {/* Action Buttons */}
-            <div className="space-y-4">
-              <h2 className="text-lg font-bold text-secondary-800 mb-4">Quick Actions</h2>
-              <ActionButton
-                href="/lighthouse/minigames"
-                icon={GamepadIcon}
-                title="Play Minigames"
-                description="Earn points through games"
-                color="primary"
-              />
-              <ActionButton
-                href="/lighthouse/leaderboard"
-                icon={BarChart3}
-                title="View Leaderboards"
-                description="See how you compare"
-                color="secondary"
-              />
-            </div>
-          </div>
-
-          {/* Badges Collection */}
-          <BadgeGrid badges={collectedBadges} onBadgeClick={handleBadgeClick} />
-        </div>
-      </main>
-
-      {/* Modals */}
-      <BadgeDetailModal
-        badge={selectedBadge}
-        isOpen={isBadgeModalOpen}
-        onClose={() => setIsBadgeModalOpen(false)}
-      />
-      <PointsInfoModal
-        isOpen={isPointsModalOpen}
-        onClose={() => setIsPointsModalOpen(false)}
-      />
-    </>
+    <LighthouseHome
+      isTeacher={isTeacher}
+      userData={userData}
+      session={session}
+    />
   );
 }
+
+

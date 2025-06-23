@@ -1,102 +1,34 @@
-"use client";
-import React, { useState } from "react";
-import { ArrowLeft, Puzzle, Zap, Brain } from "lucide-react";
-import Link from "next/link";
-import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
-import WordWhizGame from "@/components/feature/lighthouse/games/word-whiz-game";
-import ConceptMatchGame from "@/components/feature/lighthouse/games/concept-match-game";
-import QuizBlitzGame from "@/components/feature/lighthouse/games/quiz-blitz-game";
+import React from "react";
+import { auth } from "../../../../lib/auth";
+import { getUserData } from "@/lib/database/auth";
+import { redirect } from "next/navigation";
+import MinigamesHome from "@/components/feature/lighthouse/minigames-home";
 
-type GameType = "menu" | "word-whiz" | "concept-match" | "quiz-blitz";
+export default async function MinigamesPage() {
+  const session = await auth();
 
-export default function MinigamesPage() {
-  const [currentGame, setCurrentGame] = useState<GameType>("menu");
+  if (!session || !session.user) {
+    redirect("/auth/signin");
+  }
 
-  const games = [
-    {
-      id: "word-whiz",
-      title: "Word Whiz",
-      description: "Solve subject-specific word puzzles and anagrams",
-      icon: Puzzle,
-      color: "bg-primary-500 hover:bg-primary-600",
-      textColor: "text-white",
-    },
-    {
-      id: "concept-match",
-      title: "Concept Match",
-      description: "Match terms with their definitions",
-      icon: Zap,
-      color: "bg-secondary-500 hover:bg-secondary-600",
-      textColor: "text-white",
-    },
-    {
-      id: "quiz-blitz",
-      title: "Quiz Blitz",
-      description: "Fast-paced multiple choice questions",
-      icon: Brain,
-      color: "bg-primary-600 hover:bg-primary-700",
-      textColor: "text-white",
-    },
-  ];
+  let userData;
+  try {
+    userData = await getUserData(session?.user?.id || "");
+  } catch {
+    redirect("/handle-invalid-user");
+  }
 
-  const renderGame = () => {
-    switch (currentGame) {
-      case "word-whiz":
-        return <WordWhizGame onBack={() => setCurrentGame("menu")} />;
-      case "concept-match":
-        return <ConceptMatchGame onBack={() => setCurrentGame("menu")} />;
-      case "quiz-blitz":
-        return <QuizBlitzGame onBack={() => setCurrentGame("menu")} />;
-      default:
-        return (
-          <div className="max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-3 bg-primary-100 text-primary-800 px-8 py-4 rounded-lg shadow-md border border-primary-200">
-                <Brain className="w-8 h-8" />
-                <div>
-                  <h1 className="text-2xl font-bold">Minigames</h1>
-                  <p className="text-sm opacity-80">Learn while you play!</p>
-                </div>
-              </div>
-            </div>
+  const isTeacher = userData.role === "teacher";
 
-            {/* Back to Lighthouse */}
-            <div className="mb-6">
-              <Link
-                href="/lighthouse"
-                className="inline-flex items-center gap-2 text-secondary-600 hover:text-secondary-800 transition-colors"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Lighthouse
-              </Link>
-            </div>
-
-            {/* Game Selection */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {games.map((game) => (
-                <button
-                  key={game.id}
-                  onClick={() => setCurrentGame(game.id as GameType)}
-                  className={`${game.color} ${game.textColor} p-6 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-left`}
-                >
-                  <game.icon className="w-12 h-12 mb-4" />
-                  <h3 className="text-xl font-bold mb-2">{game.title}</h3>
-                  <p className="opacity-90">{game.description}</p>
-                </button>
-              ))}
-            </div>
-          </div>
-        );
-    }
-  };
+  // Redirect teachers away from minigames
+  if (isTeacher) {
+    redirect("/lighthouse?error=teacher-access-denied");
+  }
 
   return (
-    <>
-      <SetHeaderClientComponent title="MINIGAMES" />
-      <main className="min-h-screen bg-primary-50 p-6">
-        {renderGame()}
-      </main>
-    </>
+    <MinigamesHome
+      userData={userData}
+      session={session}
+    />
   );
 }
