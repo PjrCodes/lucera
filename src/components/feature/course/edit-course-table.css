@@ -1,0 +1,128 @@
+/* Custom styling for ka-table in edit course component */
+.ka-table {
+  width: 100%;
+  table-layout: auto;
+}
+
+.ka-table .ka-cell {
+  transition: background-color 0.2s ease;
+  padding: 8px 12px;
+  word-wrap: break-word;
+  max-width: none;
+}
+
+.ka-table .ka-cell:hover {
+  background-color: #f8fafc;
+}
+
+.ka-table .ka-cell.ka-cell-editor {
+  background-color: #eff6ff;
+  border: 2px solid #3b82f6;
+}
+
+.ka-table .ka-cell-editor input,
+.ka-table .ka-cell-editor select {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  min-width: 0;
+}
+
+.ka-table .ka-cell-editor input:focus,
+.ka-table .ka-cell-editor select:focus {
+  outline: none;
+}
+
+/* Improved styling for empty cells */
+.ka-table .ka-cell-text {
+  padding: 8px 12px;
+  min-height: 20px;
+  cursor: pointer;
+}
+
+/* Better button styling */
+.ka-table .ka-cell button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Make action columns non-editable */
+.ka-table .ka-cell[data-key="actions"] {
+  background-color: #f9fafb !important;
+  cursor: default;
+  width: 100px;
+  min-width: 100px;
+  max-width: 100px;
+}
+
+.ka-table .ka-cell[data-key="actions"]:hover {
+  background-color: #f3f4f6 !important;
+}
+
+/* Row hover effect */
+.ka-table .ka-row:hover .ka-cell {
+  background-color: #f1f5f9;
+}
+
+/* Drag indicator */
+.ka-table .ka-row.ka-row-reorder-over {
+  background-color: #dbeafe;
+}
+
+/* Header styling */
+.ka-table .ka-thead .ka-cell {
+  background-color: #f8fafc;
+  font-weight: 600;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+/* Responsive table wrapper */
+.ka-table-wrapper {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* Ensure table cells don't shrink too much */
+.ka-table td {
+  min-width: 120px;
+}
+
+.ka-table td[data-key="actions"] {
+  min-width: 100px !important;
+  width: 100px !important;
+}
+
+/* Style for editable cells */
+.ka-table .ka-cell[data-editable="true"] {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ka-table .ka-cell[data-editable="true"]:hover {
+  background-color: #e0f2fe;
+  box-shadow: 0 0 0 1px #0284c7;
+}
+
+/* Date input styling */
+.ka-table .ka-cell-editor input[type="date"] {
+  appearance: none;
+  background: transparent;
+  border: none;
+  width: 100%;
+  padding: 4px 8px;
+}
+
+/* Boolean select styling */
+.ka-table .ka-cell-editor select {
+  appearance: none;
+  background: transparent;
+  border: none;
+  width: 100%;
+  padding: 4px 8px;
+  cursor: pointer;
+}

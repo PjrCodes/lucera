@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Table } from "ka-table";
 import { DataType, EditingMode } from "ka-table/enums";
-import { Trash2, Edit3 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import "ka-table/style.css";
+import "./edit-course-table.css";
 import { FileDropInput } from "@/components/core/inputs/file-drop-input";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
@@ -36,17 +37,18 @@ interface Course {
   description?: string;
   units?: Unit[];
   timeline?: TimelineItem[];
+  syllabusFileName?: string;
 }
 
 // Client component
 interface EditCourseClientProps {
-  course: any;
+  course: Course;
   isNew?: boolean;
-  userData?: any;
-  session?: any;
+  userData?: unknown;
+  session?: unknown;
 }
 
-export function EditCourseClient({ course, isNew = false, userData, session }: EditCourseClientProps) {
+export function EditCourseClient({ course, isNew = false }: EditCourseClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -61,10 +63,10 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
   const [timeline, setTimeline] = useState<TimelineItem[]>(course?.timeline || []);
   const [existingSyllabusName, setExistingSyllabusName] = useState<string | null>(null);
   const [newSyllabusFile, setNewSyllabusFile] = useState<File | null>(null);
-
-  // Editing state
-  const [editingUnit, setEditingUnit] = useState<number | null>(null);
-  const [editingTimeline, setEditingTimeline] = useState<number | null>(null);
+  
+  // Ka-table editing states
+  const [editableCells, setEditableCells] = useState<{rowKeyValue: number, columnKey: string}[]>([]);
+  const [timelineEditableCells, setTimelineEditableCells] = useState<{rowKeyValue: number, columnKey: string}[]>([]);
   const handleUnitChange = (idx: number, field: keyof Unit, value: string) => {
     setUnits((prev) =>
       prev.map((u, i) => (i === idx ? { ...u, [field]: value } : u))
@@ -170,7 +172,7 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
   if (error) return <div className="p-8 text-red-600">{error}</div>;
 
   return (
-    <div className="max-w-xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">
         {isNew ? "Create Course" : "Edit Course"}
       </h1>
@@ -212,7 +214,7 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
         </div>          <div>
           <label className="block font-semibold mb-1">Units</label>
           <p className="text-sm text-gray-600 mb-2">
-            Define the course units or modules. Drag rows to reorder. Click the edit icon to modify cells.
+            Define the course units or modules. Drag rows to reorder. Click any cell to edit.
           </p>
           <button
             type="button"
@@ -221,53 +223,41 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
           >
             + Add Unit
           </button>
-          <div className="border rounded-lg overflow-hidden shadow-sm bg-white">
+          <div className="border rounded-lg overflow-hidden shadow-sm bg-white" style={{ width: '100%' }}>
             <Table
               data={units.map((unit, index) => ({ ...unit, id: index }))}
               rowKeyField="id"
-              columns={[                {
+              columns={[
+                {
                   key: "name",
                   title: "Unit Name",
                   dataType: DataType.String,
                   isEditable: true,
-                  width: 300,
                 },
                 {
-                  key: "description",
+                  key: "description", 
                   title: "Description",
                   dataType: DataType.String,
                   isEditable: true,
-                  width: 400,
                 },
                 {
                   key: "actions",
                   title: "Actions",
-                  width: 150,
+                  width: 100,
                   isEditable: false,
                 }
-              ]}              editingMode={EditingMode.Cell}
+              ]}
+              editableCells={editableCells}
+              editingMode={EditingMode.Cell}
               height={Math.max(250, units.length * 50 + 100)}
               noData={{ text: "No units added yet. Click 'Add Unit' to create your first unit." }}
-              rowReordering={true}              childComponents={{
+              rowReordering={true}
+              childComponents={{
                 cellText: {
                   content: (props) => {
                     if (props.column.key === "actions") {
                       return (
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            className="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50 transition-colors"
-                            onClick={() => {
-                              if (editingUnit === props.rowData.id) {
-                                setEditingUnit(null);
-                              } else {
-                                setEditingUnit(props.rowData.id);
-                              }
-                            }}
-                            title="Edit row"
-                          >
-                            <Edit3 size={16} />
-                          </button>
+                        <div className="flex items-center gap-2 justify-center">
                           <button
                             type="button"
                             className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50 transition-colors"
@@ -279,49 +269,21 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
                         </div>
                       );
                     }
-
-                    // Only allow editing if this row is in edit mode
-                    if (editingUnit !== props.rowData.id) {
+                    
+                    // Add placeholder text for empty cells
+                    if (!props.value || props.value === "") {
                       return (
-                        <span className="text-gray-700">
-                          {props.value || <span className="text-gray-400 italic">Click edit to add content</span>}
+                        <span className="text-gray-400 italic cursor-pointer" title="Click to edit">
+                          {props.column.key === "name" ? "Click to add unit name" : "Click to add description"}
                         </span>
                       );
                     }
-
-                    return undefined;
-                  }
-                },
-                cellEditor: {
-                  content: (props) => {
-                    // Only show editor if this row is in edit mode
-                    if (editingUnit === props.rowData.id &&
-                        (props.column.key === "name" || props.column.key === "description")) {
-                      return (
-                        <input
-                          type="text"
-                          value={props.value || ""}
-                          onChange={(e) => {
-                            props.dispatch({
-                              type: "UpdateCellValue",
-                              rowKeyValue: props.rowKeyValue,
-                              columnKey: props.column.key,
-                              value: e.target.value,
-                            });
-                          }}
-                          onBlur={() => setEditingUnit(null)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === "Escape") {
-                              setEditingUnit(null);
-                            }
-                          }}
-                          className="w-full px-2 py-1 border rounded focus:outline-none focus:border-blue-500"
-                          placeholder={props.column.key === "name" ? "Unit name" : "Unit description"}
-                          autoFocus
-                        />
-                      );
-                    }
-                    return undefined;
+                    
+                    return (
+                      <span className="cursor-pointer" title="Click to edit">
+                        {props.value}
+                      </span>
+                    );
                   }
                 }
               }}
@@ -334,8 +296,12 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
                   const { rowKeyValue, columnKey, value } = action;
                   handleUnitChange(rowKeyValue, columnKey as keyof Unit, value);
                 }
+                if (action.type === "OpenEditor") {
+                  const { rowKeyValue, columnKey } = action;
+                  setEditableCells([{ rowKeyValue, columnKey }]);
+                }
                 if (action.type === "CloseEditor") {
-                  setEditingUnit(null);
+                  setEditableCells([]);
                 }
               }}
             />
@@ -343,7 +309,7 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
         </div>        <div>
           <label className="block font-semibold mb-1">Timeline</label>
           <p className="text-sm text-gray-600 mb-2">
-            Set up your course timeline with assignments, exams, and deadlines. Drag rows to reorder. Click edit icon to modify cells.
+            Set up your course timeline with assignments, exams, and deadlines. Drag rows to reorder. Click any cell to edit.
           </p>
           <button
             type="button"
@@ -352,73 +318,68 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
           >
             + Add Timeline Item
           </button>
-          <div className="border rounded-lg overflow-hidden shadow-sm bg-white">
+          <div className="border rounded-lg overflow-hidden shadow-sm bg-white" style={{ width: '100%' }}>
             <Table
               data={timeline.map((item, index) => ({ ...item, id: index }))}
               rowKeyField="id"
-              columns={[                {
+              columns={[
+                {
                   key: "type",
                   title: "Type",
                   dataType: DataType.String,
                   isEditable: true,
-                  width: 120,
                 },
                 {
                   key: "title",
                   title: "Title",
                   dataType: DataType.String,
                   isEditable: true,
-                  width: 200,
                 },
                 {
                   key: "start_date",
                   title: "Start Date",
-                  dataType: DataType.String,
+                  dataType: DataType.Date,
                   isEditable: true,
-                  width: 130,
                 },
                 {
                   key: "due_date",
-                  title: "Due Date",
-                  dataType: DataType.String,
+                  title: "Due Date", 
+                  dataType: DataType.Date,
                   isEditable: true,
-                  width: 130,
                 },
                 {
                   key: "grade_release_date",
                   title: "Grade Release",
-                  dataType: DataType.String,
+                  dataType: DataType.Date,
                   isEditable: true,
-                  width: 130,
                 },
                 {
                   key: "start_date_inferred",
                   title: "Start Inferred",
                   dataType: DataType.Boolean,
                   isEditable: true,
-                  width: 100,
                 },
                 {
                   key: "due_date_inferred",
                   title: "Due Inferred",
                   dataType: DataType.Boolean,
                   isEditable: true,
-                  width: 100,
                 },
                 {
                   key: "grade_release_date_inferred",
                   title: "Grade Inferred",
                   dataType: DataType.Boolean,
                   isEditable: true,
-                  width: 100,
                 },
                 {
                   key: "actions",
                   title: "Actions",
-                  width: 150,
+                  width: 100,
                   isEditable: false,
                 }
-              ]}              editingMode={EditingMode.Cell}
+              ]}
+              editableCells={timelineEditableCells}
+              editingMode={EditingMode.Cell}
               height={Math.max(300, timeline.length * 50 + 100)}
               noData={{ text: "No timeline items added yet. Click 'Add Timeline Item' to create your first timeline entry." }}
               rowReordering={true}
@@ -427,21 +388,7 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
                   content: (props) => {
                     if (props.column.key === "actions") {
                       return (
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            className="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50 transition-colors"
-                            onClick={() => {
-                              if (editingTimeline === props.rowData.id) {
-                                setEditingTimeline(null);
-                              } else {
-                                setEditingTimeline(props.rowData.id);
-                              }
-                            }}
-                            title="Edit row"
-                          >
-                            <Edit3 size={16} />
-                          </button>
+                        <div className="flex items-center gap-2 justify-center">
                           <button
                             type="button"
                             className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50 transition-colors"
@@ -454,108 +401,49 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
                       );
                     }
 
-                    // Show read-only content when not editing
-                    if (editingTimeline !== props.rowData.id) {
-                      // Add placeholders for date fields
-                      if (props.column.key === "start_date" || props.column.key === "due_date" || props.column.key === "grade_release_date") {
-                        if (!props.value || props.value === "") {
-                          return <span className="text-gray-400">YYYY-MM-DD</span>;
-                        }
+                    // Format display for date fields
+                    if (props.column.key === "start_date" || props.column.key === "due_date" || props.column.key === "grade_release_date") {
+                      if (!props.value || props.value === "") {
+                        return (
+                          <span className="text-gray-400 italic cursor-pointer" title="Click to set date">
+                            Click to set date
+                          </span>
+                        );
                       }
                       return (
-                        <span className="text-gray-700">
-                          {props.value || <span className="text-gray-400 italic">Click edit to add content</span>}
+                        <span className="cursor-pointer" title="Click to edit">
+                          {props.value}
                         </span>
                       );
                     }
 
-                    return undefined;
-                  }
-                },
-                cellEditor: {
-                  content: (props) => {
-                    // Only show editor when this row is being edited
-                    if (editingTimeline === props.rowData.id) {
-                      // Custom editor for date fields
-                      if (props.column.key === "start_date" || props.column.key === "due_date" || props.column.key === "grade_release_date") {
-                        return (
-                          <input
-                            type="date"
-                            value={props.value || ""}
-                            onChange={(e) => {
-                              props.dispatch({
-                                type: "UpdateCellValue",
-                                rowKeyValue: props.rowKeyValue,
-                                columnKey: props.column.key,
-                                value: e.target.value,
-                              });
-                            }}
-                            onBlur={() => setEditingTimeline(null)}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" || e.key === "Escape") {
-                                setEditingTimeline(null);
-                              }
-                            }}
-                            className="w-full px-2 py-1 border rounded focus:outline-none focus:border-blue-500"
-                            autoFocus
-                          />
-                        );
-                      }
-
-                      // Custom editor for boolean fields
-                      if (props.column.key.includes("_inferred")) {
-                        return (
-                          <select
-                            value={props.value ? "true" : "false"}
-                            onChange={(e) => {
-                              props.dispatch({
-                                type: "UpdateCellValue",
-                                rowKeyValue: props.rowKeyValue,
-                                columnKey: props.column.key,
-                                value: e.target.value === "true",
-                              });
-                            }}
-                            onBlur={() => setEditingTimeline(null)}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" || e.key === "Escape") {
-                                setEditingTimeline(null);
-                              }
-                            }}
-                            className="w-full px-2 py-1 border rounded focus:outline-none focus:border-blue-500"
-                            autoFocus
-                          >
-                            <option value="false">No</option>
-                            <option value="true">Yes</option>
-                          </select>
-                        );
-                      }
-
-                      // Default text input for other fields
+                    // Format display for boolean fields
+                    if (props.column.key.includes("_inferred")) {
                       return (
-                        <input
-                          type="text"
-                          value={props.value || ""}
-                          onChange={(e) => {
-                            props.dispatch({
-                              type: "UpdateCellValue",
-                              rowKeyValue: props.rowKeyValue,
-                              columnKey: props.column.key,
-                              value: e.target.value,
-                            });
-                          }}
-                          onBlur={() => setEditingTimeline(null)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === "Escape") {
-                              setEditingTimeline(null);
-                            }
-                          }}
-                          className="w-full px-2 py-1 border rounded focus:outline-none focus:border-blue-500"
-                          placeholder={props.column.key === "type" ? "Assignment, Exam, etc." : "Enter " + props.column.title}
-                          autoFocus
-                        />
+                        <span className="cursor-pointer" title="Click to edit">
+                          {props.value ? "Yes" : "No"}
+                        </span>
                       );
                     }
-                    return undefined;
+
+                    // Other fields
+                    if (!props.value || props.value === "") {
+                      const placeholderText = props.column.key === "type" 
+                        ? "Click to add type (Assignment, Exam, etc.)"
+                        : `Click to add ${props.column.title?.toLowerCase()}`;
+                      
+                      return (
+                        <span className="text-gray-400 italic cursor-pointer" title="Click to edit">
+                          {placeholderText}
+                        </span>
+                      );
+                    }
+
+                    return (
+                      <span className="cursor-pointer" title="Click to edit">
+                        {props.value}
+                      </span>
+                    );
                   }
                 }
               }}
@@ -567,6 +455,13 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
                 if (action.type === "UpdateCellValue") {
                   const { rowKeyValue, columnKey, value } = action;
                   handleTimelineChange(rowKeyValue, columnKey as keyof TimelineItem, value);
+                }
+                if (action.type === "OpenEditor") {
+                  const { rowKeyValue, columnKey } = action;
+                  setTimelineEditableCells([{ rowKeyValue, columnKey }]);
+                }
+                if (action.type === "CloseEditor") {
+                  setTimelineEditableCells([]);
                 }
               }}
             />
