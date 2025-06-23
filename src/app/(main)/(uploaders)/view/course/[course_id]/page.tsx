@@ -10,6 +10,7 @@ import { CourseHeaderSkeleton } from "@/components/feature/course/course-skeleto
 import { Course } from "@/lib/schemas";
 import { getUserData } from "@/lib/database/auth";
 import CourseTabs from "@/components/feature/course/course-tabs";
+import { getContentForCourse } from "@/lib/database/content";
 
 async function getCourse(course_id: string): Promise<Course | null> {
   const db = client.db();
@@ -88,36 +89,6 @@ export default async function CourseViewPage({
       grade: "92%",
     },
   ];
-  const materials = [
-    {
-      id: 1,
-      name: "Course Syllabus.pdf",
-      type: "pdf",
-      size: "2.3 MB",
-      uploadDate: "2024-01-15",
-    },
-    {
-      id: 2,
-      name: "Lecture 1 - Introduction.pdf",
-      type: "pdf",
-      size: "5.1 MB",
-      uploadDate: "2024-01-20",
-    },
-    {
-      id: 3,
-      name: "Lab Manual.pdf",
-      type: "pdf",
-      size: "8.7 MB",
-      uploadDate: "2024-01-18",
-    },
-    {
-      id: 4,
-      name: "Assignment Guidelines.docx",
-      type: "doc",
-      size: "1.2 MB",
-      uploadDate: "2024-01-22",
-    },
-  ];
   const pollsAndAnnouncements = [
     {
       id: 1,
@@ -148,11 +119,13 @@ export default async function CourseViewPage({
       active: false,
     },
   ];
-  const students: string[] = [];
-  const grades: string[] = [];
+  const students: { id: number; name: string; email?: string; }[] = [];
+  const grades: { id: number; title: string; score: string; date: string; }[] = [];
 
   const isBookmarked = false;
 
+  const courseMaterialsData = await getContentForCourse(course._id.toString());
+  
   return (
     <>
       <SetHeaderClientComponent title={course.name.toUpperCase()} />
@@ -163,7 +136,7 @@ export default async function CourseViewPage({
             <CourseTabs
               course={course}
               assignments={assignments}
-              materials={materials}
+              courseMaterialsData={courseMaterialsData}
               pollsAndAnnouncements={pollsAndAnnouncements}
               students={students}
               grades={grades}

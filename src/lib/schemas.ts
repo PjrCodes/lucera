@@ -92,3 +92,31 @@ export const contentSchema = z.object({
 });
 export type Content = z.infer<typeof contentSchema>;
 
+export interface SyllabusInfo {
+  fileName: string;
+  filePath: string;
+  fileType: string;
+  size: number;
+  uploadDate: Date;
+  downloadUrl: string;
+  viewUrl: string;
+}
+
+export interface ContentFileDetails {
+  fileName: string;
+  filePath: string;
+  fileType: string;
+  size: number;
+  downloadUrl: string;
+  viewUrl: string;
+}
+
+export interface ContentWithFile extends Content {
+  file: ContentFileDetails | null;
+}
+
+export interface CourseContentData {
+  syllabus: SyllabusInfo;
+  contents: ContentWithFile[];
+}
+

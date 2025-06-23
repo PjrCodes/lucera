@@ -108,6 +108,7 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
       llmParsingFailed: !timeline && !units, // Flag to indicate if LLM parsing failed
       enrolledStudentCount: 0,
       completedStudentCount: 0,
+      courseCode: "AUTOCODE",
     });
     if (!courseRecord.acknowledged) {
       return NextResponse.json(
@@ -127,7 +128,7 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
     try {
       const userCollection = db.collection("user_data");
       await userCollection.updateOne(
-        { _id: new ObjectId(session.user.id) },
+        { id: session.user.id },
         { $push: { relatedCourses: courseRecord.insertedId.toString() } }
       );
     } catch (userUpdateError) {

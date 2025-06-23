@@ -9,15 +9,54 @@ import CoursePollsCard from "@/components/feature/course/cards/course-polls-card
 import CourseStudentsCard from "@/components/feature/course/cards/course-students-card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { BookOpen, ChartNoAxesColumn, ClipboardList, Clock, FileText, List, MessagesSquare, Users } from "lucide-react";
+import { CourseContentData, Course } from "@/lib/schemas";
+
+interface Assignment {
+  id: number;
+  name: string;
+  due: string;
+  status: string;
+  grade: string | null;
+}
+
+interface PollOrAnnouncement {
+  id: number;
+  type: string;
+  question: string;
+  responses: number | null;
+  active: boolean;
+}
+
+interface Grade {
+  id: number;
+  title: string;
+  score: string;
+  date: string;
+}
+
+interface Student {
+  id: number;
+  name: string;
+  email?: string;
+}
 
 export default function CourseTabs({
   course,
   assignments,
-  materials,
+  courseMaterialsData,
   pollsAndAnnouncements,
   students,
   grades,
+}: {
+  course: Course;
+  assignments: Assignment[];
+  courseMaterialsData: CourseContentData;
+  pollsAndAnnouncements: PollOrAnnouncement[];
+  students: Student[];
+  grades: Grade[];
 }) {
+
+  
   return (
     <div className="w-full flex flex-col items-center">
       <Tabs defaultValue="description" className="w-full">
@@ -101,7 +140,7 @@ export default function CourseTabs({
             <CourseGradesCard grades={grades} />
           </TabsContent>
           <TabsContent value="materials">
-            <CourseMaterialsCard materials={materials} />
+            <CourseMaterialsCard courseMaterialsData={courseMaterialsData} />
           </TabsContent>
           <TabsContent value="polls">
             <CoursePollsCard pollsAndAnnouncements={pollsAndAnnouncements} />
