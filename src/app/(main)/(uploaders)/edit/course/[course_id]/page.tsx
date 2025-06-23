@@ -1,5 +1,5 @@
 import { EditCourseClient } from '@/components/feature/course/edit-course-client';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import client from '@/lib/db';
 import { ObjectId } from 'mongodb';
 import { getUserData } from "@/lib/database/auth";
@@ -15,12 +15,14 @@ export default async function EditCoursePage({ params }: { params: { course_id: 
 
   const session = await auth();
   if (!session?.user?.id) {
-    return null;
+    redirect("/");
   }
-
   const userData = await getUserData(session.user.id);
   if (!userData) {
-    return null;
+    redirect("/");
+  }
+  if (userData.role !== "teacher") {
+    redirect("/");
   }
 
   const isNewCourse = course_id === "new";

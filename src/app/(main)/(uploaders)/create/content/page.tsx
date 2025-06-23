@@ -18,7 +18,6 @@ export default async function CreateContentPageServer() {
     redirect("/");
   }
   const courses = await getCoursesForUser(session.user.id);
-
   courses.forEach((course) => {
     if (course._id instanceof ObjectId) {
       course._id = course._id.toString();

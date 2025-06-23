@@ -14,15 +14,18 @@ import { getContentForCourse } from "@/lib/database/content";
 
 async function getCourse(course_id: string): Promise<Course | null> {
   const db = client.db();
-  const course = await db
-    .collection("courses")
-    .findOne({ _id: new ObjectId(course_id) });
-
-  if (!course) {
+  try {
+    const course = await db
+      .collection("courses")
+      .findOne({ _id: new ObjectId(course_id) });
+    if (!course) {
+      return null;
+    }
+    return course as Course | null;
+  } catch (error) {
+    console.error("Error fetching course:", error);
     return null;
   }
-
-  return course as Course | null;
 }
 
 export default async function CourseViewPage({
@@ -35,7 +38,6 @@ export default async function CourseViewPage({
     return notFound();
   }
   const userData = await getUserData(session.user.id);
-
 
   let isTeacher = false;
   if (userData.role === "teacher") {
@@ -60,10 +62,9 @@ export default async function CourseViewPage({
   if (userData.role === "student" && !(course.status === "published")) {
     return notFound();
   }
-    if (course?._id instanceof ObjectId) {
+  if (course?._id instanceof ObjectId) {
     course._id = course._id.toString();
   }
-
 
   // Dummy data for assignments, materials, polls, students
   const assignments = [
@@ -119,19 +120,24 @@ export default async function CourseViewPage({
       active: false,
     },
   ];
-  const students: { id: number; name: string; email?: string; }[] = [];
-  const grades: { id: number; title: string; score: string; date: string; }[] = [];
+  const students: { id: number; name: string; email?: string }[] = [];
+  const grades: { id: number; title: string; score: string; date: string }[] =
+    [];
 
   const isBookmarked = false;
 
   const courseMaterialsData = await getContentForCourse(course._id.toString());
-  
+
   return (
     <>
       <SetHeaderClientComponent title={course.name.toUpperCase()} />
       <div className="min-h-screen bg-primary-50">
         <div className="max-w-5xl mx-auto p-6">
-          <CourseHeader course={course} isTeacher={isTeacher} isBookmarked={isBookmarked} />
+          <CourseHeader
+            course={course}
+            isTeacher={isTeacher}
+            isBookmarked={isBookmarked}
+          />
           <div className="mt-6">
             <CourseTabs
               course={course}

@@ -19,9 +19,11 @@ export default async function EditContentPageServer({ params }: EditContentPageP
   if (!session?.user?.id) {
     redirect("/");
   }
-
   const userData = await getUserData(session.user.id);
   if (!userData) {
+    redirect("/");
+  }
+  if (userData.role !== "teacher") {
     redirect("/");
   }
 
