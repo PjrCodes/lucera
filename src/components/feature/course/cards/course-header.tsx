@@ -1,6 +1,7 @@
 import { Course } from "@/lib/schemas";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { Edit, Bookmark } from "lucide-react";
+import Link from "next/link";
 
 interface CourseHeaderProps {
   course: Course;
@@ -28,7 +29,9 @@ export default function CourseHeader({ course, isTeacher = false, isBookmarked =
             </SecondaryButton>
           {isTeacher && (
             <SecondaryButton variant="outline" size="sm">
+              <Link href={`/edit/course/${course._id}`}>
               <Edit className="h-4 w-4" />
+              </Link>
             </SecondaryButton>
           )}
         </div>

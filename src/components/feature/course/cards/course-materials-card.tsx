@@ -63,7 +63,7 @@ export default function CourseMaterialsCard({ courseMaterialsData }: { courseMat
         >
           <FiBookOpen className="w-5 h-5 text-accent-600" />
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-accent-900 truncate group-hover:text-accent-800">{syllabus.fileName}</p>
+            <p className="text-sm font-medium text-accent-900 truncate group-hover:text-accent-800 max-w-[10rem] sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg" title={syllabus.fileName}>{syllabus.fileName}</p>
             <div className="flex items-center gap-4 mt-1">
               <p className="text-xs text-accent-600">{formatFileSize(syllabus.size)}</p>
               <p className="text-xs text-accent-600">Uploaded: {formatDate(syllabus.uploadDate)}</p>
@@ -87,44 +87,15 @@ export default function CourseMaterialsCard({ courseMaterialsData }: { courseMat
         {contents.length > 0 ? (
           <div className="space-y-2">
             {contents.map((content) => (
-              <div 
-                key={content._id.toString()} 
-                className={`flex items-center gap-3 p-3 rounded-lg transition-colors group ${
-                  content.file 
-                    ? 'hover:bg-primary-100 cursor-pointer' 
-                    : 'bg-primary-25 opacity-75'
-                }`}
-                onClick={() => content.file && handleFileClick(content.file.viewUrl, content.file.downloadUrl, content.file.fileName, content.file.fileType)}
-              >
-                <FiFileText className={`w-4 h-4 ${content.file ? 'text-primary-400' : 'text-primary-300'}`} />
+              <div key={content._id.toString()} className="flex items-center gap-3 p-2 hover:bg-primary-100 rounded-lg transition-colors group">
+                <FiFileText className="w-4 h-4 text-primary-400" />
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-medium truncate ${
-                    content.file ? 'text-primary-900 group-hover:text-primary-800' : 'text-primary-600'
-                  }`}>
-                    {content.title}
-                  </p>
+                  <p className="text-sm font-medium text-primary-900 truncate max-w-[10rem] sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg" title={content.file?.fileName || content.title}>{content.title}</p>
                   {content.description && (
                     <p className="text-xs text-primary-600 mt-1 truncate">{content.description}</p>
                   )}
-                  <div className="flex items-center gap-4 mt-1">
-                    <p className="text-xs text-primary-500">Added: {formatDate(content.createdAt)}</p>
-                    {content.file && (
-                      <>
-                        <p className="text-xs text-primary-500">{formatFileSize(content.file.size)}</p>
-                        <p className="text-xs text-primary-500 uppercase">{content.file.fileType}</p>
-                      </>
-                    )}
-                  </div>
+                  <p className="text-xs text-primary-500 mt-1">Added: {formatDate(content.createdAt)}</p>
                 </div>
-                {content.file ? (
-                  isViewableFile(content.file.fileType) ? (
-                    <FiEye className="w-4 h-4 text-primary-500 group-hover:text-primary-700" title="Click to view" />
-                  ) : (
-                    <FiDownload className="w-4 h-4 text-primary-500 group-hover:text-primary-700" title="Click to download" />
-                  )
-                ) : (
-                  <span className="text-xs text-primary-400 px-2 py-1 bg-primary-100 rounded">No file</span>
-                )}
               </div>
             ))}
           </div>
