@@ -34,6 +34,15 @@ export default async function CourseViewPage({
     return notFound();
   }
   const userData = await getUserData(session.user.id);
+
+
+  let isTeacher = false;
+  if (userData.role === "teacher") {
+    isTeacher = true;
+  } else {
+    isTeacher = false;
+  }
+
   const { course_id } = await params;
 
   const course = await getCourse(course_id);
@@ -142,12 +151,14 @@ export default async function CourseViewPage({
   const students: string[] = [];
   const grades: string[] = [];
 
+  const isBookmarked = false;
+
   return (
     <>
       <SetHeaderClientComponent title={course.name.toUpperCase()} />
       <div className="min-h-screen bg-primary-50">
         <div className="max-w-5xl mx-auto p-6">
-          <CourseHeader course={course} />
+          <CourseHeader course={course} isTeacher={isTeacher} isBookmarked={isBookmarked} />
           <div className="mt-6">
             <CourseTabs
               course={course}

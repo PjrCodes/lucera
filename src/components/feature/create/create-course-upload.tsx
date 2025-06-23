@@ -26,7 +26,7 @@ export default function CreateCourseUpload({
       // Upload syllabus file
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("type", "syllabus");
+      formData.append("content_type", "syllabus");
       // formData.append("userId", session.user.id || userData._id);
 
       const uploadResponse = await fetch("/api/upload/file", {
@@ -41,7 +41,7 @@ export default function CreateCourseUpload({
       }
 
       // Process with AI
-      const processResponse = await fetch("/api/courses/magic-create", {
+      const processResponse = await fetch("/api/magic-create/course", {
         method: "POST",
         body: JSON.stringify({ fileId: uploadResult.fileId }),
         headers: {
@@ -84,10 +84,18 @@ export default function CreateCourseUpload({
             accept="application/pdf"
             file={file}
             onFileChange={setFile}
+            disabled={!!file || isProcessing}
           />
           {file && (
-            <div className="mt-1 text-sm text-gray-600">
-              Selected: {file.name}
+            <div className="mt-2 flex items-center justify-between">
+              <span className="text-sm text-gray-600">Selected: {file.name}</span>
+              <button
+                onClick={() => setFile(null)}
+                className="text-sm font-medium text-blue-600 hover:text-blue-500"
+                disabled={isProcessing}
+              >
+                Change file
+              </button>
             </div>
           )}
         </div>

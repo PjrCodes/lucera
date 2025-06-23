@@ -31,6 +31,7 @@ export const userDataSchema = z.object({
   createdAt: z.date(),
   relatedCourses: z.array(z.string()),
   relatedFiles: z.array(z.string()),
+  // bookmarks: z.array(z.string()),
 })
 
 export type UserData = z.infer<typeof userDataSchema>;

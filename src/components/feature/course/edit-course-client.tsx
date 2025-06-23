@@ -7,6 +7,14 @@ import { DataType, EditingMode } from "ka-table/enums";
 import { Trash2, Edit3 } from "lucide-react";
 import "ka-table/style.css";
 import { FileDropInput } from "@/components/core/inputs/file-drop-input";
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
+import dynamic from "next/dynamic";
+
+const MDEditor = dynamic(
+  () => import("@uiw/react-md-editor"),
+  { ssr: false }
+);
 
 type Unit = { name: string; description?: string };
 type TimelineItem = {
@@ -51,8 +59,8 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
   const [description, setDescription] = useState(course?.description || "");
   const [units, setUnits] = useState<Unit[]>(course?.units || []);
   const [timeline, setTimeline] = useState<TimelineItem[]>(course?.timeline || []);
-  const [uploadedFile, setUploadedFile] = useState<{name: string, disabled: boolean} | null>(null);
-  const [optionalFile, setOptionalFile] = useState<File | null>(null);
+  const [existingSyllabusName, setExistingSyllabusName] = useState<string | null>(null);
+  const [newSyllabusFile, setNewSyllabusFile] = useState<File | null>(null);
 
   // Editing state
   const [editingUnit, setEditingUnit] = useState<number | null>(null);
@@ -136,22 +144,19 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
 
   useEffect(() => {
     if (isNew) {
-      // Initialize with empty data for new course
-      // Set default values or leave empty
-      // Check if file was uploaded in create flow
-      const hasFile = searchParams.get('hasFile') === 'true';
-      const fileName = searchParams.get('fileName');
+      if (searchParams) {
+        const hasFile = searchParams.get('hasFile') === 'true';
+        const fileName = searchParams.get('fileName');
 
-      if (hasFile && fileName) {
-        setUploadedFile({ name: decodeURIComponent(fileName), disabled: true });
-      } else {
-        setUploadedFile(null);
+        if (hasFile && fileName) {
+          setExistingSyllabusName(decodeURIComponent(fileName));
+        } else {
+          setExistingSyllabusName(null);
+        }
       }
     } else if (course) {
-      // Load existing course data
-      // Check if course has an associated file
       if (course.syllabusFileName) {
-        setUploadedFile({ name: course.syllabusFileName, disabled: true });
+        setExistingSyllabusName(course.syllabusFileName);
       }
       setName(course.name || "");
       setShortDescription(course.short_description || course.shortDescription || "");
@@ -170,7 +175,7 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
         {isNew ? "Create Course" : "Edit Course"}
       </h1>
 
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={handleSubmit}>
         <div>
           <label className="block font-semibold mb-1">Name</label>
           <input
@@ -194,12 +199,16 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
           <label className="block font-semibold mb-1">
             Description (Markdown)
           </label>
-          <textarea
-            className="w-full border px-2 py-1 font-mono rounded"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={8}
-          />
+          <div data-color-mode="light">
+            <MDEditor
+              value={description}
+              onChange={(val) => setDescription(val || "")}
+              height={300}
+              preview="edit"
+              hideToolbar={false}
+              visibleDragbar={true}
+            />
+          </div>
         </div>          <div>
           <label className="block font-semibold mb-1">Units</label>
           <p className="text-sm text-gray-600 mb-2">
@@ -565,25 +574,42 @@ export function EditCourseClient({ course, isNew = false, userData, session }: E
         </div>
 
         <div>
-          <label className="block mb-2 font-medium">
-            Syllabus File (PDF) {!uploadedFile ? "(Optional)" : ""}:
-          </label>
-          {uploadedFile ? (
-            <div className="p-3 border-2 border-gray-300 rounded-lg bg-gray-50">
-              <div className="text-sm text-gray-600">
-                Uploaded: {uploadedFile.name}
-              </div>
+          <label className="block mb-2 font-medium">Syllabus File (PDF)</label>
+          {existingSyllabusName && !newSyllabusFile ? (
+            <div className="p-3 border-2 border-gray-300 rounded-lg bg-gray-50 flex items-center justify-between">
+              <span className="text-sm text-gray-600">
+                Current syllabus: {existingSyllabusName}
+              </span>
+              <button
+                type="button"
+                onClick={() => setExistingSyllabusName(null)}
+                className="text-sm font-medium text-blue-600 hover:text-blue-500"
+              >
+                Replace
+              </button>
             </div>
           ) : (
-            <FileDropInput
-              accept="application/pdf"
-              file={optionalFile}
-              onFileChange={setOptionalFile}
-            />
-          )}
-          {optionalFile && (
-            <div className="mt-1 text-sm text-gray-600">
-              Selected: {optionalFile.name}
+            <div>
+              <FileDropInput
+                accept="application/pdf"
+                file={newSyllabusFile}
+                onFileChange={setNewSyllabusFile}
+                disabled={!!newSyllabusFile}
+              />
+              {newSyllabusFile && (
+                <div className="mt-2 flex items-center justify-between">
+                  <span className="text-sm text-gray-600">
+                    New file: {newSyllabusFile.name}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setNewSyllabusFile(null)}
+                    className="text-sm font-medium text-blue-600 hover:text-blue-500"
+                  >
+                    Clear
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
