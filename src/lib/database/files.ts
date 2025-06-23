@@ -14,6 +14,7 @@ export async function getFileRecord(fileId: string, ownerId?: string) {
     });
   } else {
     // public file access (maybe)
+    // TODO: only for certain types
     fileRecord = await collection.findOne({ _id: new ObjectId(fileId) });
   }
   if (!fileRecord) {

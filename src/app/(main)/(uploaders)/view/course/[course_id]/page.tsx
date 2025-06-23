@@ -37,36 +37,110 @@ export default async function CourseViewPage({
   const { course_id } = await params;
 
   const course = await getCourse(course_id);
+
   if (!course) return notFound();
 
   // check access restriction on course
-  if (!userData.relatedCourses?.some((id: string) => id === course._id.toString())) {
+  if (
+    !userData.relatedCourses?.some((id: string) => id === course._id.toString())
+  ) {
     return notFound();
   }
   // check if course is published
   if (userData.role === "student" && !(course.status === "published")) {
     return notFound();
   }
+    if (course?._id instanceof ObjectId) {
+    course._id = course._id.toString();
+  }
+
 
   // Dummy data for assignments, materials, polls, students
   const assignments = [
-    { id: 1, name: "Assignment 1: Basic Concepts", due: "2024-02-15", status: "pending", grade: null },
-    { id: 2, name: "Assignment 2: Data Structures", due: "2024-03-01", status: "submitted", grade: "85%" },
-    { id: 3, name: "Mid-term Project", due: "2024-03-15", status: "graded", grade: "92%" },
+    {
+      id: 1,
+      name: "Assignment 1: Basic Concepts",
+      due: "2024-02-15",
+      status: "pending",
+      grade: null,
+    },
+    {
+      id: 2,
+      name: "Assignment 2: Data Structures",
+      due: "2024-03-01",
+      status: "submitted",
+      grade: "85%",
+    },
+    {
+      id: 3,
+      name: "Mid-term Project",
+      due: "2024-03-15",
+      status: "graded",
+      grade: "92%",
+    },
   ];
   const materials = [
-    { id: 1, name: "Course Syllabus.pdf", type: "pdf", size: "2.3 MB", uploadDate: "2024-01-15" },
-    { id: 2, name: "Lecture 1 - Introduction.pdf", type: "pdf", size: "5.1 MB", uploadDate: "2024-01-20" },
-    { id: 3, name: "Lab Manual.pdf", type: "pdf", size: "8.7 MB", uploadDate: "2024-01-18" },
-    { id: 4, name: "Assignment Guidelines.docx", type: "doc", size: "1.2 MB", uploadDate: "2024-01-22" },
+    {
+      id: 1,
+      name: "Course Syllabus.pdf",
+      type: "pdf",
+      size: "2.3 MB",
+      uploadDate: "2024-01-15",
+    },
+    {
+      id: 2,
+      name: "Lecture 1 - Introduction.pdf",
+      type: "pdf",
+      size: "5.1 MB",
+      uploadDate: "2024-01-20",
+    },
+    {
+      id: 3,
+      name: "Lab Manual.pdf",
+      type: "pdf",
+      size: "8.7 MB",
+      uploadDate: "2024-01-18",
+    },
+    {
+      id: 4,
+      name: "Assignment Guidelines.docx",
+      type: "doc",
+      size: "1.2 MB",
+      uploadDate: "2024-01-22",
+    },
   ];
   const pollsAndAnnouncements = [
-    { id: 1, type: "poll", question: "What's your preferred programming language?", responses: 45, active: true },
-    { id: 2, type: "poll", question: "Rate the difficulty of last week's content", responses: 38, active: false },
-    { id: 3, type: "announcement", question: "Class cancelled tomorrow due to holiday", responses: null, active: false },
-    { id: 4, type: "announcement", question: "New assignment uploaded - check materials section", responses: null, active: false },
+    {
+      id: 1,
+      type: "poll",
+      question: "What's your preferred programming language?",
+      responses: 45,
+      active: true,
+    },
+    {
+      id: 2,
+      type: "poll",
+      question: "Rate the difficulty of last week's content",
+      responses: 38,
+      active: false,
+    },
+    {
+      id: 3,
+      type: "announcement",
+      question: "Class cancelled tomorrow due to holiday",
+      responses: null,
+      active: false,
+    },
+    {
+      id: 4,
+      type: "announcement",
+      question: "New assignment uploaded - check materials section",
+      responses: null,
+      active: false,
+    },
   ];
-  const students = [];
+  const students: string[] = [];
+  const grades: string[] = [];
 
   return (
     <>
@@ -81,6 +155,7 @@ export default async function CourseViewPage({
               materials={materials}
               pollsAndAnnouncements={pollsAndAnnouncements}
               students={students}
+              grades={grades}
             />
           </div>
         </div>

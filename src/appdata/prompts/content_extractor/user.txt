@@ -1,0 +1,28 @@
+You are provided with a course content file for a single course, along with the courses topic list. Please parse the content and extract the following structured data:
+
+1. Appropriate title for the content (e.g. "Lecture 1: Introduction to Machine Learning", "Reading: Chapter 1 - Basics of Economics", etc.).
+2. Short Description (text, 50-100 words maximum) with keywords for a RAG system.
+3. Description (in Markdown format, see details below). This acts as a summary of the content, providing a clear overview of what the content covers.
+4. Topics related to the content (these should be extracted from the given topic list, and should be relevant to the content).
+  - Topics should only be extracted from the provided topic list.
+  - Return the exact topic ID as provided in the topic list.
+  - Do not provide the topic name, only the ID. Ensure the ID is correct and matches the IDs present in the topic list. 
+
+The content description should be well-structured using Markdown. Ensure the output is clear and easy to read when rendered in Markdown.
+Use bullet points, tables, and sections to organize the information effectively. However, remember, this is a SUMMARY. It should not be too detailed or lengthy.
+
+KEY INSTRUCTIONS:
+
+- Ensure the title is concise and accurately reflects the content.
+- The short description should include relevant keywords for searchability. It will not be read by users but will be used for indexing.
+- The description should be informative, using Markdown for formatting.
+- The topics should be strictly from the provided topic list, and only those that are relevant to the content.
+- Do not include any additional information that is not part of the structured data requested.
+- If the content does not fit into any of the structured data categories, do not return that information.
+- If the content is not relevant to any topic in the provided list, do not return any topics.
+- If the content is empty or does not contain any relevant information, return an empty object.
+
+TOPIC LIST:
+
+INSERT_TOPIC_LIST_HERE
+

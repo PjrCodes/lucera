@@ -29,7 +29,7 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
 
     const formData = await req.formData();
     const file = formData.get("file") as File;
-    const type = formData.get("type") as string;
+    const content_type = formData.get("content_type") as string;
     if (!file || !(file instanceof File)) {
       return NextResponse.json(
         { status: "failed", error: "No file provided or invalid file type" },
@@ -43,14 +43,17 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
         { status: 400 }
       );
     }
-    if (!type || typeof type !== "string") {
+    if (!content_type || typeof content_type !== "string") {
       return NextResponse.json(
         { status: "failed", error: "Invalid or missing type parameter" },
         { status: 400 }
       );
     }
     const isTeacher = userData.role === "teacher";
-    if (!isTeacher && (type === "syllabus" || type === "content")) {
+    if (
+      !isTeacher &&
+      (content_type === "syllabus" || content_type === "content")
+    ) {
       return NextResponse.json(
         { status: "failed", error: "Only teachers can upload syllabus files" },
         { status: 403 }
@@ -77,28 +80,45 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
       path: `./data/uploads/${file.name}`,
       userId: req.auth.user.id,
       createdAt: new Date(),
-      lastModified: new Date(),
-      type: type,
+      updatedAt: new Date(),
+      type: content_type,
     });
 
     // post file upload, create the database entry
     const db = client.db();
     const collection = db.collection("files");
-    const insertedObject = await collection.insertOne(
-      parsedFile.data as CustomFile
-    );
+    try {
+      if (!parsedFile.success) {
+        return NextResponse.json(
+          { status: "failed", error: parsedFile.error?.message || "Invalid file data" },
+          { status: 400 }
+        );
+      }
 
-    if (!insertedObject.acknowledged) {
+      const insertedObject = await collection.insertOne(parsedFile.data);
+
+      if (!insertedObject.acknowledged) {
+        return NextResponse.json(
+          { status: "failed", error: "Failed to insert file record" },
+          { status: 500 }
+        );
+      }
+
+      console.log("File uploaded and record created:", insertedObject);
       return NextResponse.json(
-        { status: "failed", error: "Failed to insert file record" },
+        { status: "success", fileId: insertedObject.insertedId.toString() },
+        { status: 200 }
+      );
+    } catch (e) {
+      console.error("Error inserting file record into database:", e);
+      return NextResponse.json(
+        {
+          status: "failed",
+          error: "Failed to insert file record into database",
+        },
         { status: 500 }
       );
     }
-    console.log("File uploaded and record created:", insertedObject);
-    return NextResponse.json(
-      { status: "success", fileId: insertedObject.insertedId.toString() },
-      { status: 200 }
-    );
   } catch (e) {
     console.error(e);
     return NextResponse.json({ status: "failed", error: e }, { status: 500 });

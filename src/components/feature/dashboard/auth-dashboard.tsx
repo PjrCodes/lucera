@@ -12,6 +12,7 @@ import dashboardControlList from "@/appdata/acl/dashboard.json";
 import { MdBrokenImage } from "react-icons/md";
 import { UserData } from "@/lib/schemas";
 import { PropsForEveryDashboardCard } from "@/lib/interfaces";
+import YourBadges from "./cards/your-badges";
 
 interface Props {
   session: Session
@@ -73,7 +74,7 @@ const componentMap: Record<string, (props: PropsForEveryDashboardCard) => JSX.El
     />
   ),
   YOUR_BADGES: (props) => (
-    <StudentAlerts
+    <YourBadges
       key="your-badges"
       session={props.session}
       userData={props.userData}

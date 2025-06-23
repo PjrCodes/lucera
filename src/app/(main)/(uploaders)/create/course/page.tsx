@@ -1,15 +1,19 @@
 import { getUserData } from "@/lib/database/auth";
 import CreateCourseUpload from "@/components/feature/create/create-course-upload";
 import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function CreateCoursePageServer() {
   const session = await auth();
   if (!session?.user?.id) {
-    return null;
+    redirect("/");
   }
   const userData = await getUserData(session.user.id);
   if (!userData) {
-    return null;
+    redirect("/");
+  }
+  if (userData.role !== "teacher") {
+    redirect("/");
   }
 
   return (

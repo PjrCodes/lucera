@@ -68,8 +68,8 @@ export default async function Courses({
       <div className={getGridClass()}>
         {courses.map((course, idx) => (
           <Link
-            href="/courses/view/[course_id]"
-            as={`/courses/view/${course._id.toString()}`}
+            href="/view/course/[course_id]"
+            as={`/view/course/${course._id.toString()}`}
             className="h-full block"
             key={course._id.toString()}
           >
@@ -131,7 +131,7 @@ export default async function Courses({
             variant="outline"
             className="flex items-center justify-center h-full min-h-[120px] border-dashed"
           >
-            <Link href="/courses/create">
+            <Link href="/create/course">
               <span className="text-4xl">+</span>
             </Link>
           </SecondaryButton>

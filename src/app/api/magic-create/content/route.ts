@@ -4,14 +4,16 @@ import { auth } from "@/lib/auth";
 import { NextAuthRequest } from "next-auth";
 import client from "@/lib/db";
 
-import { LLMSyllabusParse } from "@/lib/llm/syllabus";
+import { LLMContentParse } from "@/lib/llm/content";
 import { checkTeacherhood } from "@/lib/database/auth";
 import { getFileRecord } from "@/lib/database/files";
 
 import { z } from "zod";
+import { getCourseById } from "@/lib/database/courses";
 
 const schema = z.object({
   fileId: z.string().min(1, "File ID is required"),
+  courseId: z.string().min(1, "Course ID is required"),
 });
 
 // Example: Parse a course file and create a course object
@@ -44,7 +46,7 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
         { status: 400 }
       );
     }
-    const { fileId } = parsedBody.data;
+    const { fileId, courseId } = parsedBody.data;
 
     // query from the database to get the file path
     let fileRecord;
@@ -70,60 +72,48 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
     // const allText = await readPdfText(filePath);
 
     // Call LLM parse apis with error handling
-    let timeline, units, courseStartDate, courseEndDate, name, description, shortDescription;
+    let title, shortDescription, description;
+    let topics: number[] = [];
 
+    const courseRecord = await getCourseById(courseId);
     try {
-      const llmResult = await LLMSyllabusParse(filePath);
-      timeline = llmResult.timeline;
-      units = llmResult.units;
-      courseStartDate = llmResult.courseStartDate;
-      courseEndDate = llmResult.courseEndDate;
-      name = llmResult.name;
-      description = llmResult.description;
+      const llmResult = await LLMContentParse(filePath, courseRecord);
+      title = llmResult.title;
       shortDescription = llmResult.shortDescription;
+      description = llmResult.description;
+      topics = llmResult.topics;
     } catch (llmError) {
       console.error("LLM parsing failed:", llmError);
       // Fallback values when LLM parsing fails
-      timeline = [];
-      units = [];
-      courseStartDate = null;
-      courseEndDate = null;
-      name = `Course from ${fileRecord.name || 'uploaded file'}`;
+      title = "Enter Course Title";
       description = "Course description could not be automatically generated. Please edit this course to add details.";
-      shortDescription = "Auto-generated course";
+      shortDescription = "";
+      topics = [];
     }
-
     const db = client.db();
-    const courseCollection = db.collection("courses");
-    const courseRecord = await courseCollection.insertOne({
-      name: name || "Unnamed Course",
-      description: description || "No description provided",
-      shortDescription: shortDescription || "No short description provided",
-      syllabusFileId: fileId,
+    const contentRecord = await db.collection("content").insertOne({
+      courseId: courseId,
+      title: title,
+      description: description,
+      shortDescription: shortDescription,
+      topics: topics,
+      fileId: fileId,
+      createdBy: session.user.id,
       createdAt: new Date(),
       updatedAt: new Date(),
-      userId: session.user.id, // Assuming the user ID is available in the auth object
-      timeline: timeline || [],
-      units: units || [],
-      cover_image: null,
-      status: "draft",
-      isPublished: false,
-      courseStartDate: courseStartDate || null,
-      courseEndDate: courseEndDate || null,
-      llmParsingFailed: !timeline && !units, // Flag to indicate if LLM parsing failed
-      enrolledStudentCount: 0,
-      completedStudentCount: 0,
     });
-    if (!courseRecord.acknowledged) {
+
+    if (!contentRecord.acknowledged) {
       return NextResponse.json(
-        { error: "Failed to create course record" },
+        { error: "Failed to create content record" },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
-      success: true,
-      courseId: courseRecord.insertedId,
+      contentId: contentRecord.insertedId.toString(),
+      message: "Content created successfully",
+      status: "success",
     });
   } catch (error) {
     return NextResponse.json(

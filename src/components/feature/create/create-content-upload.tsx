@@ -30,23 +30,23 @@ export default function CreateContentUpload({
     try {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("type", "content");
+      formData.append("content_type", "content");
 
       // upload pdf
-      const result = await fetch("/api/upload/content", {
+      const result = await fetch("/api/upload/file", {
         method: "POST",
         body: formData,
       });
       if (!result.ok) {
         const errorData = await result.json();
         setError(errorData.error || "Failed to upload content file.");
-        return;
+        // return;
       }
 
       const uploadResult = await result.json();
       if (!uploadResult.fileId) {
         setError("File upload failed. No fileId returned.");
-        return;
+
       }
 
       const magicCreate = await fetch("/api/magic-create/content", {
@@ -63,7 +63,7 @@ export default function CreateContentUpload({
       if (!magicCreate.ok) {
         const errorData = await magicCreate.json();
         setError(errorData.error || "Failed to process content with AI.");
-        return;
+        // return;
       }
 
       const magicResult = await magicCreate.json();
@@ -75,7 +75,7 @@ export default function CreateContentUpload({
       setError(null); // Clear any previous errors
 
       const resId = magicResult.contentId;
-
+      console.log("AI processed content ID:", resId);
       // Redirect to edit page with AI-processed data and file info
       router.push(
         `/edit/content/${resId}?courseId=${selectedCourse}&hasFile=true&fileName=${encodeURIComponent(
@@ -132,6 +132,12 @@ export default function CreateContentUpload({
               </SecondaryButton>
             </div>
           </div>
+
+          {error && (
+            <div>
+              <span className="text-red-600">Error: {error}</span>
+            </div>
+          )}
 
           <div>
             <label className="block mb-2 font-medium">Upload PDF:</label>

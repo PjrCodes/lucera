@@ -24,7 +24,7 @@ export default function Create({
       type: "course",
       label: "New Course",
       icon: React.createElement(iconForType("course")),
-      href: "/courses/create",
+      href: "/create/course",
     },
     {
       id: 2,

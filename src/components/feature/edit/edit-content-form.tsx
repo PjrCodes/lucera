@@ -7,25 +7,16 @@ import { TextArea } from "@/components/core/inputs/text-area";
 import { Checkbox } from "@/components/core/inputs/checkbox";
 import { Dropdown } from "@/components/core/inputs/dropdown";
 import { TextBox } from "@/components/core/inputs/text-box";
-import { Course, UserData } from "@/lib/schemas";
+import { Content, Course, CourseUnit, UserData } from "@/lib/schemas";
 import { Session } from "next-auth";
 import { useSearchParams } from "next/navigation";
-
-const allTopics = [
-  "Algebra",
-  "Calculus",
-  "Mechanics",
-  "Thermodynamics",
-  "World War II",
-  "Ancient Civilizations",
-];
 
 interface EditContentFormProps {
   userData: UserData;
   session: Session;
   courses: Course[];
   contentId: string;
-  existingContent?: any;
+  existingContent: Content | null;
   isNew: boolean;
 }
 
@@ -41,13 +32,16 @@ export default function EditContentForm({
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
-  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const [selectedTopics, setSelectedTopics] = useState<number[]>([]);
   const [title, setTitle] = useState("");
   const [uploadedFile, setUploadedFile] = useState<{
     name: string;
     disabled: boolean;
   } | null>(null);
   const [optionalFile, setOptionalFile] = useState<File | null>(null);
+
+  // Add state for allTopics
+  const [allTopics, setAllTopics] = useState<string[]>([]);
 
   // Load course and file info from query params or existing content
   useEffect(() => {
@@ -66,32 +60,56 @@ export default function EditContentForm({
         setUploadedFile(null);
       }
     } else if (existingContent) {
-      setSelectedCourse(existingContent.courseId);
+      setSelectedCourse(existingContent.courseId || null);
       setTitle(existingContent.title || "");
       setDescription(existingContent.description || "");
-      setSelectedTopics(existingContent.topics || []);
+      // Remove this incorrect line - let the second useEffect handle topic mapping
+      // setSelectedTopics(existingContent.topics ? existingContent.topics.map((_, idx) => idx - 1) : []);
 
-      // Check if content has an associated file
-      if (existingContent.fileName) {
-        setUploadedFile({ name: existingContent.fileName, disabled: true });
+      const hasFile = searchParams.get("hasFile") === "true";
+      const fileName = searchParams.get("fileName");
+
+      if (hasFile && fileName) {
+        setUploadedFile({ name: decodeURIComponent(fileName), disabled: true });
       }
+      else {
+        setUploadedFile(null);
+      }
+
     }
   }, [isNew, existingContent, searchParams]);
 
-  const inferTopics = () => {
-    setIsInferring(true);
-    setTimeout(() => {
-      const shuffled = [...allTopics].sort(() => 0.5 - Math.random());
-      setSelectedTopics(shuffled.slice(0, 2));
-      setIsInferring(false);
-    }, 1200);
-  };
+  // Update allTopics when selectedCourse changes
+  useEffect(() => {
+    if (selectedCourse) {
+      const course = courses.find((c) => c._id.toString() === selectedCourse);
+      if (course && Array.isArray(course.units)) {
+        // Flatten all unit names as topics
+        setAllTopics(course.units.map((u: CourseUnit) => u.name));
+      } else {
+        setAllTopics([]);
+      }
+    } else {
+      setAllTopics([]);
+    }
+  }, [selectedCourse, courses]);
 
-  const handleTopicChange = (topic: string) => {
+  // When allTopics or existingContent.topics changes, update selectedTopics to indexes
+  useEffect(() => {
+    if (!isNew && existingContent && Array.isArray(existingContent.topics) && allTopics.length > 0) {
+      // Convert 1-based indexes to 0-based indexes
+      const indexes = existingContent.topics
+        .map((topicIndex: number) => topicIndex - 1)
+        .filter((idx) => idx >= 0 && idx < allTopics.length);
+      setSelectedTopics(indexes);
+    }
+  }, [allTopics, existingContent, isNew]);
+
+  const handleTopicChange = (idx: number) => {
     setSelectedTopics((prev) =>
-      prev.includes(topic)
-        ? prev.filter((t) => t !== topic)
-        : [...prev, topic]
+      prev.includes(idx)
+        ? prev.filter((i) => i !== idx)
+        : [...prev, idx]
     );
   };
 
@@ -103,7 +121,9 @@ export default function EditContentForm({
       selectedCourse,
       title,
       description,
-      selectedTopics,
+      selectedTopics, // 0-based indexes
+      selectedTopicsOneBased: selectedTopics.map((i) => i + 1), // 1-based indexes for backend
+      selectedTopicNames: selectedTopics.map((i) => allTopics[i]), // topic names
       file,
       isNew,
     });
@@ -198,11 +218,11 @@ export default function EditContentForm({
           <div>
             <label className="block mb-2 font-medium">Topics:</label>
             <div className="flex flex-wrap gap-2 mb-2">
-              {allTopics.map((topic) => (
+              {allTopics.map((topic, idx) => (
                 <label key={topic} className="flex items-center gap-2">
                   <Checkbox
-                    checked={selectedTopics.includes(topic)}
-                    onCheckedChange={() => handleTopicChange(topic)}
+                    checked={selectedTopics.includes(idx)}
+                    onCheckedChange={() => handleTopicChange(idx)}
                   />
                   <span>{topic}</span>
                 </label>

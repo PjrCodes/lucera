@@ -31,3 +31,21 @@ export async function getCoursesForUser(userId: string) {
 
   return courses;
 }
+
+export async function getCourseById(courseId: string) {
+  const course = await client
+    .db()
+    .collection("courses")
+    .findOne({ _id: new ObjectId(courseId) });
+
+  if (!course) {
+    throw new Error("Course not found");
+  }
+
+  try {
+    return courseSchema.parse(course);
+  } catch (error) {
+    console.error("Error parsing course:", error);
+    throw new Error("Invalid course data format");
+  }
+}

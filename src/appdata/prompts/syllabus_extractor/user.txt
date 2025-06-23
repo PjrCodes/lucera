@@ -1,7 +1,7 @@
 You are provided with one or many college syllabus files for a single course. Please parse the content and extract the following structured data:
 
 1. Course Name
-2. Course Code (if available, optional)
+2. Course Code
 3. Course Start Date and End Date (Format: `YYYY-MM-DD`)  
 4. Description (in Markdown format, see details below)
 5. Short Description (text, 50-100 words maximum) with keywords for a RAG system.

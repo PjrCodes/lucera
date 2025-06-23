@@ -3,6 +3,9 @@ import { getCoursesForUser } from "@/lib/database/courses";
 import EditContentForm from "@/components/feature/edit/edit-content-form";
 import { auth } from "@/lib/auth";
 import { ObjectId } from "mongodb";
+import { redirect } from "next/navigation";
+import { getContentById } from "@/lib/database/content";
+import { Content, Course } from "@/lib/schemas";
 
 interface EditContentPageProps {
   params: {
@@ -11,33 +14,37 @@ interface EditContentPageProps {
 }
 
 export default async function EditContentPageServer({ params }: EditContentPageProps) {
-
-  params = await params;
+  const resolvedParams = await params;
   const session = await auth();
   if (!session?.user?.id) {
-    return null;
+    redirect("/");
   }
 
   const userData = await getUserData(session.user.id);
   if (!userData) {
-    return null;
+    redirect("/");
   }
 
   const courses = await getCoursesForUser(session.user.id);
 
   // Convert ObjectId to string for client-side compatibility
-  courses.forEach((course) => {
+  courses.forEach((course: Course) => {
     if (course._id instanceof ObjectId) {
       course._id = course._id.toString();
     }
   });
 
-  const isNewContent = params.content_id === "new";
-
-  // TODO: If not new, fetch existing content data
-  let existingContent = null;
+  const isNewContent = resolvedParams.content_id === "new";
+  let existingContent: Content | null = null;
   if (!isNewContent) {
-    // existingContent = await getContentById(params.content_id);
+    existingContent = await getContentById(resolvedParams.content_id);
+  }
+
+  if (existingContent) {
+    // Convert ObjectId to string for client-side compatibility
+    if (existingContent._id instanceof ObjectId) {
+      existingContent._id = existingContent._id.toString();
+    }
   }
 
   return (
@@ -45,7 +52,7 @@ export default async function EditContentPageServer({ params }: EditContentPageP
       userData={userData}
       session={session}
       courses={courses}
-      contentId={params.content_id}
+      contentId={resolvedParams.content_id}
       existingContent={existingContent}
       isNew={isNewContent}
     />

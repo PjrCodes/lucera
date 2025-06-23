@@ -124,12 +124,6 @@ interface LLMSyllabusParseResponse {
   shortDescription: string;
 }
 
-export async function LLMContentParse(
-  filePath: string): Promise<LLMSyllabusParseResponse> {
-
-
-}
-
 export async function LLMSyllabusParse(
   filePath: string
 ): Promise<LLMSyllabusParseResponse> {

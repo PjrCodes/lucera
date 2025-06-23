@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { z } from "zod";
 
 export const fileSchema = z.object({
-  _id: z.instanceof(ObjectId),
+  _id: z.instanceof(ObjectId).optional(),
   name: z.string(),
   size: z.number(),
   file_type: z.string(),
@@ -76,3 +76,18 @@ export const courseSchema = z.object({
 });
 
 export type Course = z.infer<typeof courseSchema>;
+
+export const contentSchema = z.object({
+  _id: z.instanceof(ObjectId).or(z.string()),
+  title: z.string(),
+  description: z.string().optional(),
+  topics: z.array(z.number()).optional(),
+  courseId: z.string(),
+  fileId: z.string().optional(),
+  createdBy: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  shortDescription: z.string().optional(),
+});
+export type Content = z.infer<typeof contentSchema>;
+

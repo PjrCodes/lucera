@@ -14,7 +14,7 @@ export default async function Home() {
 
   if (!session || !session.user) {
     // If the session is not valid, redirect to the homepage
-    redirect("/");
+    return <UnauthHomepage />;
   }
 
   // let isTeacher = false;
