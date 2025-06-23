@@ -1,6 +1,6 @@
 import { getUserData } from "@/lib/database/auth";
 import { getCoursesForUser } from "@/lib/database/courses";
-import EditContentForm from "@/components/feature/edit/edit-content-form";
+import EditContentForm from "@/components/feature/content/edit-content-form";
 import { auth } from "@/lib/auth";
 import { ObjectId } from "mongodb";
 import { redirect } from "next/navigation";
