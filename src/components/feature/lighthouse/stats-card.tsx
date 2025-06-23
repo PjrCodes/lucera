@@ -5,26 +5,20 @@ interface StatsCardProps {
   title: string;
   value: string | number;
   icon: LucideIcon;
-  color: "blue" | "green" | "purple" | "red" | "yellow";
+  color: "primary" | "secondary";
   subtitle?: string;
   onClick?: () => void;
   clickable?: boolean;
 }
 
 const colorClasses = {
-  blue: "bg-lucerablue-1 text-lucerablue-5 border-lucerablue-2",
-  green: "bg-luceragreen-1 text-luceragreen-5 border-luceragreen-2",
-  purple: "bg-lucerapurple-1 text-lucerapurple-5 border-lucerapurple-2",
-  red: "bg-lucerared-1 text-lucerared-5 border-lucerared-2",
-  yellow: "bg-lucerayellow-1 text-lucerayellow-5 border-lucerayellow-2",
+  primary: "bg-primary-100 text-primary-800 border-primary-200",
+  secondary: "bg-secondary-100 text-secondary-800 border-secondary-200",
 };
 
 const iconColorClasses = {
-  blue: "text-lucerablue-4",
-  green: "text-luceragreen-4",
-  purple: "text-lucerapurple-4",
-  red: "text-lucerared-4",
-  yellow: "text-lucerayellow-4",
+  primary: "text-primary-600",
+  secondary: "text-secondary-600",
 };
 
 const StatsCard: React.FC<StatsCardProps> = ({

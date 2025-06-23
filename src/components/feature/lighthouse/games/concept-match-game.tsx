@@ -131,13 +131,13 @@ const ConceptMatchGame: React.FC<ConceptMatchGameProps> = ({ onBack }) => {
     let baseStyle = "p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 text-center min-h-[100px] flex items-center justify-center ";
 
     if (isCorrect) {
-      baseStyle += "bg-luceragreen-1 border-luceragreen-3 text-luceragreen-5 cursor-default ";
+      baseStyle += "bg-green-100 border-green-300 text-green-800 cursor-default ";
     } else if (isIncorrect) {
-      baseStyle += "bg-lucerared-1 border-lucerared-3 text-lucerared-5 animate-shake ";
+      baseStyle += "bg-red-100 border-red-300 text-red-800 animate-shake ";
     } else if (isSelected) {
-      baseStyle += "bg-lucerablue-2 border-lucerablue-4 text-lucerablue-5 scale-105 ";
+      baseStyle += "bg-secondary-200 border-secondary-400 text-secondary-800 scale-105 ";
     } else {
-      baseStyle += "bg-white border-gray-300 hover:border-lucerablue-3 hover:shadow-md ";
+      baseStyle += "bg-white border-gray-300 hover:border-secondary-300 hover:shadow-md ";
     }
 
     return baseStyle;
@@ -155,9 +155,9 @@ const ConceptMatchGame: React.FC<ConceptMatchGameProps> = ({ onBack }) => {
           Back to Games
         </button>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-lucerayellow-1 px-3 py-1 rounded-lg">
-            <Star className="w-4 h-4 text-lucerayellow-4" />
-            <span className="font-bold text-lucerayellow-5">{score}</span>
+          <div className="flex items-center gap-2 bg-primary-100 px-3 py-1 rounded-lg">
+            <Star className="w-4 h-4 text-primary-600" />
+            <span className="font-bold text-primary-800">{score}</span>
           </div>
           <div className="flex items-center gap-2 bg-lucerablue-1 px-3 py-1 rounded-lg">
             <Timer className="w-4 h-4 text-lucerablue-4" />

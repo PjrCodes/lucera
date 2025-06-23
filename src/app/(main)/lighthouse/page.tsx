@@ -74,11 +74,11 @@ export default function LighthouseHome() {
   return (
     <>
       <SetHeaderClientComponent title={"LIGHTHOUSE"} />
-      <main className="min-h-screen bg-gray-50 p-6">
+      <main className="min-h-screen bg-primary-50 p-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-3 bg-lucerayellow-1 text-lucerayellow-5 px-8 py-4 rounded-lg shadow-md border border-lucerayellow-2">
+            <div className="inline-flex items-center gap-3 bg-primary-100 text-primary-800 px-8 py-4 rounded-lg shadow-md border border-primary-200">
               <Trophy className="w-8 h-8" />
               <div>
                 <h1 className="text-2xl font-bold">Lighthouse</h1>
@@ -93,7 +93,7 @@ export default function LighthouseHome() {
               title="Total Points"
               value={currentPoints.toLocaleString()}
               icon={Star}
-              color="yellow"
+              color="primary"
               clickable={true}
               onClick={handlePointsClick}
             />
@@ -101,7 +101,7 @@ export default function LighthouseHome() {
               title="University Rank"
               value={`#${currentRank}`}
               icon={Trophy}
-              color="blue"
+              color="secondary"
               subtitle={`of ${totalStudents.toLocaleString()} students`}
               clickable={true}
               onClick={handleRankClick}
@@ -110,7 +110,7 @@ export default function LighthouseHome() {
               title="Badges Earned"
               value={`${collectedBadges.filter((b) => b.collected).length}/${collectedBadges.length}`}
               icon={Users}
-              color="purple"
+              color="primary"
               clickable={true}
               onClick={handleBadgesClick}
             />
@@ -122,20 +122,20 @@ export default function LighthouseHome() {
 
             {/* Action Buttons */}
             <div className="space-y-4">
-              <h2 className="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
+              <h2 className="text-lg font-bold text-secondary-800 mb-4">Quick Actions</h2>
               <ActionButton
                 href="/lighthouse/minigames"
                 icon={GamepadIcon}
                 title="Play Minigames"
                 description="Earn points through games"
-                color="rose"
+                color="primary"
               />
               <ActionButton
                 href="/lighthouse/leaderboard"
                 icon={BarChart3}
                 title="View Leaderboards"
                 description="See how you compare"
-                color="blue"
+                color="secondary"
               />
             </div>
           </div>

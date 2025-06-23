@@ -218,7 +218,7 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
 
           <button
             onClick={startGame}
-            className="bg-lucerapurple-3 text-white px-8 py-4 rounded-lg hover:bg-lucerapurple-4 text-xl font-bold flex items-center gap-2 mx-auto"
+            className="bg-primary-500 text-white px-8 py-4 rounded-lg hover:bg-primary-600 text-xl font-bold flex items-center gap-2 mx-auto"
           >
             <Zap className="w-6 h-6" />
             Start Quiz
@@ -247,28 +247,27 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
           <div className="text-6xl mb-4">🎉</div>
           <h2 className="text-3xl font-bold text-gray-800 mb-4">Quiz Complete!</h2>
           
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="bg-lucerayellow-1 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-lucerayellow-5">{score}</div>
-              <div className="text-lucerayellow-4">Final Score</div>
+          <div className="grid grid-cols-2 gap-4 mb-6">            <div className="bg-primary-100 p-4 rounded-lg">
+              <div className="text-2xl font-bold text-primary-800">{score}</div>
+              <div className="text-primary-600">Final Score</div>
             </div>
-            <div className="bg-luceragreen-1 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-luceragreen-5">{accuracy}%</div>
-              <div className="text-luceragreen-4">Accuracy</div>
+            <div className="bg-secondary-100 p-4 rounded-lg">
+              <div className="text-2xl font-bold text-secondary-800">{accuracy}%</div>
+              <div className="text-secondary-600">Accuracy</div>
             </div>
-            <div className="bg-lucerablue-1 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-lucerablue-5">{correctAnswers}/{questions.length}</div>
-              <div className="text-lucerablue-4">Correct</div>
+            <div className="bg-primary-100 p-4 rounded-lg">
+              <div className="text-2xl font-bold text-primary-800">{correctAnswers}/{questions.length}</div>
+              <div className="text-primary-600">Correct</div>
             </div>
-            <div className="bg-lucerapurple-1 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-lucerapurple-5">{maxStreak}</div>
-              <div className="text-lucerapurple-4">Best Streak</div>
+            <div className="bg-secondary-100 p-4 rounded-lg">
+              <div className="text-2xl font-bold text-secondary-800">{maxStreak}</div>
+              <div className="text-secondary-600">Best Streak</div>
             </div>
           </div>
 
           <button
             onClick={resetGame}
-            className="bg-lucerapurple-3 text-white px-6 py-3 rounded-lg hover:bg-lucerapurple-4 font-bold"
+            className="bg-secondary-500 text-white px-6 py-3 rounded-lg hover:bg-secondary-600 font-bold"
           >
             Play Again
           </button>
@@ -287,14 +286,13 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Games
-        </button>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-lucerayellow-1 px-3 py-1 rounded-lg">
-            <Star className="w-4 h-4 text-lucerayellow-4" />
-            <span className="font-bold text-lucerayellow-5">{score}</span>
+        </button>        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 bg-primary-100 px-3 py-1 rounded-lg">
+            <Star className="w-4 h-4 text-primary-600" />
+            <span className="font-bold text-primary-800">{score}</span>
           </div>
           <div className="text-sm text-gray-600">
-            Streak: <span className="font-bold text-lucerapurple-5">{streak}</span>
+            Streak: <span className="font-bold text-secondary-800">{streak}</span>
           </div>
         </div>
       </div>
@@ -307,7 +305,7 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div 
-            className="bg-lucerapurple-3 h-2 rounded-full transition-all duration-300"
+            className="bg-secondary-500 h-2 rounded-full transition-all duration-300"
             style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
           />
         </div>
@@ -316,7 +314,7 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
       {/* Timer */}
       <div className="text-center mb-6">
         <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-lg font-bold ${
-          timeLeft <= 5 ? 'bg-lucerared-1 text-lucerared-5 animate-pulse' : 'bg-lucerablue-1 text-lucerablue-5'
+          timeLeft <= 5 ? 'bg-red-100 text-red-800 animate-pulse' : 'bg-secondary-100 text-secondary-800'
         }`}>
           <Timer className="w-5 h-5" />
           {timeLeft}s
@@ -334,17 +332,16 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
               <button
                 key={index}
                 onClick={() => handleAnswerSelect(index)}
-                disabled={showResult}
-                className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 ${
+                disabled={showResult}                className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 ${
                   selectedAnswer === index
                     ? showResult
                       ? index === currentQuestion.correctAnswer
-                        ? 'bg-luceragreen-1 border-luceragreen-3 text-luceragreen-5'
-                        : 'bg-lucerared-1 border-lucerared-3 text-lucerared-5'
-                      : 'bg-lucerablue-1 border-lucerablue-3 text-lucerablue-5'
+                        ? 'bg-green-100 border-green-300 text-green-800'
+                        : 'bg-red-100 border-red-300 text-red-800'
+                      : 'bg-secondary-100 border-secondary-300 text-secondary-800'
                     : showResult && index === currentQuestion.correctAnswer
-                    ? 'bg-luceragreen-1 border-luceragreen-3 text-luceragreen-5'
-                    : 'bg-gray-50 border-gray-300 hover:border-lucerablue-3 hover:bg-lucerablue-1'
+                    ? 'bg-green-100 border-green-300 text-green-800'
+                    : 'bg-gray-50 border-gray-300 hover:border-secondary-300 hover:bg-secondary-100'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -374,14 +371,14 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
               <button
                 onClick={submitAnswer}
                 disabled={selectedAnswer === null}
-                className="bg-lucerapurple-3 text-white px-6 py-2 rounded-lg hover:bg-lucerapurple-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-secondary-500 text-white px-6 py-2 rounded-lg hover:bg-secondary-600 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Submit Answer
               </button>
             ) : (
               <button
                 onClick={nextQuestion}
-                className="bg-luceragreen-3 text-white px-6 py-2 rounded-lg hover:bg-luceragreen-4"
+                className="bg-primary-500 text-white px-6 py-2 rounded-lg hover:bg-primary-600"
               >
                 {currentQuestionIndex < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
               </button>

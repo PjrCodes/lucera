@@ -18,7 +18,7 @@ export default function MinigamesPage() {
       title: "Word Whiz",
       description: "Solve subject-specific word puzzles and anagrams",
       icon: Puzzle,
-      color: "bg-lucerablue-3 hover:bg-lucerablue-4",
+      color: "bg-primary-500 hover:bg-primary-600",
       textColor: "text-white",
     },
     {
@@ -26,7 +26,7 @@ export default function MinigamesPage() {
       title: "Concept Match",
       description: "Match terms with their definitions",
       icon: Zap,
-      color: "bg-luceragreen-3 hover:bg-luceragreen-4",
+      color: "bg-secondary-500 hover:bg-secondary-600",
       textColor: "text-white",
     },
     {
@@ -34,7 +34,7 @@ export default function MinigamesPage() {
       title: "Quiz Blitz",
       description: "Fast-paced multiple choice questions",
       icon: Brain,
-      color: "bg-lucerapurple-3 hover:bg-lucerapurple-4",
+      color: "bg-primary-600 hover:bg-primary-700",
       textColor: "text-white",
     },
   ];
@@ -52,7 +52,7 @@ export default function MinigamesPage() {
           <div className="max-w-4xl mx-auto">
             {/* Header */}
             <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-3 bg-lucerarose-1 text-lucerarose-5 px-8 py-4 rounded-lg shadow-md border border-lucerarose-2">
+              <div className="inline-flex items-center gap-3 bg-primary-100 text-primary-800 px-8 py-4 rounded-lg shadow-md border border-primary-200">
                 <Brain className="w-8 h-8" />
                 <div>
                   <h1 className="text-2xl font-bold">Minigames</h1>
@@ -65,7 +65,7 @@ export default function MinigamesPage() {
             <div className="mb-6">
               <Link
                 href="/lighthouse"
-                className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
+                className="inline-flex items-center gap-2 text-secondary-600 hover:text-secondary-800 transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Lighthouse
@@ -94,7 +94,7 @@ export default function MinigamesPage() {
   return (
     <>
       <SetHeaderClientComponent title="MINIGAMES" />
-      <main className="min-h-screen bg-gray-50 p-6">
+      <main className="min-h-screen bg-primary-50 p-6">
         {renderGame()}
       </main>
     </>

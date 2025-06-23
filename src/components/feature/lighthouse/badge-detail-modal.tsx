@@ -79,7 +79,7 @@ const BadgeDetailModal: React.FC<BadgeDetailModalProps> = ({ badge, isOpen, onCl
               <span className={`text-4xl ${!badge.collected ? "grayscale" : ""}`}>
                 {badge.emoji}
               </span>
-              <h2 className="text-xl font-bold text-gray-800">{badge.name}</h2>
+              <h2 className="text-xl font-bold text-secondary-800">{badge.name}</h2>
             </div>
             <button
               onClick={onClose}
@@ -92,7 +92,7 @@ const BadgeDetailModal: React.FC<BadgeDetailModalProps> = ({ badge, isOpen, onCl
           {/* Status */}
           <div className={`flex items-center gap-2 mb-4 p-3 rounded-lg ${
             badge.collected
-              ? "bg-luceragreen-1 text-luceragreen-5"
+              ? "bg-primary-100 text-primary-800"
               : "bg-gray-100 text-gray-600"
           }`}>
             {badge.collected ? (
@@ -107,7 +107,7 @@ const BadgeDetailModal: React.FC<BadgeDetailModalProps> = ({ badge, isOpen, onCl
 
           {/* Description */}
           <div className="mb-4">
-            <h3 className="font-semibold text-gray-800 mb-2">Description</h3>
+            <h3 className="font-semibold text-secondary-800 mb-2">Description</h3>
             <p className="text-gray-600 text-sm leading-relaxed">
               {details.longDescription}
             </p>
@@ -115,17 +115,17 @@ const BadgeDetailModal: React.FC<BadgeDetailModalProps> = ({ badge, isOpen, onCl
 
           {/* Requirement */}
           <div className="mb-4">
-            <h3 className="font-semibold text-gray-800 mb-2">How to Earn</h3>
+            <h3 className="font-semibold text-secondary-800 mb-2">How to Earn</h3>
             <p className="text-gray-600 text-sm">
               {details.requirement}
             </p>
           </div>
 
           {/* Points */}
-          <div className="bg-lucerayellow-1 p-3 rounded-lg">
+          <div className="bg-primary-100 p-3 rounded-lg">
             <div className="flex items-center justify-between">
-              <span className="text-lucerayellow-5 font-medium">Points Reward</span>
-              <span className="text-lucerayellow-5 font-bold">{details.points} pts</span>
+              <span className="text-primary-800 font-medium">Points Reward</span>
+              <span className="text-primary-800 font-bold">{details.points} pts</span>
             </div>
           </div>
         </div>

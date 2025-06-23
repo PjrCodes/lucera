@@ -132,18 +132,17 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <button
-            onClick={() => setGameMode("anagram")}
-            className="bg-lucerablue-1 border-2 border-lucerablue-3 p-6 rounded-lg hover:bg-lucerablue-2 transition-colors"
+            onClick={() => setGameMode("anagram")}            className="bg-primary-100 border-2 border-primary-300 p-6 rounded-lg hover:bg-primary-200 transition-colors"
           >
-            <h3 className="text-xl font-bold text-lucerablue-5 mb-2">Anagram Solve</h3>
-            <p className="text-lucerablue-4">Unscramble the letters to form the correct word</p>
+            <h3 className="text-xl font-bold text-primary-800 mb-2">Anagram Solve</h3>
+            <p className="text-primary-600">Unscramble the letters to form the correct word</p>
           </button>
           <button
             onClick={() => setGameMode("guess")}
-            className="bg-luceragreen-1 border-2 border-luceragreen-3 p-6 rounded-lg hover:bg-luceragreen-2 transition-colors"
+            className="bg-secondary-100 border-2 border-secondary-300 p-6 rounded-lg hover:bg-secondary-200 transition-colors"
           >
-            <h3 className="text-xl font-bold text-luceragreen-5 mb-2">Guess the Word</h3>
-            <p className="text-luceragreen-4">Fill in the blanks with hints provided</p>
+            <h3 className="text-xl font-bold text-secondary-800 mb-2">Guess the Word</h3>
+            <p className="text-secondary-600">Fill in the blanks with hints provided</p>
           </button>
         </div>
       </div>
@@ -161,10 +160,9 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
           <ArrowLeft className="w-4 h-4" />
           Change Mode
         </button>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-lucerayellow-1 px-3 py-1 rounded-lg">
-            <Star className="w-4 h-4 text-lucerayellow-4" />
-            <span className="font-bold text-lucerayellow-5">{score}</span>
+        <div className="flex items-center gap-4">          <div className="flex items-center gap-2 bg-primary-100 px-3 py-1 rounded-lg">
+            <Star className="w-4 h-4 text-primary-600" />
+            <span className="font-bold text-primary-800">{score}</span>
           </div>
           <div className="text-sm text-gray-600">
             Streak: <span className="font-bold">{streak}</span>
@@ -177,9 +175,8 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
               {gameMode === "anagram" ? "🔤 Anagram Solve" : "🔍 Guess the Word"}
-            </h2>
-            <div className="inline-block bg-lucerablue-1 px-3 py-1 rounded-full">
-              <span className="text-lucerablue-5 text-sm font-medium">{currentPuzzle.course}</span>
+            </h2>            <div className="inline-block bg-secondary-100 px-3 py-1 rounded-full">
+              <span className="text-secondary-800 text-sm font-medium">{currentPuzzle.course}</span>
             </div>
           </div>
 
@@ -203,7 +200,7 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
               onChange={(e) => setUserAnswer(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && checkAnswer()}
               placeholder="Enter your answer..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lucerablue-3 focus:border-transparent text-center text-xl font-mono"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary-300 focus:border-transparent text-center text-xl font-mono"
               disabled={isCorrect !== null}
             />
 
@@ -212,14 +209,14 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
                 <button
                   onClick={checkAnswer}
                   disabled={!userAnswer.trim()}
-                  className="bg-lucerablue-3 text-white px-6 py-2 rounded-lg hover:bg-lucerablue-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-secondary-500 text-white px-6 py-2 rounded-lg hover:bg-secondary-600 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Check Answer
                 </button>
               ) : (
                 <button
                   onClick={nextPuzzle}
-                  className="bg-luceragreen-3 text-white px-6 py-2 rounded-lg hover:bg-luceragreen-4"
+                  className="bg-primary-500 text-white px-6 py-2 rounded-lg hover:bg-primary-600"
                 >
                   Next Puzzle
                 </button>
@@ -236,7 +233,7 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
             {isCorrect !== null && (
               <div className={`text-center p-4 rounded-lg ${
                 isCorrect 
-                  ? "bg-luceragreen-1 text-luceragreen-5" 
+                  ? "bg-green-100 text-green-800" 
                   : "bg-lucerared-1 text-lucerared-5"
               }`}>
                 <div className="flex items-center justify-center gap-2 mb-2">

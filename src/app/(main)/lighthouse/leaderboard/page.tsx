@@ -95,11 +95,11 @@ export default function LeaderboardPage() {
   return (
     <>
       <SetHeaderClientComponent title="LEADERBOARD" />
-      <main className="min-h-screen bg-gray-50 p-6">
+      <main className="min-h-screen bg-primary-50 p-6">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-3 bg-lucerablue-1 text-lucerablue-5 px-8 py-4 rounded-lg shadow-md border border-lucerablue-2">
+            <div className="inline-flex items-center gap-3 bg-secondary-100 text-secondary-800 px-8 py-4 rounded-lg shadow-md border border-secondary-200">
               <Trophy className="w-8 h-8" />
               <div>
                 <h1 className="text-2xl font-bold">Leaderboard</h1>
@@ -111,15 +111,15 @@ export default function LeaderboardPage() {
           {/* Filter Controls */}
           <div className="bg-white rounded-lg shadow-md p-4 mb-6">
             <div className="flex items-center gap-3 mb-4">
-              <Filter className="w-5 h-5 text-gray-600" />
-              <h2 className="font-semibold text-gray-800">Filter by Course</h2>
+              <Filter className="w-5 h-5 text-secondary-600" />
+              <h2 className="font-semibold text-secondary-800">Filter by Course</h2>
             </div>
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setSelectedCourse("university")}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                   selectedCourse === "university"
-                    ? "bg-lucerablue-3 text-white"
+                    ? "bg-secondary-500 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
@@ -131,7 +131,7 @@ export default function LeaderboardPage() {
                   onClick={() => setSelectedCourse(course.code)}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                     selectedCourse === course.code
-                      ? "bg-lucerablue-3 text-white"
+                      ? "bg-secondary-500 text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 >
@@ -143,8 +143,8 @@ export default function LeaderboardPage() {
 
           {/* Leaderboard */}
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="p-4 bg-lucerablue-1 border-b">
-              <h2 className="font-bold text-lucerablue-5">
+            <div className="p-4 bg-secondary-100 border-b">
+              <h2 className="font-bold text-secondary-800">
                 {selectedCourse === "university"
                   ? "University Leaderboard"
                   : `${selectedCourse} Leaderboard`}
@@ -155,13 +155,13 @@ export default function LeaderboardPage() {
                 <div
                   key={entry.id}
                   className={`p-4 flex items-center justify-between hover:bg-gray-50 transition-colors ${
-                    entry.isCurrentUser ? "bg-lucerayellow-1 border-l-4 border-lucerayellow-4" : ""
+                    entry.isCurrentUser ? "bg-primary-100 border-l-4 border-primary-400" : ""
                   }`}
                 >
                   <div className="flex items-center gap-4">
                     {getRankIcon(entry.rank)}
                     <div>
-                      <h3 className={`font-semibold ${entry.isCurrentUser ? "text-lucerayellow-5" : "text-gray-800"}`}>
+                      <h3 className={`font-semibold ${entry.isCurrentUser ? "text-primary-800" : "text-secondary-800"}`}>
                         {entry.name}
                         {entry.isCurrentUser && <span className="ml-2 text-xs font-normal">(You)</span>}
                       </h3>
@@ -170,7 +170,7 @@ export default function LeaderboardPage() {
                   <div className="flex items-center gap-6 text-sm">
                     <div className="text-center">
                       <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 text-lucerayellow-4" />
+                        <Star className="w-4 h-4 text-primary-600" />
                         <span className="font-bold">{entry.points.toLocaleString()}</span>
                       </div>
                       <span className="text-gray-500 text-xs">points</span>

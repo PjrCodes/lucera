@@ -43,8 +43,8 @@ const PointsInfoModal: React.FC<PointsInfoModalProps> = ({ isOpen, onClose }) =>
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <Star className="w-8 h-8 text-lucerayellow-4" />
-              <h2 className="text-2xl font-bold text-gray-800">How Points Work</h2>
+              <Star className="w-8 h-8 text-primary-600" />
+              <h2 className="text-2xl font-bold text-secondary-800">How Points Work</h2>
             </div>
             <button
               onClick={onClose}
@@ -65,17 +65,17 @@ const PointsInfoModal: React.FC<PointsInfoModalProps> = ({ isOpen, onClose }) =>
 
           {/* Point Sources */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Ways to Earn Points</h3>
+            <h3 className="text-lg font-semibold text-secondary-800 mb-4">Ways to Earn Points</h3>
             <div className="space-y-4">
               {pointSources.map((source, index) => (
                 <div key={index} className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                  <div className="bg-lucerablue-1 p-2 rounded-lg">
-                    <source.icon className="w-5 h-5 text-lucerablue-4" />
+                  <div className="bg-secondary-100 p-2 rounded-lg">
+                    <source.icon className="w-5 h-5 text-secondary-600" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
-                      <h4 className="font-semibold text-gray-800">{source.title}</h4>
-                      <span className="text-lucerayellow-5 font-bold text-sm">{source.points}</span>
+                      <h4 className="font-semibold text-secondary-800">{source.title}</h4>
+                      <span className="text-primary-800 font-bold text-sm">{source.points}</span>
                     </div>
                     <p className="text-gray-600 text-sm">{source.description}</p>
                   </div>
@@ -86,9 +86,9 @@ const PointsInfoModal: React.FC<PointsInfoModalProps> = ({ isOpen, onClose }) =>
 
           {/* Ranking System */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Ranking System</h3>
-            <div className="bg-lucerablue-1 p-4 rounded-lg">
-              <p className="text-lucerablue-5 text-sm leading-relaxed">
+            <h3 className="text-lg font-semibold text-secondary-800 mb-4">Ranking System</h3>
+            <div className="bg-secondary-100 p-4 rounded-lg">
+              <p className="text-secondary-800 text-sm leading-relaxed">
                 Your rank is determined by your total points compared to other students.
                 Points are accumulated across all your courses and activities. The leaderboard
                 updates in real-time as you earn more points through your academic journey.
@@ -98,22 +98,22 @@ const PointsInfoModal: React.FC<PointsInfoModalProps> = ({ isOpen, onClose }) =>
 
           {/* Tips */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Tips to Maximize Points</h3>
+            <h3 className="text-lg font-semibold text-secondary-800 mb-4">Tips to Maximize Points</h3>
             <ul className="space-y-2 text-gray-600 text-sm">
               <li className="flex items-start gap-2">
-                <span className="text-lucerayellow-4 mt-1">•</span>
+                <span className="text-primary-600 mt-1">•</span>
                 Submit assignments early to avoid point deductions
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-lucerayellow-4 mt-1">•</span>
+                <span className="text-primary-600 mt-1">•</span>
                 Actively participate in class discussions and forums
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-lucerayellow-4 mt-1">•</span>
+                <span className="text-primary-600 mt-1">•</span>
                 Complete bonus activities and challenges when available
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-lucerayellow-4 mt-1">•</span>
+                <span className="text-primary-600 mt-1">•</span>
                 Work towards earning badges for significant point bonuses
               </li>
             </ul>

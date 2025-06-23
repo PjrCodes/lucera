@@ -7,15 +7,12 @@ interface ActionButtonProps {
   icon: LucideIcon;
   title: string;
   description: string;
-  color: "blue" | "green" | "purple" | "red" | "rose";
+  color: "primary" | "secondary";
 }
 
 const colorClasses = {
-  blue: "bg-lucerablue-3 hover:bg-lucerablue-4 text-white",
-  green: "bg-luceragreen-3 hover:bg-luceragreen-4 text-white",
-  purple: "bg-lucerapurple-3 hover:bg-lucerapurple-4 text-white",
-  red: "bg-lucerared-3 hover:bg-lucerared-4 text-white",
-  rose: "bg-lucerarose-3 hover:bg-lucerarose-4 text-white",
+  primary: "bg-primary-500 hover:bg-primary-600 text-white",
+  secondary: "bg-secondary-500 hover:bg-secondary-600 text-white",
 };
 
 const ActionButton: React.FC<ActionButtonProps> = ({ href, icon: Icon, title, description, color }) => {
