@@ -2,17 +2,15 @@
 
 import { ProgressProvider } from '@bprogress/next/app';
 
-const ClientProviders = ({ children }: { children: React.ReactNode }) => {
+export default function ClientProviders({ children }: { children: React.ReactNode }) {
   return (
     <ProgressProvider
-      height="3px"
-      color="#3b82f6"
+      height="4px"
+      color="#432325"
       options={{ showSpinner: false }}
       shallowRouting
     >
       {children}
     </ProgressProvider>
   );
-};
-
-export default ClientProviders;
+}

@@ -1,23 +1,23 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Urbanist } from "next/font/google";
+import {  Raleway, Urbanist } from "next/font/google";
 import "@/app/globals.css";
 import React from "react";
 import ClientProviders from "@/components/core/client-providers";
 import { SessionProvider } from "next-auth/react";
 
 const urbanist = Urbanist({
-  variable: "--font-sans",
+  variable: "--font-header",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const raleway = Raleway({
+  variable: "--font-body",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: "Lucera",
-  description: "An AI-First, no-compromise Learning Management System.",
+  description: "An AI-First, no-compromise Learning Management System. Built for the future of education.",
 };
 
 export default async function RootLayout({
@@ -26,13 +26,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body
-        className={`${urbanist.variable} ${geistMono.variable} antialiased`}
+        className={`${urbanist.variable} ${raleway.variable} antialiased`}
       >
         <ClientProviders>
           <SessionProvider>
-            <div className="font-sans w-full min-h-screen flex flex-col bg-primary-50">
+            <div className="font-body w-full min-h-screen flex flex-col bg-primary-50">
               {children}
             </div>
           </SessionProvider>
