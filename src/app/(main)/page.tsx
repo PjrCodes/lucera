@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth();
-
+  // console.log("Session:", session);
   if (!session || !session.user) {
     // If the session is not valid, redirect to the homepage
     return <UnauthHomepage />;
