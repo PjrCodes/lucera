@@ -14,8 +14,6 @@ interface Option {
 }
 
 export default function Create({
-  session,
-  userData,
 }: PropsForEveryDashboardCard) {
   // Complete options list with icons
   const options: Option[] = [

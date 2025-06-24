@@ -7,7 +7,7 @@ import { LLMSyllabusParse } from "@/lib/llm/syllabus";
 import { checkTeacherhood } from "@/lib/database/auth";
 import { getFileRecord } from "@/lib/database/files";
 import { fileIdSchema } from "@/lib/api-schemas";
-import { ObjectId } from "mongodb";
+// import { CourseTimelineItem } from "@/lib/schemas";
 
 // Example: Parse a course file and create a course object
 export const POST = auth(async function POST(req: NextAuthRequest) {
@@ -44,12 +44,12 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
     // query from the database to get the file path
     let fileRecord;
     try {
-        fileRecord = await getFileRecord(fileId, session.user.id);
+      fileRecord = await getFileRecord(fileId, session.user.id);
     } catch {
-        return NextResponse.json(
-            { error: "One of several errors." },
-            { status: 500 }
-        );
+      return NextResponse.json(
+        { error: "One of several errors." },
+        { status: 500 }
+      );
     }
     const filePath = fileRecord.path;
     // ensure the file exists
@@ -65,7 +65,13 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
     // const allText = await readPdfText(filePath);
 
     // Call LLM parse apis with error handling
-    let timeline, units, courseStartDate, courseEndDate, name, description, shortDescription;
+    let timeline: object[],
+      units: object[],
+      courseStartDate: Date | null,
+      courseEndDate: Date | null,
+      name: string | null,
+      description: string | null,
+      shortDescription: string | null;
 
     try {
       const llmResult = await LLMSyllabusParse(filePath);
@@ -83,8 +89,9 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
       units = [];
       courseStartDate = null;
       courseEndDate = null;
-      name = `Course from ${fileRecord.name || 'uploaded file'}`;
-      description = "Course description could not be automatically generated. Please edit this course to add details.";
+      name = `Course from ${fileRecord.name || "uploaded file"}`;
+      description =
+        "Course description could not be automatically generated. Please edit this course to add details.";
       shortDescription = "Auto-generated course";
     }
 
@@ -123,13 +130,16 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
         { status: 500 }
       );
     }
-    
+
+    const courseIdStr = courseRecord.insertedId.toString();
+
     // Update user's relatedCourses array
     try {
       const userCollection = db.collection("user_data");
       await userCollection.updateOne(
         { id: session.user.id },
-        { $push: { relatedCourses: courseRecord.insertedId.toString() } }
+        /* @ts-expect-error: mongodb types dont always match up */
+        { $push: { relatedCourses: courseIdStr } }
       );
     } catch (userUpdateError) {
       console.error("Failed to update user relatedCourses:", userUpdateError);

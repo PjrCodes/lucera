@@ -1,6 +1,6 @@
 import fs from "fs";
 import { GoogleGenAI, Type } from "@google/genai";
-import { Course } from "../schemas";
+import { Course } from "@/lib/schemas";
 
 const contentUserPrompt = fs.readFileSync(
   "./src/appdata/prompts/content_extractor/user.txt",

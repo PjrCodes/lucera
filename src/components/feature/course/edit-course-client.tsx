@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Table } from "ka-table";
 import { DataType, EditingMode } from "ka-table/enums";
 import { Trash2 } from "lucide-react";
@@ -42,14 +42,14 @@ interface Course {
 
 // Client component
 interface EditCourseClientProps {
-  course: Course;
+  course: Course | null;
   isNew?: boolean;
   userData?: unknown;
   session?: unknown;
 }
 
 export function EditCourseClient({ course, isNew = false }: EditCourseClientProps) {
-  const router = useRouter();
+  // const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -63,7 +63,7 @@ export function EditCourseClient({ course, isNew = false }: EditCourseClientProp
   const [timeline, setTimeline] = useState<TimelineItem[]>(course?.timeline || []);
   const [existingSyllabusName, setExistingSyllabusName] = useState<string | null>(null);
   const [newSyllabusFile, setNewSyllabusFile] = useState<File | null>(null);
-  
+
   // Ka-table editing states
   const [editableCells, setEditableCells] = useState<{rowKeyValue: number, columnKey: string}[]>([]);
   const [timelineEditableCells, setTimelineEditableCells] = useState<{rowKeyValue: number, columnKey: string}[]>([]);
@@ -124,24 +124,15 @@ export function EditCourseClient({ course, isNew = false }: EditCourseClientProp
     e.preventDefault();
     setLoading(true);
     setError(null);
-    const payload = {
-      name,
-      short_description: shortDescription,
-      description,
-      units,
-      timeline,
-    };
-    const res = await fetch(`/api/courses/${course._id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (res.ok) {
-      router.push(`/courses/view/${course._id}`);
-    } else {
-      setError("Failed to update course");
-      setLoading(false);
-    }
+    // const payload = {
+    //   name,
+    //   short_description: shortDescription,
+    //   description,
+    //   units,
+    //   timeline,
+    // };
+    setError("Failed to update course");
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -235,7 +226,7 @@ export function EditCourseClient({ course, isNew = false }: EditCourseClientProp
                   isEditable: true,
                 },
                 {
-                  key: "description", 
+                  key: "description",
                   title: "Description",
                   dataType: DataType.String,
                   isEditable: true,
@@ -269,7 +260,7 @@ export function EditCourseClient({ course, isNew = false }: EditCourseClientProp
                         </div>
                       );
                     }
-                    
+
                     // Add placeholder text for empty cells
                     if (!props.value || props.value === "") {
                       return (
@@ -278,7 +269,7 @@ export function EditCourseClient({ course, isNew = false }: EditCourseClientProp
                         </span>
                       );
                     }
-                    
+
                     return (
                       <span className="cursor-pointer" title="Click to edit">
                         {props.value}
@@ -343,7 +334,7 @@ export function EditCourseClient({ course, isNew = false }: EditCourseClientProp
                 },
                 {
                   key: "due_date",
-                  title: "Due Date", 
+                  title: "Due Date",
                   dataType: DataType.Date,
                   isEditable: true,
                 },
@@ -428,10 +419,10 @@ export function EditCourseClient({ course, isNew = false }: EditCourseClientProp
 
                     // Other fields
                     if (!props.value || props.value === "") {
-                      const placeholderText = props.column.key === "type" 
+                      const placeholderText = props.column.key === "type"
                         ? "Click to add type (Assignment, Exam, etc.)"
                         : `Click to add ${props.column.title?.toLowerCase()}`;
-                      
+
                       return (
                         <span className="text-gray-400 italic cursor-pointer" title="Click to edit">
                           {placeholderText}

@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { checkTeacherhood, getUserData } from "@/lib/database/auth";
+import { getUserData } from "@/lib/database/auth";
 import Courses from "@/components/feature/dashboard/cards/courses";
 import React from "react";
 import { redirect } from "next/navigation";

@@ -57,10 +57,10 @@ async function setUserRole(data: FormData) {
 export default async function SelectRolePage({
   searchParams,
 }: {
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  // await serachParams
-  searchParams = await searchParams;
+  // await searchParams
+  const ourSearchParams = await searchParams;
   // restrict page to authenticated users only
   const session = await redirectUnauthenticated();
 
@@ -74,7 +74,7 @@ export default async function SelectRolePage({
     });
     currentRole = userData?.role ?? null;
 
-    if (searchParams?.reason === "newuser" && userData) {
+    if (ourSearchParams?.reason === "newuser" && userData) {
       // If the user is new but user data already exists, then something is fishy.
       // Redirect to home page.
       return redirect("/");
@@ -87,8 +87,8 @@ export default async function SelectRolePage({
         <h1 className="text-2xl font-bold mb-6">Select Your Role</h1>
         <Form action={setUserRole} className="space-y-4">
           {/* Add hidden fields for each query param */}
-          {searchParams &&
-            Object.entries(searchParams).map(([key, value]) =>
+          {ourSearchParams &&
+            Object.entries(ourSearchParams).map(([key, value]) =>
               Array.isArray(value) ? (
                 value.map((v, i) => (
                   <input key={key + i} type="hidden" name={key} value={v} />

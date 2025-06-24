@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
+// import type { Metadata } from "next";
 import "@/app/globals.css";
 import MainFooter from "@/components/feature/footer";
 import HeaderWrapper from "@/components/feature/header/header-wrapper";
 import { AppSidebar } from "@/components/feature/sidenav";
-import { SessionProvider } from "next-auth/react";
+// import { SessionProvider } from "next-auth/react";
 import { HeaderProvider } from "@/context/header-context";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import React from "react";

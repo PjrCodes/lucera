@@ -117,8 +117,8 @@ const syllabusDecoderSchema = {
 interface LLMSyllabusParseResponse {
   name: string;
   description: string;
-  units: string[];
-  timeline: string[];
+  units: object[];
+  timeline: object[];
   courseStartDate: Date;
   courseEndDate: Date;
   shortDescription: string;

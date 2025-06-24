@@ -1,5 +1,5 @@
-import { Course } from "@/app/courses/view/[course_id]/page";
-import { FiDownload, FiFileText, FiUsers, FiBookOpen, FiClipboard, FiBarChart2, FiMessageSquare, FiAward } from "react-icons/fi";
+import { Course } from "@/lib/schemas";
+import { FiDownload, FiFileText, FiUsers, FiBookOpen, FiClipboard, FiBarChart2, FiMessageSquare } from "react-icons/fi";
 
 interface CourseSidebarProps {
   course: Course;
@@ -26,7 +26,7 @@ const pollsAndAnnouncements = [
   { id: 4, type: "announcement", question: "New assignment uploaded - check materials section", responses: null, active: false },
 ];
 
-export default function CourseSidebar({ course }: CourseSidebarProps) {
+export default function CourseSidebar({ }: CourseSidebarProps) {
   return (
     <div className="space-y-4">
       {/* Quick Actions */}

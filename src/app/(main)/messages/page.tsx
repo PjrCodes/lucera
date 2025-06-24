@@ -104,7 +104,7 @@ export default function MessagesPage() {
               <button
                 key={item.key}
                 onClick={() => {
-                  setSelected(item.key as any);
+                  setSelected(item.key as "announcements" | "dms");
                   setSelectedAnnouncementId(null);
                   setSelectedDmId(null);
                 }}

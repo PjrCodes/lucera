@@ -50,7 +50,7 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
     const length = word.length;
     const revealCount = Math.floor(length * 0.3); // Reveal 30% of letters
     const positions = new Set<number>();
-    
+
     while (positions.size < revealCount) {
       positions.add(Math.floor(Math.random() * length));
     }
@@ -190,7 +190,7 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
                 {maskedWord}
               </div>
             )}
-            <p className="text-gray-600 italic">"{currentPuzzle.hint}"</p>
+            <p className="text-gray-600 italic">&quot;{currentPuzzle.hint}&quot;</p>
           </div>
 
           <div className="space-y-4">
@@ -232,8 +232,8 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
 
             {isCorrect !== null && (
               <div className={`text-center p-4 rounded-lg ${
-                isCorrect 
-                  ? "bg-green-100 text-green-800" 
+                isCorrect
+                  ? "bg-green-100 text-green-800"
                   : "bg-lucerared-1 text-lucerared-5"
               }`}>
                 <div className="flex items-center justify-center gap-2 mb-2">

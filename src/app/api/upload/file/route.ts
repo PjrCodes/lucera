@@ -4,7 +4,7 @@ import client from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { NextAuthRequest } from "next-auth";
 import { getUserData } from "@/lib/database/auth";
-import { CustomFile, fileSchema } from "@/lib/schemas";
+import { fileSchema } from "@/lib/schemas";
 
 export const POST = auth(async function POST(req: NextAuthRequest) {
   try {

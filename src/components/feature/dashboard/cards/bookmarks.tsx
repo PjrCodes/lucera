@@ -12,7 +12,7 @@ interface Bookmark {
   subtitle: string;
 }
 
-export default function Bookmarks({ session, userData }: PropsForEveryDashboardCard) {
+export default function Bookmarks({ }: PropsForEveryDashboardCard) {
   // Dummy data for bookmarks - replace with actual data fetching later
   const bookmarks: Bookmark[] = [
 

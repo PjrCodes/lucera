@@ -10,10 +10,10 @@ interface NextAction {
   dueDate?: string;
 }
 
-export default function WhatsNext({ session, userData }: PropsForEveryDashboardCard) {
+export default function WhatsNext({ }: PropsForEveryDashboardCard) {
   // Mock data for what's next - replace with actual data fetching later
   const unreadMessages = 3;
-  
+
   const nextActions: NextAction[] = [
     {
       id: 1,
@@ -39,7 +39,7 @@ export default function WhatsNext({ session, userData }: PropsForEveryDashboardC
       <h2 className="text-lg font-bold text-primary-700 mb-4">
         WHAT&apos;S NEXT
       </h2>
-      
+
       {/* Unread Messages */}
       <div className="mb-4">
         <p className="text-primary-700 mb-2">
@@ -58,7 +58,7 @@ export default function WhatsNext({ session, userData }: PropsForEveryDashboardC
               <span className="text-primary-700">•</span>
               <div className="text-primary-700">
                 {action.action}{" "}
-                <Link 
+                <Link
                   href={action.link}
                   className="font-bold underline hover:text-primary-800 transition-colors"
                 >

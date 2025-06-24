@@ -1,4 +1,4 @@
-import { Course } from "@/app/courses/view/[course_id]/page";
+import { Course } from "@/lib/schemas";
 import { iconForType } from "@/constants";
 
 interface CourseTimelineProps {
@@ -56,13 +56,13 @@ function formatPartialDate(dateStr: string) {
   }
   const weekMatch = dateStr.match(/^(\d{4})-(\d{2}) WEEK (\d)$/);
   if (weekMatch) {
-    const [_, year, month, week] = weekMatch;
+    const [, year, month, week] = weekMatch;
     const monthName = new Date(`${year}-${month}-01`).toLocaleString('default', { month: 'long' });
     return `Week ${week} of ${monthName} ${year}`;
   }
   const monthMatch = dateStr.match(/^(\d{4})-(\d{2})$/);
   if (monthMatch) {
-    const [_, year, month] = monthMatch;
+    const [, year, month] = monthMatch;
     const monthName = new Date(`${year}-${month}-01`).toLocaleString('default', { month: 'long' });
     return `${monthName} ${year}`;
   }

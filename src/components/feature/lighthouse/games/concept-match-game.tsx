@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, RotateCcw, CheckCircle, XCircle, Star, Timer } from "lucide-react";
+import { ArrowLeft, RotateCcw, CheckCircle, Star, Timer } from "lucide-react";
 
 interface ConceptPair {
   id: number;
@@ -8,12 +8,6 @@ interface ConceptPair {
   definition: string;
   course: string;
 }
-
-interface Match {
-  termId: number;
-  definitionId: number;
-}
-
 interface ConceptMatchGameProps {
   onBack: () => void;
 }
@@ -21,7 +15,7 @@ interface ConceptMatchGameProps {
 const ConceptMatchGame: React.FC<ConceptMatchGameProps> = ({ onBack }) => {
   const [concepts, setConcepts] = useState<ConceptPair[]>([]);
   const [shuffledDefinitions, setShuffledDefinitions] = useState<ConceptPair[]>([]);
-  const [matches, setMatches] = useState<Match[]>([]);
+  // Removed unused matches state
   const [selectedTerm, setSelectedTerm] = useState<number | null>(null);
   const [selectedDefinition, setSelectedDefinition] = useState<number | null>(null);
   const [correctMatches, setCorrectMatches] = useState<Set<number>>(new Set());
@@ -53,7 +47,7 @@ const ConceptMatchGame: React.FC<ConceptMatchGameProps> = ({ onBack }) => {
     const selectedConcepts = conceptPairs.slice(0, 5); // Use first 5 concepts
     setConcepts(selectedConcepts);
     setShuffledDefinitions(shuffleArray(selectedConcepts));
-    setMatches([]);
+    // Removed setMatches as matches state is not used
     setCorrectMatches(new Set());
     setIncorrectMatches(new Set());
     setSelectedTerm(null);
@@ -74,17 +68,17 @@ const ConceptMatchGame: React.FC<ConceptMatchGameProps> = ({ onBack }) => {
 
     if (selectedTerm !== null) {
       // Create match
-      const newMatch: Match = {
-        termId: selectedTerm,
-        definitionId: definitionId
-      };
+      // const newMatch: Match = {
+      //   termId: selectedTerm,
+      //   definitionId: definitionId
+      // };
 
       const isCorrect = selectedTerm === definitionId;
       const matchKey = `${selectedTerm}-${definitionId}`;
 
       if (isCorrect) {
         setCorrectMatches(prev => new Set([...prev, selectedTerm]));
-        setMatches(prev => [...prev, newMatch]);
+        // Removed setMatches as matches state is not used
 
         // Calculate score with time bonus
         const timeBonus = Math.max(0, 100 - Math.floor((Date.now() - startTime) / 1000));

@@ -27,7 +27,7 @@ const recentlyAccessed = [
 ];
 
 
-export default function RecentlyAccessed({ session, userData }: PropsForEveryDashboardCard) {
+export default function RecentlyAccessed({ }: PropsForEveryDashboardCard) {
 	return (
 		<div className="bg-primary-100 border border-primary-200 shadow-md rounded-lg">
 			<div className="p-5">

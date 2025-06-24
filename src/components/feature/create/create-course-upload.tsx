@@ -8,8 +8,8 @@ import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 
 export default function CreateCourseUpload({
-  userData,
-  session,
+  // userData,
+  // session,
 }: {
   userData: UserData;
   session: Session;

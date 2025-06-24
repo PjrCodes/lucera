@@ -6,7 +6,7 @@ import fs from "fs";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { fileId: string } }
+  { params }: { params: Promise<{ fileId: string }> }
 ) {
   try {
     // Check authentication
@@ -23,7 +23,7 @@ export async function GET(
 
     // Get file record from database
     const fileRecord = await getFileRecord(fileId);
-    
+
     if (!fileRecord) {
       return NextResponse.json({ error: "File not found" }, { status: 404 });
     }
@@ -43,12 +43,12 @@ export async function GET(
     const headers = new Headers();
     headers.set("Content-Type", fileRecord.file_type || "application/octet-stream");
     headers.set("Content-Length", fileBuffer.length.toString());
-    
+
     // For certain file types, set inline disposition to view in browser
     const viewableTypes = [
       "application/pdf",
       "image/jpeg",
-      "image/jpg", 
+      "image/jpg",
       "image/png",
       "image/gif",
       "image/webp",
@@ -57,7 +57,7 @@ export async function GET(
       "text/css",
       "text/javascript"
     ];
-    
+
     if (viewableTypes.includes(fileRecord.file_type)) {
       headers.set("Content-Disposition", `inline; filename="${fileRecord.name}"`);
     } else {

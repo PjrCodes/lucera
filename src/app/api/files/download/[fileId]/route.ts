@@ -6,7 +6,7 @@ import fs from "fs";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { fileId: string } }
+  { params }: { params: Promise<{ fileId: string }>}
 ) {
   try {
     // Check authentication
@@ -23,7 +23,7 @@ export async function GET(
 
     // Get file record from database
     const fileRecord = await getFileRecord(fileId);
-    
+
     if (!fileRecord) {
       return NextResponse.json({ error: "File not found" }, { status: 404 });
     }

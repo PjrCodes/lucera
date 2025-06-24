@@ -1,5 +1,5 @@
 import React from "react";
-import { auth } from "../../../lib/auth";
+import { auth } from "@/lib/auth";
 import { getUserData } from "@/lib/database/auth";
 import { redirect } from "next/navigation";
 import MinigamesHome from "@/components/feature/lighthouse/minigames-home";

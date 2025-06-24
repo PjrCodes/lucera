@@ -115,7 +115,7 @@ const getDeadlineColor = (dateStr: string) => {
 };
 
 
-export default function UpcomingDeadlines({ session, userData }: PropsForEveryDashboardCard) {
+export default function UpcomingDeadlines({ }: PropsForEveryDashboardCard) {
   // Create deadlines with varied dates to showcase different colors
   const today = new Date("2025-06-09T19:00:00Z"); // Fixed date for consistency in examples
   const yesterday = new Date(today);

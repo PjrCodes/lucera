@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Urbanist } from "next/font/google";
 import "@/app/globals.css";
-import MainFooter from "@/components/feature/footer";
 import React from "react";
 import ClientProviders from "@/components/core/client-providers";
 import { SessionProvider } from "next-auth/react";

@@ -9,8 +9,8 @@ import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 
 export default function CreateContentUpload({
-  userData,
-  session,
+  // userData,
+  // session,
   courses,
 }: {
   userData: UserData;

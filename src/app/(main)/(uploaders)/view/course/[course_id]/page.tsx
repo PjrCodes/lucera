@@ -31,7 +31,7 @@ async function getCourse(course_id: string): Promise<Course | null> {
 export default async function CourseViewPage({
   params,
 }: {
-  params: { course_id: string };
+  params: Promise<{ course_id: string }>;
 }) {
   const session = await redirectUnauthenticated();
   if (!session?.user?.id) {

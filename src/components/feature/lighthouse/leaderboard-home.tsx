@@ -26,7 +26,7 @@ interface LeaderboardHomeProps {
   session: Session;
 }
 
-export default function LeaderboardHome({ isTeacher, userData, session }: LeaderboardHomeProps) {
+export default function LeaderboardHome({ isTeacher }: LeaderboardHomeProps) {
   const [selectedCourse, setSelectedCourse] = useState<string>("university");
 
   const courses: Course[] = [

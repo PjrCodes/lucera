@@ -8,9 +8,9 @@ import { getContentById } from "@/lib/database/content";
 import { Content, Course } from "@/lib/schemas";
 
 interface EditContentPageProps {
-  params: {
+  params: Promise<{
     content_id: string;
-  };
+  }>;
 }
 
 export default async function EditContentPageServer({ params }: EditContentPageProps) {

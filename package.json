@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently \"node socket_server/server.js\" \"next dev --turbopack\"",
     "build": "next build",
-    "start": "next start",
+    "start": "concurrently \"next start\" \"node socket_server/server.js\"",
     "lint": "next lint",
     "socket": "ts-node --esm socket_server/server.ts"
   },

@@ -21,8 +21,8 @@ interface EditContentFormProps {
 }
 
 export default function EditContentForm({
-  userData,
-  session,
+  // userData,
+  // session,
   courses,
   contentId,
   existingContent,
@@ -30,7 +30,7 @@ export default function EditContentForm({
 }: EditContentFormProps) {
   const searchParams = useSearchParams();
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
-  const [file, setFile] = useState<File | null>(null);
+  // const [file, setFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
   const [selectedTopics, setSelectedTopics] = useState<number[]>([]);
   const [title, setTitle] = useState("");
@@ -45,6 +45,8 @@ export default function EditContentForm({
 
   // Load course and file info from query params or existing content
   useEffect(() => {
+
+      if (!searchParams) throw new Error("Search params not available in new content form");
     if (isNew) {
       const courseId = searchParams.get("courseId");
       const hasFile = searchParams.get("hasFile") === "true";
@@ -124,7 +126,6 @@ export default function EditContentForm({
       selectedTopics, // 0-based indexes
       selectedTopicsOneBased: selectedTopics.map((i) => i + 1), // 1-based indexes for backend
       selectedTopicNames: selectedTopics.map((i) => allTopics[i]), // topic names
-      file,
       isNew,
     });
   };

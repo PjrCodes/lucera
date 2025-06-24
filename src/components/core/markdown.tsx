@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Markdown, { MarkdownProps } from "react-markdown";
+import Markdown, { Options, Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 
-interface MyMarkdownProps extends MarkdownProps {
+interface MyMarkdownProps extends Options {
   children: string;
-  components?: Record<string, React.ComponentType<any>>;
+  components?: Components;
 }
 
 export function MyMarkdown({ children, components, ...props }: MyMarkdownProps) {
@@ -47,7 +47,7 @@ export function MyMarkdown({ children, components, ...props }: MyMarkdownProps) 
         ...components,
       }}
       remarkPlugins={[remarkGfm, ...(props.remarkPlugins ?? [])]}
-      rehypePlugins={[rehypeRaw]}
+      rehypePlugins={[rehypeRaw, ...(props.rehypePlugins ?? [])]}
       {...props}
     >
       {children}

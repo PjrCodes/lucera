@@ -16,7 +16,7 @@ interface MinigamesHomeProps {
   session: Session;
 }
 
-export default function MinigamesHome({ userData, session }: MinigamesHomeProps) {
+export default function MinigamesHome({}: MinigamesHomeProps) {
   const [currentGame, setCurrentGame] = useState<GameType>("menu");
 
   const games = [

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, RotateCcw, CheckCircle, XCircle, Star, Timer, Zap } from "lucide-react";
+import { ArrowLeft, CheckCircle, XCircle, Star, Timer, Zap } from "lucide-react";
 
 interface QuizQuestion {
   id: number;
@@ -132,18 +132,18 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
 
   const submitAnswer = () => {
     if (selectedAnswer === null || !gameStarted) return;
-    
+
     const currentQuestion = questions[currentQuestionIndex];
     const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
-    
+
     setShowResult(true);
-    
+
     if (isCorrect) {
       const timeBonus = Math.floor(timeLeft * 2); // 2 points per second remaining
-      const difficultyBonus = currentQuestion.difficulty === "easy" ? 10 : 
+      const difficultyBonus = currentQuestion.difficulty === "easy" ? 10 :
                              currentQuestion.difficulty === "medium" ? 20 : 30;
       const streakBonus = streak * 5;
-      
+
       const totalPoints = difficultyBonus + timeBonus + streakBonus;
       setScore(score + totalPoints);
       setCorrectAnswers(correctAnswers + 1);
@@ -205,7 +205,7 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">🧠 Quiz Blitz</h1>
           <p className="text-gray-600 mb-6">Fast-paced quiz with 15 seconds per question!</p>
-          
+
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <h3 className="text-xl font-bold mb-4">Game Rules</h3>
             <ul className="text-left space-y-2 text-gray-600">
@@ -230,7 +230,7 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
 
   if (gameCompleted) {
     const accuracy = Math.round((correctAnswers / questions.length) * 100);
-    
+
     return (
       <div className="max-w-2xl mx-auto">
         <div className="mb-6">
@@ -246,7 +246,7 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
         <div className="bg-white rounded-lg shadow-md p-8 text-center">
           <div className="text-6xl mb-4">🎉</div>
           <h2 className="text-3xl font-bold text-gray-800 mb-4">Quiz Complete!</h2>
-          
+
           <div className="grid grid-cols-2 gap-4 mb-6">            <div className="bg-primary-100 p-4 rounded-lg">
               <div className="text-2xl font-bold text-primary-800">{score}</div>
               <div className="text-primary-600">Final Score</div>
@@ -304,7 +304,7 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
           <span>{currentQuestion?.course}</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
-          <div 
+          <div
             className="bg-secondary-500 h-2 rounded-full transition-all duration-300"
             style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
           />

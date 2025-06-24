@@ -26,7 +26,7 @@ interface LighthouseHomeProps {
   session: Session;
 }
 
-export default function LighthouseHome({ isTeacher, userData, session }: LighthouseHomeProps) {
+export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
   const router = useRouter();
   const [currentPoints] = useState(2847);
   const [currentRank] = useState(15);

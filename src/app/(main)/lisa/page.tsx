@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
 import { useSession } from "next-auth/react";
@@ -40,7 +40,7 @@ interface ContentType {
 
 const COURSE_COLORS = {
   blue: "bg-primary-100 text-primary-700 border-primary-300",
-  green: "bg-secondary-100 text-secondary-700 border-secondary-300", 
+  green: "bg-secondary-100 text-secondary-700 border-secondary-300",
   rose: "bg-accent-100 text-accent-700 border-accent-300",
   purple: "bg-primary-200 text-primary-800 border-primary-400",
   brown: "bg-secondary-200 text-secondary-800 border-secondary-400",
@@ -336,15 +336,23 @@ function InitialSplash({
   );
 }
 
-export default function LisaPage() {
+function LisaPageContent({
+  initialMessages,
+  initialQuestion,
+}: {
+  initialMessages?: Message[];
+  initialQuestion?: string;
+}) {
   const session = useSession();
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(initialMessages || []);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 
-  const searchParams = useSearchParams();
-  const question = searchParams.get("question");
+  // Remove useSearchParams from here
+
+  // Accept initialQuestion as prop
+  const question: string = initialQuestion || "";
   const hasSentInitialQuestion = useRef(false);
   useEffect(() => {
     if (question && messages.length === 0 && !hasSentInitialQuestion.current) {
@@ -500,5 +508,22 @@ export default function LisaPage() {
         />
       </div>
     </>
+  );
+}
+
+// New client component to extract searchParams
+function LisaPageSearchParamsWrapper() {
+  "use client";
+  const searchParams = useSearchParams();
+  const question = searchParams ? searchParams.get("question") || "" : "";
+  return <LisaPageContent initialQuestion={question} />;
+}
+
+export default function LisaPage() {
+  // Wrap client component in Suspense
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LisaPageSearchParamsWrapper />
+    </Suspense>
   );
 }

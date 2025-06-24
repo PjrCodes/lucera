@@ -50,8 +50,12 @@ const componentMap: Record<string, (props: PropsForEveryDashboardCard) => JSX.El
       userData={props.userData}
     />
   ),
-  RECENTLY_ACCESSED: () => (
-    <RecentlyAccessed key="recently-accessed" />
+  RECENTLY_ACCESSED: (props) => (
+    <RecentlyAccessed
+      key="recently-accessed"
+      session={props.session}
+      userData={props.userData}
+    />
   ),
   UPCOMING_DEADLINES: (props) => (
     <UpcomingDeadlines

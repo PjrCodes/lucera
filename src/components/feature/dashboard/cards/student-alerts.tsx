@@ -11,7 +11,7 @@ interface Alert {
 }
 
 
-export default function StudentAlerts({ session, userData }: PropsForEveryDashboardCard) {
+export default function StudentAlerts({ }: PropsForEveryDashboardCard) {
   // Example alerts for teachers, sorted by severity
   const dummyAlerts: Alert[] = [
     {

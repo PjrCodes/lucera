@@ -34,11 +34,11 @@ const mockBadges = [
 	},
 ];
 
-const YourBadges: React.FC<PropsForEveryDashboardCard> = ({ session, userData }) => {
+const YourBadges: React.FC<PropsForEveryDashboardCard> = ({}) => {
 	// Use userData.badges if present, otherwise fallback to mockBadges
-	const badges =
-		userData.badges && userData.badges.length > 0 ? userData.badges : mockBadges;
-
+	// const badges =
+	// 	userData.badges && userData.badges.length > 0 ? userData.badges : mockBadges;
+  const badges = mockBadges; // Replace with userData.badges when available
 	if (!badges.length) {
 		return (
 			<div className="bg-primary-100 rounded-lg shadow-md p-4 flex items-center justify-center text-center text-gray-500 h-full min-h-[200px]">
@@ -53,7 +53,7 @@ const YourBadges: React.FC<PropsForEveryDashboardCard> = ({ session, userData })
 				YOUR BADGES
 			</h2>
 			<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 w-full justify-items-center">
-				{badges.map((badge: any) => (
+				{badges.map((badge: { id: number; name: string; emoji: string; collected: boolean; description: string; }) => (
 					<Link
 						href="/lighthouse"
 						key={badge.id}
@@ -73,13 +73,7 @@ const YourBadges: React.FC<PropsForEveryDashboardCard> = ({ session, userData })
 									!badge.collected ? "grayscale" : ""
 								}`}
 							>
-								{badge.emoji || (
-									<img
-										src={badge.iconUrl}
-										alt={badge.name}
-										className="w-12 h-12 mb-2"
-									/>
-								)}
+								{badge.emoji}
 							</div>
 							<span
 								className={`font-medium text-sm text-center ${

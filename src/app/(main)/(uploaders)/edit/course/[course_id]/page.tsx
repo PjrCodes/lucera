@@ -6,7 +6,7 @@ import { getUserData } from "@/lib/database/auth";
 import { auth } from "@/lib/auth";
 
 // Async wrapper to await params
-export default async function EditCoursePage({ params }: { params: { course_id: string } }) {
+export default async function EditCoursePage({ params }: { params: Promise<{ course_id: string }> }) {
   const { course_id } = await params;
 
   if (!course_id) {
@@ -42,6 +42,10 @@ export default async function EditCoursePage({ params }: { params: { course_id: 
       ...course,
       _id: course._id.toString()
     };
+  }
+
+  if (courseForClient === null && !isNewCourse) {
+    return notFound();
   }
 
   return (

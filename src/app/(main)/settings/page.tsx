@@ -1,8 +1,6 @@
 "use client";
 import React, { useState } from "react";
 
-const dummyEndpoint = "/api/settings"; // Replace with real endpoint later
-
 export default function SettingsPage() {
   const [form, setForm] = useState({
     // Notifications

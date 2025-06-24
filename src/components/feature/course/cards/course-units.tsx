@@ -1,4 +1,4 @@
-import { Course } from "@/app/courses/view/[course_id]/page";
+import { Course } from "@/lib/schemas";
 
 interface CourseUnitsProps {
   course: Course;
