@@ -17,7 +17,8 @@ export default async function HandleInvalidUserPage() {
     return redirect("/");
   } catch (error) {
     // error message shown to user is the entire developer error trace
-    errorMessage = error instanceof Error ? error.message : "An unexpected error occurred.";
+    errorMessage =
+      error instanceof Error ? error.message : "An unexpected error occurred.";
     // add trace and full details
     console.error("Error fetching user data:", error);
 
@@ -25,7 +26,6 @@ export default async function HandleInvalidUserPage() {
     if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
       throw error;
     }
-
   }
 
   return (

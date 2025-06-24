@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import {  Raleway, Urbanist } from "next/font/google";
+import { Raleway, Urbanist } from "next/font/google";
 import "@/app/globals.css";
 import React from "react";
 import ClientProviders from "@/components/core/client-providers";
@@ -17,7 +17,8 @@ const raleway = Raleway({
 
 export const metadata: Metadata = {
   title: "Lucera",
-  description: "An AI-First, no-compromise Learning Management System. Built for the future of education.",
+  description:
+    "An AI-First, no-compromise Learning Management System. Built for the future of education.",
 };
 
 export default async function RootLayout({
@@ -27,9 +28,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${urbanist.variable} ${raleway.variable} antialiased`}
-      >
+      <body className={`${urbanist.variable} ${raleway.variable} antialiased`}>
         <ClientProviders>
           <SessionProvider>
             <div className="font-body w-full min-h-screen flex flex-col bg-primary-50">

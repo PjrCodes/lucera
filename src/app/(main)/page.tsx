@@ -1,38 +1,23 @@
-import { auth } from "../../lib/auth";
-import {
-  getUserData,
-} from "@/lib/database/auth";
+import { auth } from "@/lib/auth";
+import { getUserData } from "@/lib/database/auth";
 import UnauthHomepage from "@/components/feature/dashboard/unauth-homepage";
 import AuthDashboard from "@/components/feature/dashboard/auth-dashboard";
 import { redirect } from "next/navigation";
+import { UserData } from "@/lib/schemas";
 
 export default async function Home() {
   const session = await auth();
-  // console.log("Session:", session);
+
   if (!session || !session.user) {
-    // If the session is not valid, redirect to the homepage
+    // If the session is not valid, show the unauthenticated homepage
     return <UnauthHomepage />;
   }
 
-  // let isTeacher = false;
-  // let dashboardLayout;
-  let userData;
+  let userData: UserData | null = null;
   try {
-    userData = await getUserData(session?.user?.id || "");
-    // isTeacher = userData.role === "teacher";
-    // dashboardLayout = userData?.dashboardLayout;
-
-    // if (!dashboardLayout) {
-    //   await setDefaultDashboardLayout(session?.user?.id || "", isTeacher);
-    // }
+    userData = await getUserData(session.user.id || "");
+    return <AuthDashboard userData={userData} session={session} />;
   } catch {
     redirect("/handle-invalid-user");
   }
-
-  return (
-    <AuthDashboard
-      userData={userData}
-      session={session}
-    />
-  );
 }
