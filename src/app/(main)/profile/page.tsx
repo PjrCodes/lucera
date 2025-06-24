@@ -1,12 +1,12 @@
 import React from "react";
-import { redirectUnauthenticated } from "@/lib/auth";
+import { serverSideRedirectUnauthenticated } from "@/lib/auth";
 import client from "@/lib/db";
 import SetHeaderClientComponent from "../../../components/feature/header/set-header-client-component"; // Added import
 import SignOut from "@/components/feature/auth/sign-out-button";
 import Link from "next/link";
 
 export default async function ProfilePage() {
-  const session = await redirectUnauthenticated();
+  const session = await serverSideRedirectUnauthenticated();
 
   type UserData = {
     id: string;
@@ -16,7 +16,7 @@ export default async function ProfilePage() {
   const userData: UserData | null = await client
     .db()
     .collection<UserData>("user_data")
-    .findOne({ id: session?.user?.id });
+    .findOne({ id: session.user.id });
 
   if (!userData) {
     throw new Error("User data not found");

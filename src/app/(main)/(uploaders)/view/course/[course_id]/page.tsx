@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import client from "@/lib/db";
-import { redirectUnauthenticated } from "@/lib/auth";
+import { serverSideRedirectUnauthenticated } from "@/lib/auth";
 import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
 import CourseHeader from "@/components/feature/course/cards/course-header";
 import { CourseHeaderSkeleton } from "@/components/feature/course/course-skeleton";
@@ -33,7 +33,7 @@ export default async function CourseViewPage({
 }: {
   params: Promise<{ course_id: string }>;
 }) {
-  const session = await redirectUnauthenticated();
+  const session = await serverSideRedirectUnauthenticated();
   if (!session?.user?.id) {
     return notFound();
   }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getFileRecord } from "@/lib/database/files";
-import { redirectUnauthenticated } from "@/lib/auth";
+import { serverSideRedirectUnauthenticated } from "@/lib/auth";
 import path from "path";
 import fs from "fs";
 
@@ -10,7 +10,7 @@ export async function GET(
 ) {
   try {
     // Check authentication
-    const session = await redirectUnauthenticated();
+    const session = await serverSideRedirectUnauthenticated();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

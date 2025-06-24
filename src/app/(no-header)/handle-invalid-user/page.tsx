@@ -5,15 +5,13 @@ import { redirect } from "next/navigation";
 export default async function HandleInvalidUserPage() {
   // check if the user is now validated
   const session = await auth();
-
-  if (!session?.user) {
-    // If the user is not authenticated, redirect to the homepage
+  if (!session || !session.user || !session.user.id) {
     return redirect("/");
   }
 
   let errorMessage = "";
   try {
-    await getUserData(session.user.id!);
+    await getUserData(session.user.id);
     return redirect("/");
   } catch (error) {
     // error message shown to user is the entire developer error trace

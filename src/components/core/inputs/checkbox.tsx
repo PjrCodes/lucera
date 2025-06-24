@@ -1,45 +1,53 @@
 import * as React from "react";
+import { Checkbox as UICheckbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
 
 interface CheckboxProps {
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
   className?: string;
+  children?: React.ReactNode;
+  id?: string;
+  name?: string;
 }
 
-export function Checkbox({ checked, onCheckedChange, className }: CheckboxProps) {
+export function Checkbox({
+  checked,
+  onCheckedChange,
+  className,
+  children,
+  id,
+  name
+}: CheckboxProps) {
+  const checkboxId = id || name;
+
   return (
-    <button
-      type="button"
-      role="checkbox"
-      aria-checked={checked}
-      tabIndex={0}
-      onClick={() => onCheckedChange(!checked)}
-      onKeyDown={(e) => {
-        if (e.key === " " || e.key === "Enter") {
-          e.preventDefault();
-          onCheckedChange(!checked);
-        }
-      }}
-      className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors
-        ${checked
-          ? "bg-primary-500 border-primary-600 text-white"
-          : "bg-white border-secondary-300 text-transparent"}
-        focus-visible:ring-2 focus-visible:ring-primary-300
-        hover:border-primary-400
-        ${className ?? ""}
-      `}
-    >
-      {checked && (
-        <svg className="w-3 h-3" viewBox="0 0 16 16" fill="none">
-          <path
-            d="M4 8.5l3 3 5-5"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+    <label
+      htmlFor={checkboxId}
+      className={cn(
+        "inline-flex items-center space-x-2",
+        className
       )}
-    </button>
+    >
+      <UICheckbox
+        id={checkboxId}
+        name={name}
+        checked={checked}
+        onCheckedChange={onCheckedChange}
+        className={cn(
+          "size-5 h-5 w-5 border rounded text-secondary-500",
+          "border-gray-300 bg-white transition-colors duration-200",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary-300",
+          "data-[state=checked]:bg-secondary-500 data-[state=checked]:border-secondary-500 data-[state=checked]:text-white",
+          "hover:border-secondary-400",
+          "disabled:cursor-not-allowed disabled:opacity-50"
+        )}
+      />
+      {children && (
+        <span className="text-sm text-gray-700">
+          {children}
+        </span>
+      )}
+    </label>
   );
 }

@@ -1,5 +1,8 @@
 "use client";
 import React, { useState } from "react";
+import { Checkbox } from "@/components/core/inputs/checkbox";
+import { Dropdown } from "@/components/core/inputs/dropdown";
+import { SecondaryButton } from "@/components/core/buttons/secondary";
 
 export default function SettingsPage() {
   const [form, setForm] = useState({
@@ -17,22 +20,6 @@ export default function SettingsPage() {
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked, type, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : parseInt(value) || value,
-    }));
-  };
-
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,125 +39,107 @@ export default function SettingsPage() {
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Notifications */}
         <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">📢 Notifications</h2>
-          <div className="grid grid-cols-2 gap-4">
-            <label className="flex items-center">
-              <input
-                name="dmNotifications"
-                type="checkbox"
-                checked={form.dmNotifications}
-                onChange={handleChange}
-                className="mr-2"
-              />
+          <h2 className="text-xl font-semibold mb-6">📢 Notifications</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Checkbox
+              name="dmNotifications"
+              checked={form.dmNotifications}
+              onCheckedChange={(checked) => setForm(prev => ({ ...prev, dmNotifications: checked }))}
+            >
               Direct Messages
-            </label>
-            <label className="flex items-center">
-              <input
-                name="announcementNotifications"
-                type="checkbox"
-                checked={form.announcementNotifications}
-                onChange={handleChange}
-                className="mr-2"
-              />
+            </Checkbox>
+            <Checkbox
+              name="announcementNotifications"
+              checked={form.announcementNotifications}
+              onCheckedChange={(checked) => setForm(prev => ({ ...prev, announcementNotifications: checked }))}
+            >
               Announcements
-            </label>
-            <label className="flex items-center">
-              <input
-                name="assignmentNotifications"
-                type="checkbox"
-                checked={form.assignmentNotifications}
-                onChange={handleChange}
-                className="mr-2"
-              />
+            </Checkbox>
+            <Checkbox
+              name="assignmentNotifications"
+              checked={form.assignmentNotifications}
+              onCheckedChange={(checked) => setForm(prev => ({ ...prev, assignmentNotifications: checked }))}
+            >
               New Assignments
-            </label>
-            <label className="flex items-center">
-              <input
-                name="gradeNotifications"
-                type="checkbox"
-                checked={form.gradeNotifications}
-                onChange={handleChange}
-                className="mr-2"
-              />
+            </Checkbox>
+            <Checkbox
+              name="gradeNotifications"
+              checked={form.gradeNotifications}
+              onCheckedChange={(checked) => setForm(prev => ({ ...prev, gradeNotifications: checked }))}
+            >
               Grade Updates
-            </label>
-            <label className="flex items-center">
-              <input
-                name="deadlineReminders"
-                type="checkbox"
-                checked={form.deadlineReminders}
-                onChange={handleChange}
-                className="mr-2"
-              />
+            </Checkbox>
+            <Checkbox
+              name="deadlineReminders"
+              checked={form.deadlineReminders}
+              onCheckedChange={(checked) => setForm(prev => ({ ...prev, deadlineReminders: checked }))}
+              className="md:col-span-2"
+            >
               Deadline Reminders
-            </label>
+            </Checkbox>
           </div>
         </div>
 
         {/* AI Assistant */}
         <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">🤖 AI Assistant</h2>
+          <h2 className="text-xl font-semibold mb-6">🤖 AI Assistant</h2>
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block font-medium mb-2">AI Personality</label>
-                <select
-                  name="aiPersonality"
-                  value={form.aiPersonality}
-                  onChange={handleSelectChange}
-                  className="border rounded w-full p-2"
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Dropdown
+                name="aiPersonality"
+                value={form.aiPersonality}
+                onChange={(value) => setForm(prev => ({ ...prev, aiPersonality: value }))}
+                options={[
+                  { value: "professional", label: "💼 Professional" },
+                  { value: "friendly", label: "😊 Friendly" },
+                  { value: "quirky", label: "🤪 Quirky" },
+                ]}
+                placeholder="Select AI Personality"
+              >
+                AI Personality
+              </Dropdown>
+              <div className="space-y-4">
+                <Checkbox
+                  name="aiAssistantEnabled"
+                  checked={form.aiAssistantEnabled}
+                  onCheckedChange={(checked) => setForm(prev => ({ ...prev, aiAssistantEnabled: checked }))}
                 >
-                  <option value="professional">💼 Professional</option>
-                  <option value="friendly">😊 Friendly</option>
-                  <option value="quirky">🤪 Quirky</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <label className="flex items-center">
-                  <input
-                    name="aiAssistantEnabled"
-                    type="checkbox"
-                    checked={form.aiAssistantEnabled}
-                    onChange={handleChange}
-                    className="mr-2"
-                  />
                   Enable AI Assistant
-                </label>
-                <label className="flex items-center">
-                  <input
-                    name="aiNudges"
-                    type="checkbox"
-                    checked={form.aiNudges}
-                    onChange={handleChange}
-                    className="mr-2"
-                  />
+                </Checkbox>
+                <Checkbox
+                  name="aiNudges"
+                  checked={form.aiNudges}
+                  onCheckedChange={(checked) => setForm(prev => ({ ...prev, aiNudges: checked }))}
+                >
                   AI Nudges
-                </label>
+                </Checkbox>
               </div>
             </div>
           </div>
         </div>
 
         <div className="flex gap-4">
-          <button
+          <SecondaryButton
             type="submit"
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg disabled:opacity-50 font-medium"
             disabled={loading}
+            className="px-6 py-3"
           >
             {loading ? "🔄 Saving..." : "💾 Save All Settings"}
-          </button>
-          <button
+          </SecondaryButton>
+          <SecondaryButton
             type="button"
-            className="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium"
+            variant="outline"
             onClick={() => window.location.reload()}
+            className="px-6 py-3"
           >
             🔄 Reset to Defaults
-          </button>
+          </SecondaryButton>
         </div>
 
         {success && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-            ✅ All settings saved successfully!
+          <div className="bg-green-50 border border-green-200 text-green-800 px-6 py-4 rounded-lg flex items-center space-x-2">
+            <span className="text-green-600">✅</span>
+            <span className="font-medium">All settings saved successfully!</span>
           </div>
         )}
       </form>

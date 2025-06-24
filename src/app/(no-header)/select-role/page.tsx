@@ -1,10 +1,11 @@
 import React from "react";
 import Form from "next/form";
-import { auth, redirectUnauthenticated } from "@/lib/auth";
+import { serverSideRedirectUnauthenticated } from "@/lib/auth";
 import client from "@/lib/db";
 import { redirect } from "next/navigation";
 import defaults from "@/appdata/defaults.json";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
+import { RadioGroup, RadioItem } from "@/components/core/inputs/radio";
 
 async function setUserRole(data: FormData) {
   "use server";
@@ -15,12 +16,7 @@ async function setUserRole(data: FormData) {
     throw new Error("Invalid role selected");
   }
 
-  // Get the current session - should exist after OAuth sign-in
-  const session = await auth();
-  if (!session?.user || !session.user.id) {
-    // This code will not be reached.
-    throw new Error("User not authenticated");
-  }
+  const session = await serverSideRedirectUnauthenticated();
 
   // Update the user's role in the database
   const db = client.db();
@@ -59,14 +55,13 @@ export default async function SelectRolePage({
 }: {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  // await searchParams
   const ourSearchParams = await searchParams;
   // restrict page to authenticated users only
-  const session = await redirectUnauthenticated();
+  const session = await serverSideRedirectUnauthenticated();
 
   // set role in the picker based on the database stored role
   let currentRole: string | null = null;
-  if (session?.user?.id) {
+  if (session.user.id) {
     const db = client.db();
     const customUserDataCollection = db.collection("user_data");
     const userData = await customUserDataCollection.findOne({
@@ -77,7 +72,7 @@ export default async function SelectRolePage({
     if (ourSearchParams?.reason === "newuser" && userData) {
       // If the user is new but user data already exists, then something is fishy.
       // Redirect to home page.
-      return redirect("/");
+      redirect("/");
     }
   }
 
@@ -97,30 +92,14 @@ export default async function SelectRolePage({
                 <input key={key} type="hidden" name={key} value={value ?? ""} />
               )
             )}
-          <div>
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="role"
-                value="student"
-                defaultChecked={currentRole === "student"}
-                className="mr-2"
-              />
+          <RadioGroup name="role" defaultValue={currentRole || undefined}>
+            <RadioItem value="student">
               Student
-            </label>
-          </div>
-          <div>
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="role"
-                value="teacher"
-                defaultChecked={currentRole === "teacher"}
-                className="mr-2"
-              />
+            </RadioItem>
+            <RadioItem value="teacher">
               Teacher
-            </label>
-          </div>
+            </RadioItem>
+          </RadioGroup>
             <SecondaryButton type="submit">
             Continue
             </SecondaryButton>
