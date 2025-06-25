@@ -1,9 +1,9 @@
 import { auth } from "@/lib/auth";
-import { getUserData } from "@/lib/database/auth";
+import { getUserData } from "@/lib/database-service/auth";
 import UnauthHomepage from "@/components/feature/dashboard/unauth-homepage";
 import AuthDashboard from "@/components/feature/dashboard/auth-dashboard";
 import { redirect } from "next/navigation";
-import { UserData } from "@/lib/schemas";
+import { UserData } from "@/lib/schemas/database";
 
 export default async function Home() {
   const session = await auth();

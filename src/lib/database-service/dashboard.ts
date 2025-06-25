@@ -1,7 +1,7 @@
-import { getUserData } from "@/lib/database/auth";
+import { getUserData } from "@/lib/database-service/auth";
 import client from "@/lib/db";
 import defaults from "@/appdata/defaults.json";
-import { DashboardLayout } from "@/lib/schemas";
+import { DashboardLayout } from "@/lib/schemas/database";
 
 
 export async function getUserDashboardLayout(userId: string): Promise<DashboardLayout> {

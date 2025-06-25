@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { PrimaryButton } from "@/components/core/buttons/primary";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { FileDropInput } from "@/components/core/inputs/file-drop-input";
-import { UserData } from "@/lib/schemas";
+import { UserData } from "@/lib/schemas/database";
 import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 

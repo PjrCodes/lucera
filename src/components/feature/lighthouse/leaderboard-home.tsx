@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Trophy, Medal, Star, Filter } from "lucide-react";
 import { Session } from "next-auth";
 import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
-import { UserData } from "@/lib/schemas";
+import { UserData } from "@/lib/schemas/database";
 
 interface LeaderboardEntry {
   id: number;

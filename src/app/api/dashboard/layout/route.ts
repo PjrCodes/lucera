@@ -3,7 +3,7 @@ import { NextAuthRequest } from "next-auth";
 import {
   getUserDashboardLayout,
   saveDashboardLayout,
-} from "@/lib/database/dashboard";
+} from "@/lib/database-service/dashboard";
 import { auth } from "@/lib/auth";
 
 export const GET = auth(async function GET(request: NextAuthRequest) {

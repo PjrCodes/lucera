@@ -10,7 +10,7 @@ import ActionButton from "@/components/feature/lighthouse/action-buttons";
 import BadgeDetailModal from "@/components/feature/lighthouse/badge-detail-modal";
 import PointsInfoModal from "@/components/feature/lighthouse/points-info-modal";
 import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
-import { UserData } from "@/lib/schemas";
+import { UserData } from "@/lib/schemas/database";
 
 interface Badge {
   id: number;

@@ -1,11 +1,11 @@
-import { getUserData } from "@/lib/database/auth";
-import { getCoursesForUser } from "@/lib/database/courses";
+import { getUserData } from "@/lib/database-service/auth";
+import { getCoursesForUser } from "@/lib/database-service/courses";
 import EditContentForm from "@/components/feature/content/edit-content-form";
 import { auth } from "@/lib/auth";
 import { ObjectId } from "mongodb";
 import { redirect } from "next/navigation";
-import { getContentById } from "@/lib/database/content";
-import { Content, Course } from "@/lib/schemas";
+import { getContentById } from "@/lib/database-service/content";
+import { Content, Course } from "@/lib/schemas/database";
 
 interface EditContentPageProps {
   params: Promise<{

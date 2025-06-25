@@ -4,12 +4,12 @@ import { auth } from "@/lib/auth";
 import { NextAuthRequest } from "next-auth";
 import client from "@/lib/db";
 
-import { LLMContentParse } from "@/lib/llm/content";
-import { checkTeacherhood } from "@/lib/database/auth";
-import { getFileRecord } from "@/lib/database/files";
+import { LLMContentExtractor } from "@/lib/llm/content";
+import { checkTeacherhood } from "@/lib/database-service/auth";
+import { getFileRecord } from "@/lib/database-service/files";
 
 import { z } from "zod";
-import { getCourseById } from "@/lib/database/courses";
+import { getCourseById } from "@/lib/database-service/courses";
 
 const schema = z.object({
   fileId: z.string().min(1, "File ID is required"),
@@ -77,7 +77,7 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
 
     const courseRecord = await getCourseById(courseId);
     try {
-      const llmResult = await LLMContentParse(filePath, courseRecord);
+      const llmResult = await LLMContentExtractor(filePath, courseRecord);
       title = llmResult.title;
       shortDescription = llmResult.shortDescription;
       description = llmResult.description;

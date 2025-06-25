@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
 import { useSession } from "next-auth/react";
 import { PiChatTeardrop, PiCaretUp, PiBooks, PiTag } from "react-icons/pi";
-import { iconForType } from "@/constants";
+import { iconForType } from "@/lib/constants";
 import { MultiSelect } from "@/components/core/multi-select";
 
 interface Message {

@@ -1,7 +1,7 @@
 import client from "@/lib/db";
 import { ObjectId } from "mongodb";
 import { getUserData } from "./auth";
-import { Course, courseSchema } from "../schemas";
+import { Course, courseSchema } from "../schemas/database";
 
 export async function getCoursesForUser(userId: string) {
 

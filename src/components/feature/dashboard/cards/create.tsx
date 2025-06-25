@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { iconForType } from "@/constants";
+import { iconForType } from "@/lib/constants";
 import { PrimaryButton } from "@/components/core/buttons/primary";
 import { PropsForEveryDashboardCard } from "@/lib/interfaces";
 

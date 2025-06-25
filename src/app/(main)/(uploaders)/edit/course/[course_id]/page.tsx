@@ -2,7 +2,7 @@ import { EditCourseClient } from '@/components/feature/course/edit-course-client
 import { notFound, redirect } from 'next/navigation';
 import client from '@/lib/db';
 import { ObjectId } from 'mongodb';
-import { getUserData } from "@/lib/database/auth";
+import { getUserData } from "@/lib/database-service/auth";
 import { auth } from "@/lib/auth";
 
 // Async wrapper to await params

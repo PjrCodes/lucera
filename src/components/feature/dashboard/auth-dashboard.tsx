@@ -10,7 +10,7 @@ import RecentlyAccessed from "./cards/recently-accessed";
 import defaults from "@/appdata/defaults.json";
 import dashboardControlList from "@/appdata/acl/dashboard.json";
 import { MdBrokenImage } from "react-icons/md";
-import { UserData } from "@/lib/schemas";
+import { UserData } from "@/lib/schemas/database";
 import { PropsForEveryDashboardCard } from "@/lib/interfaces";
 import YourBadges from "./cards/your-badges";
 import WhatsNext from "./cards/whats-next";

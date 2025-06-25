@@ -1,5 +1,5 @@
-import { Course } from "@/lib/schemas";
-import { iconForType } from "@/constants";
+import { Course } from "@/lib/schemas/database";
+import { iconForType } from "@/lib/constants";
 
 interface CourseTimelineProps {
   course: Course;

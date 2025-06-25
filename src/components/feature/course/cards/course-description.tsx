@@ -1,5 +1,5 @@
 import { MyMarkdown } from "@/components/core/markdown";
-import { Course } from "@/lib/schemas";
+import { Course } from "@/lib/schemas/database";
 
 interface CourseDescriptionProps {
   course: Course;

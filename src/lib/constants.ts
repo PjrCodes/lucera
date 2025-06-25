@@ -46,6 +46,7 @@ export const ourIconColors = {
     "lab": "bg-lucerabrown-2 text-lucerabrown-5",
     "fallback": "bg-gray-100 text-gray-800", // Fallback color
 }
+
 export const colorClassForType = (type: string) => {
     // simply return color based on type
     const color = ourIconColors[type.toLowerCase() as keyof typeof ourIconColors];

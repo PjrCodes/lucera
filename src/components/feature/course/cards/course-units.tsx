@@ -1,4 +1,4 @@
-import { Course } from "@/lib/schemas";
+import { Course } from "@/lib/schemas/database";
 
 interface CourseUnitsProps {
   course: Course;

@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import client from "../db";
-import { contentSchema } from "../schemas";
+import { contentSchema } from "../schemas/database";
 import { getCourseById } from "./courses";
 import { getFileRecord } from "./files";
 
@@ -42,7 +42,7 @@ export async function getContentForCourse(courseId: string) {
       if (parsedData._id instanceof ObjectId) {
         parsedData._id = parsedData._id.toString();
       }
-      
+
       // Get file details if fileId exists
       let fileDetails = null;
       if (parsedData.fileId) {
@@ -60,7 +60,7 @@ export async function getContentForCourse(courseId: string) {
           console.error("Error fetching file details:", error);
         }
       }
-      
+
       return {
         ...parsedData,
         file: fileDetails,

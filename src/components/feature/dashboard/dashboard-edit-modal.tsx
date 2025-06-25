@@ -10,8 +10,8 @@ import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import DraggableItem from "@/components/core/draggable-item";
 import dashboardAcl from "@/appdata/acl/dashboard.json";
 import defaultLayouts from "@/appdata/defaults.json";
-import { DASHBOARD_ELEMENT_TO_NAME } from "@/constants";
-import { UserData } from "@/lib/schemas";
+import { DASHBOARD_ELEMENT_TO_NAME } from "@/lib/constants";
+import { UserData } from "@/lib/schemas/database";
 import { PrimaryButton } from "@/components/core/buttons/primary";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 

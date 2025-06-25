@@ -3,10 +3,10 @@ import fs from "fs/promises";
 import { auth } from "@/lib/auth";
 import { NextAuthRequest } from "next-auth";
 import client from "@/lib/db";
-import { LLMSyllabusParse } from "@/lib/llm/syllabus";
-import { checkTeacherhood } from "@/lib/database/auth";
-import { getFileRecord } from "@/lib/database/files";
-import { fileIdSchema } from "@/lib/api-schemas";
+import { LLMSyllabusExtractor } from "@/lib/llm/syllabus";
+import { checkTeacherhood } from "@/lib/database-service/auth";
+import { getFileRecord } from "@/lib/database-service/files";
+import { fileIdSchema } from "@/lib/schemas/api";
 // import { CourseTimelineItem } from "@/lib/schemas";
 
 // Example: Parse a course file and create a course object
@@ -74,7 +74,7 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
       shortDescription: string | null;
 
     try {
-      const llmResult = await LLMSyllabusParse(filePath);
+      const llmResult = await LLMSyllabusExtractor(filePath);
       timeline = llmResult.timeline;
       units = llmResult.units;
       courseStartDate = llmResult.courseStartDate;

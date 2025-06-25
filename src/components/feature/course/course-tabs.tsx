@@ -9,7 +9,7 @@ import CoursePollsCard from "@/components/feature/course/cards/course-polls-card
 import CourseStudentsCard from "@/components/feature/course/cards/course-students-card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { BookOpen, ChartNoAxesColumn, ClipboardList, Clock, FileText, List, MessagesSquare, Users } from "lucide-react";
-import { CourseContentData, Course } from "@/lib/schemas";
+import { CourseContentData, Course } from "@/lib/schemas/database";
 
 interface Assignment {
   id: number;
@@ -56,7 +56,7 @@ export default function CourseTabs({
   grades: Grade[];
 }) {
 
-  
+
   return (
     <div className="w-full flex flex-col items-center">
       <Tabs defaultValue="description" className="w-full">

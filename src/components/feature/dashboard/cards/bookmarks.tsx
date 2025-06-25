@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { iconForType } from "@/constants";
+import { iconForType } from "@/lib/constants";
 import { MdBookmarkBorder } from "react-icons/md";
 import { PropsForEveryDashboardCard } from "@/lib/interfaces";
 

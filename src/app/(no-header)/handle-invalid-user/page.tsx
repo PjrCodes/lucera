@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { getUserData } from "@/lib/database/auth";
+import { getUserData } from "@/lib/database-service/auth";
 import { redirect } from "next/navigation";
 
 export default async function HandleInvalidUserPage() {

@@ -1,11 +1,9 @@
 import { Session } from "next-auth";
-import { UserData } from "@/lib/schemas";
+import { UserData } from "@/lib/schemas/database";
 
 export interface PropsForEveryDashboardCard {
   session: Session;
   userData: UserData;
 }
 
-export interface lLMResponse {
-  text: string;
-};
+

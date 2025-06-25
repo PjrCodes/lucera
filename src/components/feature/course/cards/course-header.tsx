@@ -1,4 +1,4 @@
-import { Course } from "@/lib/schemas";
+import { Course } from "@/lib/schemas/database";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { Edit, Bookmark } from "lucide-react";
 import Link from "next/link";

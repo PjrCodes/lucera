@@ -1,5 +1,5 @@
-import { getUserData } from "@/lib/database/auth";
-import { getCoursesForUser } from "@/lib/database/courses";
+import { getUserData } from "@/lib/database-service/auth";
+import { getCoursesForUser } from "@/lib/database-service/courses";
 import CreateContentUpload from "@/components/feature/create/create-content-upload";
 import { auth } from "@/lib/auth";
 import { ObjectId } from "mongodb";

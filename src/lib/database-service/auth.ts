@@ -1,6 +1,6 @@
 import client from "@/lib/db";
 import { NotFoundError, InvalidDataError, InvalidCredentials } from "@/lib/errors";
-import { userDataSchema } from "@/lib/schemas";
+import { userDataSchema } from "@/lib/schemas/database";
 import { User } from "next-auth";
 
 export async function getUserData(userId: string) {

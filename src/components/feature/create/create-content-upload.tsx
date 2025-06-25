@@ -4,7 +4,7 @@ import { PrimaryButton } from "@/components/core/buttons/primary";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { FileDropInput } from "@/components/core/inputs/file-drop-input";
 import { Dropdown } from "@/components/core/inputs/dropdown";
-import { Course, UserData } from "@/lib/schemas";
+import { Course, UserData } from "@/lib/schemas/database";
 import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 

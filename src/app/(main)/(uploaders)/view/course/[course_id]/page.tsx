@@ -7,10 +7,10 @@ import { serverSideRedirectUnauthenticated } from "@/lib/auth";
 import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
 import CourseHeader from "@/components/feature/course/cards/course-header";
 import { CourseHeaderSkeleton } from "@/components/feature/course/course-skeleton";
-import { Course } from "@/lib/schemas";
-import { getUserData } from "@/lib/database/auth";
+import { Course } from "@/lib/schemas/database";
+import { getUserData } from "@/lib/database-service/auth";
 import CourseTabs from "@/components/feature/course/course-tabs";
-import { getContentForCourse } from "@/lib/database/content";
+import { getContentForCourse } from "@/lib/database-service/content";
 
 async function getCourse(course_id: string): Promise<Course | null> {
   const db = client.db();

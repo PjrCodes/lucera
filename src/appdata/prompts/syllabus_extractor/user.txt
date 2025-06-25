@@ -14,7 +14,6 @@ You are provided with one or many college syllabus files for a single course. Pl
    - If a due date is not specified, assume the assignment or quiz is DUE on the day specified as the start date.
    - The timeline is used by Students to plan their semester, so it should be detailed and clear, and should include relevant *due dates* - which are the most important.
    - If you find dates in the syllabus, use them directly as much as possible. Mostly, these will be DUE dates. Ensure these are correctly formatted.
-   - Clearly label inferred dates as such.
    - If the dates are not specified, but a Month or something similar (e.g. "Mid-February") is mentioned, please do not return a specific date, return a partial date (see more details below).
 
 The course description should be well-structured using Markdown. Include the following sections (use `##` and `###` for formatting):
@@ -38,7 +37,7 @@ The dates can be _partial_ if not specified exactly. Use the following format fo
   - Spring: starts first Monday of January, ends mid-May.
   - Fall / Monsoon: starts first Monday of August, ends mid-December.
 - Assignments and quizzes are typically due on the same day they are assigned unless specified otherwise.
-- Midtersm are in the middle of the 20-week semester, typically around week 8-10.
+- Midterms are in the middle of the 20-week semester, typically around week 8-10.
 - Finals are usually in the last week of the semester.
 - Grade release: 1 week after submission unless otherwise specified.
 

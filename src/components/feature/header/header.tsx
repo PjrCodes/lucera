@@ -10,9 +10,9 @@ import { House, SidebarIcon, SquarePen } from "lucide-react";
 import Link from "next/link";
 import { Session } from "next-auth";
 import Bell from "./bell";
-import { useHeader } from "@/context/header-context";
+import { useHeader } from "@/components/feature/header/header-context";
 import DashboardEditModal from "../dashboard/dashboard-edit-modal";
-import type { UserData } from "@/lib/schemas"; // Adjust the import path as needed
+import type { UserData } from "@/lib/schemas/database"; // Adjust the import path as needed
 
 // Accept session as a prop instead of fetching it on the client
 export default function Header({

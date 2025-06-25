@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getFileRecord } from "@/lib/database/files";
+import { getFileRecord } from "@/lib/database-service/files";
 import { serverSideRedirectUnauthenticated } from "@/lib/auth";
 import path from "path";
 import fs from "fs";

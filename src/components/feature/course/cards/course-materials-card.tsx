@@ -1,5 +1,5 @@
 import { FileText, BookOpen, Download, Eye } from "lucide-react";
-import { CourseContentData } from "@/lib/schemas";
+import { CourseContentData } from "@/lib/schemas/database";
 import { formatDate, formatFileSize } from "@/lib/utils";
 
 function isViewableFile(fileType: string): boolean {

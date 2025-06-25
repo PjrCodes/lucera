@@ -1,6 +1,6 @@
 import React from "react";
 import { auth } from "../../../../lib/auth";
-import { getUserData } from "@/lib/database/auth";
+import { getUserData } from "@/lib/database-service/auth";
 import { redirect } from "next/navigation";
 import LeaderboardHome from "@/components/feature/lighthouse/leaderboard-home";
 

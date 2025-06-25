@@ -7,7 +7,7 @@ import { TextArea } from "@/components/core/inputs/text-area";
 import { Checkbox } from "@/components/core/inputs/checkbox";
 import { Dropdown } from "@/components/core/inputs/dropdown";
 import { TextBox } from "@/components/core/inputs/text-box";
-import { Course, UserData } from "@/lib/schemas";
+import { Course, UserData } from "@/lib/schemas/database";
 import { Session } from "next-auth";
 
 const allTopics = [

@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { NotFoundError } from "@/lib/errors";
-import { fileSchema } from "@/lib/schemas";
+import { fileSchema } from "@/lib/schemas/database";
 import client from "@/lib/db";
 
 export async function getFileRecord(fileId: string, ownerId?: string) {

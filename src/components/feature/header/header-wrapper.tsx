@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { auth } from "@/lib/auth";
-import { getUserData } from "@/lib/database/auth";
+import { getUserData } from "@/lib/database-service/auth";
 import Header from "./header";
 import { redirect } from "next/navigation";
 

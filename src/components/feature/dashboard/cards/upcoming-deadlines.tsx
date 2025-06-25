@@ -1,5 +1,5 @@
 import React from "react";
-import { iconForType } from "../../../../constants"; // Import the icons
+import { iconForType } from "../../../../lib/constants"; // Import the icons
 import { PiConfetti } from "react-icons/pi";
 import { PropsForEveryDashboardCard } from "@/lib/interfaces";
 

@@ -1,4 +1,4 @@
-import { Course } from "@/lib/schemas";
+import { Course } from "@/lib/schemas/database";
 import { FiDownload, FiFileText, FiUsers, FiBookOpen, FiClipboard, FiBarChart2, FiMessageSquare } from "react-icons/fi";
 
 interface CourseSidebarProps {

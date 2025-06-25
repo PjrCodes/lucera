@@ -3,8 +3,8 @@ import fs from "node:fs/promises";
 import client from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { NextAuthRequest } from "next-auth";
-import { getUserData } from "@/lib/database/auth";
-import { fileSchema } from "@/lib/schemas";
+import { getUserData } from "@/lib/database-service/auth";
+import { fileSchema } from "@/lib/schemas/database";
 
 export const POST = auth(async function POST(req: NextAuthRequest) {
   try {
