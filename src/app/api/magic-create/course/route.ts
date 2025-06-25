@@ -74,8 +74,8 @@ export const POST = auth(
     } else {
       timeline = llmResult.data.timeline;
       units = llmResult.data.units;
-      courseStartDate = new Date(llmResult.data.startDate);
-      courseEndDate = new Date(llmResult.data.endDate);
+      courseStartDate = llmResult.data.startDate;
+      courseEndDate = llmResult.data.endDate;
       name = llmResult.data.name;
       description = llmResult.data.description;
       shortDescription = llmResult.data.shortDescription;

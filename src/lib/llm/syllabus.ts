@@ -40,6 +40,9 @@ export async function LLMSyllabusExtractor(
   try {
     const parsedResponse =
       syllabusExtractorLLMResponseSchema.parse(llmTextResponse);
+
+    // further parsing of content into DATE
+
     return {
       success: true,
       error: null,
