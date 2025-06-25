@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { iconForType } from "@/lib/constants";
 import { PrimaryButton } from "@/components/core/buttons/primary";
-import { PropsForEveryDashboardCard } from "@/lib/interfaces";
+import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
 
 interface Option {
   id: number;

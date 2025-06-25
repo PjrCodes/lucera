@@ -2,7 +2,7 @@
 import React from "react";
 import { iconForType } from "@/lib/constants";
 import { MdBookmarkBorder } from "react-icons/md";
-import { PropsForEveryDashboardCard } from "@/lib/interfaces";
+import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
 
 interface Bookmark {
   id: number;

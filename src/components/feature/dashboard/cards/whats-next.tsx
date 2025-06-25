@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { PropsForEveryDashboardCard } from "@/lib/interfaces";
+import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
 
 interface NextAction {
   id: number;

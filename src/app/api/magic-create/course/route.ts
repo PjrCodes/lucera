@@ -4,38 +4,26 @@ import { auth } from "@/lib/auth";
 import { NextAuthRequest } from "next-auth";
 import client from "@/lib/db";
 import { LLMSyllabusExtractor } from "@/lib/llm/syllabus";
-import { checkTeacherhood } from "@/lib/database-service/auth";
+import {
+  withTeacherSession,
+} from "@/lib/database-service/auth";
 import { getFileRecord } from "@/lib/database-service/files";
 import { fileIdSchema } from "@/lib/schemas/api";
+import { AuthenticatedSession } from "@/lib/types/auth";
+import { generateErrorMessage } from "zod-error";
 // import { CourseTimelineItem } from "@/lib/schemas";
 
 // Example: Parse a course file and create a course object
-export const POST = auth(async function POST(req: NextAuthRequest) {
-  if (!req.auth) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-  const session = req.auth;
-  if (!session.user || !session.user.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  try {
-    if (!(await checkTeacherhood(session.user.id))) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-    }
-  } catch {
-    return NextResponse.json(
-      { error: "Internal Server Error processing User Data" },
-      { status: 500 }
-    );
-  }
-
-  try {
+export const POST = auth(
+  withTeacherSession(async function POST(
+    req: NextAuthRequest,
+    session: AuthenticatedSession
+  ) {
     const body = await req.json();
     const parsedBody = fileIdSchema.safeParse(body);
     if (!parsedBody.success) {
       return NextResponse.json(
-        { error: parsedBody.error.message },
+        { error: generateErrorMessage(parsedBody.error.issues) },
         { status: 400 }
       );
     }
@@ -73,18 +61,8 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
       description: string | null,
       shortDescription: string | null;
 
-    try {
-      const llmResult = await LLMSyllabusExtractor(filePath);
-      timeline = llmResult.timeline;
-      units = llmResult.units;
-      courseStartDate = llmResult.courseStartDate;
-      courseEndDate = llmResult.courseEndDate;
-      name = llmResult.name;
-      description = llmResult.description;
-      shortDescription = llmResult.shortDescription;
-    } catch (llmError) {
-      console.error("LLM parsing failed:", llmError);
-      // Fallback values when LLM parsing fails
+    const llmResult = await LLMSyllabusExtractor(filePath);
+    if (!llmResult.success || !llmResult.data) {
       timeline = [];
       units = [];
       courseStartDate = null;
@@ -93,26 +71,34 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
       description =
         "Course description could not be automatically generated. Please edit this course to add details.";
       shortDescription = "Auto-generated course";
+    } else {
+      timeline = llmResult.data.timeline;
+      units = llmResult.data.units;
+      courseStartDate = new Date(llmResult.data.startDate);
+      courseEndDate = new Date(llmResult.data.endDate);
+      name = llmResult.data.name;
+      description = llmResult.data.description;
+      shortDescription = llmResult.data.shortDescription;
     }
 
     const db = client.db();
     const courseCollection = db.collection("courses");
     const courseRecord = await courseCollection.insertOne({
-      name: name || "Unnamed Course",
-      description: description || "No description provided",
-      shortDescription: shortDescription || "No short description provided",
+      name: name,
+      description: description,
+      shortDescription: shortDescription,
       syllabusFileId: fileId,
       createdAt: new Date(),
       updatedAt: new Date(),
       userId: session.user.id, // Assuming the user ID is available in the auth object
-      timeline: timeline || [],
-      units: units || [],
+      timeline: timeline,
+      units: units,
       cover_image: null,
       status: "draft",
       isPublished: false,
-      courseStartDate: courseStartDate || null,
-      courseEndDate: courseEndDate || null,
-      llmParsingFailed: !timeline && !units, // Flag to indicate if LLM parsing failed
+      courseStartDate: courseStartDate,
+      courseEndDate: courseEndDate,
+      llmParsingFailed: !llmResult.success,
       enrolledStudentCount: 0,
       completedStudentCount: 0,
       courseCode: "AUTOCODE",
@@ -151,10 +137,5 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
       success: true,
       courseId: courseRecord.insertedId,
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: (error as Error).message },
-      { status: 500 }
-    );
-  }
-});
+  })
+);

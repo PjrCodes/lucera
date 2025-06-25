@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
-import { PropsForEveryDashboardCard } from "@/lib/interfaces";
+import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
 import { getCoursesForUser } from "@/lib/database-service/courses";
 
 export default async function Courses({

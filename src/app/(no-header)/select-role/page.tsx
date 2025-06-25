@@ -1,6 +1,6 @@
 import React from "react";
 import Form from "next/form";
-import { serverSideRedirectUnauthenticated } from "@/lib/auth";
+import { serverSideRedirectUnauthenticated } from "@/lib/database-service/auth";
 import client from "@/lib/db";
 import { redirect } from "next/navigation";
 import defaults from "@/appdata/defaults.json";

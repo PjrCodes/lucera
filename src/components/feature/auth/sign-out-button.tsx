@@ -4,7 +4,7 @@ import { SecondaryButton } from "../../core/buttons/secondary";
 
 export default function SignOut() {
   return (
-    <SecondaryButton variant={"outline"} onClick={() => signOut()}>
+    <SecondaryButton onClick={() => signOut()}>
       Sign Out
     </SecondaryButton>
   );

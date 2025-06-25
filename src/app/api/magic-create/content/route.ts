@@ -2,47 +2,26 @@ import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import { auth } from "@/lib/auth";
 import { NextAuthRequest } from "next-auth";
+import { AuthenticatedSession } from "@/lib/types/auth";
 import client from "@/lib/db";
 
 import { LLMContentExtractor } from "@/lib/llm/content";
-import { checkTeacherhood } from "@/lib/database-service/auth";
 import { getFileRecord } from "@/lib/database-service/files";
-
-import { z } from "zod";
 import { getCourseById } from "@/lib/database-service/courses";
+import { MagicCreateContentRequestSchema } from "@/lib/schemas/api";
+import { withTeacherSession } from "@/lib/database-service/auth";
+import { generateErrorMessage } from "zod-error";
 
-const schema = z.object({
-  fileId: z.string().min(1, "File ID is required"),
-  courseId: z.string().min(1, "Course ID is required"),
-});
-
-// Example: Parse a course file and create a course object
-export const POST = auth(async function POST(req: NextAuthRequest) {
-  if (!req.auth) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-  const session = req.auth;
-  if (!session.user || !session.user.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  try {
-    if (!(await checkTeacherhood(session.user.id))) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-    }
-  } catch {
-    return NextResponse.json(
-      { error: "Internal Server Error processing User Data" },
-      { status: 500 }
-    );
-  }
-
-  try {
+export const POST = auth(
+  withTeacherSession(async function POST(
+    req: NextAuthRequest,
+    session: AuthenticatedSession
+  ) {
     const body = await req.json();
-    const parsedBody = schema.safeParse(body);
+    const parsedBody = MagicCreateContentRequestSchema.safeParse(body);
     if (!parsedBody.success) {
       return NextResponse.json(
-        { error: parsedBody.error.message },
+        { error: generateErrorMessage(parsedBody.error.issues) },
         { status: 400 }
       );
     }
@@ -51,12 +30,12 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
     // query from the database to get the file path
     let fileRecord;
     try {
-        fileRecord = await getFileRecord(fileId, session.user.id);
+      fileRecord = await getFileRecord(fileId, session.user.id);
     } catch {
-        return NextResponse.json(
-            { error: "One of several errors." },
-            { status: 500 }
-        );
+      return NextResponse.json(
+        { error: "One of several errors." },
+        { status: 500 }
+      );
     }
     const filePath = fileRecord.path;
     // ensure the file exists
@@ -72,30 +51,28 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
     // const allText = await readPdfText(filePath);
 
     // Call LLM parse apis with error handling
-    let title, shortDescription, description;
+    let title, description;
     let topics: number[] = [];
 
     const courseRecord = await getCourseById(courseId);
-    try {
-      const llmResult = await LLMContentExtractor(filePath, courseRecord);
-      title = llmResult.title;
-      shortDescription = llmResult.shortDescription;
-      description = llmResult.description;
-      topics = llmResult.topics;
-    } catch (llmError) {
-      console.error("LLM parsing failed:", llmError);
-      // Fallback values when LLM parsing fails
+
+    const llmResult = await LLMContentExtractor(filePath, courseRecord);
+    if (!llmResult.success || !llmResult.data) {
       title = "Enter Course Title";
-      description = "Course description could not be automatically generated. Please edit this course to add details.";
-      shortDescription = "";
+      description =
+        "Course description could not be automatically generated. Please edit this course to add details.";
       topics = [];
+    } else {
+      title = llmResult.data.title;
+      description = llmResult.data.description;
+      topics = llmResult.data.topics;
     }
+
     const db = client.db();
     const contentRecord = await db.collection("content").insertOne({
       courseId: courseId,
       title: title,
       description: description,
-      shortDescription: shortDescription,
       topics: topics,
       fileId: fileId,
       createdBy: session.user.id,
@@ -115,10 +92,5 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
       message: "Content created successfully",
       status: "success",
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: (error as Error).message },
-      { status: 500 }
-    );
-  }
-});
+  })
+);

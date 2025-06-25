@@ -1,7 +1,7 @@
 import React from "react";
 import { iconForType } from "../../../../lib/constants"; // Import the icons
 import { PiConfetti } from "react-icons/pi";
-import { PropsForEveryDashboardCard } from "@/lib/interfaces";
+import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
 
 interface Deadline {
   id: number;

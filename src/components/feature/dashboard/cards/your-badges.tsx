@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { PropsForEveryDashboardCard } from "@/lib/interfaces";
+import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
 
 // Mock badge data for demonstration
 const mockBadges = [

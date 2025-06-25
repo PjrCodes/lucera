@@ -1,6 +1,6 @@
 import React from "react";
 import { MdWarningAmber } from "react-icons/md";
-import { PropsForEveryDashboardCard } from "@/lib/interfaces";
+import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
 
 interface Alert {
   id: number;

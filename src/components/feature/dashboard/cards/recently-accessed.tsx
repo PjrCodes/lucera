@@ -1,4 +1,4 @@
-import { PropsForEveryDashboardCard } from "@/lib/interfaces";
+import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
 import React from "react";
 
 // Mocked data for recently accessed courses/resources

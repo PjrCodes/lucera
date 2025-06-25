@@ -1,7 +1,16 @@
 import client from "@/lib/db";
-import { NotFoundError, InvalidDataError, InvalidCredentials } from "@/lib/errors";
+import {
+  NotFoundError,
+  InvalidDataError,
+  InvalidCredentials,
+} from "@/lib/errors";
 import { userDataSchema } from "@/lib/schemas/database";
 import { User } from "next-auth";
+import { NextResponse } from "next/server";
+import { NextAuthRequest } from "next-auth";
+import { AuthenticatedSession } from "@/lib/types/auth";
+import { auth } from "../auth";
+import { redirect } from "next/navigation";
 
 export async function getUserData(userId: string) {
   const db = client.db();
@@ -15,7 +24,7 @@ export async function getUserData(userId: string) {
 
   if (!parsedUser.success) {
     console.error("Invalid user data format:", parsedUser.error);
-    throw new InvalidDataError("Invalid user data format");
+    throw new InvalidDataError("Invalid user data format: " + parsedUser.error.message);
   }
 
   // remove the _id field from the parsed user data
@@ -58,4 +67,50 @@ export async function addUserToDb(user: User, password: string) {
     password: password,
   });
   return result;
+}
+
+export function withTeacherSession(
+  handler: (
+    req: NextAuthRequest,
+    session: AuthenticatedSession
+  ) => Promise<Response>
+) {
+  return async function (req: NextAuthRequest) {
+    if (!req.auth) {
+      return NextResponse.json(
+        { error: "Unauthorized: No authentication provided" },
+        { status: 401 }
+      );
+    }
+    const session = req.auth;
+    if (!session.user || !session.user.id) {
+      return NextResponse.json(
+        { error: "Unauthorized: No user information found" },
+        { status: 401 }
+      );
+    }
+    try {
+      if (!(await checkTeacherhood(session.user.id))) {
+        return NextResponse.json(
+          { error: "Forbidden: User is not a teacher" },
+          { status: 403 }
+        );
+      }
+    } catch {
+      return NextResponse.json(
+        { error: "Internal Error: Server error processing user data" },
+        { status: 500 }
+      );
+    }
+
+    return handler(req, session as AuthenticatedSession);
+  };
+}
+
+export async function serverSideRedirectUnauthenticated(): Promise<AuthenticatedSession> {
+  const session = await auth();
+  if (!session || !session.user || !session.user.id) {
+    redirect("/");
+  }
+  return session as AuthenticatedSession;
 }
