@@ -118,8 +118,8 @@ export const syllabusExtractorSchema = {
 export const syllabusExtractorLLMResponseSchema = z.object({
   name: z.string(),
   courseCode: z.string(),
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
+  courseStartDate: z.coerce.date(),
+  courseEndDate: z.coerce.date(),
   description: z.string(),
   shortDescription: z.string(),
   units: z.array(

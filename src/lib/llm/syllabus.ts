@@ -15,11 +15,9 @@ const syllabusExtractorSystemPrompt = fs.readFileSync(
   "utf-8"
 );
 
-interface LLMSyllabusExtractorResult {
-  success: boolean;
-  error: string | null;
-  data: ExtractedSyllabus | null;
-}
+type LLMSyllabusExtractorResult =
+  | { success: true; error: null; data: ExtractedSyllabus }
+  | { success: false; error: string; data: null };
 
 export async function LLMSyllabusExtractor(
   fileBuffer: Buffer
