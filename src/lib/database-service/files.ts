@@ -9,10 +9,19 @@ export async function getFileRecord(fileId: string, ownerId?: string) {
   let fileRecord;
 
   if (ownerId) {
+    // either file is owned by the user
     fileRecord = await collection.findOne({
       _id: new ObjectId(fileId),
       userId: ownerId,
     });
+    // or it is a public file
+    if (!fileRecord) {
+      fileRecord = await collection.findOne({
+        _id: new ObjectId(fileId),
+        type: { $in: ["syllabus", "assignment", "content"] },
+      });
+    }
+    // if the file will still not be found, error will be thrown below.
   } else {
     // public file access
     fileRecord = await collection.findOne({
@@ -27,7 +36,7 @@ export async function getFileRecord(fileId: string, ownerId?: string) {
   const parsedFileRecord = fileSchema.safeParse(fileRecord);
   if (!parsedFileRecord.success) {
     console.error(
-      "[GET_FILE] FATAL: Invalid file record format:",
+      "[LIB_GET_FILE] FATAL: Invalid file record format:",
       parsedFileRecord.error
     );
     throw new Error("Invalid file record format");

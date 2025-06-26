@@ -24,7 +24,7 @@ export const GET = auth(
     let fileRecord;
     try {
       // Get file record from database
-      fileRecord = await getFileRecord(fileId);
+      fileRecord = await getFileRecord(fileId, session.user.id);
       if (!fileRecord) {
         return NextResponse.json({ error: "File not found" }, { status: 404 });
       }
