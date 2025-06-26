@@ -1,11 +1,9 @@
 "use client";
 
-
-import React from "react";
-import { useFormState } from "react-dom";
+import React, { useActionState } from "react";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { RadioGroup, RadioItem } from "@/components/core/inputs/radio";
-import { setUserRole } from "../../../app/(no-header)/select-role/page";
+import { setUserRole } from "@/components/feature/profile/select-role-action";
 
 export default function SelectRoleClient({
   searchParams,
@@ -14,7 +12,7 @@ export default function SelectRoleClient({
   searchParams?: Record<string, string | string[] | undefined>;
   currentRole: string | null;
 }) {
-  const [state, formAction] = useFormState(setUserRole, { success: false });
+  const [state, formAction] = useActionState(setUserRole, { success: false });
 
   return (
     <form action={formAction} className="space-y-4">
@@ -35,14 +33,11 @@ export default function SelectRoleClient({
           <RadioItem value="student">Student</RadioItem>
           <RadioItem value="teacher">Teacher</RadioItem>
         </RadioGroup>
-        {state.errors?.role && (
-          <p className="text-red-600 text-sm">{state.errors.role[0]}</p>
-        )}
       </div>
 
-      {state.message && !state.success && (
+      {state.error && !state.success && (
         <div className="text-red-600 text-sm bg-red-50 p-3 rounded-md">
-          {state.message}
+          {state.error}
         </div>
       )}
 

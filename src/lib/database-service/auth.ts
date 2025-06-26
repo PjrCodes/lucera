@@ -11,6 +11,7 @@ import { NextAuthRequest } from "next-auth";
 import { AuthenticatedSession } from "@/lib/types/auth";
 import { auth } from "../auth";
 import { redirect } from "next/navigation";
+import defaults from "@/appdata/defaults.json";
 
 export async function getUserData(userId: string) {
   const db = client.db();
@@ -156,4 +157,45 @@ export async function serverComponentRedirectUnauthenticated(): Promise<Authenti
     redirect("/");
   }
   return session as AuthenticatedSession;
+}
+
+export async function setUserRoleInDb(
+  reason: "newuser" | undefined,
+  userId: string,
+  role: "student" | "teacher",
+): Promise<void> {
+  const db = client.db();
+  const customUserDataCollection = db.collection("user_data");
+  const dbreq = await customUserDataCollection.updateOne(
+    { id: userId },
+    reason === "newuser"
+      ? {
+          $set: {
+            role: role,
+            dashboardLayout:
+              role === "teacher"
+                ? defaults.dashboardLayout.teacher
+                : defaults.dashboardLayout.student,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            relatedCourses: [],
+            relatedFiles: [],
+          },
+        }
+      : {
+          $set: {
+            role: role,
+            updatedAt: new Date(),
+          },
+        },
+    { upsert: true }
+  );
+
+  if (dbreq.acknowledged) {
+    console.log(
+      `User role updated successfully for user ${userId} to ${role}.`
+    );
+  } else {
+    throw new Error("Failed to update user role in the database.");
+  }
 }
