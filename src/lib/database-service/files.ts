@@ -57,31 +57,103 @@ export async function loadFileFromDiskById(
   try {
     fileRecord = await getFileRecord(fileId, ownerId);
   } catch (error) {
-    return { error: NextResponse.json(
-      { error: "Failed to retrieve file record", detailedError: error },
-      { status: 500 }
-    ) 
-  };
+    return {
+      error: NextResponse.json(
+        { error: "Failed to retrieve file record", detailedError: error },
+        { status: 500 }
+      ),
+    };
   }
   // Construct the full file path
   const filePath = path.join(process.cwd(), fileRecord.path);
   // Check if file exists
   if (!fs.existsSync(filePath)) {
-    return { error: NextResponse.json(
-      { error: "File not found on disk" },
-      { status: 404 }
-    ) };
+    return {
+      error: NextResponse.json(
+        { error: "File not found on disk" },
+        { status: 404 }
+      ),
+    };
   }
   let fileBuffer;
   try {
     // Read the file
     fileBuffer = fs.readFileSync(filePath);
   } catch {
-    return {error: NextResponse.json(
-      { error: "Failed to read file from disk" },
-      { status: 500 }
-    )};
+    return {
+      error: NextResponse.json(
+        { error: "Failed to read file from disk" },
+        { status: 500 }
+      ),
+    };
   }
 
-  return {fileBuffer: fileBuffer, fileRecord: fileRecord} ;
+  return { fileBuffer: fileBuffer, fileRecord: fileRecord };
+}
+
+export async function uploadFile(
+  userId: string,
+  file: File,
+  content_type: string
+) {
+  const fileBuffer = new Uint8Array(await file.arrayBuffer());
+  
+  try {
+    await fs.promises.writeFile(`./data/uploads/${file.name}`, fileBuffer);
+  } catch (e) {
+    console.error("Error writing file:", e);
+    return NextResponse.json(
+      { status: "failed", error: "Failed to write file to disk" },
+      { status: 500 }
+    );
+  }
+
+  const parsedFile = fileSchema.safeParse({
+    name: file.name,
+    size: file.size,
+    file_type: file.type,
+    path: `./data/uploads/${file.name}`,
+    userId: userId,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    type: content_type,
+  });
+
+  if (!parsedFile.success) {
+    return NextResponse.json(
+      {
+        status: "failed",
+        error: parsedFile.error?.message || "Invalid file data",
+      },
+      { status: 400 }
+    );
+  }
+
+  const db = client.db();
+  const collection = db.collection("files");
+  let insertedObject;
+  try {
+    insertedObject = await collection.insertOne(parsedFile.data);
+  } catch (e) {
+    console.error("Error inserting file record into database:", e);
+    return NextResponse.json(
+      {
+        status: "failed",
+        error: "Failed to insert file record into database",
+      },
+      { status: 500 }
+    );
+  }
+  if (!insertedObject.acknowledged) {
+    return NextResponse.json(
+      { status: "failed", error: "Failed to insert file record" },
+      { status: 500 }
+    );
+  }
+
+  console.log("File uploaded and record created:", insertedObject);
+  return NextResponse.json(
+    { status: "success", fileId: insertedObject.insertedId.toString() },
+    { status: 200 }
+  );
 }
