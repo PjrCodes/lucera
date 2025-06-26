@@ -150,7 +150,7 @@ export function withAuthorisation(
   };
 }
 
-export async function serverSideRedirectUnauthenticated(): Promise<AuthenticatedSession> {
+export async function serverComponentRedirectUnauthenticated(): Promise<AuthenticatedSession> {
   const session = await auth();
   if (!session || !session.user || !session.user.id) {
     redirect("/");

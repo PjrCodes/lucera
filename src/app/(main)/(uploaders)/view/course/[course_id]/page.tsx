@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import { notFound } from "next/navigation";
 import client from "@/lib/db";
-import { serverSideRedirectUnauthenticated } from "@/lib/database-service/auth";
+import { serverComponentRedirectUnauthenticated } from "@/lib/database-service/auth";
 import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
 import CourseHeader from "@/components/feature/course/cards/course-header";
 import { Course } from "@/lib/schemas/database";
@@ -30,7 +30,7 @@ export default async function CourseViewPage({
 }: {
   params: Promise<{ course_id: string }>;
 }) {
-  const session = await serverSideRedirectUnauthenticated();
+  const session = await serverComponentRedirectUnauthenticated();
   if (!session?.user?.id) {
     return notFound();
   }

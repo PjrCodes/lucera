@@ -1,55 +1,97 @@
+"use server";
+
 import React from "react";
-import Form from "next/form";
-import { serverSideRedirectUnauthenticated } from "@/lib/database-service/auth";
+import { serverComponentRedirectUnauthenticated } from "@/lib/database-service/auth";
 import client from "@/lib/db";
 import { redirect } from "next/navigation";
+import SelectRoleClient from "../../../components/feature/profile/select-role-client";
 import defaults from "@/appdata/defaults.json";
-import { SecondaryButton } from "@/components/core/buttons/secondary";
-import { RadioGroup, RadioItem } from "@/components/core/inputs/radio";
+import { z } from "zod";
 
-async function setUserRole(data: FormData) {
+const setUserRoleSchema = z.object({
+  role: z.enum(["student", "teacher"], {
+    required_error: "Please select a role",
+    invalid_type_error: "Invalid role selected",
+  }),
+  reason: z.string().optional(),
+  callbackUrl: z.string().optional(),
+});
+
+export type FormState = {
+  errors?: {
+    role?: string[];
+    reason?: string[];
+    callbackUrl?: string[];
+  };
+  message?: string;
+  success?: boolean;
+};
+
+export async function setUserRole(
+  prevState: FormState,
+  data: FormData
+): Promise<FormState> {
   "use server";
 
-  const role = data.get("role");
-
-  if (role !== "student" && role !== "teacher") {
-    throw new Error("Invalid role selected");
+  // Let Zod handle FormData directly
+  const parsedData = setUserRoleSchema.safeParse(
+    Object.fromEntries(data.entries())
+  );
+  if (!parsedData.success) {
+    return {
+      errors: parsedData.error.flatten().fieldErrors,
+      message: "Validation failed",
+      success: false,
+    };
   }
 
-  const session = await serverSideRedirectUnauthenticated();
+  try {
+    const session = await serverComponentRedirectUnauthenticated();
 
-  // Update the user's role in the database
-  const db = client.db();
-  const customUserDataCollection = db.collection("user_data");
-  await customUserDataCollection.updateOne(
-    { id: session.user.id },
-    data.get("reason") === "newuser"
-      ? {
-          $set: {
-            role: role,
-            updatedAt: new Date(),
-            dashboardLayout:
-              role === "teacher"
-                ? defaults.dashboardLayout.teacher
-                : defaults.dashboardLayout.student,
-            createdAt: new Date(),
-            relatedCourses: [],
-            relatedFiles: [],
+    // Update the user's role in the database
+    const db = client.db();
+    const customUserDataCollection = db.collection("user_data");
+    await customUserDataCollection.updateOne(
+      { id: session.user.id },
+      parsedData.data.reason === "newuser"
+        ? {
+            $set: {
+              role: parsedData.data.role,
+              dashboardLayout:
+                parsedData.data.role === "teacher"
+                  ? defaults.dashboardLayout.teacher
+                  : defaults.dashboardLayout.student,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              relatedCourses: [],
+              relatedFiles: [],
+            },
+          }
+        : {
+            $set: {
+              role: parsedData.data.role,
+              updatedAt: new Date(),
+            },
           },
-        }
-      : {
-          $set: {
-            role: role,
-            updatedAt: new Date(),
-          },
-        },
-    { upsert: true }
-  );
+      { upsert: true }
+    );
 
-  return redirect((data.get("callbackUrl") as string) || "/");
+    redirect(parsedData.data.callbackUrl || "/");
+  } catch (error) {
+    // if eerror is NEXT_REDIRECT then throw it
+    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
+      throw error;
+    }
+    
+    console.error("Database error:", error);
+    return {
+      message: "Failed to update user role. Please try again.",
+      success: false,
+    };
+  }
 }
 
-// Accept searchParams as a prop to receive query parameters
+// Server component for data fetching and rendering the client component
 export default async function SelectRolePage({
   searchParams,
 }: {
@@ -57,7 +99,7 @@ export default async function SelectRolePage({
 }) {
   const ourSearchParams = await searchParams;
   // restrict page to authenticated users only
-  const session = await serverSideRedirectUnauthenticated();
+  const session = await serverComponentRedirectUnauthenticated();
 
   // set role in the picker based on the database stored role
   let currentRole: string | null = null;
@@ -80,31 +122,19 @@ export default async function SelectRolePage({
     <main className="h-screen">
       <div className="max-w-md mx-auto my-12 p-8 border border-gray-200 rounded-lg">
         <h1 className="text-2xl font-bold mb-6">Select Your Role</h1>
-        <Form action={setUserRole} className="space-y-4">
-          {/* Add hidden fields for each query param */}
-          {ourSearchParams &&
-            Object.entries(ourSearchParams).map(([key, value]) =>
-              Array.isArray(value) ? (
-                value.map((v, i) => (
-                  <input key={key + i} type="hidden" name={key} value={v} />
-                ))
-              ) : (
-                <input key={key} type="hidden" name={key} value={value ?? ""} />
-              )
-            )}
-          <RadioGroup name="role" defaultValue={currentRole || undefined}>
-            <RadioItem value="student">
-              Student
-            </RadioItem>
-            <RadioItem value="teacher">
-              Teacher
-            </RadioItem>
-          </RadioGroup>
-            <SecondaryButton type="submit">
-            Continue
-            </SecondaryButton>
-        </Form>
+        <SelectRoleClient
+          searchParams={ourSearchParams}
+          currentRole={currentRole}
+        />
       </div>
     </main>
   );
 }
+
+
+
+
+
+
+
+

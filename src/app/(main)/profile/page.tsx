@@ -1,7 +1,7 @@
 import React from "react";
 import {
   getUserData,
-  serverSideRedirectUnauthenticated,
+  serverComponentRedirectUnauthenticated,
 } from "@/lib/database-service/auth";
 import SetHeaderClientComponent from "../../../components/feature/header/set-header-client-component"; // Added import
 import SignOut from "@/components/feature/auth/sign-out-button";
@@ -10,7 +10,7 @@ import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { Edit } from "lucide-react";
 
 export default async function ProfilePage() {
-  const session = await serverSideRedirectUnauthenticated();
+  const session = await serverComponentRedirectUnauthenticated();
 
   const userData = await getUserData(session.user.id);
 
