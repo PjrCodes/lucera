@@ -1,12 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ObjectId } from "mongodb";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 import client from "@/lib/db";
 import { serverSideRedirectUnauthenticated } from "@/lib/database-service/auth";
 import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
 import CourseHeader from "@/components/feature/course/cards/course-header";
-import { CourseHeaderSkeleton } from "@/components/feature/course/course-skeleton";
 import { Course } from "@/lib/schemas/database";
 import { getUserData } from "@/lib/database-service/auth";
 import CourseTabs from "@/components/feature/course/course-tabs";

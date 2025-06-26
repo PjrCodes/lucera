@@ -1,5 +1,4 @@
 import { GoogleGenAI } from "@google/genai";
-import fs from "fs";
 
 export async function callLLMWithSchema(
   responseSchema: object,

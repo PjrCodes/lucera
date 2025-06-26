@@ -1,7 +1,6 @@
 import { ObjectId } from "mongodb";
 import client from "../db";
-import { contentSchema } from "../schemas/database";
-import { getCourseById } from "./courses";
+import { contentSchema, ContentWithEmbeddedFile } from "../schemas/database";
 import { getFileRecord } from "./files";
 
 export async function getContentById(courseId: string) {
@@ -22,61 +21,42 @@ export async function getContentById(courseId: string) {
   }
 }
 
-export async function getContentForCourse(courseId: string) {
+export async function getContentForCourse(
+  courseId: string
+): Promise<ContentWithEmbeddedFile[]> {
   const contents = await client
     .db()
     .collection("content")
     .find({ courseId: courseId })
     .toArray();
-  const course_syllabus = await getCourseById(courseId);
-  const syllabusFileID = course_syllabus.syllabusFileId;
-
-  if (!syllabusFileID) {
-    throw new Error("Syllabus file ID is missing for this course");
-  }
-  const syllabusFile = await getFileRecord(syllabusFileID);
 
   try {
-    const parsedContents = await Promise.all(contents.map(async (content) => {
-      const parsedData = contentSchema.parse(content);
-      if (parsedData._id instanceof ObjectId) {
-        parsedData._id = parsedData._id.toString();
-      }
-
-      // Get file details if fileId exists
-      let fileDetails = null;
-      if (parsedData.fileId) {
-        try {
-          const file = await getFileRecord(parsedData.fileId);
-          fileDetails = {
-            fileName: file.name,
-            filePath: file.path,
-            fileType: file.type,
-            size: file.size,
-            downloadUrl: `/api/files/download/${parsedData.fileId}`,
-          };
-        } catch (error) {
-          console.error("Error fetching file details:", error);
+    const parsedContents = await Promise.all(
+      contents.map(async (content) => {
+        const parsedData = contentSchema.parse(content);
+        if (parsedData._id instanceof ObjectId) {
+          parsedData._id = parsedData._id.toString();
         }
-      }
 
-      return {
-        ...parsedData,
-        file: fileDetails,
-      };
-    }));
+        // Get file details if fileId exists
+        let file = null;
+        if (parsedData.fileId) {
+          try {
+            file = await getFileRecord(parsedData.fileId);
+          } catch (error) {
+            console.error("Error fetching file details:", error);
+            throw new Error("File not found or invalid file ID");
+          }
+        }
 
-    return {
-      syllabus: {
-        fileName: syllabusFile.name,
-        filePath: syllabusFile.path,
-        fileType: syllabusFile.type,
-        size: syllabusFile.size,
-        uploadDate: syllabusFile.createdAt,
-        downloadUrl: `/api/files/download/${syllabusFileID}`,
-      },
-      contents: parsedContents,
-    };
+        return {
+          ...parsedData,
+          file: file,
+        } as ContentWithEmbeddedFile;
+      })
+    );
+
+    return parsedContents;
   } catch (error) {
     console.error("Error parsing content:", error);
     throw new Error("Invalid content data format");
