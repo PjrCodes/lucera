@@ -8,7 +8,7 @@ import {
   withTeacherSession,
 } from "@/lib/database-service/auth";
 import { getFileRecord } from "@/lib/database-service/files";
-import { fileIdSchema } from "@/lib/schemas/api";
+import { MagicCreateCourseRequestSchema } from "@/lib/schemas/api";
 import { AuthenticatedSession } from "@/lib/types/auth";
 import { generateErrorMessage } from "zod-error";
 // import { CourseTimelineItem } from "@/lib/schemas";
@@ -20,7 +20,7 @@ export const POST = auth(
     session: AuthenticatedSession
   ) {
     const body = await req.json();
-    const parsedBody = fileIdSchema.safeParse(body);
+    const parsedBody = MagicCreateCourseRequestSchema.safeParse(body);
     if (!parsedBody.success) {
       return NextResponse.json(
         { error: generateErrorMessage(parsedBody.error.issues) },

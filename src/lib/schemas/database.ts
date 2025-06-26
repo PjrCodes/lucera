@@ -10,7 +10,7 @@ export const fileSchema = z.object({
   userId: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  type: z.string(),
+  type: z.enum(["syllabus", "content", "assignment", "solved_assignment", "graded_assignment"]),
 });
 
 export type CustomFile = z.infer<typeof fileSchema>;

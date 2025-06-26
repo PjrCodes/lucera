@@ -24,7 +24,9 @@ export async function getUserData(userId: string) {
 
   if (!parsedUser.success) {
     console.error("Invalid user data format:", parsedUser.error);
-    throw new InvalidDataError("Invalid user data format: " + parsedUser.error.message);
+    throw new InvalidDataError(
+      "Invalid user data format: " + parsedUser.error.message
+    );
   }
 
   // remove the _id field from the parsed user data
@@ -72,10 +74,18 @@ export async function addUserToDb(user: User, password: string) {
 export function withTeacherSession(
   handler: (
     req: NextAuthRequest,
-    session: AuthenticatedSession
+    session: AuthenticatedSession,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    params: Promise<any>
   ) => Promise<Response>
 ) {
-  return async function (req: NextAuthRequest) {
+  return async function (
+    req: NextAuthRequest,
+    ctx: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      params: Promise<any>;
+    }
+  ) {
     if (!req.auth) {
       return NextResponse.json(
         { error: "Unauthorized: No authentication provided" },
@@ -103,7 +113,40 @@ export function withTeacherSession(
       );
     }
 
-    return handler(req, session as AuthenticatedSession);
+    return handler(req, session as AuthenticatedSession, ctx?.params);
+  };
+}
+
+export function withAuthorisation(
+  handler: (
+    req: NextAuthRequest,
+    session: AuthenticatedSession,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    params: Promise<any>
+  ) => Promise<Response>
+) {
+  return async function (
+    req: NextAuthRequest,
+    ctx: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      params: Promise<any>;
+    }
+  ) {
+    if (!req.auth) {
+      return NextResponse.json(
+        { error: "Unauthorized: No authentication provided" },
+        { status: 401 }
+      );
+    }
+    const session = req.auth;
+    if (!session.user || !session.user.id) {
+      return NextResponse.json(
+        { error: "Unauthorized: No user information found" },
+        { status: 401 }
+      );
+    }
+
+    return handler(req, session as AuthenticatedSession, ctx?.params);
   };
 }
 

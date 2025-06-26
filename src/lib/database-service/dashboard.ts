@@ -41,7 +41,7 @@ export async function saveDashboardLayout(userId: string, layout: DashboardLayou
       { upsert: true }
     );
   } catch (error) {
-    console.error("Error saving dashboard layout:", error);
+    console.error("[LIB_SAVE_DASHBOARD_LAYOUT] Error saving dashboard layout:", error);
     throw new Error("Failed to save dashboard layout");
   }
 }

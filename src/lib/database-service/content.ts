@@ -54,7 +54,6 @@ export async function getContentForCourse(courseId: string) {
             fileType: file.type,
             size: file.size,
             downloadUrl: `/api/files/download/${parsedData.fileId}`,
-            viewUrl: `/api/files/view/${parsedData.fileId}`,
           };
         } catch (error) {
           console.error("Error fetching file details:", error);
@@ -75,7 +74,6 @@ export async function getContentForCourse(courseId: string) {
         size: syllabusFile.size,
         uploadDate: syllabusFile.createdAt,
         downloadUrl: `/api/files/download/${syllabusFileID}`,
-        viewUrl: `/api/files/view/${syllabusFileID}`,
       },
       contents: parsedContents,
     };
