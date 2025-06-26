@@ -22,7 +22,7 @@ interface LLMSyllabusExtractorResult {
 }
 
 export async function LLMSyllabusExtractor(
-  filePath: string
+  fileBuffer: Buffer
 ): Promise<LLMSyllabusExtractorResult> {
   // save the text to a file for debugging purposes
 
@@ -31,7 +31,7 @@ export async function LLMSyllabusExtractor(
     syllabusExtractorSystemPrompt,
     syllabusExtractorUserPrompt,
     {
-      filePath,
+      fileBuffer: fileBuffer,
       fileName: "syllabus.pdf",
       mimeType: "application/pdf",
     }

@@ -16,14 +16,12 @@ const contentExtractorSystemPrompt = fs.readFileSync(
   "utf-8"
 );
 
-interface LLMContentExtractorResult {
-  success: boolean;
-  error: string | null;
-  data: ExtractedContent | null;
-}
+type LLMContentExtractorResult =
+  | { success: true; error: null; data: ExtractedContent }
+  | { success: false; error: string; data: null };
 
 export async function LLMContentExtractor(
-  filePath: string,
+  fileBuffer: Buffer,
   course: Course
 ): Promise<LLMContentExtractorResult> {
   let counter = 1;
@@ -36,7 +34,7 @@ export async function LLMContentExtractor(
     contentExtractorSystemPrompt,
     contentExtractorUserPrompt.replace("INSERT_TOPIC_LIST_HERE", topicList),
     {
-      filePath,
+      fileBuffer: fileBuffer,
       fileName: "content.pdf",
       mimeType: "application/pdf",
     }

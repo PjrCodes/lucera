@@ -6,7 +6,7 @@ export async function callLLMWithSchema(
   systemPrompt: string,
   userPrompt: string,
   fileDetails: {
-    filePath: string;
+    fileBuffer: Buffer;
     fileName: string;
     mimeType: string;
   } | null
@@ -34,9 +34,7 @@ export async function callLLMWithSchema(
         ? [
             {
               inlineData: {
-                data: Buffer.from(
-                  fs.readFileSync(fileDetails.filePath)
-                ).toString("base64"),
+                data: fileDetails.fileBuffer.toString("base64"),
                 filename: fileDetails.fileName,
                 mimeType: fileDetails.mimeType,
               },

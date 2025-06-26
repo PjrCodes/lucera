@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
-import fs from "fs/promises";
 import { auth } from "@/lib/auth";
 import { NextAuthRequest } from "next-auth";
 import client from "@/lib/db";
 import { LLMSyllabusExtractor } from "@/lib/llm/syllabus";
+import { withTeacherSession } from "@/lib/database-service/auth";
 import {
-  withTeacherSession,
-} from "@/lib/database-service/auth";
-import { getFileRecord } from "@/lib/database-service/files";
+  loadFileFromDiskById,
+} from "@/lib/database-service/files";
 import { MagicCreateCourseRequestSchema } from "@/lib/schemas/api";
 import { AuthenticatedSession } from "@/lib/types/auth";
 import { generateErrorMessage } from "zod-error";
@@ -30,27 +29,10 @@ export const POST = auth(
     const { fileId } = parsedBody.data;
 
     // query from the database to get the file path
-    let fileRecord;
-    try {
-      fileRecord = await getFileRecord(fileId, session.user.id);
-    } catch {
-      return NextResponse.json(
-        { error: "One of several errors." },
-        { status: 500 }
-      );
+    const loadResponse = await loadFileFromDiskById(fileId, session.user.id);
+    if (loadResponse.error) {
+      return loadResponse.error;
     }
-    const filePath = fileRecord.path;
-    // ensure the file exists
-    try {
-      await fs.access(filePath);
-    } catch (error) {
-      return NextResponse.json(
-        { error: "File does not exist", detailedError: error },
-        { status: 404 }
-      );
-    }
-
-    // const allText = await readPdfText(filePath);
 
     // Call LLM parse apis with error handling
     let timeline: object[],
@@ -61,13 +43,13 @@ export const POST = auth(
       description: string | null,
       shortDescription: string | null;
 
-    const llmResult = await LLMSyllabusExtractor(filePath);
+    const llmResult = await LLMSyllabusExtractor(loadResponse.fileBuffer);
     if (!llmResult.success || !llmResult.data) {
       timeline = [];
       units = [];
       courseStartDate = null;
       courseEndDate = null;
-      name = `Course from ${fileRecord.name || "uploaded file"}`;
+      name = `Course from ${loadResponse.fileRecord.name || "uploaded file"}`;
       description =
         "Course description could not be automatically generated. Please edit this course to add details.";
       shortDescription = "Auto-generated course";

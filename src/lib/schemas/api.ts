@@ -11,3 +11,8 @@ export const MagicCreateContentRequestSchema = z.object({
 });
 
 export const UpdateDashboardLayoutRequestSchema = dashboardLayoutSchema;
+
+export const MagicCreateAssignmentRequestSchema = z.object({
+  fileId: z.string().min(1, "File ID is required"),
+  courseId: z.string().min(1, "Course ID is required"),
+});
