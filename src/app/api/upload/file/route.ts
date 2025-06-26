@@ -3,59 +3,38 @@ import fs from "node:fs/promises";
 import client from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { NextAuthRequest } from "next-auth";
-import { getUserData } from "@/lib/database-service/auth";
+import { getUserData, withAuthorisation } from "@/lib/database-service/auth";
 import { fileSchema } from "@/lib/schemas/database";
+import { AuthenticatedSession } from "@/lib/types/auth";
+import { UploadFileRequestSchema } from "@/lib/schemas/api";
+import { generateErrorMessage } from "zod-error";
 
-export const POST = auth(async function POST(req: NextAuthRequest) {
-  try {
-    if (!req.auth || !req.auth.user || !req.auth.user.id) {
+export const POST = auth(withAuthorisation(async function POST(req: NextAuthRequest, session: AuthenticatedSession) {
+    let userData;
+    try { 
+    userData = await getUserData(session.user.id);
+    } catch {
       return NextResponse.json(
-        { status: "failed", error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    const userData = await getUserData(req.auth.user.id);
-
-    if (!userData) {
-      return NextResponse.json(
-        {
-          status: "failed",
-          error: "Internal Server Error: User data not found",
-        },
+        { status: "failed", error: "Failed to fetch user data" },
         { status: 500 }
       );
     }
+    const formData = await UploadFileRequestSchema.safeParseAsync(req.body);
+    if (!formData.success) {
+      return NextResponse.json(
+        { status: "failed", error: generateErrorMessage(formData.error.issues) },
+        { status: 400 }
+      );
+    }
+    const { file, content_type } = formData.data;
 
-    const formData = await req.formData();
-    const file = formData.get("file") as File;
-    const content_type = formData.get("content_type") as string;
-    if (!file || !(file instanceof File)) {
-      return NextResponse.json(
-        { status: "failed", error: "No file provided or invalid file type" },
-        { status: 400 }
-      );
-    }
-    // file type pdf
-    if (file.type !== "application/pdf") {
-      return NextResponse.json(
-        { status: "failed", error: "Only PDF files are allowed" },
-        { status: 400 }
-      );
-    }
-    if (!content_type || typeof content_type !== "string") {
-      return NextResponse.json(
-        { status: "failed", error: "Invalid or missing type parameter" },
-        { status: 400 }
-      );
-    }
     const isTeacher = userData.role === "teacher";
     if (
       !isTeacher &&
-      (content_type === "syllabus" || content_type === "content")
+      (content_type in ["syllabus", "assignment", "graded_assignment", "content"])
     ) {
       return NextResponse.json(
-        { status: "failed", error: "Only teachers can upload syllabus files" },
+        { status: "failed", error: "Only teachers can upload this type of file" },
         { status: 403 }
       );
     }
@@ -78,7 +57,7 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
       size: file.size,
       file_type: file.type,
       path: `./data/uploads/${file.name}`,
-      userId: req.auth.user.id,
+      userId: session.user.id,
       createdAt: new Date(),
       updatedAt: new Date(),
       type: content_type,
@@ -119,8 +98,5 @@ export const POST = auth(async function POST(req: NextAuthRequest) {
         { status: 500 }
       );
     }
-  } catch (e) {
-    console.error(e);
-    return NextResponse.json({ status: "failed", error: e }, { status: 500 });
-  }
-});
+
+}));

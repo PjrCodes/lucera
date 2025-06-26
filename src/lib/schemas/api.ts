@@ -16,3 +16,10 @@ export const MagicCreateAssignmentRequestSchema = z.object({
   fileId: z.string().min(1, "File ID is required"),
   courseId: z.string().min(1, "Course ID is required"),
 });
+
+export const UploadFileRequestSchema = z.object({
+  file: z.instanceof(File).refine(file => file.size > 0 && file.type === "application/pdf", {
+    message: "File is required and must not be empty. Only PDF files are allowed.",
+  }),
+  content_type: z.string().min(1, "Content type is required"),
+})
