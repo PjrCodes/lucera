@@ -1,25 +1,17 @@
-import { auth } from "@/lib/auth";
-import { getUserData } from "@/lib/database-service/auth";
+import { getUserData, serverComponentRedirectUnauthenticated } from "@/lib/database-service/auth";
 import Courses from "@/components/feature/dashboard/cards/courses";
 import React from "react";
 import { redirect } from "next/navigation";
 
 export default async function ProgressPage() {
-  const session = await auth();
-  if (!session?.user) {
-    return (
-      <div className="max-w-2xl mx-auto py-12 text-center text-gray-600">
-        <h1 className="text-3xl font-bold mb-4">Progress Dashboard</h1>
-        <p>Please sign in to view your progress.</p>
-      </div>
-    );
+ const session = await serverComponentRedirectUnauthenticated();
+  let userData;
+  try {
+    userData = await getUserData(session.user.id);
+  } catch {
+    redirect("/handle-invalid-user");
   }
-
-  const userData = await getUserData(session.user.id!);
-  if (!userData) {
-    redirect("/");
-  }
-
+  
   const isTeacher = userData.role === "teacher";
 
   return (

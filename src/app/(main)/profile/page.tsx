@@ -8,16 +8,16 @@ import SignOut from "@/components/feature/auth/sign-out-button";
 import Link from "next/link";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { Edit } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
   const session = await serverComponentRedirectUnauthenticated();
-
-  const userData = await getUserData(session.user.id);
-
-  if (!userData) {
-    throw new Error("User data not found");
+  let userData;
+  try {
+    userData = await getUserData(session.user.id);
+  } catch {
+    redirect("/handle-invalid-user");
   }
-
   // Pass session and userData to the client component
   return (
     <>
