@@ -1,6 +1,6 @@
 import React from "react";
 import { redirect } from "next/navigation";
-import SettingsClientComponent from "@/components/feature/profile/settings-client";
+import SettingsForm from "@/components/feature/profile/settings-form";
 import {
   getUserData,
   serverComponentRedirectUnauthenticated,
@@ -14,5 +14,5 @@ export default async function SettingsPage() {
   } catch {
     redirect("/handle-invalid-user");
   }
-  return <SettingsClientComponent userData={userData} />;
+  return <SettingsForm userData={userData} />;
 }

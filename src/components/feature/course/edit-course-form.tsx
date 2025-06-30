@@ -48,7 +48,7 @@ interface EditCourseClientProps {
   session?: unknown;
 }
 
-export function EditCourseClient({ course, isNew = false }: EditCourseClientProps) {
+export function EditCourseForm({ course, isNew = false }: EditCourseClientProps) {
   // const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);

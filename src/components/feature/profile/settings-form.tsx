@@ -10,7 +10,7 @@ interface Props {
   userData: UserData;
 }
 
-export default function SettingsClientComponent({}: Props) {
+export default function SettingsForm({}: Props) {
   const [form, setForm] = useState({
     // Notifications
     dmNotifications: true,

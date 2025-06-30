@@ -1,5 +1,5 @@
 import { getUserData } from "@/lib/database-service/auth";
-import CreateCourseUpload from "@/components/feature/create/create-course-upload";
+import CreateCourseAIForm from "@/components/feature/course/create-course-ai-form";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
@@ -17,7 +17,7 @@ export default async function CreateCoursePageServer() {
   }
 
   return (
-    <CreateCourseUpload
+    <CreateCourseAIForm
       userData={userData}
       session={session}
     />

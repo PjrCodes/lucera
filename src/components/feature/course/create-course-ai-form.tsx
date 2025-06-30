@@ -7,7 +7,7 @@ import { UserData } from "@/lib/schemas/database";
 import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 
-export default function CreateCourseUpload({
+export default function CreateCourseAIForm({
   // userData,
   // session,
 }: {

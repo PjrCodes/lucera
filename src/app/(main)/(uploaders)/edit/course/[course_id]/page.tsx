@@ -1,4 +1,4 @@
-import { EditCourseClient } from '@/components/feature/course/edit-course-client';
+import { EditCourseForm } from '@/components/feature/course/edit-course-form';
 import { notFound, redirect } from 'next/navigation';
 import client from '@/lib/db';
 import { ObjectId } from 'mongodb';
@@ -49,7 +49,7 @@ export default async function EditCoursePage({ params }: { params: Promise<{ cou
   }
 
   return (
-    <EditCourseClient
+    <EditCourseForm
       course={courseForClient}
       isNew={isNewCourse}
       userData={userData}

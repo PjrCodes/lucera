@@ -5,7 +5,7 @@ import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { RadioGroup, RadioItem } from "@/components/core/inputs/radio";
 import { setUserRole } from "@/components/feature/profile/select-role-action";
 
-export default function SelectRoleClient({
+export default function SelectRoleForm({
   searchParams,
   currentRole,
 }: {

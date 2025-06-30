@@ -4,7 +4,7 @@ import React from "react";
 import { redirect } from "next/navigation";
 import { serverComponentRedirectUnauthenticated } from "@/lib/database-service/auth";
 import client from "@/lib/db";
-import SelectRoleClient from "@/components/feature/profile/select-role-client";
+import SelectRoleForm from "@/components/feature/profile/select-role-form";
 
 // Server component for data fetching and rendering the client component
 export default async function SelectRolePage({
@@ -37,7 +37,7 @@ export default async function SelectRolePage({
     <main className="h-screen">
       <div className="max-w-md mx-auto my-12 p-8 border border-gray-200 rounded-lg">
         <h1 className="text-2xl font-bold mb-6">Select Your Role</h1>
-        <SelectRoleClient
+        <SelectRoleForm
           searchParams={ourSearchParams}
           currentRole={currentRole}
         />

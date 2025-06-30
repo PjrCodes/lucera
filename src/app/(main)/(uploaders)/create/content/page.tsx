@@ -1,6 +1,6 @@
 import { getUserData } from "@/lib/database-service/auth";
 import { getCoursesForUser } from "@/lib/database-service/courses";
-import CreateContentUpload from "@/components/feature/create/create-content-upload";
+import CreateContentAIForm from "@/components/feature/content/create-content-ai-form";
 import { auth } from "@/lib/auth";
 import { ObjectId } from "mongodb";
 import { redirect } from "next/navigation";
@@ -25,7 +25,7 @@ export default async function CreateContentPageServer() {
   });
 
   return (
-    <CreateContentUpload
+    <CreateContentAIForm
       userData={userData}
       session={session}
       courses={courses}
