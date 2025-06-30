@@ -4,9 +4,10 @@ import client from "@/lib/db";
 import { getSessionAndUserData } from "@/lib/database-service/auth";
 import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
 import CourseHeader from "@/components/feature/course/cards/course-header";
-import { Course } from "@/lib/schemas/database";
+import { Course, UserWithData } from "@/lib/schemas/database";
 import CourseTabs from "@/components/feature/course/course-tabs";
 import { getContentForCourse } from "@/lib/database-service/content";
+import { getStudentsForCourse } from "@/lib/database-service/courses";
 
 async function getCourse(course_id: string): Promise<Course | null> {
   const db = client.db();
@@ -106,7 +107,10 @@ export default async function CourseViewPage({
       active: false,
     },
   ];
-  const students: { id: number; name: string; email?: string }[] = [];
+
+  const students: UserWithData[] =
+    await getStudentsForCourse(course._id.toString());
+
   const grades: { id: number; title: string; score: string; date: string }[] =
     [];
 

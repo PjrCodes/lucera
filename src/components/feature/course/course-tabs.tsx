@@ -9,7 +9,7 @@ import CoursePollsCard from "@/components/feature/course/cards/course-polls-card
 import CourseStudentsCard from "@/components/feature/course/cards/course-students-card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { BookOpen, ChartNoAxesColumn, ClipboardList, Clock, FileText, List, MessagesSquare, Users } from "lucide-react";
-import { ContentWithEmbeddedFile, Course } from "@/lib/schemas/database";
+import { ContentWithEmbeddedFile, Course, UserWithData } from "@/lib/schemas/database";
 
 interface Assignment {
   id: number;
@@ -34,12 +34,6 @@ interface Grade {
   date: string;
 }
 
-interface Student {
-  id: number;
-  name: string;
-  email?: string;
-}
-
 export default function CourseTabs({
   course,
   assignments,
@@ -52,7 +46,7 @@ export default function CourseTabs({
   assignments: Assignment[];
   courseMaterialsData: ContentWithEmbeddedFile[];
   pollsAndAnnouncements: PollOrAnnouncement[];
-  students: Student[];
+  students: UserWithData[];
   grades: Grade[];
 }) {
 

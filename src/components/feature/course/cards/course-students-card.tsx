@@ -1,12 +1,8 @@
+import { UserWithData } from "@/lib/schemas/database";
 import { FiUsers } from "react-icons/fi";
 
-interface Student {
-  id: number;
-  name: string;
-  email?: string;
-}
 
-export default function CourseStudentsCard({ students }: { students: Student[] }) {
+export default function CourseStudentsCard({ students }: { students: UserWithData[] }) {
   return (
     <div className="bg-primary-50 rounded-xl shadow border border-primary-100 p-6">
       <h2 className="text-lg font-semibold text-primary-900 mb-4 flex items-center gap-2"><FiUsers />Students</h2>

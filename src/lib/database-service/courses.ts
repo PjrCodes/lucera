@@ -1,10 +1,9 @@
 import client from "@/lib/db";
 import { ObjectId } from "mongodb";
 import { getUserData } from "./auth";
-import { Course, courseSchema } from "../schemas/database";
+import { Course, courseSchema, userWithDataSchema } from "../schemas/database";
 
 export async function getCoursesForUser(userId: string) {
-
   const userData = await getUserData(userId);
 
   // Extract related course IDs from user data
@@ -47,5 +46,23 @@ export async function getCourseById(courseId: string) {
   } catch (error) {
     console.error("Error parsing course:", error);
     throw new Error("Invalid course data format");
+  }
+}
+
+export async function getStudentsForCourse(courseId: string) {
+  const userDataCollection = client.db().collection("users_and_their_data");
+  const students = await userDataCollection
+    .find({
+      relatedCourses: {
+        $in: [courseId],
+      },
+      role: "student",
+    })
+    .toArray();
+  
+  try {
+    return students.map((student) => userWithDataSchema.parse(student));
+  } catch {
+    throw new Error("Invalid user data format found in database");
   }
 }

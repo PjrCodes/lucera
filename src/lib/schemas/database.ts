@@ -10,7 +10,13 @@ export const fileSchema = z.object({
   userId: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  type: z.enum(["syllabus", "content", "assignment", "solved_assignment", "graded_assignment"]),
+  type: z.enum([
+    "syllabus",
+    "content",
+    "assignment",
+    "solved_assignment",
+    "graded_assignment",
+  ]),
 });
 
 export type CustomFile = z.infer<typeof fileSchema>;
@@ -32,9 +38,19 @@ export const userDataSchema = z.object({
   relatedCourses: z.array(z.string()),
   relatedFiles: z.array(z.string()),
   // bookmarks: z.array(z.string()),
-})
+});
 
 export type UserData = z.infer<typeof userDataSchema>;
+
+export const userWithDataSchema = userDataSchema.extend({
+  name: z.string(),
+  email: z.email(),
+  image: z.string(),
+  emailVerified: z.boolean().optional(),
+});
+
+export type UserWithData = z.infer<typeof userWithDataSchema>;
+
 export const courseUnitSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
