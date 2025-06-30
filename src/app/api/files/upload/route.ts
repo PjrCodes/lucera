@@ -4,7 +4,6 @@ import { NextAuthRequest } from "next-auth";
 import { getUserData, withAuthorisation } from "@/lib/database-service/auth";
 import { AuthenticatedSession } from "@/lib/types/auth";
 import { UploadFileRequestSchema } from "@/lib/schemas/api";
-import { generateErrorMessage } from "zod-error";
 import { uploadFile } from "@/lib/database-service/files";
 
 export const POST = auth(
@@ -26,7 +25,7 @@ export const POST = auth(
       return NextResponse.json(
         {
           status: "failed",
-          error: generateErrorMessage(formData.error.issues),
+          error: formData.error.issues.map((issue) => issue.message).join(", "),
         },
         { status: 400 }
       );

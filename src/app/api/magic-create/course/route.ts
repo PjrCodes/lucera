@@ -7,7 +7,6 @@ import { withTeacherSession } from "@/lib/database-service/auth";
 import { loadFileFromDiskById } from "@/lib/database-service/files";
 import { MagicCreateCourseRequestSchema } from "@/lib/schemas/api";
 import { AuthenticatedSession } from "@/lib/types/auth";
-import { generateErrorMessage } from "zod-error";
 // import { CourseTimelineItem } from "@/lib/schemas";
 
 // TODO: Syllabus file added to course content database
@@ -21,7 +20,7 @@ export const POST = auth(
     const parsedBody = MagicCreateCourseRequestSchema.safeParse(body);
     if (!parsedBody.success) {
       return NextResponse.json(
-        { error: generateErrorMessage(parsedBody.error.issues) },
+        { error: parsedBody.error.issues.map((issue) => issue.message).join(", ") },
         { status: 400 }
       );
     }

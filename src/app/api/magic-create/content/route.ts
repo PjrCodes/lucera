@@ -9,7 +9,6 @@ import { loadFileFromDiskById } from "@/lib/database-service/files";
 import { getCourseById } from "@/lib/database-service/courses";
 import { MagicCreateContentRequestSchema } from "@/lib/schemas/api";
 import { withTeacherSession } from "@/lib/database-service/auth";
-import { generateErrorMessage } from "zod-error";
 
 export const POST = auth(
   withTeacherSession(async function POST(
@@ -20,7 +19,7 @@ export const POST = auth(
     const parsedBody = MagicCreateContentRequestSchema.safeParse(body);
     if (!parsedBody.success) {
       return NextResponse.json(
-        { error: generateErrorMessage(parsedBody.error.issues) },
+        { error: parsedBody.error.issues.map((issue) => issue.message).join(", ") },
         { status: 400 }
       );
     }
