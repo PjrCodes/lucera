@@ -480,7 +480,7 @@ function LisaPageContent({
   return (
     <>
       <SetHeaderClientComponent title="LISA" />
-      <div className="w-full max-w-4xl flex flex-col min-h-screen bg-primary-50">
+      <div className="mx-auto w-full max-w-4xl flex flex-col min-h-screen bg-primary-50">
         {/* Main scrollable content area */}
         <div className="flex-1">
           {messages.length === 0 ? (

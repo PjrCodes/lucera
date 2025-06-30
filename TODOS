@@ -1,0 +1,33 @@
+# TODOS
+
+- Shift to using React Aria components for all form elements since we are Adobe.
+- Progress Dashboard page needs to be overhauled. New designs are required - maybe make mocks for tomorrow, or don't show it for tomorrow.
+- Form components - beautification a little bit. Radix can be used as the base for now.
+
+## Requirements for AHM
+
+- FIX each page to have a consistent logic for auth checking, etc. and use the latest cool utilities created by us for ourselves.
+- "Logical Flow Features": Teachers must add student to a course.
+- FUNCTIONAL Bookmarks
+- FUNCTIONAL Assignments System
+  - Assignment upload on teacher side
+  - Assignment download on student side
+  - Assignment submission on student side
+  - Assignment grading on teacher side - for now, just a simple text field per question
+- UI Improvements
+  - Make it more consistent
+  - Make it more visually appealing
+- FUNCTIONAL Recently Accessed System
+- FUNCTIONAL Choose Students System
+- FUNCTIONAL upcoming deadlines, for which ASSIGNMENTS are required
+
+- From the timeline, only the events that are *activated* should be shown in upcoming deadlines.
+  - Midsems, Endsems always show up.
+  - Assignments should show up only if an assignment is created for that event - these don't "need" to be linked. They can be created independently.
+  - Quizzes should always show up.
+  - Field trips, etc. should always show up.
+
+After the above, if time permits, then:
+
+- FUNCTIONAL Polls, announcements and notifications for the same.
+- FUNCTIONAL Direct Messages.

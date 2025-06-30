@@ -176,7 +176,7 @@ const AuthDashboard: NextPage<Props> = ({
     return (
       <main className="w-full h-full px-4 py-4 bg-transparent">
         <div className="w-full h-full flex flex-1 flex-col justify-center text-center text-gray-500">
-          <div className="text-6xl font-bold text-primary-800 mb-4">
+          <div className="font-header text-6xl font-bold text-primary-800 mb-4">
             Hi, {session?.user?.name || "there"}! Start by adding items to your dashboard.
           </div>
           <MdBrokenImage size={48} className="mx-auto mb-4" />
@@ -214,7 +214,7 @@ const AuthDashboard: NextPage<Props> = ({
               : " basis-full")
           }
         >
-          <div className="text-2xl md:text-5xl font-bold text-secondary-600 mb-4">
+          <div className="font-header text-2xl md:text-5xl font-bold text-secondary-600 mb-4">
             Hi, {session?.user?.name || "there"}!<br></br>Welcome to your dashboard.
           </div>
           {renderComponents(currentLayout.leftColumn)}

@@ -75,7 +75,7 @@ export default function Header({
           )}
           {/* Heading: only render once, hide/show with CSS */}
           <h1
-            className={`text-xl md:text-2xl tracking-wider font-bold truncate max-w-[150px] sm:max-w-[200px] md:max-w-none ${
+            className={`font-header text-xl md:text-2xl tracking-wider font-bold truncate max-w-[150px] sm:max-w-[200px] md:max-w-none ${
               searchExpanded ? "hidden sm:block" : "block"
             }`}
           >
@@ -109,7 +109,7 @@ export default function Header({
               <Bell></Bell>
             </span>
             {/* Edit icon: only show on Dashboard and never on mobile */}
-            {headerTitle === "DASHBOARD" && (
+            {isHomePage && (
               <span className="hidden sm:inline">
                 <div
                   className={
