@@ -9,13 +9,7 @@ export default function SettingsPage() {
     // Notifications
     dmNotifications: true,
     announcementNotifications: true,
-    assignmentNotifications: true,
-    gradeNotifications: true,
-    deadlineReminders: true,
-
     // AI Assistant
-    aiAssistantEnabled: true,
-    aiNudges: true,
     aiPersonality: "friendly", // "professional" | "friendly" | "quirky"
   });
   const [loading, setLoading] = useState(false);
@@ -44,38 +38,23 @@ export default function SettingsPage() {
             <Checkbox
               name="dmNotifications"
               checked={form.dmNotifications}
-              onCheckedChange={(checked) => setForm(prev => ({ ...prev, dmNotifications: checked }))}
+              onCheckedChange={(checked) =>
+                setForm((prev) => ({ ...prev, dmNotifications: checked }))
+              }
             >
               Direct Messages
             </Checkbox>
             <Checkbox
               name="announcementNotifications"
               checked={form.announcementNotifications}
-              onCheckedChange={(checked) => setForm(prev => ({ ...prev, announcementNotifications: checked }))}
+              onCheckedChange={(checked) =>
+                setForm((prev) => ({
+                  ...prev,
+                  announcementNotifications: checked,
+                }))
+              }
             >
               Announcements
-            </Checkbox>
-            <Checkbox
-              name="assignmentNotifications"
-              checked={form.assignmentNotifications}
-              onCheckedChange={(checked) => setForm(prev => ({ ...prev, assignmentNotifications: checked }))}
-            >
-              New Assignments
-            </Checkbox>
-            <Checkbox
-              name="gradeNotifications"
-              checked={form.gradeNotifications}
-              onCheckedChange={(checked) => setForm(prev => ({ ...prev, gradeNotifications: checked }))}
-            >
-              Grade Updates
-            </Checkbox>
-            <Checkbox
-              name="deadlineReminders"
-              checked={form.deadlineReminders}
-              onCheckedChange={(checked) => setForm(prev => ({ ...prev, deadlineReminders: checked }))}
-              className="md:col-span-2"
-            >
-              Deadline Reminders
             </Checkbox>
           </div>
         </div>
@@ -88,7 +67,9 @@ export default function SettingsPage() {
               <Dropdown
                 name="aiPersonality"
                 value={form.aiPersonality}
-                onChange={(value) => setForm(prev => ({ ...prev, aiPersonality: value }))}
+                onChange={(value) =>
+                  setForm((prev) => ({ ...prev, aiPersonality: value }))
+                }
                 options={[
                   { value: "professional", label: "💼 Professional" },
                   { value: "friendly", label: "😊 Friendly" },
@@ -98,22 +79,6 @@ export default function SettingsPage() {
               >
                 AI Personality
               </Dropdown>
-              <div className="space-y-4">
-                <Checkbox
-                  name="aiAssistantEnabled"
-                  checked={form.aiAssistantEnabled}
-                  onCheckedChange={(checked) => setForm(prev => ({ ...prev, aiAssistantEnabled: checked }))}
-                >
-                  Enable AI Assistant
-                </Checkbox>
-                <Checkbox
-                  name="aiNudges"
-                  checked={form.aiNudges}
-                  onCheckedChange={(checked) => setForm(prev => ({ ...prev, aiNudges: checked }))}
-                >
-                  AI Nudges
-                </Checkbox>
-              </div>
             </div>
           </div>
         </div>
@@ -139,7 +104,9 @@ export default function SettingsPage() {
         {success && (
           <div className="bg-green-50 border border-green-200 text-green-800 px-6 py-4 rounded-lg flex items-center space-x-2">
             <span className="text-green-600">✅</span>
-            <span className="font-medium">All settings saved successfully!</span>
+            <span className="font-medium">
+              All settings saved successfully!
+            </span>
           </div>
         )}
       </form>
