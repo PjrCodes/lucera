@@ -18,17 +18,17 @@
   - [ ] Assignment download on student side
   - [ ] Assignment submission on student side
   - [ ] Assignment grading on teacher side - for now, just a simple text field per question
+
 - [ ] UI Improvements
   - [ ] Make it more consistent
   - [ ] Make it more visually appealing
-- [ ] FUNCTIONAL Recently Accessed System
-- [ ] FUNCTIONAL upcoming deadlines, for which ASSIGNMENTS are required
-
-- [ ] From the timeline, only the events that are *activated* should be shown in upcoming deadlines.
+- [ ] FUNCTIONAL Upcoming Deadlines: From the timeline, only the events that are *activated* should be shown in upcoming deadlines.
   - [ ] Midsems, Endsems always show up.
   - [ ] Assignments should show up only if an assignment is created for that event - these don't "need" to be linked. They can be created independently.
   - [ ] Quizzes should always show up.
   - [ ] Field trips, etc. should always show up.
+- [ ] FUNCTIONAL Recently Accessed System
+
 
 After the above, if time permits, then:
 
