@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { z } from "zod";
+import * as z from "zod/v4";
 
 export const fileSchema = z.object({
   _id: z.instanceof(ObjectId).optional(),

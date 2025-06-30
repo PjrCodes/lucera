@@ -1,5 +1,5 @@
 import { Type } from "@google/genai";
-import z from "zod";
+import * as z from "zod/v4";
 
 export const contentExtractorSchema = {
   type: Type.OBJECT,
@@ -118,8 +118,8 @@ export const syllabusExtractorSchema = {
 export const syllabusExtractorLLMResponseSchema = z.object({
   name: z.string(),
   courseCode: z.string(),
-  courseStartDate: z.coerce.date(),
-  courseEndDate: z.coerce.date(),
+  courseStartDate: z.iso.date(),
+  courseEndDate: z.iso.date(),
   description: z.string(),
   shortDescription: z.string(),
   units: z.array(

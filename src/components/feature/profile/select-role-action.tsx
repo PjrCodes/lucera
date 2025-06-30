@@ -1,13 +1,16 @@
 "use server";
 
-import { serverComponentRedirectUnauthenticated, setUserRoleInDb } from "@/lib/database-service/auth";
+import {
+  serverComponentRedirectUnauthenticated,
+  setUserRoleInDb,
+} from "@/lib/database-service/auth";
 import { redirect } from "next/navigation";
-import { z } from "zod";
+import * as z from "zod/v4";
 
 const setUserRoleSchema = z.object({
   role: z.enum(["student", "teacher"], {
-    required_error: "Please select a role",
-    invalid_type_error: "Invalid role selected",
+    error: (issue) =>
+      issue.input === undefined ? "Please pick a role!" : "Invalid role selected!",
   }),
   reason: z.enum(["newuser"]).optional(),
   callbackUrl: z.string().optional(),

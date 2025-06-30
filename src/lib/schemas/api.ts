@@ -1,4 +1,4 @@
-import {z} from "zod";
+import * as z from "zod/v4";
 import { dashboardLayoutSchema } from "./database";
 
 export const MagicCreateCourseRequestSchema = z.object({
