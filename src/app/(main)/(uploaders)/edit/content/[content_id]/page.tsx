@@ -1,8 +1,7 @@
-import { getUserData, serverComponentRedirectUnauthenticated } from "@/lib/database-service/auth";
+import { getSessionAndUserData} from "@/lib/database-service/auth";
 import { getCoursesForUser } from "@/lib/database-service/courses";
 import EditContentForm from "@/components/feature/content/edit-content-form";
 import { ObjectId } from "mongodb";
-import { redirect } from "next/navigation";
 import { getContentById } from "@/lib/database-service/content";
 import { Content, Course } from "@/lib/schemas/database";
 
@@ -14,17 +13,7 @@ interface EditContentPageProps {
 
 export default async function EditContentPageServer({ params }: EditContentPageProps) {
   const resolvedParams = await params;
-  const session = await serverComponentRedirectUnauthenticated();
-  let userData;
-  try {
-    userData = await getUserData(session.user.id);
-  } catch {
-    redirect("/handle-invalid-user");
-  }
-  if (userData.role !== "teacher") {
-    redirect("/");
-  }
-
+  const { session, userData } = await getSessionAndUserData();
   const courses = await getCoursesForUser(session.user.id);
 
   // Convert ObjectId to string for client-side compatibility

@@ -1,19 +1,9 @@
 import React from "react";
-import {
-  getUserData,
-  serverComponentRedirectUnauthenticated,
-} from "@/lib/database-service/auth";
-import { redirect } from "next/navigation";
 import LighthouseHome from "@/components/feature/lighthouse/lighthouse-home";
+import { getSessionAndUserData } from "@/lib/database-service/auth";
 
 export default async function LighthousePage() {
-  const session = await serverComponentRedirectUnauthenticated();
-  let userData;
-  try {
-    userData = await getUserData(session.user.id);
-  } catch {
-    redirect("/handle-invalid-user");
-  }
+  const { session, userData } = await getSessionAndUserData();
 
   const isTeacher = userData.role === "teacher";
 

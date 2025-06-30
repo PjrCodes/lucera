@@ -1,27 +1,22 @@
-import { EditCourseForm } from '@/components/feature/course/edit-course-form';
-import { notFound, redirect } from 'next/navigation';
-import client from '@/lib/db';
-import { ObjectId } from 'mongodb';
-import { getUserData, serverComponentRedirectUnauthenticated } from "@/lib/database-service/auth";
+import { EditCourseForm } from "@/components/feature/course/edit-course-form";
+import { notFound } from "next/navigation";
+import client from "@/lib/db";
+import { ObjectId } from "mongodb";
+import { getSessionAndUserData } from "@/lib/database-service/auth";
 
 // Async wrapper to await params
-export default async function EditCoursePage({ params }: { params: Promise<{ course_id: string }> }) {
+export default async function EditCoursePage({
+  params,
+}: {
+  params: Promise<{ course_id: string }>;
+}) {
   const { course_id } = await params;
 
   if (!course_id) {
     return notFound();
   }
 
-  const session = await serverComponentRedirectUnauthenticated();
-  let userData;
-  try {
-    userData = await getUserData(session.user.id);
-  } catch {
-    redirect("/handle-invalid-user");
-  }
-  if (userData.role !== "teacher") {
-    redirect("/");
-  }
+  const { session, userData } = await getSessionAndUserData();
 
   const isNewCourse = course_id === "new";
   let courseForClient = null;
@@ -29,7 +24,9 @@ export default async function EditCoursePage({ params }: { params: Promise<{ cou
   if (!isNewCourse) {
     // Fetch existing course data
     const db = client.db();
-    const course = await db.collection('courses').findOne({ _id: new ObjectId(course_id) });
+    const course = await db
+      .collection("courses")
+      .findOne({ _id: new ObjectId(course_id) });
 
     if (!course) {
       return notFound();
@@ -38,7 +35,7 @@ export default async function EditCoursePage({ params }: { params: Promise<{ cou
     // Convert ObjectId to string for client component
     courseForClient = {
       ...course,
-      _id: course._id.toString()
+      _id: course._id.toString(),
     };
   }
 

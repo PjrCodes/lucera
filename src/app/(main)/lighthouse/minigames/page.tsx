@@ -1,16 +1,10 @@
 import React from "react";
-import { getUserData, serverComponentRedirectUnauthenticated } from "@/lib/database-service/auth";
+import { getSessionAndUserData } from "@/lib/database-service/auth";
 import { redirect } from "next/navigation";
 import MinigamesHome from "@/components/feature/lighthouse/minigames-home";
 
 export default async function MinigamesPage() {
-const session = await serverComponentRedirectUnauthenticated();
-  let userData;
-  try {
-    userData = await getUserData(session.user.id);
-  } catch {
-    redirect("/handle-invalid-user");
-  }
+  const { session, userData } = await getSessionAndUserData();
 
   const isTeacher = userData.role === "teacher";
 
@@ -19,10 +13,5 @@ const session = await serverComponentRedirectUnauthenticated();
     redirect("/lighthouse?error=teacher-access-denied");
   }
 
-  return (
-    <MinigamesHome
-      userData={userData}
-      session={session}
-    />
-  );
+  return <MinigamesHome userData={userData} session={session} />;
 }

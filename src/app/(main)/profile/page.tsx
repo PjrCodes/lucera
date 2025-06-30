@@ -1,23 +1,15 @@
 import React from "react";
 import {
-  getUserData,
-  serverComponentRedirectUnauthenticated,
+  getSessionAndUserData,
 } from "@/lib/database-service/auth";
 import SetHeaderClientComponent from "../../../components/feature/header/set-header-client-component"; // Added import
 import SignOut from "@/components/feature/auth/sign-out-button";
 import Link from "next/link";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { Edit } from "lucide-react";
-import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
-  const session = await serverComponentRedirectUnauthenticated();
-  let userData;
-  try {
-    userData = await getUserData(session.user.id);
-  } catch {
-    redirect("/handle-invalid-user");
-  }
+  const { session, userData } = await getSessionAndUserData();
   // Pass session and userData to the client component
   return (
     <>

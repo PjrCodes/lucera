@@ -159,6 +159,17 @@ export async function serverComponentRedirectUnauthenticated(): Promise<Authenti
   return session as AuthenticatedSession;
 }
 
+export async function getSessionAndUserData() {
+  const session = await serverComponentRedirectUnauthenticated();
+  let userData;
+  try {
+    userData = await getUserData(session.user.id);
+  } catch {
+    redirect("/handle-invalid-user");
+  }
+  return { session, userData };
+}
+
 export async function setUserRoleInDb(
   reason: "newuser" | undefined,
   userId: string,

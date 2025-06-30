@@ -1,19 +1,11 @@
 import {
-  getUserData,
-  serverComponentRedirectUnauthenticated,
+  getSessionAndUserData,
 } from "@/lib/database-service/auth";
 import Courses from "@/components/feature/dashboard/cards/courses";
 import React from "react";
-import { redirect } from "next/navigation";
 
 export default async function ProgressPage() {
-  const session = await serverComponentRedirectUnauthenticated();
-  let userData;
-  try {
-    userData = await getUserData(session.user.id);
-  } catch {
-    redirect("/handle-invalid-user");
-  }
+  const { session, userData } = await getSessionAndUserData();
 
   const isTeacher = userData.role === "teacher";
 

@@ -1,25 +1,10 @@
-import { getUserData, serverComponentRedirectUnauthenticated } from "@/lib/database-service/auth";
+import { getSessionAndUserData } from "@/lib/database-service/auth";
 import CreateCourseAIForm from "@/components/feature/course/create-course-ai-form";
-import { redirect } from "next/navigation";
 
 export default async function CreateCoursePageServer() {
-  const session = await serverComponentRedirectUnauthenticated();
-  let userData;
-  try {
-    userData = await getUserData(session.user.id);
-  } catch {
-    redirect("/handle-invalid-user");
-  }
-  if (userData.role !== "teacher") {
-    redirect("/");
-  }
+  const { session, userData } = await getSessionAndUserData();
 
-  return (
-    <CreateCourseAIForm
-      userData={userData}
-      session={session}
-    />
-  );
+  return <CreateCourseAIForm userData={userData} session={session} />;
 }
 //       console.error("No file selected");
 //       return;
@@ -29,7 +14,6 @@ export default async function CreateCoursePageServer() {
 
 //     // Now, upload the syllabus file
 //     console.log("Uploading file:", file.name);
-
 
 //     let response = await fetch("/api/upload/syllabus", {
 //       method: "POST",

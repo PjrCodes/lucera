@@ -1,11 +1,10 @@
 import { ObjectId } from "mongodb";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import client from "@/lib/db";
-import { serverComponentRedirectUnauthenticated } from "@/lib/database-service/auth";
+import { getSessionAndUserData } from "@/lib/database-service/auth";
 import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
 import CourseHeader from "@/components/feature/course/cards/course-header";
 import { Course } from "@/lib/schemas/database";
-import { getUserData } from "@/lib/database-service/auth";
 import CourseTabs from "@/components/feature/course/course-tabs";
 import { getContentForCourse } from "@/lib/database-service/content";
 
@@ -30,13 +29,7 @@ export default async function CourseViewPage({
 }: {
   params: Promise<{ course_id: string }>;
 }) {
-  const session = await serverComponentRedirectUnauthenticated();
-  let userData;
-  try {
-    userData = await getUserData(session.user.id);
-  } catch {
-    redirect("/handle-invalid-user");
-  }
+  const { userData } = await getSessionAndUserData();
   const isTeacher = userData.role === "teacher";
 
   const { course_id } = await params;

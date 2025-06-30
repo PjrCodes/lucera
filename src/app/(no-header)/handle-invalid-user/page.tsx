@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 export default async function HandleInvalidUserPage() {
   // check if the user is now validated
   const session = await serverComponentRedirectUnauthenticated();
-
   let errorMessage = "";
   try {
     await getUserData(session.user.id);
