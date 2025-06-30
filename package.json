@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "concurrently \"next start\" \"node socket_server/server.js\"",
     "lint": "next lint",
-    "socket": "ts-node --esm socket_server/server.ts"
+    "socket": "node socket_server/server.js"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.9.1",
