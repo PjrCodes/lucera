@@ -10,7 +10,7 @@ export default async function MinigamesPage() {
 
   // Redirect teachers away from minigames
   if (isTeacher) {
-    redirect("/lighthouse?error=teacher-access-denied");
+    redirect("/lighthouse");
   }
 
   return <MinigamesHome userData={userData} session={session} />;
