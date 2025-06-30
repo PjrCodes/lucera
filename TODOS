@@ -20,6 +20,11 @@
 - FUNCTIONAL Recently Accessed System
 - FUNCTIONAL Choose Students System
 - FUNCTIONAL upcoming deadlines, for which ASSIGNMENTS are required
+- Better Dashboard Layout error showcasing, if possible.
+  - They shouldn't even be something that is shown, perhaps just a message that says "Dashboard was reset to default state because of errors."
+  - This should be shown only once, and then the user should be able to continue using the app.
+  - Or, we don't show the dashboard, and only errors are shown. Until they are fixed, the user cannot use the app.
+  - In the real world, it won't be common to have dashboard layout errors, so this is not a priority.
 
 - From the timeline, only the events that are *activated* should be shown in upcoming deadlines.
   - Midsems, Endsems always show up.
