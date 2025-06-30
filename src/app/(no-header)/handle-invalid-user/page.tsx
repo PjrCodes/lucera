@@ -1,13 +1,9 @@
-import { auth } from "@/lib/auth";
-import { getUserData } from "@/lib/database-service/auth";
+import { getUserData, serverComponentRedirectUnauthenticated } from "@/lib/database-service/auth";
 import { redirect } from "next/navigation";
 
 export default async function HandleInvalidUserPage() {
   // check if the user is now validated
-  const session = await auth();
-  if (!session || !session.user || !session.user.id) {
-    return redirect("/");
-  }
+  const session = await serverComponentRedirectUnauthenticated();
 
   let errorMessage = "";
   try {

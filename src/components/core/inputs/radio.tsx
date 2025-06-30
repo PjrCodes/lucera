@@ -1,5 +1,5 @@
 import * as React from "react";
-import { RadioGroup as RadixRadioGroup, RadioGroupItem as RadixRadioGroupItem } from "@/components/ui/radio-group";
+import { RadioGroup as ShadcnRadioGroup, RadioGroupItem as ShadcnRadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 
 interface RadioGroupProps {
@@ -27,7 +27,7 @@ export function RadioGroup({
   children
 }: RadioGroupProps) {
   return (
-    <RadixRadioGroup
+    <ShadcnRadioGroup
       name={name}
       defaultValue={defaultValue}
       value={value}
@@ -35,7 +35,7 @@ export function RadioGroup({
       className={cn("grid gap-3", className)}
     >
       {children}
-    </RadixRadioGroup>
+    </ShadcnRadioGroup>
   );
 }
 
@@ -44,7 +44,7 @@ export function RadioItem({ value, id, children, className }: RadioItemProps) {
 
   return (
     <label htmlFor={radioId} className={cn("inline-flex items-center space-x-2", className)}>
-      <RadixRadioGroupItem
+      <ShadcnRadioGroupItem
         value={value}
         id={radioId}
         className={cn(
