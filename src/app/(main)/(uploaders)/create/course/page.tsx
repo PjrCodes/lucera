@@ -1,16 +1,14 @@
-import { getUserData } from "@/lib/database-service/auth";
+import { getUserData, serverComponentRedirectUnauthenticated } from "@/lib/database-service/auth";
 import CreateCourseAIForm from "@/components/feature/course/create-course-ai-form";
-import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function CreateCoursePageServer() {
-  const session = await auth();
-  if (!session?.user?.id) {
-    redirect("/");
-  }
-  const userData = await getUserData(session.user.id);
-  if (!userData) {
-    redirect("/");
+  const session = await serverComponentRedirectUnauthenticated();
+  let userData;
+  try {
+    userData = await getUserData(session.user.id);
+  } catch {
+    redirect("/handle-invalid-user");
   }
   if (userData.role !== "teacher") {
     redirect("/");

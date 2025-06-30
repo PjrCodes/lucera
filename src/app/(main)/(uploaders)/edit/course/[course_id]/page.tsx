@@ -2,8 +2,7 @@ import { EditCourseForm } from '@/components/feature/course/edit-course-form';
 import { notFound, redirect } from 'next/navigation';
 import client from '@/lib/db';
 import { ObjectId } from 'mongodb';
-import { getUserData } from "@/lib/database-service/auth";
-import { auth } from "@/lib/auth";
+import { getUserData, serverComponentRedirectUnauthenticated } from "@/lib/database-service/auth";
 
 // Async wrapper to await params
 export default async function EditCoursePage({ params }: { params: Promise<{ course_id: string }> }) {
@@ -13,13 +12,12 @@ export default async function EditCoursePage({ params }: { params: Promise<{ cou
     return notFound();
   }
 
-  const session = await auth();
-  if (!session?.user?.id) {
-    redirect("/");
-  }
-  const userData = await getUserData(session.user.id);
-  if (!userData) {
-    redirect("/");
+  const session = await serverComponentRedirectUnauthenticated();
+  let userData;
+  try {
+    userData = await getUserData(session.user.id);
+  } catch {
+    redirect("/handle-invalid-user");
   }
   if (userData.role !== "teacher") {
     redirect("/");
