@@ -7,6 +7,7 @@ import StudentAlerts from "./cards/student-alerts";
 import Bookmarks from "./cards/bookmarks";
 import Create from "./cards/create";
 import RecentlyAccessed from "./cards/recently-accessed";
+import Announcements from "./cards/announcements";
 import defaults from "@/appdata/defaults.json";
 import dashboardControlList from "@/appdata/acl/dashboard.json";
 import { MdBrokenImage } from "react-icons/md";
@@ -65,7 +66,7 @@ const componentMap: Record<string, (props: PropsForEveryDashboardCard) => JSX.El
     />
   ),
   ANNOUNCEMENTS: (props) => (
-    <StudentAlerts
+    <Announcements
       key="announcements"
       session={props.session}
       userData={props.userData}
