@@ -84,7 +84,7 @@ export const courseSchema = z.object({
   userId: z.string(),
   timeline: z.array(courseTimelineItemSchema),
   units: z.array(courseUnitSchema),
-  cover_image: z.string().nullable(),
+  coverImage: z.string().nullable(),
   status: z.enum(["draft", "published"]).default("draft"),
   courseStartDate: z.date().nullable(),
   courseEndDate: z.date().nullable(),

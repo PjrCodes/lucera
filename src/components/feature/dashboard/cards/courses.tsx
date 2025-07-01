@@ -77,7 +77,7 @@ export default async function Courses({
               <Image
                 width={300}
                 height={300}
-                src={course.cover_image || "/placeholder.jpg"}
+                src={course.coverImage || "/placeholder.jpg"}
                 alt={`Thumbnail for ${course.name}`}
                 className="w-full h-32 object-cover"
               />

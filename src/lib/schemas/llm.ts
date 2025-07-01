@@ -13,8 +13,8 @@ export type ExtractedContent = z.infer<typeof contentExtractorSchema>;
 export const syllabusExtractorSchema = z.object({
   name: z.string(),
   courseCode: z.string(),
-  courseStartDate: z.coerce.date(),
-  courseEndDate: z.coerce.date(),
+  courseStartDate: z.iso.date(),
+  courseEndDate: z.iso.date(),
   description: z.string(),
   shortDescription: z.string(),
   units: z.array(
@@ -50,6 +50,8 @@ export const syllabusExtractorSchema = z.object({
 export const syllabusExtractorLLMSchema = z.toJSONSchema(
   syllabusExtractorSchema
 );
+
+console.log(syllabusExtractorLLMSchema);
 
 export type ExtractedSyllabus = z.infer<typeof syllabusExtractorSchema>;
 
