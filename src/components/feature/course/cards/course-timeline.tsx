@@ -105,8 +105,8 @@ export default function CourseTimeline({ course }: CourseTimelineProps) {
                     </span>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-gray-600">
-                    <span>📅 Start: {formatPartialDate(item.start_date)}</span>
-                    <span>⏰ Due: {formatPartialDate(item.due_date)}</span>
+                    <span>📅 Start: {formatPartialDate(item.startDate)}</span>
+                    <span>⏰ Due: {formatPartialDate(item.dueDate)}</span>
                   </div>
                 </div>
               </div>

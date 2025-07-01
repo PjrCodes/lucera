@@ -3,21 +3,21 @@ import client from "../db";
 import { assignmentSchema, AssignmentWithEmbeddedFile } from "../schemas/database";
 import { getFileRecord } from "./files";
 
-export async function getAssignmentById(courseId: string) {
-  const course = await client
+export async function getAssignmentById(assignmentId: string) {
+  const assignment = await client
     .db()
     .collection("assignment")
-    .findOne({ _id: new ObjectId(courseId) });
+    .findOne({ _id: new ObjectId(assignmentId) });
 
-  if (!course) {
-    throw new Error("Course not found");
+  if (!assignment) {
+    throw new Error("Assignment not found");
   }
 
   try {
-    return assignmentSchema.parse(course);
+    return assignmentSchema.parse(assignment);
   } catch (error) {
-    console.error("Error parsing content:", error);
-    throw new Error("Invalid content data format");
+    console.error("Error parsing assignment:", error);
+    throw new Error("Invalid assignment data format");
   }
 }
 

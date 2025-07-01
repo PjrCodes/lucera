@@ -71,6 +71,8 @@ export default function EditAssignmentForm({
   );
 
   const [allTopics, setAllTopics] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Load course and file info from query params or existing content
   useEffect(() => {
@@ -205,33 +207,63 @@ export default function EditAssignmentForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-    const assignmentData = {
-      contentId,
-      selectedCourse,
-      title,
-      description,
-      selectedTopics: selectedTopics.map((i) => i + 1), // 1-based indexes for backend
-      startDate: startDate || null,
-      dueDate: dueDate || null,
-      gradeReleaseDate: gradeReleaseDate || null,
-      submissionType,
-      grading: {
-        type: gradingType,
-        method: gradingMethod,
-        total_points: totalPoints,
-        ...(gradingMethod === "rubric" && {
-          rubric: {
-            criteria: rubricCriteria,
-            level: rubricLevels,
-          }
-        })
-      },
-      isNew,
-    };
+    try {
+      const requestData = {
+        _id: isNew ? null : contentId,
+        data: {
+          title,
+          description,
+          courseId: selectedCourse,
+          topics: selectedTopics.map((i) => i + 1), // Convert to 1-based indexes for backend
+          fileId: null, // TODO: Handle file upload if needed
+          startDate: startDate || null,
+          dueDate: dueDate || null,
+          gradeReleaseDate: gradeReleaseDate || null,
+          submissionType,
+          grading: {
+            type: gradingType,
+            method: gradingMethod,
+            total_points: totalPoints,
+            ...(gradingMethod === "rubric" && {
+              rubric: {
+                criteria: rubricCriteria,
+                level: rubricLevels,
+              }
+            })
+          },
+        },
+      };
 
-    console.log("Saving assignment...", assignmentData);
-    // TODO: Implement save/update logic
+      const response = await fetch("/api/assignment/save", {
+        method: "POST",
+        body: JSON.stringify(requestData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(
+          `Failed to save assignment: ${errorData.error || response.statusText}`
+        );
+        setLoading(false);
+        return;
+      }
+
+      const resp = await response.json();
+      console.log("Success!", resp);
+
+      // Redirect to assignments list or course page
+      window.location.href = "/";
+    } catch (err) {
+      console.error("Error saving assignment:", err);
+      setError("Failed to save assignment. Please try again.");
+    }
+    setLoading(false);
   };
 
   return (
@@ -533,10 +565,12 @@ export default function EditAssignmentForm({
           <PrimaryButton
             type="submit"
             className="px-4 py-2"
-            disabled={!isFormValid()}
+            disabled={!isFormValid() || loading}
           >
-            {isNew ? "Create Assignment" : "Update Assignment"}
+            {loading ? "Saving..." : (isNew ? "Create Assignment" : "Update Assignment")}
           </PrimaryButton>
+
+          {error && <div className="text-red-600 mt-2">{error}</div>}
         </form>
       )}
     </div>

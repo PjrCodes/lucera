@@ -81,4 +81,40 @@ export const SaveContentRequestSchema = z.object({
   }),
 });
 
+export const SaveAssignmentRequestSchema = z.object({
+  _id: z.string().nullable(),
+  data: z.object({
+    title: z.string().min(1),
+    description: z.string().min(1),
+    courseId: z.string().min(1),
+    topics: z.array(z.number()),
+    fileId: z.string().nullable(),
+    startDate: z.string().nullable(),
+    dueDate: z.string().nullable(),
+    gradeReleaseDate: z.string().nullable(),
+    submissionType: z.enum(["file_upload", "text_entry"]),
+    grading: z.object({
+      type: z.enum(["percentage", "pass_fail"]),
+      method: z.enum(["direct", "rubric"]),
+      total_points: z.number().positive(),
+      rubric: z
+        .object({
+          criteria: z.array(
+            z.object({
+              description: z.string(),
+              points: z.number(),
+            })
+          ),
+          level: z.array(
+            z.object({
+              description: z.string(),
+              rank: z.number(),
+            })
+          ),
+        })
+        .optional(),
+    }),
+  }),
+});
+
 export type SaveContentRequest = z.infer<typeof SaveContentRequestSchema>;

@@ -8,6 +8,7 @@ import { Course, UserWithData } from "@/lib/schemas/database";
 import CourseTabs from "@/components/feature/course/course-tabs";
 import { getContentForCourse } from "@/lib/database-service/content";
 import { getAvailableStudents, getStudentsForCourse } from "@/lib/database-service/courses";
+import { getAssignmentsForCourse } from "@/lib/database-service/assignment";
 
 async function getCourse(course_id: string): Promise<Course | null> {
   const db = client.db();
@@ -54,30 +55,8 @@ export default async function CourseViewPage({
     course._id = course._id.toString();
   }
 
-  // Dummy data for assignments, materials, polls, students
-  const assignments = [
-    {
-      id: 1,
-      name: "Assignment 1: Basic Concepts",
-      due: "2024-02-15",
-      status: "pending",
-      grade: null,
-    },
-    {
-      id: 2,
-      name: "Assignment 2: Data Structures",
-      due: "2024-03-01",
-      status: "submitted",
-      grade: "85%",
-    },
-    {
-      id: 3,
-      name: "Mid-term Project",
-      due: "2024-03-15",
-      status: "graded",
-      grade: "92%",
-    },
-  ];
+  // Fetch assignments for the course
+  const assignments = await getAssignmentsForCourse(course._id.toString());
   const pollsAndAnnouncements = [
     {
       id: 1,

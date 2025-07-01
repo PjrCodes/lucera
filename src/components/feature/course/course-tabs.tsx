@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import CourseDescription from "@/components/feature/course/cards/course-description";
 import CourseUnits from "@/components/feature/course/cards/course-units";
 import CourseTimeline from "@/components/feature/course/cards/course-timeline";
@@ -7,17 +8,24 @@ import CourseGradesCard from "@/components/feature/course/cards/course-grades-ca
 import CourseMaterialsCard from "@/components/feature/course/cards/course-materials-card";
 import CoursePollsCard from "@/components/feature/course/cards/course-polls-card";
 import CourseStudentsCard from "@/components/feature/course/cards/course-students-card";
+import AssignmentView from "@/components/feature/course/assignment-view";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { BookOpen, ChartNoAxesColumn, ClipboardList, Clock, FileText, List, MessagesSquare, Users } from "lucide-react";
-import { ContentWithEmbeddedFile, Course, UserWithData } from "@/lib/schemas/database";
-
-interface Assignment {
-  id: number;
-  name: string;
-  due: string;
-  status: string;
-  grade: string | null;
-}
+import {
+  BookOpen,
+  ChartNoAxesColumn,
+  ClipboardList,
+  Clock,
+  FileText,
+  List,
+  MessagesSquare,
+  Users,
+} from "lucide-react";
+import {
+  AssignmentWithEmbeddedFile,
+  ContentWithEmbeddedFile,
+  Course,
+  UserWithData,
+} from "@/lib/schemas/database";
 
 interface PollOrAnnouncement {
   id: number;
@@ -36,7 +44,7 @@ interface Grade {
 
 interface CourseTabsProps {
   course: Course;
-  assignments: Assignment[];
+  assignments: AssignmentWithEmbeddedFile[];
   courseMaterialsData: ContentWithEmbeddedFile[];
   pollsAndAnnouncements: PollOrAnnouncement[];
   students: UserWithData[];
@@ -57,11 +65,23 @@ export default function CourseTabs({
   isTeacher,
   availableStudents,
 }: CourseTabsProps) {
+  const [selectedAssignment, setSelectedAssignment] =
+    useState<AssignmentWithEmbeddedFile | null>(null);
+  const [activeTab, setActiveTab] = useState("description");
 
+  const handleAssignmentSelect = (
+    assignment: AssignmentWithEmbeddedFile | null
+  ) => {
+    setSelectedAssignment(assignment);
+  };
+
+  const handleBackToAssignments = () => {
+    setSelectedAssignment(null);
+  };
 
   return (
     <div className="w-full flex flex-col items-center">
-      <Tabs defaultValue="description" className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         {/* Responsive scrollable tab bar */}
         <div className="w-full min-w-0 max-w-full sm:min-w-[22rem] md:min-w-[36rem] lg:min-w-[48rem] xl:min-w-[64rem] sm:max-w-5xl mx-auto">
           <TabsList className="flex flex-row flex-wrap gap-1 w-full bg-primary-100 border border-primary-200 rounded-lg p-1 min-h-fit">
@@ -97,7 +117,7 @@ export default function CourseTabs({
               value="grades"
               className="data-[state=active]:bg-accent-50 data-[state=active]:text-accent-900 text-accent-700 whitespace-nowrap flex items-center px-3 py-2"
             >
-            <ChartNoAxesColumn className="mr-1" />
+              <ChartNoAxesColumn className="mr-1" />
               Grades
             </TabsTrigger>
             <TabsTrigger
@@ -111,7 +131,6 @@ export default function CourseTabs({
               value="polls"
               className="data-[state=active]:bg-accent-50 data-[state=active]:text-accent-900 text-accent-700 whitespace-nowrap flex items-center px-3 py-2"
             >
-
               <MessagesSquare className="mr-1" />
               Polls & Announcements
             </TabsTrigger>
@@ -121,7 +140,8 @@ export default function CourseTabs({
             >
               <Users className="mr-1" />
               Students
-            </TabsTrigger>            </TabsList>
+            </TabsTrigger>{" "}
+          </TabsList>
         </div>
         {/* Content area with only min-h to prevent jumping, no extra box styling */}
         <div className="w-full min-w-0 max-w-full sm:min-w-[22rem] md:min-w-[36rem] lg:min-w-[48rem] xl:min-w-[64rem] sm:max-w-5xl mx-auto px-2 sm:px-0 mt-2 min-h-[340px] flex flex-col justify-start">
@@ -135,7 +155,21 @@ export default function CourseTabs({
             <CourseTimeline course={course} />
           </TabsContent>
           <TabsContent value="assignments">
-            <CourseAssignmentsCard assignments={assignments} />
+            {selectedAssignment ? (
+              <AssignmentView
+                assignment={selectedAssignment}
+                course={course}
+                backUrl="#"
+                onBack={handleBackToAssignments}
+              />
+            ) : (
+              <CourseAssignmentsCard
+                assignments={assignments}
+                courseId={courseId}
+                onAssignmentSelect={handleAssignmentSelect}
+                selectedAssignmentId={null}
+              />
+            )}
           </TabsContent>
           <TabsContent value="grades">
             <CourseGradesCard grades={grades} />
@@ -148,8 +182,8 @@ export default function CourseTabs({
           </TabsContent>
           {/* Students Tab */}
           <TabsContent value="students" className="mt-6">
-            <CourseStudentsCard 
-              students={students} 
+            <CourseStudentsCard
+              students={students}
               courseId={courseId}
               isTeacher={isTeacher}
               availableStudents={availableStudents}
