@@ -52,6 +52,7 @@ export const POST = auth(
       createdBy: session.user.id,
       createdAt: new Date(),
       updatedAt: new Date(),
+      type: "content",
     });
 
     if (!contentRecord.acknowledged) {

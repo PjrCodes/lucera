@@ -20,8 +20,11 @@ export const POST = auth(
         { status: 500 }
       );
     }
-    const formData = await UploadFileRequestSchema.safeParseAsync(req.body);
+    const data = await req.formData();
+
+    const formData = await UploadFileRequestSchema.safeParseAsync(Object.fromEntries(data.entries()));
     if (!formData.success) {
+      console.log(formData.error.message);
       return NextResponse.json(
         {
           status: "failed",

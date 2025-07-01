@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
       new URL("https://placehold.co/**"),
     ],
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "50mb",
+    }
+  }
 };
 
 export default nextConfig;

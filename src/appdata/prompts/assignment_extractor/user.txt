@@ -1,0 +1,40 @@
+You are provided with an assignment file for a particular course, along with the course topic list.  Please parse the content and extract the following structured data:
+
+1. Appropriate title for the assignment (e.g. "Assignment 1: Introduction to Machine Learning", "Quiz 1: Basics of Economics", etc.).
+2. Description in text format (Max 150 words). This acts as a summary of the assignment, providing a clear overview of what the assignment covers.
+3. Topics related to the assignment (these should be extracted from the given topic list, and should be relevant to the assignment).
+   - Topics should only be extracted from the provided topic list.
+   - Return the exact topic ID as provided in the topic list.
+   - Do not provide the topic name, only the ID. Ensure the ID is correct and matches the IDs present in the topic list.
+4. Start Date (Format: ISO8601 Date `YYYY-MM-DD`). Return NULL if not specified.
+5. Due Date (Format: ISO8601 Date `YYYY-MM-DD`). Return NULL if not specified.
+6. Grade Release Date (Format: ISO8601 Date `YYYY-MM-DD`). Return NULL if not specified.
+7. Submission Type (e.g. "file_upload" or "text_entry"). If not specified, return "file_upload".
+8. Grading related details:
+  - Total Points: A number representing the total points for the assignment. If not specified, return 0.
+  - Type: A string represent the type of grading, e.g. "percentage" or "pass_fail". If not specified, return "percentage".
+  - Method: A string representing the grading method, e.g. "direct" or "rubric". If not specified, return "direct".
+  - Rubric: 
+    - A complex object representing the grading rubric. If no rubric is specified, INFER and create a relevant rubric based on the assignment PDF content.
+    - The rubric should have the following structure:
+      - `criteria`: An array of objects, each with:
+        - `description`: A string describing the criterion.
+        - `points`: A number representing the points for that criterion.
+      - `level`: An array of objects, each with:
+        - `description`: A string describing the level.
+        - `rank`: A number representing the rank of the level (1 for lowest, and higher numbers for better levels).
+
+KEY INSTRUCTIONS:
+- Ensure the title is concise and accurately reflects the assignment.
+- The description should be informative, summarizing the key points of the assignment without going into excessive
+detail.
+- The topics should be strictly from the provided topic list, and only those that are relevant to
+the assignment.
+- Do not include any additional information that is not part of the structured data requested.
+- The rubrics will be rendered such that criteria is a row, and levels are columns. Ensure the rubric is well-structured.
+- Rubric will be graded such that if the user selects the highest level in a criterion, they will get the full points for that criterion. If the user selects a lower level, they will get proportionally lower points based on the rank of the level.
+- The ranks should be sequential, starting from 1. They CANNOT be skipped. For example, if you have 3 levels, they should be ranked 1, 2, and 3.
+
+TOPIC LIST:
+
+INSERT_TOPIC_LIST_HERE

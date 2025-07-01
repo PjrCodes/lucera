@@ -29,7 +29,7 @@ export default function CreateCourseAIForm({
       formData.append("content_type", "syllabus");
       // formData.append("userId", session.user.id || userData._id);
 
-      const uploadResponse = await fetch("/api/upload/file", {
+      const uploadResponse = await fetch("/api/files/upload", {
         method: "POST",
         body: formData,
       });

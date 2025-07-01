@@ -2,35 +2,35 @@ import fs from "fs";
 import { Course } from "@/lib/schemas/database";
 import { callLLMWithSchema } from "./call-llm";
 import {
-  contentExtractorLLMSchema,
-  contentExtractorSchema,
-  ExtractedContent,
+  assignmentExtractorLLMSchema,
+  assignmentExtractorSchema,
+  ExtractedAssignment,
 } from "@/lib/schemas/llm";
 
 const contentExtractorUserPrompt = fs.readFileSync(
-  "./src/appdata/prompts/content_extractor/user.txt",
+  "./src/appdata/prompts/assignment_extractor/user.txt",
   "utf-8"
 );
 const contentExtractorSystemPrompt = fs.readFileSync(
-  "./src/appdata/prompts/content_extractor/system.txt",
+  "./src/appdata/prompts/assignment_extractor/system.txt",
   "utf-8"
 );
 
-type LLMContentExtractorResult =
-  | { success: true; error: null; data: ExtractedContent }
+type LLMAssignmentExtractorResult =
+  | { success: true; error: null; data: ExtractedAssignment }
   | { success: false; error: string; data: null };
 
-export async function LLMContentExtractor(
+export async function LLMAssignmentExtractor(
   fileBuffer: Buffer,
   course: Course
-): Promise<LLMContentExtractorResult> {
+): Promise<LLMAssignmentExtractorResult> {
   let counter = 1;
   const topicList = course.units
     .map((unit) => `${counter++}. ${unit.name}: ${unit.description}`)
     .join("\n");
 
   const llmTextResponse = callLLMWithSchema(
-    contentExtractorLLMSchema,
+    assignmentExtractorLLMSchema,
     contentExtractorSystemPrompt,
     contentExtractorUserPrompt.replace("INSERT_TOPIC_LIST_HERE", topicList),
     {
@@ -42,7 +42,7 @@ export async function LLMContentExtractor(
 
   try {
     const parsedResponse =
-      contentExtractorSchema.parse(llmTextResponse);
+      assignmentExtractorSchema.parse(llmTextResponse);
     return {
       success: true,
       error: null,
@@ -50,7 +50,7 @@ export async function LLMContentExtractor(
     };
   } catch (error) {
     console.error(
-      "[LLM_CONTENT_EXTRACTOR]: Error parsing LLM response:",
+      "[LLM_ASSIGNMENT_EXTRACTOR]: Error parsing LLM response:",
       error
     );
     return {

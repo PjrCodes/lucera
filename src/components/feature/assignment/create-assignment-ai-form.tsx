@@ -8,7 +8,7 @@ import { Course, UserData } from "@/lib/schemas/database";
 import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 
-export default function CreateContentAIForm({
+export default function CreateAssignmentAIForm({
   // userData,
   // session,
   courses,
@@ -30,7 +30,7 @@ export default function CreateContentAIForm({
     try {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("content_type", "content");
+      formData.append("content_type", "assignment");
 
       // upload pdf
       const result = await fetch("/api/files/upload", {
@@ -39,7 +39,7 @@ export default function CreateContentAIForm({
       });
       if (!result.ok) {
         const errorData = await result.json();
-        setError(errorData.error || "Failed to upload content file.");
+        setError(errorData.error || "Failed to upload assignment file.");
         // return;
       }
 
@@ -49,7 +49,7 @@ export default function CreateContentAIForm({
 
       }
 
-      const magicCreate = await fetch("/api/magic-create/content", {
+      const magicCreate = await fetch("/api/magic-create/assignment", {
         method: "POST",
         body: JSON.stringify({
           fileId: uploadResult.fileId,
@@ -78,7 +78,7 @@ export default function CreateContentAIForm({
       console.log("AI processed content ID:", resId);
       // Redirect to edit page with AI-processed data and file info
       router.push(
-        `/edit/content/${resId}?courseId=${selectedCourse}&hasFile=true&fileName=${encodeURIComponent(
+        `/edit/assignment/${resId}?courseId=${selectedCourse}&hasFile=true&fileName=${encodeURIComponent(
           file.name
         )}`
       );
@@ -91,12 +91,12 @@ export default function CreateContentAIForm({
 
   const handleSkipToEdit = () => {
     if (!selectedCourse) return;
-    router.push(`/edit/content/new?courseId=${selectedCourse}&hasFile=false`);
+    router.push(`/edit/assignment/new?courseId=${selectedCourse}&hasFile=false`);
   };
 
   return (
     <div className="max-w-xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Upload Course Content</h1>
+      <h1 className="text-2xl font-bold mb-6">Create an Assignment</h1>
 
       {!selectedCourse ? (
         <div>

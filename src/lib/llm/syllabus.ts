@@ -2,7 +2,7 @@ import fs from "fs";
 import { callLLMWithSchema } from "./call-llm";
 import {
   ExtractedSyllabus,
-  syllabusExtractorLLMResponseSchema,
+  syllabusExtractorLLMSchema,
   syllabusExtractorSchema,
 } from "@/lib/schemas/llm";
 
@@ -25,7 +25,7 @@ export async function LLMSyllabusExtractor(
   // save the text to a file for debugging purposes
 
   const llmTextResponse = await callLLMWithSchema(
-    syllabusExtractorSchema,
+    syllabusExtractorLLMSchema,
     syllabusExtractorSystemPrompt,
     syllabusExtractorUserPrompt,
     {
@@ -37,7 +37,7 @@ export async function LLMSyllabusExtractor(
 
   try {
     const parsedResponse =
-      syllabusExtractorLLMResponseSchema.parse(llmTextResponse);
+      syllabusExtractorSchema.parse(llmTextResponse);
 
     // further parsing of content into DATE
 

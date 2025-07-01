@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import * as z from "zod/v4";
+import { assignmentExtractorSchema } from "./llm";
 
 export const fileSchema = z.object({
   _id: z.instanceof(ObjectId).optional(),
@@ -105,9 +106,25 @@ export const contentSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   shortDescription: z.string().optional(),
+  type: z.enum(["content", "syllabus"]).default("content"),
 });
 export type Content = z.infer<typeof contentSchema>;
 
 export type ContentWithEmbeddedFile = Content & {
+  file: CustomFile;
+};
+
+export const assignmentSchema = assignmentExtractorSchema.extend({
+  _id: z.instanceof(ObjectId).or(z.string()),
+  courseId: z.string(),
+  fileId: z.string().optional(),
+  createdBy: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
+
+export type Assignment = z.infer<typeof assignmentSchema>;
+
+export type AssignmentWithEmbeddedFile = Assignment & {
   file: CustomFile;
 };

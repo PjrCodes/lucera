@@ -74,25 +74,28 @@ export const POST = auth(
       );
     }
 
-    const courseIdStr = courseRecord.insertedId.toString();
+    const contentRecord = await db.collection("content").insertOne({
+      courseId: courseRecord.insertedId.toString(),
+      title: "Syllabus",
+      description: description,
+      topics: [], // Syllabus has no topics
+      fileId: fileId,
+      createdBy: session.user.id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      type: "syllabus",
+    });
 
-    // Update user's relatedCourses array
-    try {
-      const userCollection = db.collection("user_data");
-      await userCollection.updateOne(
-        { id: session.user.id },
-        /* @ts-expect-error: mongodb types dont always match up */
-        { $push: { relatedCourses: courseIdStr } }
+    if (!contentRecord.acknowledged) {
+      return NextResponse.json(
+        { error: "Failed to create content record" },
+        { status: 500 }
       );
-    } catch (userUpdateError) {
-      console.error("Failed to update user relatedCourses:", userUpdateError);
-      // Note: Course was created successfully, but user update failed
-      // You might want to log this or handle it according to your business logic
     }
 
     return NextResponse.json({
       success: true,
-      courseId: courseRecord.insertedId,
+      courseId: courseRecord.insertedId.toString(),
     });
   })
 );

@@ -12,13 +12,13 @@
 - [ ] Move all schemas, interfaces, and types to common locations.
 - [ ] Move all utility functions to common locations.
 - [ ] Refactor constant functions / variables appropriately if they are not being used much, etc.
-- [ ] FUNCTIONAL Bookmarks
+
 - [ ] FUNCTIONAL Assignments System
   - [ ] Assignment upload on teacher side
   - [ ] Assignment download on student side
   - [ ] Assignment submission on student side
   - [ ] Assignment grading on teacher side - for now, just a simple text field per question
-
+- [ ] FUNCTIONAL Bookmarks
 - [ ] UI Improvements
   - [ ] Make it more consistent
   - [ ] Make it more visually appealing
@@ -27,8 +27,8 @@
   - [ ] Assignments should show up only if an assignment is created for that event - these don't "need" to be linked. They can be created independently.
   - [ ] Quizzes should always show up.
   - [ ] Field trips, etc. should always show up.
-- [ ] FUNCTIONAL Recently Accessed System
 
+- [ ] FUNCTIONAL Recently Accessed System
 
 After the above, if time permits, then:
 
