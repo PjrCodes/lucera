@@ -7,7 +7,7 @@
 ## Requirements for AHM
 
 - [X] FIX each page to have a consistent logic for auth checking, etc. and use the latest cool utilities created by us for ourselves.
-- [ ] "Logical Flow Features": Teachers must add student to a course.
+- [X] "Logical Flow Features": Teachers must add student to a course.
 - [ ] Properly update the `relatedFiles` field in the UserData schema.
 - [ ] Move all schemas, interfaces, and types to common locations.
 - [ ] Move all utility functions to common locations.
