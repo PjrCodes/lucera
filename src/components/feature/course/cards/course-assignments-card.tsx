@@ -1,6 +1,7 @@
 "use client";
 import { AssignmentWithEmbeddedFile } from "@/lib/schemas/database";
 import { FiClipboard, FiChevronRight } from "react-icons/fi";
+import Link from "next/link";
 
 interface CourseAssignmentsCardProps {
   assignments: AssignmentWithEmbeddedFile[];
@@ -27,8 +28,16 @@ export default function CourseAssignmentsCard({
     return startDate && new Date(startDate) > new Date();
   };
 
-  const handleAssignmentClick = (assignment: AssignmentWithEmbeddedFile) => {
-    onAssignmentSelect?.(assignment);
+  const handleAssignmentClick = (
+    assignment: AssignmentWithEmbeddedFile,
+    e: React.MouseEvent
+  ) => {
+    // If we have an onAssignmentSelect handler, prevent navigation and show in-place
+    if (onAssignmentSelect) {
+      e.preventDefault();
+      onAssignmentSelect(assignment);
+    }
+    // Otherwise, let the Link handle navigation normally
   };
 
   if (assignments.length === 0) {
@@ -58,10 +67,11 @@ export default function CourseAssignmentsCard({
           const isSelected = selectedAssignmentId === assignment._id.toString();
 
           return (
-            <button
+            <Link
               key={assignment._id.toString()}
-              onClick={() => handleAssignmentClick(assignment)}
-              className={`w-full text-left border-l-4 ${
+              href={`/view/assignment/${assignment._id.toString()}`}
+              onClick={(e) => handleAssignmentClick(assignment, e)}
+              className={`block w-full text-left border-l-4 ${
                 isSelected
                   ? "border-primary-500 bg-white"
                   : "border-secondary-300"
@@ -111,7 +121,7 @@ export default function CourseAssignmentsCard({
                   } transition-colors flex-shrink-0`}
                 />
               </div>
-            </button>
+            </Link>
           );
         })}
       </div>
