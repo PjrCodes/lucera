@@ -42,6 +42,8 @@ export default function EditContentForm({
 
   // Add state for allTopics
   const [allTopics, setAllTopics] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Load course and file info from query params or existing content
   useEffect(() => {
@@ -117,17 +119,48 @@ export default function EditContentForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement save/update logic
-    console.log("Saving content...", {
-      contentId,
-      selectedCourse,
-      title,
-      description,
-      selectedTopics, // 0-based indexes
-      selectedTopicsOneBased: selectedTopics.map((i) => i + 1), // 1-based indexes for backend
-      selectedTopicNames: selectedTopics.map((i) => allTopics[i]), // topic names
-      isNew,
-    });
+    setLoading(true);
+    setError(null);
+
+    try {
+      const requestData = {
+        _id: isNew ? null : contentId,
+        data: {
+          title,
+          description,
+          courseId: selectedCourse,
+          topics: selectedTopics.map((i) => i + 1), // Convert to 1-based indexes for backend
+          fileId: null, // TODO: Handle file upload if needed
+        },
+      };
+
+      const response = await fetch("/api/content/save", {
+        method: "POST",
+        body: JSON.stringify(requestData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(
+          `Failed to save content: ${errorData.error || response.statusText}`
+        );
+        setLoading(false);
+        return;
+      }
+
+      const resp = await response.json();
+      console.log("Success!", resp);
+
+      // Redirect to content list or course page
+      window.location.href = "/";
+    } catch (err) {
+      console.error("Error saving content:", err);
+      setError("Failed to save content. Please try again.");
+    }
+    setLoading(false);
   };
 
   return (
@@ -234,10 +267,12 @@ export default function EditContentForm({
           <PrimaryButton
             type="submit"
             className="px-4 py-2"
-            disabled={!title || !description || selectedTopics.length === 0}
+            disabled={!title || !description || selectedTopics.length === 0 || loading}
           >
-            {isNew ? "Create Content" : "Update Content"}
+            {loading ? "Saving..." : (isNew ? "Create Content" : "Update Content")}
           </PrimaryButton>
+
+          {error && <div className="text-red-600 mt-2">{error}</div>}
         </form>
       )}
     </div>

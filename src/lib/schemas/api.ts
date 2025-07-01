@@ -69,3 +69,16 @@ export const SaveCourseRequestSchema = z.union([
     }),
   }),
 ]);
+
+export const SaveContentRequestSchema = z.object({
+  _id: z.string().nullable(),
+  data: z.object({
+    title: z.string().min(1, "Title is required"),
+    description: z.string().min(1, "Description is required"),
+    courseId: z.string().min(1, "Course ID is required"),
+    topics: z.array(z.number()).min(1, "At least one topic must be selected"),
+    fileId: z.string().nullable().optional(),
+  }),
+});
+
+export type SaveContentRequest = z.infer<typeof SaveContentRequestSchema>;
