@@ -41,7 +41,7 @@ export async function getFileRecord(fileId: string, ownerId?: string) {
   if (!parsedFileRecord.success) {
     console.error(
       "[LIB_GET_FILE] FATAL: Invalid file record format:",
-      parsedFileRecord.error,
+      parsedFileRecord.error
     );
     throw new Error("Invalid file database record");
   }
@@ -51,7 +51,7 @@ export async function getFileRecord(fileId: string, ownerId?: string) {
 
 export async function loadFileFromDiskById(
   fileId: string,
-  ownerId?: string,
+  ownerId?: string
 ): Promise<LoadFileFromDiskReturnType> {
   let fileRecord;
   try {
@@ -60,7 +60,7 @@ export async function loadFileFromDiskById(
     return {
       error: NextResponse.json(
         { error: "Failed to retrieve file record", detailedError: error },
-        { status: 500 },
+        { status: 500 }
       ),
     };
   }
@@ -71,7 +71,7 @@ export async function loadFileFromDiskById(
     return {
       error: NextResponse.json(
         { error: "File not found on disk" },
-        { status: 404 },
+        { status: 404 }
       ),
     };
   }
@@ -83,7 +83,7 @@ export async function loadFileFromDiskById(
     return {
       error: NextResponse.json(
         { error: "Failed to read file from disk" },
-        { status: 500 },
+        { status: 500 }
       ),
     };
   }
@@ -94,7 +94,7 @@ export async function loadFileFromDiskById(
 export async function uploadFile(
   userId: string,
   file: File,
-  content_type: string,
+  content_type: string
 ) {
   const fileBuffer = new Uint8Array(await file.arrayBuffer());
 
@@ -104,7 +104,7 @@ export async function uploadFile(
     console.error("Error writing file:", e);
     return NextResponse.json(
       { status: "failed", error: "Failed to write file to disk" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 
@@ -125,15 +125,20 @@ export async function uploadFile(
         status: "failed",
         error: parsedFile.error?.message || "Invalid file data",
       },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   const db = client.db();
   const collection = db.collection("files");
+  // ensure there is no ID in the parsed file data
   let insertedObject;
   try {
-    insertedObject = await collection.insertOne(parsedFile.data);
+    // Remove _id if present and not an ObjectId
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { _id, ...fileData } = parsedFile.data;
+    insertedObject = await collection.insertOne(fileData);
   } catch (e) {
     console.error("Error inserting file record into database:", e);
     return NextResponse.json(
@@ -141,19 +146,19 @@ export async function uploadFile(
         status: "failed",
         error: "Failed to insert file record into database",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
   if (!insertedObject.acknowledged) {
     return NextResponse.json(
       { status: "failed", error: "Failed to insert file record" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 
   console.log("File uploaded and record created:", insertedObject);
   return NextResponse.json(
     { status: "success", fileId: insertedObject.insertedId.toString() },
-    { status: 200 },
+    { status: 200 }
   );
 }

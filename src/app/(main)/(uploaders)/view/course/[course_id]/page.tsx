@@ -92,7 +92,7 @@ export default async function CourseViewPage({
   ];
 
   const students: UserWithData[] = await getStudentsForCourse(
-    course._id.toString(),
+    course._id.toString()
   );
 
   // Get available students for invitation (only for teachers)
@@ -105,25 +105,51 @@ export default async function CourseViewPage({
 
   const isBookmarked = false;
 
-  const courseMaterialsData = await getContentForCourse(course._id.toString());
+  const courseMaterialsData = (
+    await getContentForCourse(course._id.toString())
+  ).map((content) => ({
+    ...content,
+    _id: content._id.toString(),
+    file: {
+      ...content.file,
+      _id: content.file._id?.toString(),
+    },
+  }));
 
+  const safeCourse = {
+    ...course,
+    _id: course._id.toString(),
+  };
+  console.log(safeCourse);
+  const safeStudents = students.map((student) => ({
+    ...student,
+    _id: student._id.toString(),
+  }));
+  const safeAssignments = assignments.map((assignment) => ({
+    ...assignment,
+    _id: assignment._id.toString(),
+    file: {
+      ...assignment.file,
+      _id: assignment.file._id?.toString(),
+    },
+  }));
   return (
     <>
       <SetHeaderClientComponent title={course.name.toUpperCase()} />
       <div className="min-h-screen bg-primary-50">
         <div className="max-w-5xl mx-auto p-6">
           <CourseHeader
-            course={course}
+            course={safeCourse}
             isTeacher={isTeacher}
             isBookmarked={isBookmarked}
           />
           <div className="mt-6">
             <CourseTabs
-              course={course}
-              assignments={assignments}
+              course={safeCourse}
+              assignments={safeAssignments}
               courseMaterialsData={courseMaterialsData}
               pollsAndAnnouncements={pollsAndAnnouncements}
-              students={students}
+              students={safeStudents}
               grades={grades}
               courseId={course._id.toString()}
               isTeacher={isTeacher}

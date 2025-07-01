@@ -3,7 +3,7 @@ import * as z from "zod/v4";
 import { assignmentExtractorSchema } from "./llm";
 
 export const fileSchema = z.object({
-  _id: z.instanceof(ObjectId).optional(),
+  _id: z.instanceof(ObjectId).or(z.string()).optional(),
   name: z.string(),
   size: z.number(),
   file_type: z.string(),
@@ -30,7 +30,7 @@ export const dashboardLayoutSchema = z.object({
 export type DashboardLayout = z.infer<typeof dashboardLayoutSchema>;
 
 export const userDataSchema = z.object({
-  _id: z.instanceof(ObjectId).optional(),
+  _id: z.instanceof(ObjectId).or(z.string()),
   role: z.enum(["student", "teacher"]),
   dashboardLayout: dashboardLayoutSchema,
   id: z.string(),
