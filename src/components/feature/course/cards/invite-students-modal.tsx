@@ -98,7 +98,7 @@ export default function InviteStudentsModal({
               <div className="mb-3 flex flex-wrap gap-2">
                 {selectedStudents.map((studentId) => {
                   const student = availableStudents.find(
-                    (s) => s.id === studentId
+                    (s) => s.id === studentId,
                   );
                   if (!student) return null;
                   return (

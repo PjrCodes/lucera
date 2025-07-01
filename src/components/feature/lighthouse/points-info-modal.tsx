@@ -6,7 +6,10 @@ interface PointsInfoModalProps {
   onClose: () => void;
 }
 
-const PointsInfoModal: React.FC<PointsInfoModalProps> = ({ isOpen, onClose }) => {
+const PointsInfoModal: React.FC<PointsInfoModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   if (!isOpen) return null;
 
   const pointSources = [
@@ -14,26 +17,28 @@ const PointsInfoModal: React.FC<PointsInfoModalProps> = ({ isOpen, onClose }) =>
       icon: Target,
       title: "Assignment Completion",
       points: "10-50 pts",
-      description: "Points based on assignment complexity and score achieved"
+      description: "Points based on assignment complexity and score achieved",
     },
     {
       icon: Trophy,
       title: "Badge Achievements",
       points: "50-250 pts",
-      description: "Earn points when you unlock new badges for various accomplishments"
+      description:
+        "Earn points when you unlock new badges for various accomplishments",
     },
     {
       icon: Users,
       title: "Class Participation",
       points: "5-25 pts",
-      description: "Active participation in discussions, forums, and group activities"
+      description:
+        "Active participation in discussions, forums, and group activities",
     },
     {
       icon: Star,
       title: "Bonus Activities",
       points: "15-100 pts",
-      description: "Extra credit activities, challenges, and special events"
-    }
+      description: "Extra credit activities, challenges, and special events",
+    },
   ];
 
   return (
@@ -44,7 +49,9 @@ const PointsInfoModal: React.FC<PointsInfoModalProps> = ({ isOpen, onClose }) =>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <Star className="w-8 h-8 text-primary-600" />
-              <h2 className="text-2xl font-bold text-secondary-800">How Points Work</h2>
+              <h2 className="text-2xl font-bold text-secondary-800">
+                How Points Work
+              </h2>
             </div>
             <button
               onClick={onClose}
@@ -57,27 +64,38 @@ const PointsInfoModal: React.FC<PointsInfoModalProps> = ({ isOpen, onClose }) =>
           {/* Overview */}
           <div className="mb-6">
             <p className="text-gray-600 leading-relaxed">
-              The Lighthouse points system rewards your academic achievements and engagement.
-              Points are automatically awarded based on your activities and help determine your
-              position on the leaderboard.
+              The Lighthouse points system rewards your academic achievements
+              and engagement. Points are automatically awarded based on your
+              activities and help determine your position on the leaderboard.
             </p>
           </div>
 
           {/* Point Sources */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-secondary-800 mb-4">Ways to Earn Points</h3>
+            <h3 className="text-lg font-semibold text-secondary-800 mb-4">
+              Ways to Earn Points
+            </h3>
             <div className="space-y-4">
               {pointSources.map((source, index) => (
-                <div key={index} className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg"
+                >
                   <div className="bg-secondary-100 p-2 rounded-lg">
                     <source.icon className="w-5 h-5 text-secondary-600" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
-                      <h4 className="font-semibold text-secondary-800">{source.title}</h4>
-                      <span className="text-primary-800 font-bold text-sm">{source.points}</span>
+                      <h4 className="font-semibold text-secondary-800">
+                        {source.title}
+                      </h4>
+                      <span className="text-primary-800 font-bold text-sm">
+                        {source.points}
+                      </span>
                     </div>
-                    <p className="text-gray-600 text-sm">{source.description}</p>
+                    <p className="text-gray-600 text-sm">
+                      {source.description}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -86,19 +104,24 @@ const PointsInfoModal: React.FC<PointsInfoModalProps> = ({ isOpen, onClose }) =>
 
           {/* Ranking System */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-secondary-800 mb-4">Ranking System</h3>
+            <h3 className="text-lg font-semibold text-secondary-800 mb-4">
+              Ranking System
+            </h3>
             <div className="bg-secondary-100 p-4 rounded-lg">
               <p className="text-secondary-800 text-sm leading-relaxed">
-                Your rank is determined by your total points compared to other students.
-                Points are accumulated across all your courses and activities. The leaderboard
-                updates in real-time as you earn more points through your academic journey.
+                Your rank is determined by your total points compared to other
+                students. Points are accumulated across all your courses and
+                activities. The leaderboard updates in real-time as you earn
+                more points through your academic journey.
               </p>
             </div>
           </div>
 
           {/* Tips */}
           <div>
-            <h3 className="text-lg font-semibold text-secondary-800 mb-4">Tips to Maximize Points</h3>
+            <h3 className="text-lg font-semibold text-secondary-800 mb-4">
+              Tips to Maximize Points
+            </h3>
             <ul className="space-y-2 text-gray-600 text-sm">
               <li className="flex items-start gap-2">
                 <span className="text-primary-600 mt-1">•</span>

@@ -9,11 +9,11 @@ import {
 
 const contentExtractorUserPrompt = fs.readFileSync(
   "./src/appdata/prompts/content_extractor/user.txt",
-  "utf-8"
+  "utf-8",
 );
 const contentExtractorSystemPrompt = fs.readFileSync(
   "./src/appdata/prompts/content_extractor/system.txt",
-  "utf-8"
+  "utf-8",
 );
 
 type LLMContentExtractorResult =
@@ -22,7 +22,7 @@ type LLMContentExtractorResult =
 
 export async function LLMContentExtractor(
   fileBuffer: Buffer,
-  course: Course
+  course: Course,
 ): Promise<LLMContentExtractorResult> {
   let counter = 1;
   const topicList = course.units
@@ -37,12 +37,13 @@ export async function LLMContentExtractor(
       fileBuffer: fileBuffer,
       fileName: "content.pdf",
       mimeType: "application/pdf",
-    }
+    },
   );
 
   try {
-    const parsedResponse =
-      contentExtractorSchema.parse(JSON.parse(llmTextResponse));
+    const parsedResponse = contentExtractorSchema.parse(
+      JSON.parse(llmTextResponse),
+    );
     return {
       success: true,
       error: null,
@@ -51,7 +52,7 @@ export async function LLMContentExtractor(
   } catch (error) {
     console.error(
       "[LLM_CONTENT_EXTRACTOR]: Error parsing LLM response:",
-      error
+      error,
     );
     return {
       success: false,

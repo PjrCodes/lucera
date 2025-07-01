@@ -13,15 +13,19 @@ import { withTeacherSession } from "@/lib/database-service/auth";
 export const POST = auth(
   withTeacherSession(async function POST(
     req: NextAuthRequest,
-    session: AuthenticatedSession
+    session: AuthenticatedSession,
   ) {
     const body = await req.json();
     console.log("Magic Create Content Request Body:", body);
     const parsedBody = MagicCreateContentRequestSchema.safeParse(body);
     if (!parsedBody.success) {
       return NextResponse.json(
-        { error: parsedBody.error.issues.map((issue) => issue.message).join(", ") },
-        { status: 400 }
+        {
+          error: parsedBody.error.issues
+            .map((issue) => issue.message)
+            .join(", "),
+        },
+        { status: 400 },
       );
     }
     const { fileId, courseId } = parsedBody.data;
@@ -35,7 +39,10 @@ export const POST = auth(
     // Call LLM parse apis with error handling
     const courseRecord = await getCourseById(courseId);
 
-    const llmResult = await LLMContentExtractor(loadResponse.fileBuffer, courseRecord);
+    const llmResult = await LLMContentExtractor(
+      loadResponse.fileBuffer,
+      courseRecord,
+    );
 
     const {
       title = "Enter Course Title",
@@ -59,7 +66,7 @@ export const POST = auth(
     if (!contentRecord.acknowledged) {
       return NextResponse.json(
         { error: "Failed to create content record" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -68,5 +75,5 @@ export const POST = auth(
       message: "Content created successfully",
       status: "success",
     });
-  })
+  }),
 );

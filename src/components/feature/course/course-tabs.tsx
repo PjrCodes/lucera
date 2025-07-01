@@ -70,7 +70,7 @@ export default function CourseTabs({
   const [activeTab, setActiveTab] = useState("description");
 
   const handleAssignmentSelect = (
-    assignment: AssignmentWithEmbeddedFile | null
+    assignment: AssignmentWithEmbeddedFile | null,
   ) => {
     setSelectedAssignment(assignment);
   };

@@ -1,8 +1,12 @@
-'use client';
+"use client";
 
-import { ProgressProvider } from '@bprogress/next/app';
+import { ProgressProvider } from "@bprogress/next/app";
 
-export default function ClientProviders({ children }: { children: React.ReactNode }) {
+export default function ClientProviders({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <ProgressProvider
       height="4px"

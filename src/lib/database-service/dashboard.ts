@@ -3,8 +3,9 @@ import client from "@/lib/db";
 import defaults from "@/appdata/defaults.json";
 import { DashboardLayout } from "@/lib/schemas/database";
 
-
-export async function getUserDashboardLayout(userId: string): Promise<DashboardLayout> {
+export async function getUserDashboardLayout(
+  userId: string,
+): Promise<DashboardLayout> {
   try {
     const userData = await getUserData(userId);
 
@@ -17,7 +18,6 @@ export async function getUserDashboardLayout(userId: string): Promise<DashboardL
     return isTeacher
       ? defaults.dashboardLayout.teacher
       : defaults.dashboardLayout.student;
-
   } catch (error) {
     console.error("Error fetching dashboard layout:", error);
     // Fallback to student default if user data fetch fails
@@ -25,7 +25,10 @@ export async function getUserDashboardLayout(userId: string): Promise<DashboardL
   }
 }
 
-export async function saveDashboardLayout(userId: string, layout: DashboardLayout): Promise<void> {
+export async function saveDashboardLayout(
+  userId: string,
+  layout: DashboardLayout,
+): Promise<void> {
   const db = client.db();
   const collection = db.collection("user_data");
 
@@ -35,21 +38,23 @@ export async function saveDashboardLayout(userId: string, layout: DashboardLayou
       {
         $set: {
           dashboardLayout: layout,
-          updatedAt: new Date()
-        }
+          updatedAt: new Date(),
+        },
       },
-      { upsert: true }
+      { upsert: true },
     );
   } catch (error) {
-    console.error("[LIB_SAVE_DASHBOARD_LAYOUT] Error saving dashboard layout:", error);
+    console.error(
+      "[LIB_SAVE_DASHBOARD_LAYOUT] Error saving dashboard layout:",
+      error,
+    );
     throw new Error("Failed to save dashboard layout");
   }
 }
 
-
 export async function setDefaultDashboardLayout(
   userId: string,
-  isTeacher: boolean
+  isTeacher: boolean,
 ) {
   const db = client.db();
   const customUserDataCollection = db.collection("user_data");
@@ -60,13 +65,12 @@ export async function setDefaultDashboardLayout(
       { id: userId },
       {
         $set: {
-          dashboardLayout:
-            !isTeacher
-              ? defaults.dashboardLayout.student
-              : defaults.dashboardLayout.teacher,
+          dashboardLayout: !isTeacher
+            ? defaults.dashboardLayout.student
+            : defaults.dashboardLayout.teacher,
         },
       },
-      { upsert: true }
+      { upsert: true },
     );
     // Redirect to the profile page after successful role assignment
   } catch (error) {

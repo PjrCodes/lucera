@@ -26,7 +26,7 @@ export async function getUserData(userId: string) {
   if (!parsedUser.success) {
     console.error("Invalid user data format:", parsedUser.error);
     throw new InvalidDataError(
-      "Invalid user data format: " + parsedUser.error.message
+      "Invalid user data format: " + parsedUser.error.message,
     );
   }
 
@@ -77,40 +77,40 @@ export function withTeacherSession(
     req: NextAuthRequest,
     session: AuthenticatedSession,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    params: Promise<any>
-  ) => Promise<Response>
+    params: Promise<any>,
+  ) => Promise<Response>,
 ) {
   return async function (
     req: NextAuthRequest,
     ctx: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       params: Promise<any>;
-    }
+    },
   ) {
     if (!req.auth) {
       return NextResponse.json(
         { error: "Unauthorized: No authentication provided" },
-        { status: 401 }
+        { status: 401 },
       );
     }
     const session = req.auth;
     if (!session.user || !session.user.id) {
       return NextResponse.json(
         { error: "Unauthorized: No user information found" },
-        { status: 401 }
+        { status: 401 },
       );
     }
     try {
       if (!(await checkTeacherhood(session.user.id))) {
         return NextResponse.json(
           { error: "Forbidden: User is not a teacher" },
-          { status: 403 }
+          { status: 403 },
         );
       }
     } catch {
       return NextResponse.json(
         { error: "Internal Error: Server error processing user data" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -123,27 +123,27 @@ export function withAuthorisation(
     req: NextAuthRequest,
     session: AuthenticatedSession,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    params: Promise<any>
-  ) => Promise<Response>
+    params: Promise<any>,
+  ) => Promise<Response>,
 ) {
   return async function (
     req: NextAuthRequest,
     ctx: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       params: Promise<any>;
-    }
+    },
   ) {
     if (!req.auth) {
       return NextResponse.json(
         { error: "Unauthorized: No authentication provided" },
-        { status: 401 }
+        { status: 401 },
       );
     }
     const session = req.auth;
     if (!session.user || !session.user.id) {
       return NextResponse.json(
         { error: "Unauthorized: No user information found" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -199,12 +199,12 @@ export async function setUserRoleInDb(
             updatedAt: new Date(),
           },
         },
-    { upsert: true }
+    { upsert: true },
   );
 
   if (dbreq.acknowledged) {
     console.log(
-      `User role updated successfully for user ${userId} to ${role}.`
+      `User role updated successfully for user ${userId} to ${role}.`,
     );
   } else {
     throw new Error("Failed to update user role in the database.");

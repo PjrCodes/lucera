@@ -52,12 +52,12 @@ export function EditCourseForm({
   // Form state
   const [name, setName] = useState(course?.name || "");
   const [shortDescription, setShortDescription] = useState(
-    course?.shortDescription || ""
+    course?.shortDescription || "",
   );
   const [description, setDescription] = useState(course?.description || "");
   const [units, setUnits] = useState<Unit[]>(course?.units || []);
   const [timeline, setTimeline] = useState<TimelineItem[]>(
-    course?.timeline || []
+    course?.timeline || [],
   );
   const [syllabusFile, setSyllabusFile] = useState<File | null>(null);
 
@@ -70,17 +70,17 @@ export function EditCourseForm({
   >([]);
   const handleUnitChange = (idx: number, field: keyof Unit, value: string) => {
     setUnits((prev) =>
-      prev.map((u, i) => (i === idx ? { ...u, [field]: value } : u))
+      prev.map((u, i) => (i === idx ? { ...u, [field]: value } : u)),
     );
   };
 
   const handleTimelineChange = (
     idx: number,
     field: keyof TimelineItem,
-    value: string | boolean
+    value: string | boolean,
   ) => {
     setTimeline((prev) =>
-      prev.map((t, i) => (i === idx ? { ...t, [field]: value } : t))
+      prev.map((t, i) => (i === idx ? { ...t, [field]: value } : t)),
     );
   };
 
@@ -146,7 +146,7 @@ export function EditCourseForm({
       if (!response.ok) {
         const errorData = await response.json();
         setError(
-          `Failed to save course: ${errorData.error || response.statusText}`
+          `Failed to save course: ${errorData.error || response.statusText}`,
         );
         setLoading(false);
         return;
@@ -491,7 +491,7 @@ export function EditCourseForm({
                   handleTimelineChange(
                     rowKeyValue,
                     columnKey as keyof TimelineItem,
-                    value
+                    value,
                   );
                 }
                 if (action.type === "OpenEditor") {

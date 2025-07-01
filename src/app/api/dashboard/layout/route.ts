@@ -9,15 +9,15 @@ import { UpdateDashboardLayoutRequestSchema } from "@/lib/schemas/api";
 export const POST = auth(
   withAuthorisation(async function POST(
     req: NextAuthRequest,
-    session: AuthenticatedSession
+    session: AuthenticatedSession,
   ) {
     const layout = await UpdateDashboardLayoutRequestSchema.safeParseAsync(
-      await req.json()
+      await req.json(),
     );
     if (!layout.success) {
       return NextResponse.json(
         { error: "Invalid layout data" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -27,8 +27,8 @@ export const POST = auth(
     } catch {
       return NextResponse.json(
         { error: "Failed to save layout." },
-        { status: 500 }
+        { status: 500 },
       );
     }
-  })
+  }),
 );

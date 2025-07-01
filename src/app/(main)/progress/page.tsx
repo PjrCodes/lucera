@@ -1,6 +1,4 @@
-import {
-  getSessionAndUserData,
-} from "@/lib/database-service/auth";
+import { getSessionAndUserData } from "@/lib/database-service/auth";
 import Courses from "@/components/feature/dashboard/cards/courses";
 import React from "react";
 

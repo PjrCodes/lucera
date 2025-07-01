@@ -82,10 +82,12 @@ export default function SearchBarElement({
           <Search size={24} />
         </button>
         {/* Expanded search container overlays the whole width */}
-        <div className={`absolute left-0 top-0 w-full h-full flex items-center bg-secondary-50 shadow-sm rounded-full px-2 py-1
+        <div
+          className={`absolute left-0 top-0 w-full h-full flex items-center bg-secondary-50 shadow-sm rounded-full px-2 py-1
           transition-all duration-300 ease-in-out
           ${expanded ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}
-        `}>
+        `}
+        >
           <input
             ref={inputRef}
             type="text"

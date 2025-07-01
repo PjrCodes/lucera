@@ -6,5 +6,5 @@ export type AuthenticatedSession = Session & {
     name: string;
     email: string;
     image: string;
-  }
+  };
 };

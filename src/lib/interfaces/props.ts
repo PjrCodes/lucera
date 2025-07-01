@@ -5,5 +5,3 @@ export interface PropsForEveryDashboardCard {
   session: Session;
   userData: UserData;
 }
-
-

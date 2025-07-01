@@ -8,7 +8,7 @@ export async function getCoursesForUser(userId: string) {
 
   // Extract related course IDs from user data
   const relatedCourseIDs = userData.relatedCourses.map(
-    (course) => new ObjectId(course)
+    (course) => new ObjectId(course),
   );
 
   const coursesData = client
@@ -69,7 +69,7 @@ export async function getStudentsForCourse(courseId: string) {
 }
 
 export async function getAvailableStudents(
-  course_id: string
+  course_id: string,
 ): Promise<{ id: string; name: string; email: string }[]> {
   const result = await client
     .db()

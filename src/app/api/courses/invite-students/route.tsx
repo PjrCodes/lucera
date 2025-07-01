@@ -17,7 +17,7 @@ export const POST = auth(
             .map((issue) => issue.message)
             .join(", "),
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
     const { courseId, studentIds } = formData.data;
@@ -27,19 +27,19 @@ export const POST = auth(
       .collection("user_data")
       .updateMany(
         { id: { $in: studentIds } },
-        { $addToSet: { relatedCourses: courseId } }
+        { $addToSet: { relatedCourses: courseId } },
       );
 
     if (result.modifiedCount === 0) {
       return NextResponse.json(
         { status: "failed", message: "No students were invited" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     return NextResponse.json(
       { status: "success", message: "Students invited successfully" },
-      { status: 200 }
+      { status: 200 },
     );
-  })
+  }),
 );

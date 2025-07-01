@@ -101,7 +101,7 @@ export default function MessagesClientComponent({}: {
   userData: UserData;
 }) {
   const [selected, setSelected] = useState<"announcements" | "dms">(
-    "announcements"
+    "announcements",
   );
   const [selectedAnnouncementId, setSelectedAnnouncementId] = useState<
     number | null
@@ -195,7 +195,7 @@ export default function MessagesClientComponent({}: {
                         }`}
                         onClick={() =>
                           setSelectedAnnouncementId(
-                            selectedAnnouncementId === a.id ? null : a.id
+                            selectedAnnouncementId === a.id ? null : a.id,
                           )
                         }
                       >

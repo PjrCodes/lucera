@@ -37,27 +37,71 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
   const [isBadgeModalOpen, setIsBadgeModalOpen] = useState(false);
   const [isPointsModalOpen, setIsPointsModalOpen] = useState(false);
 
-  const [collectedBadges] = useState<Badge[]>(
-    [
-      { id: 1, name: "First Steps", emoji: "👶", collected: true, description: "Completed first course" },
-      { id: 2, name: "Speed Demon", emoji: "⚡", collected: true, description: "Fast assignment completion" },
-      { id: 3, name: "Scholar", emoji: "🎓", collected: true, description: "High academic performance" },
-      { id: 4, name: "Night Owl", emoji: "🦉", collected: false },
-      { id: 5, name: "Perfectionist", emoji: "💎", collected: false },
-      { id: 6, name: "Team Player", emoji: "🤝", collected: false },
-      { id: 7, name: "Mastermind", emoji: "🧠", collected: true, description: "Problem solving expert" },
-      { id: 8, name: "Explorer", emoji: "🗺️", collected: false },
-    ]
-  );
+  const [collectedBadges] = useState<Badge[]>([
+    {
+      id: 1,
+      name: "First Steps",
+      emoji: "👶",
+      collected: true,
+      description: "Completed first course",
+    },
+    {
+      id: 2,
+      name: "Speed Demon",
+      emoji: "⚡",
+      collected: true,
+      description: "Fast assignment completion",
+    },
+    {
+      id: 3,
+      name: "Scholar",
+      emoji: "🎓",
+      collected: true,
+      description: "High academic performance",
+    },
+    { id: 4, name: "Night Owl", emoji: "🦉", collected: false },
+    { id: 5, name: "Perfectionist", emoji: "💎", collected: false },
+    { id: 6, name: "Team Player", emoji: "🤝", collected: false },
+    {
+      id: 7,
+      name: "Mastermind",
+      emoji: "🧠",
+      collected: true,
+      description: "Problem solving expert",
+    },
+    { id: 8, name: "Explorer", emoji: "🗺️", collected: false },
+  ]);
 
-  const [courseRanks] = useState(
-    [
-      { courseCode: "CS101", courseName: "Introduction to Programming", rank: 5, points: 425, totalStudents: 85 },
-      { courseCode: "CS201", courseName: "Data Structures", rank: 12, points: 380, totalStudents: 72 },
-      { courseCode: "CS301", courseName: "Algorithms", rank: 8, points: 402, totalStudents: 65 },
-      { courseCode: "CS401", courseName: "Software Engineering", rank: 3, points: 445, totalStudents: 58 },
-    ]
-  );
+  const [courseRanks] = useState([
+    {
+      courseCode: "CS101",
+      courseName: "Introduction to Programming",
+      rank: 5,
+      points: 425,
+      totalStudents: 85,
+    },
+    {
+      courseCode: "CS201",
+      courseName: "Data Structures",
+      rank: 12,
+      points: 380,
+      totalStudents: 72,
+    },
+    {
+      courseCode: "CS301",
+      courseName: "Algorithms",
+      rank: 8,
+      points: 402,
+      totalStudents: 65,
+    },
+    {
+      courseCode: "CS401",
+      courseName: "Software Engineering",
+      rank: 3,
+      points: 445,
+      totalStudents: 58,
+    },
+  ]);
 
   const handleBadgeClick = (badge: Badge) => {
     setSelectedBadge(badge);
@@ -91,7 +135,9 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
               <div>
                 <h1 className="text-2xl font-bold">Lighthouse</h1>
                 <p className="text-sm opacity-80">
-                  {isTeacher ? "View Student Performance" : "Earn Points. Get Badges!"}
+                  {isTeacher
+                    ? "View Student Performance"
+                    : "Earn Points. Get Badges!"}
                 </p>
               </div>
             </div>
@@ -132,18 +178,30 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
           {isTeacher && (
             <div className="mb-8">
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-lg font-bold text-secondary-800 mb-4">Teacher Dashboard</h2>
+                <h2 className="text-lg font-bold text-secondary-800 mb-4">
+                  Teacher Dashboard
+                </h2>
                 <p className="text-gray-600 mb-4">
-                  View student performance and leaderboards across your courses and the university.
+                  View student performance and leaderboards across your courses
+                  and the university.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-secondary-100 p-4 rounded-lg">
-                    <h3 className="font-semibold text-secondary-800 mb-2">Course Analytics</h3>
-                    <p className="text-sm text-secondary-600">View detailed performance metrics for students in your courses</p>
+                    <h3 className="font-semibold text-secondary-800 mb-2">
+                      Course Analytics
+                    </h3>
+                    <p className="text-sm text-secondary-600">
+                      View detailed performance metrics for students in your
+                      courses
+                    </p>
                   </div>
                   <div className="bg-primary-100 p-4 rounded-lg">
-                    <h3 className="font-semibold text-primary-800 mb-2">Leaderboard Overview</h3>
-                    <p className="text-sm text-primary-600">Monitor student rankings and engagement levels</p>
+                    <h3 className="font-semibold text-primary-800 mb-2">
+                      Leaderboard Overview
+                    </h3>
+                    <p className="text-sm text-primary-600">
+                      Monitor student rankings and engagement levels
+                    </p>
                   </div>
                 </div>
               </div>
@@ -158,7 +216,9 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
 
               {/* Action Buttons */}
               <div className="space-y-4">
-                <h2 className="text-lg font-bold text-secondary-800 mb-4">Quick Actions</h2>
+                <h2 className="text-lg font-bold text-secondary-800 mb-4">
+                  Quick Actions
+                </h2>
 
                 <ActionButton
                   href="/lighthouse/minigames"
@@ -183,7 +243,9 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
           {isTeacher && (
             <div className="max-w-md mx-auto mb-8">
               <div className="space-y-4">
-                <h2 className="text-lg font-bold text-secondary-800 mb-4 text-center">Quick Actions</h2>
+                <h2 className="text-lg font-bold text-secondary-800 mb-4 text-center">
+                  Quick Actions
+                </h2>
 
                 <ActionButton
                   href="/lighthouse/leaderboard"
@@ -198,7 +260,10 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
 
           {/* Badges Collection - Only for Students */}
           {!isTeacher && (
-            <BadgeGrid badges={collectedBadges} onBadgeClick={handleBadgeClick} />
+            <BadgeGrid
+              badges={collectedBadges}
+              onBadgeClick={handleBadgeClick}
+            />
           )}
         </div>
       </main>

@@ -13,7 +13,7 @@ An intelligent, no-compromise Learning Management System built for the future of
 - **Real-time Communication** - WebSocket-powered notifications and live messaging systems
 - **Progress Tracking** - Advanced analytics and progress monitoring
 - **Bookmarks** - Save and organize important content
-- **Gamification** - *Lighthouse* system of bdages, achievements, and leaderboards to enhance student engagement
+- **Gamification** - _Lighthouse_ system of bdages, achievements, and leaderboards to enhance student engagement
 
 ### AI-Powered Features
 

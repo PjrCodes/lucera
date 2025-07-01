@@ -62,15 +62,21 @@ export default function CourseAssignmentsCard({
               key={assignment._id.toString()}
               onClick={() => handleAssignmentClick(assignment)}
               className={`w-full text-left border-l-4 ${
-                isSelected ? 'border-primary-500 bg-white' : 'border-secondary-300'
+                isSelected
+                  ? "border-primary-500 bg-white"
+                  : "border-secondary-300"
               } pl-4 py-3 hover:bg-white hover:shadow-sm transition-all duration-200 rounded-r-lg group`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h4 className={`text-sm font-medium ${
-                      isSelected ? 'text-primary-700' : 'text-primary-900 group-hover:text-primary-700'
-                    }`}>
+                    <h4
+                      className={`text-sm font-medium ${
+                        isSelected
+                          ? "text-primary-700"
+                          : "text-primary-900 group-hover:text-primary-700"
+                      }`}
+                    >
                       {assignment.title}
                     </h4>
                     {overdue && (
@@ -87,9 +93,7 @@ export default function CourseAssignmentsCard({
                   <div className="flex items-center gap-4 text-xs text-primary-600">
                     {assignment.dueDate ? (
                       <span
-                        className={
-                          overdue ? "text-red-600 font-medium" : ""
-                        }
+                        className={overdue ? "text-red-600 font-medium" : ""}
                       >
                         Due: {formatDate(assignment.dueDate)}
                       </span>
@@ -99,9 +103,13 @@ export default function CourseAssignmentsCard({
                     <span>{assignment.grading?.total_points || 0} points</span>
                   </div>
                 </div>
-                <FiChevronRight className={`w-4 h-4 ${
-                  isSelected ? 'text-primary-600' : 'text-primary-400 group-hover:text-primary-600'
-                } transition-colors flex-shrink-0`} />
+                <FiChevronRight
+                  className={`w-4 h-4 ${
+                    isSelected
+                      ? "text-primary-600"
+                      : "text-primary-400 group-hover:text-primary-600"
+                  } transition-colors flex-shrink-0`}
+                />
               </div>
             </button>
           );

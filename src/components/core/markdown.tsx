@@ -8,7 +8,11 @@ interface MyMarkdownProps extends Options {
   components?: Components;
 }
 
-export function MyMarkdown({ children, components, ...props }: MyMarkdownProps) {
+export function MyMarkdown({
+  children,
+  components,
+  ...props
+}: MyMarkdownProps) {
   return (
     <Markdown
       components={{

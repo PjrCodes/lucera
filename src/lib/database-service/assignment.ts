@@ -1,6 +1,9 @@
 import { ObjectId } from "mongodb";
 import client from "../db";
-import { assignmentSchema, AssignmentWithEmbeddedFile } from "../schemas/database";
+import {
+  assignmentSchema,
+  AssignmentWithEmbeddedFile,
+} from "../schemas/database";
 import { getFileRecord } from "./files";
 
 export async function getAssignmentById(assignmentId: string) {
@@ -22,7 +25,7 @@ export async function getAssignmentById(assignmentId: string) {
 }
 
 export async function getAssignmentsForCourse(
-  courseId: string
+  courseId: string,
 ): Promise<AssignmentWithEmbeddedFile[]> {
   const contents = await client
     .db()
@@ -53,7 +56,7 @@ export async function getAssignmentsForCourse(
           ...parsedData,
           file: file,
         } as AssignmentWithEmbeddedFile;
-      })
+      }),
     );
 
     return parsedContents;

@@ -17,18 +17,17 @@ import YourBadges from "./cards/your-badges";
 import WhatsNext from "./cards/whats-next";
 
 interface Props {
-  session: Session
-  userData: UserData
+  session: Session;
+  userData: UserData;
 }
 
 // Component map to hold the components for the dashboard
-const componentMap: Record<string, (props: PropsForEveryDashboardCard) => JSX.Element> = {
+const componentMap: Record<
+  string,
+  (props: PropsForEveryDashboardCard) => JSX.Element
+> = {
   PROGRESS: (props) => (
-    <Courses
-      key="progress"
-      session={props.session}
-      userData={props.userData}
-    />
+    <Courses key="progress" session={props.session} userData={props.userData} />
   ),
   WHATS_NEXT: (props) => (
     <WhatsNext
@@ -93,7 +92,7 @@ const componentMap: Record<string, (props: PropsForEveryDashboardCard) => JSX.El
 
 function checkAndCleanLayout(
   layout: { leftColumn: string[]; rightColumn: string[] },
-  isTeacher: boolean
+  isTeacher: boolean,
 ) {
   const errors: string[] = [];
 
@@ -104,14 +103,14 @@ function checkAndCleanLayout(
   // Helper to filter and collect errors
   function filterColumn(
     column: string[],
-    columnName: "leftColumn" | "rightColumn"
+    columnName: "leftColumn" | "rightColumn",
   ) {
     return column.filter((component) => {
       if (!roleRestrictions.includes(component)) {
         errors.push(
           `Component "${component}" is not allowed for ${
             isTeacher ? "teacher" : "student"
-          }`
+          }`,
         );
         return false;
       }
@@ -134,10 +133,7 @@ function checkAndCleanLayout(
   };
 }
 
-const AuthDashboard: NextPage<Props> = ({
-  session,
-  userData,
-}) => {
+const AuthDashboard: NextPage<Props> = ({ session, userData }) => {
   // Props object for component rendering - only session and role data
   const componentProps: PropsForEveryDashboardCard = {
     session,
@@ -167,7 +163,7 @@ const AuthDashboard: NextPage<Props> = ({
   // layout ACL checking
   const { layout: currentLayout, errors } = checkAndCleanLayout(
     uncleanLayout,
-    isTeacher
+    isTeacher,
   );
 
   if (
@@ -178,7 +174,8 @@ const AuthDashboard: NextPage<Props> = ({
       <main className="w-full h-full px-4 py-4 bg-transparent">
         <div className="w-full h-full flex flex-1 flex-col justify-center text-center text-gray-500">
           <div className="font-header text-6xl font-bold text-primary-800 mb-4">
-            Hi, {session?.user?.name || "there"}! Start by adding items to your dashboard.
+            Hi, {session?.user?.name || "there"}! Start by adding items to your
+            dashboard.
           </div>
           <MdBrokenImage size={48} className="mx-auto mb-4" />
           <h2 className="text-lg font-semibold mb-2">No Components Found</h2>
@@ -216,7 +213,8 @@ const AuthDashboard: NextPage<Props> = ({
           }
         >
           <div className="font-header text-2xl md:text-5xl font-bold text-secondary-600 mb-4">
-            Hi, {session?.user?.name || "there"}!<br></br>Welcome to your dashboard.
+            Hi, {session?.user?.name || "there"}!<br></br>Welcome to your
+            dashboard.
           </div>
           {renderComponents(currentLayout.leftColumn)}
         </div>

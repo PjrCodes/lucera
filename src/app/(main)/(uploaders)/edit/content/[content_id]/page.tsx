@@ -1,4 +1,4 @@
-import { getSessionAndUserData} from "@/lib/database-service/auth";
+import { getSessionAndUserData } from "@/lib/database-service/auth";
 import { getCoursesForUser } from "@/lib/database-service/courses";
 import EditContentForm from "@/components/feature/content/edit-content-form";
 import { ObjectId } from "mongodb";
@@ -11,7 +11,9 @@ interface EditContentPageProps {
   }>;
 }
 
-export default async function EditContentPageServer({ params }: EditContentPageProps) {
+export default async function EditContentPageServer({
+  params,
+}: EditContentPageProps) {
   const resolvedParams = await params;
   const { session, userData } = await getSessionAndUserData();
   const courses = await getCoursesForUser(session.user.id);

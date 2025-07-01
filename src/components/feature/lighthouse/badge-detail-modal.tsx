@@ -17,56 +17,72 @@ interface BadgeDetailModalProps {
   onClose: () => void;
 }
 
-const BadgeDetailModal: React.FC<BadgeDetailModalProps> = ({ badge, isOpen, onClose }) => {
+const BadgeDetailModal: React.FC<BadgeDetailModalProps> = ({
+  badge,
+  isOpen,
+  onClose,
+}) => {
   if (!isOpen || !badge) return null;
 
-  const badgeDetails: Record<string, { requirement: string; points: number; longDescription: string }> = {
+  const badgeDetails: Record<
+    string,
+    { requirement: string; points: number; longDescription: string }
+  > = {
     "First Steps": {
       requirement: "Complete your first course module",
       points: 50,
-      longDescription: "Welcome to your learning journey! This badge is awarded when you take your first steps into the world of knowledge by completing your very first course module."
+      longDescription:
+        "Welcome to your learning journey! This badge is awarded when you take your first steps into the world of knowledge by completing your very first course module.",
     },
     "Speed Demon": {
       requirement: "Submit 5 assignments before the deadline",
       points: 100,
-      longDescription: "You're quick on your feet! This badge recognizes students who consistently submit their work early, demonstrating excellent time management skills."
+      longDescription:
+        "You're quick on your feet! This badge recognizes students who consistently submit their work early, demonstrating excellent time management skills.",
     },
-    "Scholar": {
+    Scholar: {
       requirement: "Maintain an average grade of 85% or higher",
       points: 200,
-      longDescription: "Academic excellence at its finest! This prestigious badge is awarded to students who maintain consistently high grades across their courses."
+      longDescription:
+        "Academic excellence at its finest! This prestigious badge is awarded to students who maintain consistently high grades across their courses.",
     },
     "Night Owl": {
       requirement: "Complete 10 activities between 10 PM and 6 AM",
       points: 75,
-      longDescription: "Burning the midnight oil! This badge celebrates the dedicated night studiers who put in extra hours when others are sleeping."
+      longDescription:
+        "Burning the midnight oil! This badge celebrates the dedicated night studiers who put in extra hours when others are sleeping.",
     },
-    "Perfectionist": {
+    Perfectionist: {
       requirement: "Score 100% on 3 different assignments",
       points: 150,
-      longDescription: "Flawless execution! This badge is for students who demand nothing less than perfection from themselves and achieve it multiple times."
+      longDescription:
+        "Flawless execution! This badge is for students who demand nothing less than perfection from themselves and achieve it multiple times.",
     },
     "Team Player": {
       requirement: "Participate in 5 group projects or discussions",
       points: 125,
-      longDescription: "Collaboration champion! This badge recognizes students who actively contribute to group work and foster a collaborative learning environment."
+      longDescription:
+        "Collaboration champion! This badge recognizes students who actively contribute to group work and foster a collaborative learning environment.",
     },
-    "Mastermind": {
+    Mastermind: {
       requirement: "Solve 20 complex problem-solving challenges",
       points: 250,
-      longDescription: "Strategic thinking at its best! This elite badge is awarded to students who excel at tackling complex problems and finding innovative solutions."
+      longDescription:
+        "Strategic thinking at its best! This elite badge is awarded to students who excel at tackling complex problems and finding innovative solutions.",
     },
-    "Explorer": {
+    Explorer: {
       requirement: "Access 50 different course materials",
       points: 100,
-      longDescription: "Curiosity drives learning! This badge celebrates students who explore beyond the required materials, diving deep into additional resources."
+      longDescription:
+        "Curiosity drives learning! This badge celebrates students who explore beyond the required materials, diving deep into additional resources.",
     },
   };
 
   const details = badgeDetails[badge.name] || {
     requirement: "Complete specific learning objectives",
     points: 50,
-    longDescription: "This badge recognizes achievement in a specific area of learning."
+    longDescription:
+      "This badge recognizes achievement in a specific area of learning.",
   };
 
   return (
@@ -76,10 +92,14 @@ const BadgeDetailModal: React.FC<BadgeDetailModalProps> = ({ badge, isOpen, onCl
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <span className={`text-4xl ${!badge.collected ? "grayscale" : ""}`}>
+              <span
+                className={`text-4xl ${!badge.collected ? "grayscale" : ""}`}
+              >
                 {badge.emoji}
               </span>
-              <h2 className="text-xl font-bold text-secondary-800">{badge.name}</h2>
+              <h2 className="text-xl font-bold text-secondary-800">
+                {badge.name}
+              </h2>
             </div>
             <button
               onClick={onClose}
@@ -90,11 +110,13 @@ const BadgeDetailModal: React.FC<BadgeDetailModalProps> = ({ badge, isOpen, onCl
           </div>
 
           {/* Status */}
-          <div className={`flex items-center gap-2 mb-4 p-3 rounded-lg ${
-            badge.collected
-              ? "bg-primary-100 text-primary-800"
-              : "bg-gray-100 text-gray-600"
-          }`}>
+          <div
+            className={`flex items-center gap-2 mb-4 p-3 rounded-lg ${
+              badge.collected
+                ? "bg-primary-100 text-primary-800"
+                : "bg-gray-100 text-gray-600"
+            }`}
+          >
             {badge.collected ? (
               <CheckCircle className="w-5 h-5" />
             ) : (
@@ -107,7 +129,9 @@ const BadgeDetailModal: React.FC<BadgeDetailModalProps> = ({ badge, isOpen, onCl
 
           {/* Description */}
           <div className="mb-4">
-            <h3 className="font-semibold text-secondary-800 mb-2">Description</h3>
+            <h3 className="font-semibold text-secondary-800 mb-2">
+              Description
+            </h3>
             <p className="text-gray-600 text-sm leading-relaxed">
               {details.longDescription}
             </p>
@@ -115,17 +139,21 @@ const BadgeDetailModal: React.FC<BadgeDetailModalProps> = ({ badge, isOpen, onCl
 
           {/* Requirement */}
           <div className="mb-4">
-            <h3 className="font-semibold text-secondary-800 mb-2">How to Earn</h3>
-            <p className="text-gray-600 text-sm">
-              {details.requirement}
-            </p>
+            <h3 className="font-semibold text-secondary-800 mb-2">
+              How to Earn
+            </h3>
+            <p className="text-gray-600 text-sm">{details.requirement}</p>
           </div>
 
           {/* Points */}
           <div className="bg-primary-100 p-3 rounded-lg">
             <div className="flex items-center justify-between">
-              <span className="text-primary-800 font-medium">Points Reward</span>
-              <span className="text-primary-800 font-bold">{details.points} pts</span>
+              <span className="text-primary-800 font-medium">
+                Points Reward
+              </span>
+              <span className="text-primary-800 font-bold">
+                {details.points} pts
+              </span>
             </div>
           </div>
         </div>

@@ -13,8 +13,7 @@ interface Option {
   href: string;
 }
 
-export default function Create({
-}: PropsForEveryDashboardCard) {
+export default function Create({}: PropsForEveryDashboardCard) {
   // Complete options list with icons
   const options: Option[] = [
     {

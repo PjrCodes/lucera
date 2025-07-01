@@ -349,7 +349,6 @@ function LisaPageContent({
   session: AuthenticatedSession;
   userData: UserData;
 }) {
-  
   const [messages, setMessages] = useState<Message[]>(initialMessages || []);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
@@ -373,7 +372,7 @@ function LisaPageContent({
     setSelectedCourses((prev) =>
       prev.includes(courseId)
         ? prev.filter((id) => id !== courseId)
-        : [...prev, courseId]
+        : [...prev, courseId],
     );
   };
 
@@ -381,7 +380,7 @@ function LisaPageContent({
     setSelectedTypes((prev) =>
       prev.includes(typeId)
         ? prev.filter((id) => id !== typeId)
-        : [...prev, typeId]
+        : [...prev, typeId],
     );
   };
 
@@ -517,13 +516,22 @@ function LisaPageContent({
   );
 }
 
-export default function LisaClientComponent({ session, userData }: { session: AuthenticatedSession, userData: UserData}) {
-
+export default function LisaClientComponent({
+  session,
+  userData,
+}: {
+  session: AuthenticatedSession;
+  userData: UserData;
+}) {
   const searchParams = useSearchParams();
   const question = searchParams ? searchParams.get("question") || "" : "";
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <LisaPageContent initialQuestion={question} session={session} userData={userData} />
+      <LisaPageContent
+        initialQuestion={question}
+        session={session}
+        userData={userData}
+      />
     </Suspense>
   );
 }

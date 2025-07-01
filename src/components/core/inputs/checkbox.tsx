@@ -17,17 +17,14 @@ export function Checkbox({
   className,
   children,
   id,
-  name
+  name,
 }: CheckboxProps) {
   const checkboxId = id || name;
 
   return (
     <label
       htmlFor={checkboxId}
-      className={cn(
-        "inline-flex items-center space-x-2",
-        className
-      )}
+      className={cn("inline-flex items-center space-x-2", className)}
     >
       <UICheckbox
         id={checkboxId}
@@ -40,14 +37,10 @@ export function Checkbox({
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary-300",
           "data-[state=checked]:bg-secondary-500 data-[state=checked]:border-secondary-500 data-[state=checked]:text-white",
           "hover:border-secondary-400",
-          "disabled:cursor-not-allowed disabled:opacity-50"
+          "disabled:cursor-not-allowed disabled:opacity-50",
         )}
       />
-      {children && (
-        <span className="text-sm text-gray-700">
-          {children}
-        </span>
-      )}
+      {children && <span className="text-sm text-gray-700">{children}</span>}
     </label>
   );
 }

@@ -7,13 +7,15 @@ import { UserData } from "@/lib/schemas/database";
 import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 
-export default function CreateCourseAIForm({
-  // userData,
-  // session,
-}: {
-  userData: UserData;
-  session: Session;
-}) {
+export default function CreateCourseAIForm(
+  {
+    // userData,
+    // session,
+  }: {
+    userData: UserData;
+    session: Session;
+  },
+) {
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
@@ -37,7 +39,9 @@ export default function CreateCourseAIForm({
       const uploadResult = await uploadResponse.json();
 
       if (!uploadResponse.ok) {
-        throw new Error(uploadResult.error || "Failed to upload syllabus file.");
+        throw new Error(
+          uploadResult.error || "Failed to upload syllabus file.",
+        );
       }
 
       // Process with AI
@@ -57,12 +61,16 @@ export default function CreateCourseAIForm({
 
       // Redirect to edit page with the created course and file info
       if (processResult.status === "success") {
-        router.push(`/edit/course/${processResult.courseId}?type=success&hasFile=true&fileName=${encodeURIComponent(file.name)}`);
+        router.push(
+          `/edit/course/${processResult.courseId}?type=success&hasFile=true&fileName=${encodeURIComponent(file.name)}`,
+        );
       } else {
-        router.push(`/edit/course/${processResult.courseId}?type=error&hasFile=true&fileName=${encodeURIComponent(file.name)}`);
+        router.push(
+          `/edit/course/${processResult.courseId}?type=error&hasFile=true&fileName=${encodeURIComponent(file.name)}`,
+        );
       }
     } catch (error) {
-      console.error('Error processing syllabus:', error);
+      console.error("Error processing syllabus:", error);
       // Handle error - maybe show a toast or error message
     } finally {
       setIsProcessing(false);
@@ -70,7 +78,7 @@ export default function CreateCourseAIForm({
   };
 
   const handleSkipToEdit = () => {
-    router.push('/edit/course/new?hasFile=false');
+    router.push("/edit/course/new?hasFile=false");
   };
 
   return (
@@ -79,7 +87,9 @@ export default function CreateCourseAIForm({
 
       <div className="space-y-6">
         <div>
-          <label className="block mb-2 font-medium">Upload Syllabus (PDF):</label>
+          <label className="block mb-2 font-medium">
+            Upload Syllabus (PDF):
+          </label>
           <FileDropInput
             accept="application/pdf"
             file={file}
@@ -88,7 +98,9 @@ export default function CreateCourseAIForm({
           />
           {file && (
             <div className="mt-2 flex items-center justify-between">
-              <span className="text-sm text-gray-600">Selected: {file.name}</span>
+              <span className="text-sm text-gray-600">
+                Selected: {file.name}
+              </span>
               <button
                 onClick={() => setFile(null)}
                 className="text-sm font-medium text-blue-600 hover:text-blue-500"
@@ -106,7 +118,9 @@ export default function CreateCourseAIForm({
             disabled={!file || isProcessing}
             className="w-full"
           >
-            {isProcessing ? "Processing with AI..." : "✨ Upload & Process with AI"}
+            {isProcessing
+              ? "Processing with AI..."
+              : "✨ Upload & Process with AI"}
           </PrimaryButton>
 
           <div className="text-center text-sm text-gray-500">or</div>

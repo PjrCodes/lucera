@@ -7,7 +7,10 @@ import CourseHeader from "@/components/feature/course/cards/course-header";
 import { Course, UserWithData } from "@/lib/schemas/database";
 import CourseTabs from "@/components/feature/course/course-tabs";
 import { getContentForCourse } from "@/lib/database-service/content";
-import { getAvailableStudents, getStudentsForCourse } from "@/lib/database-service/courses";
+import {
+  getAvailableStudents,
+  getStudentsForCourse,
+} from "@/lib/database-service/courses";
 import { getAssignmentsForCourse } from "@/lib/database-service/assignment";
 
 async function getCourse(course_id: string): Promise<Course | null> {
@@ -88,11 +91,14 @@ export default async function CourseViewPage({
     },
   ];
 
-  const students: UserWithData[] =
-    await getStudentsForCourse(course._id.toString());
+  const students: UserWithData[] = await getStudentsForCourse(
+    course._id.toString(),
+  );
 
   // Get available students for invitation (only for teachers)
-  const availableStudents = isTeacher ? await getAvailableStudents(course._id.toString()) : [];
+  const availableStudents = isTeacher
+    ? await getAvailableStudents(course._id.toString())
+    : [];
 
   const grades: { id: number; title: string; score: string; date: string }[] =
     [];

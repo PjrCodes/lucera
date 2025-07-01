@@ -118,7 +118,7 @@ export const assignmentSchema = assignmentExtractorSchema.extend({
   createdBy: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
-})
+});
 
 export type Assignment = z.infer<typeof assignmentSchema>;
 

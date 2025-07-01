@@ -7,7 +7,12 @@ interface FileDropInputProps {
   disabled?: boolean;
 }
 
-export function FileDropInput({ accept, file, onFileChange, disabled = false }: FileDropInputProps) {
+export function FileDropInput({
+  accept,
+  file,
+  onFileChange,
+  disabled = false,
+}: FileDropInputProps) {
   const [dragActive, setDragActive] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -49,7 +54,9 @@ export function FileDropInput({ accept, file, onFileChange, disabled = false }: 
         accept={accept}
         className="hidden"
         onChange={(e) =>
-          onFileChange(e.target.files && e.target.files[0] ? e.target.files[0] : null)
+          onFileChange(
+            e.target.files && e.target.files[0] ? e.target.files[0] : null,
+          )
         }
         disabled={disabled}
       />

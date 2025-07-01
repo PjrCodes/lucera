@@ -12,11 +12,9 @@ interface Bookmark {
   subtitle: string;
 }
 
-export default function Bookmarks({ }: PropsForEveryDashboardCard) {
+export default function Bookmarks({}: PropsForEveryDashboardCard) {
   // Dummy data for bookmarks - replace with actual data fetching later
-  const bookmarks: Bookmark[] = [
-
-  ];
+  const bookmarks: Bookmark[] = [];
 
   return (
     <div className="bg-primary-100 rounded-lg shadow-md p-4 md:px-6 min-h-[300px] flex flex-col">
@@ -64,4 +62,4 @@ export default function Bookmarks({ }: PropsForEveryDashboardCard) {
       )}
     </div>
   );
-};
+}

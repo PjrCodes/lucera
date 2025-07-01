@@ -1,7 +1,5 @@
 import React from "react";
-import {
-  getSessionAndUserData,
-} from "@/lib/database-service/auth";
+import { getSessionAndUserData } from "@/lib/database-service/auth";
 import SetHeaderClientComponent from "../../../components/feature/header/set-header-client-component"; // Added import
 import SignOut from "@/components/feature/auth/sign-out-button";
 import Link from "next/link";

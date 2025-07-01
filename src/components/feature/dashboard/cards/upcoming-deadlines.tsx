@@ -19,8 +19,16 @@ function formatDate(dateStr: string) {
 
   const now = new Date();
   // Reset time to compare just dates
-  const nowDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const nowDateOnly = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  );
+  const dateOnly = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+  );
 
   // Calculate difference in days
   const diffTime = dateOnly.getTime() - nowDateOnly.getTime();
@@ -34,9 +42,9 @@ function formatDate(dateStr: string) {
   if (hasTime) {
     const hours = date.getHours();
     const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const ampm = hours >= 12 ? "PM" : "AM";
     const hour12 = hours % 12 || 12; // Convert 0 to 12 for 12-hour format
-    timeStr = `${hour12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+    timeStr = `${hour12}:${minutes.toString().padStart(2, "0")} ${ampm}`;
   }
 
   // Handle overdue for same day events by comparing time
@@ -50,9 +58,13 @@ function formatDate(dateStr: string) {
   if (diffDays < 0) {
     // Overdue
     if (diffDays === -1) {
-      return hasTime ? `Overdue (Yesterday at ${timeStr})` : "Overdue (Yesterday)";
+      return hasTime
+        ? `Overdue (Yesterday at ${timeStr})`
+        : "Overdue (Yesterday)";
     } else {
-      return hasTime ? `Overdue (${Math.abs(diffDays)} days ago at ${timeStr})` : `Overdue (${Math.abs(diffDays)} days ago)`;
+      return hasTime
+        ? `Overdue (${Math.abs(diffDays)} days ago at ${timeStr})`
+        : `Overdue (${Math.abs(diffDays)} days ago)`;
     }
   } else if (diffDays === 0) {
     // Today
@@ -65,7 +77,9 @@ function formatDate(dateStr: string) {
     return hasTime ? `Day after tomorrow at ${timeStr}` : "Day after tomorrow";
   } else if (diffDays < 7) {
     // Within a week
-    return hasTime ? `In ${diffDays} days at ${timeStr}` : `In ${diffDays} days`;
+    return hasTime
+      ? `In ${diffDays} days at ${timeStr}`
+      : `In ${diffDays} days`;
   } else if (diffDays < 30) {
     // Within a month but beyond a week - don't show time
     return `In ${diffDays} days`;
@@ -73,7 +87,7 @@ function formatDate(dateStr: string) {
 
   // For other dates, show formatted date without time for far future
   const day = date.getDate();
-  const month = date.toLocaleString('default', { month: 'short' });
+  const month = date.toLocaleString("default", { month: "short" });
   const year = date.getFullYear();
   // Capitalize the month name
   const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
@@ -89,8 +103,16 @@ const getDeadlineColor = (dateStr: string) => {
 
   const now = new Date();
   // Reset time to compare just dates
-  const nowDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const nowDateOnly = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  );
+  const dateOnly = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+  );
 
   // Calculate difference in days
   const diffTime = dateOnly.getTime() - nowDateOnly.getTime();
@@ -114,8 +136,7 @@ const getDeadlineColor = (dateStr: string) => {
   return "text-lucerablue-5";
 };
 
-
-export default function UpcomingDeadlines({ }: PropsForEveryDashboardCard) {
+export default function UpcomingDeadlines({}: PropsForEveryDashboardCard) {
   // Create deadlines with varied dates to showcase different colors
   const today = new Date("2025-06-09T19:00:00Z"); // Fixed date for consistency in examples
   const yesterday = new Date(today);
@@ -135,10 +156,16 @@ export default function UpcomingDeadlines({ }: PropsForEveryDashboardCard) {
 
   // Format dates as strings
   const formatDateToString = (date: Date) => {
-    return date.toISOString().split('T')[0] +
-      (date === today ? " 08:00:00" :
-       date === yesterday ? " 15:00:00" :
-       date === tomorrow ? " 10:00:00" : "");
+    return (
+      date.toISOString().split("T")[0] +
+      (date === today
+        ? " 08:00:00"
+        : date === yesterday
+          ? " 15:00:00"
+          : date === tomorrow
+            ? " 10:00:00"
+            : "")
+    );
   };
 
   // Dummy data for deadlines showing all deadline states
@@ -149,7 +176,7 @@ export default function UpcomingDeadlines({ }: PropsForEveryDashboardCard) {
       dueDate: formatDateToString(yesterday),
       course: "CS101: Introduction to Programming",
       type: "assignment",
-      courseColor: "bg-lucerablue-2 text-lucerablue-5"
+      courseColor: "bg-lucerablue-2 text-lucerablue-5",
     },
     {
       id: 1,
@@ -157,8 +184,8 @@ export default function UpcomingDeadlines({ }: PropsForEveryDashboardCard) {
       dueDate: "2025-06-12 20:00:00", // Overdue with time
       course: "CS101",
       type: "exam",
-      courseColor: "bg-lucerared-2 text-lucerared-5"
-    }
+      courseColor: "bg-lucerared-2 text-lucerared-5",
+    },
     // {
     //   id: 2,
     //   title: "Quiz Due Today", // Changed to Quiz
@@ -207,19 +234,28 @@ export default function UpcomingDeadlines({ }: PropsForEveryDashboardCard) {
         {deadlines.map((dl) => {
           const IconComponent = iconForType(dl.type);
           return (
-            <li key={dl.id} className="flex flex-col md:flex-row items-start md:items-center justify-center gap-2 md:gap-3 bg-white/80 rounded-lg shadow-sm px-3 py-2 hover:shadow-md transition-shadow hover:cursor-pointer">
+            <li
+              key={dl.id}
+              className="flex flex-col md:flex-row items-start md:items-center justify-center gap-2 md:gap-3 bg-white/80 rounded-lg shadow-sm px-3 py-2 hover:shadow-md transition-shadow hover:cursor-pointer"
+            >
               <div className="flex-1 flex flex-col md:flex-row md:items-center w-full">
                 <div className="flex items-center gap-2 mb-1 md:mb-0">
                   <span className="text-xl md:text-3xl mr-1 text-primary-700">
                     <IconComponent />
                   </span>
-                  <span className="font-semibold text-primary-700 text-sm md:text-base">{dl.title}</span>
+                  <span className="font-semibold text-primary-700 text-sm md:text-base">
+                    {dl.title}
+                  </span>
                 </div>
-                <span className={`self-start md:self-center md:ml-2 px-2 py-0.5 rounded text-xs font-medium ${dl.courseColor}`}>
+                <span
+                  className={`self-start md:self-center md:ml-2 px-2 py-0.5 rounded text-xs font-medium ${dl.courseColor}`}
+                >
                   {dl.course}
                 </span>
               </div>
-              <span className={`text-xs md:text-sm ${getDeadlineColor(dl.dueDate)} mt-1 md:mt-0`}>
+              <span
+                className={`text-xs md:text-sm ${getDeadlineColor(dl.dueDate)} mt-1 md:mt-0`}
+              >
                 {formatDate(dl.dueDate)}
               </span>
             </li>
@@ -236,4 +272,4 @@ export default function UpcomingDeadlines({ }: PropsForEveryDashboardCard) {
       )}
     </div>
   );
-};
+}

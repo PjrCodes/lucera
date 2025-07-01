@@ -35,54 +35,58 @@ function formatAnnouncementDate(dateStr: string) {
     return `${diffDays} days ago`;
   } else {
     const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'short' });
+    const month = date.toLocaleString("default", { month: "short" });
     return `${day} ${month}`;
   }
 }
 
-export default function Announcements({ }: PropsForEveryDashboardCard) {
+export default function Announcements({}: PropsForEveryDashboardCard) {
   // Mock announcements data
   const dummyAnnouncements: Announcement[] = [
     {
       id: 1,
       title: "Mid-semester Break Notice",
-      content: "Classes will be suspended from June 15-20 for mid-semester break. All assignments due during this period have been extended.",
+      content:
+        "Classes will be suspended from June 15-20 for mid-semester break. All assignments due during this period have been extended.",
       courseId: "cs101",
       courseName: "Introduction to Programming",
       courseCode: "CS101",
       courseColor: "bg-lucerablue-2 text-lucerablue-5",
-      date: "2025-06-09T08:00:00Z"
+      date: "2025-06-09T08:00:00Z",
     },
     {
       id: 2,
       title: "Guest Lecture Tomorrow",
-      content: "Dr. Sarah Chen from MIT will be giving a guest lecture on 'Advanced Machine Learning Techniques' tomorrow at 2 PM in Hall A.",
+      content:
+        "Dr. Sarah Chen from MIT will be giving a guest lecture on 'Advanced Machine Learning Techniques' tomorrow at 2 PM in Hall A.",
       courseId: "cs301",
       courseName: "Machine Learning",
       courseCode: "CS301",
       courseColor: "bg-lucerared-2 text-lucerared-5",
-      date: "2025-06-08T14:30:00Z"
+      date: "2025-06-08T14:30:00Z",
     },
     {
       id: 3,
       title: "Lab Session Rescheduled",
-      content: "Thursday's lab session has been moved to Friday 10 AM due to equipment maintenance.",
+      content:
+        "Thursday's lab session has been moved to Friday 10 AM due to equipment maintenance.",
       courseId: "cs201",
       courseName: "Data Structures",
       courseCode: "CS201",
       courseColor: "bg-lucerayellow-2 text-lucerayellow-5",
-      date: "2025-06-07T16:45:00Z"
+      date: "2025-06-07T16:45:00Z",
     },
     {
       id: 4,
       title: "New Study Materials Available",
-      content: "Additional practice problems and solutions for Chapter 5 have been uploaded to the course resources.",
+      content:
+        "Additional practice problems and solutions for Chapter 5 have been uploaded to the course resources.",
       courseId: "math201",
       courseName: "Discrete Mathematics",
       courseCode: "MATH201",
       courseColor: "bg-primary-2 text-primary-5",
-      date: "2025-06-06T11:20:00Z"
-    }
+      date: "2025-06-06T11:20:00Z",
+    },
   ];
 
   const announcements = dummyAnnouncements;
@@ -92,7 +96,7 @@ export default function Announcements({ }: PropsForEveryDashboardCard) {
       <h2 className="text-lg font-bold text-primary-700 mb-4 flex items-center gap-2">
         ANNOUNCEMENTS
       </h2>
-      
+
       {announcements.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center text-primary-500">
           <FiMessageSquare className="text-5xl mb-2" />
@@ -118,13 +122,15 @@ export default function Announcements({ }: PropsForEveryDashboardCard) {
                     {formatAnnouncementDate(announcement.date)}
                   </span>
                 </div>
-                
+
                 <div className="mb-1">
-                  <span className={`inline-block px-1.5 py-0.5 rounded text-xs font-medium ${announcement.courseColor}`}>
+                  <span
+                    className={`inline-block px-1.5 py-0.5 rounded text-xs font-medium ${announcement.courseColor}`}
+                  >
                     {announcement.courseCode}
                   </span>
                 </div>
-                
+
                 <p className="text-xs text-gray-600 line-clamp-2">
                   {announcement.content}
                 </p>

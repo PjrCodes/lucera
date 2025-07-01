@@ -22,7 +22,7 @@ export async function getContentById(courseId: string) {
 }
 
 export async function getContentForCourse(
-  courseId: string
+  courseId: string,
 ): Promise<ContentWithEmbeddedFile[]> {
   const contents = await client
     .db()
@@ -53,7 +53,7 @@ export async function getContentForCourse(
           ...parsedData,
           file: file,
         } as ContentWithEmbeddedFile;
-      })
+      }),
     );
 
     return parsedContents;

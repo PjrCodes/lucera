@@ -103,13 +103,13 @@ export const SaveAssignmentRequestSchema = z.object({
             z.object({
               description: z.string(),
               points: z.number(),
-            })
+            }),
           ),
           level: z.array(
             z.object({
               description: z.string(),
               rank: z.number(),
-            })
+            }),
           ),
         })
         .optional(),

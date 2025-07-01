@@ -52,7 +52,14 @@ export default function LeaderboardHome({ isTeacher }: LeaderboardHomeProps) {
     { id: 12, name: "Liam Garcia", points: 2850, badges: 5, rank: 12 },
     { id: 13, name: "Mia Rodriguez", points: 2848, badges: 4, rank: 13 },
     { id: 14, name: "Noah Martinez", points: 2847, badges: 4, rank: 14 },
-    { id: 15, name: "You", points: 2847, badges: 4, rank: 15, isCurrentUser: true },
+    {
+      id: 15,
+      name: "You",
+      points: 2847,
+      badges: 4,
+      rank: 15,
+      isCurrentUser: true,
+    },
     { id: 16, name: "Olivia Thompson", points: 2845, badges: 4, rank: 16 },
     { id: 17, name: "Paul White", points: 2840, badges: 3, rank: 17 },
     { id: 18, name: "Quinn Davis", points: 2835, badges: 3, rank: 18 },
@@ -66,23 +73,51 @@ export default function LeaderboardHome({ isTeacher }: LeaderboardHomeProps) {
       { id: 2, name: "Alice Johnson", points: 470, badges: 3, rank: 2 },
       { id: 3, name: "Carol Davis", points: 450, badges: 2, rank: 3 },
       { id: 4, name: "David Wilson", points: 440, badges: 2, rank: 4 },
-      { id: 5, name: "You", points: 425, badges: 2, rank: 5, isCurrentUser: true },
+      {
+        id: 5,
+        name: "You",
+        points: 425,
+        badges: 2,
+        rank: 5,
+        isCurrentUser: true,
+      },
     ],
     CS201: [
       { id: 1, name: "Alice Johnson", points: 420, badges: 2, rank: 1 },
       { id: 2, name: "Emma Brown", points: 410, badges: 2, rank: 2 },
       { id: 3, name: "Carol Davis", points: 400, badges: 1, rank: 3 },
-      { id: 4, name: "You", points: 380, badges: 1, rank: 12, isCurrentUser: true },
+      {
+        id: 4,
+        name: "You",
+        points: 380,
+        badges: 1,
+        rank: 12,
+        isCurrentUser: true,
+      },
     ],
     CS301: [
       { id: 1, name: "Frank Miller", points: 450, badges: 3, rank: 1 },
       { id: 2, name: "Grace Lee", points: 430, badges: 2, rank: 2 },
-      { id: 3, name: "You", points: 402, badges: 1, rank: 8, isCurrentUser: true },
+      {
+        id: 3,
+        name: "You",
+        points: 402,
+        badges: 1,
+        rank: 8,
+        isCurrentUser: true,
+      },
     ],
     CS401: [
       { id: 1, name: "Alice Johnson", points: 480, badges: 3, rank: 1 },
       { id: 2, name: "Bob Chen", points: 460, badges: 2, rank: 2 },
-      { id: 3, name: "You", points: 445, badges: 2, rank: 3, isCurrentUser: true },
+      {
+        id: 3,
+        name: "You",
+        points: 445,
+        badges: 2,
+        rank: 3,
+        isCurrentUser: true,
+      },
     ],
   };
 
@@ -96,7 +131,7 @@ export default function LeaderboardHome({ isTeacher }: LeaderboardHomeProps) {
 
     // Filter out current user entry for teachers
     if (isTeacher) {
-      return leaderboard.filter(entry => !entry.isCurrentUser);
+      return leaderboard.filter((entry) => !entry.isCurrentUser);
     }
 
     return leaderboard;
@@ -106,7 +141,11 @@ export default function LeaderboardHome({ isTeacher }: LeaderboardHomeProps) {
     if (rank === 1) return <Trophy className="w-6 h-6 text-yellow-500" />;
     if (rank === 2) return <Medal className="w-6 h-6 text-gray-400" />;
     if (rank === 3) return <Medal className="w-6 h-6 text-amber-600" />;
-    return <span className="w-6 h-6 flex items-center justify-center text-gray-600 font-bold">#{rank}</span>;
+    return (
+      <span className="w-6 h-6 flex items-center justify-center text-gray-600 font-bold">
+        #{rank}
+      </span>
+    );
   };
 
   return (
@@ -121,7 +160,9 @@ export default function LeaderboardHome({ isTeacher }: LeaderboardHomeProps) {
               <div>
                 <h1 className="text-2xl font-bold">Leaderboard</h1>
                 <p className="text-sm opacity-80">
-                  {isTeacher ? "Monitor student performance" : "See how you rank against others"}
+                  {isTeacher
+                    ? "Monitor student performance"
+                    : "See how you rank against others"}
                 </p>
               </div>
             </div>
@@ -134,10 +175,13 @@ export default function LeaderboardHome({ isTeacher }: LeaderboardHomeProps) {
                 <div className="bg-secondary-100 p-2 rounded-lg">
                   <Star className="w-5 h-5 text-secondary-600" />
                 </div>
-                <h2 className="font-semibold text-secondary-800">Teacher View</h2>
+                <h2 className="font-semibold text-secondary-800">
+                  Teacher View
+                </h2>
               </div>
               <p className="text-sm text-gray-600">
-                View student rankings and performance across courses. Use the filter to see specific course leaderboards.
+                View student rankings and performance across courses. Use the
+                filter to see specific course leaderboards.
               </p>
             </div>
           )}
@@ -146,7 +190,9 @@ export default function LeaderboardHome({ isTeacher }: LeaderboardHomeProps) {
           <div className="bg-white rounded-lg shadow-md p-4 mb-6">
             <div className="flex items-center gap-3 mb-4">
               <Filter className="w-5 h-5 text-secondary-600" />
-              <h2 className="font-semibold text-secondary-800">Filter by Course</h2>
+              <h2 className="font-semibold text-secondary-800">
+                Filter by Course
+              </h2>
             </div>
             <div className="flex flex-wrap gap-2">
               <button
@@ -189,15 +235,23 @@ export default function LeaderboardHome({ isTeacher }: LeaderboardHomeProps) {
                 <div
                   key={entry.id}
                   className={`p-4 flex items-center justify-between hover:bg-gray-50 transition-colors ${
-                    entry.isCurrentUser ? "bg-primary-100 border-l-4 border-primary-400" : ""
+                    entry.isCurrentUser
+                      ? "bg-primary-100 border-l-4 border-primary-400"
+                      : ""
                   }`}
                 >
                   <div className="flex items-center gap-4">
                     {getRankIcon(entry.rank)}
                     <div>
-                      <h3 className={`font-semibold ${entry.isCurrentUser ? "text-primary-800" : "text-secondary-800"}`}>
+                      <h3
+                        className={`font-semibold ${entry.isCurrentUser ? "text-primary-800" : "text-secondary-800"}`}
+                      >
                         {entry.name}
-                        {entry.isCurrentUser && <span className="ml-2 text-xs font-normal">(You)</span>}
+                        {entry.isCurrentUser && (
+                          <span className="ml-2 text-xs font-normal">
+                            (You)
+                          </span>
+                        )}
                       </h3>
                     </div>
                   </div>
@@ -205,7 +259,9 @@ export default function LeaderboardHome({ isTeacher }: LeaderboardHomeProps) {
                     <div className="text-center">
                       <div className="flex items-center gap-1">
                         <Star className="w-4 h-4 text-primary-600" />
-                        <span className="font-bold">{entry.points.toLocaleString()}</span>
+                        <span className="font-bold">
+                          {entry.points.toLocaleString()}
+                        </span>
                       </div>
                       <span className="text-gray-500 text-xs">points</span>
                     </div>

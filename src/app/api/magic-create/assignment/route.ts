@@ -13,7 +13,7 @@ import { LLMAssignmentExtractor } from "@/lib/llm/assignment";
 export const POST = auth(
   withTeacherSession(async function POST(
     req: NextAuthRequest,
-    session: AuthenticatedSession
+    session: AuthenticatedSession,
   ) {
     const body = await req.json();
     const parsedBody = MagicCreateAssignmentRequestSchema.safeParse(body);
@@ -24,7 +24,7 @@ export const POST = auth(
             .map((issue) => issue.message)
             .join(", "),
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
     const { fileId, courseId } = parsedBody.data;
@@ -40,7 +40,7 @@ export const POST = auth(
 
     const llmResult = await LLMAssignmentExtractor(
       loadResponse.fileBuffer,
-      courseRecord
+      courseRecord,
     );
 
     const {
@@ -82,7 +82,7 @@ export const POST = auth(
     if (!contentRecord.acknowledged) {
       return NextResponse.json(
         { error: "Failed to create assignment record" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -91,5 +91,5 @@ export const POST = auth(
       message: "Assignment created successfully",
       status: "success",
     });
-  })
+  }),
 );

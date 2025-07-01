@@ -46,7 +46,6 @@ export default function CreateContentAIForm({
       const uploadResult = await result.json();
       if (!uploadResult.fileId) {
         setError("File upload failed. No fileId returned.");
-
       }
 
       const magicCreate = await fetch("/api/magic-create/content", {
@@ -79,8 +78,8 @@ export default function CreateContentAIForm({
       // Redirect to edit page with AI-processed data and file info
       router.push(
         `/edit/content/${resId}?courseId=${selectedCourse}&hasFile=true&fileName=${encodeURIComponent(
-          file.name
-        )}`
+          file.name,
+        )}`,
       );
     } catch (error) {
       console.error("Error processing PDF:", error);
@@ -117,10 +116,7 @@ export default function CreateContentAIForm({
             <label className="block mb-2 font-medium">Course:</label>
             <div className="flex items-center gap-2">
               <span className="font-semibold">
-                {
-                  courses.find((c) => c._id.toString() === selectedCourse)
-                    ?.name
-                }
+                {courses.find((c) => c._id.toString() === selectedCourse)?.name}
               </span>
               <SecondaryButton
                 type="button"

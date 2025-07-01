@@ -7,7 +7,12 @@ import { TextArea } from "@/components/core/inputs/text-area";
 import { Checkbox } from "@/components/core/inputs/checkbox";
 import { Dropdown } from "@/components/core/inputs/dropdown";
 import { TextBox } from "@/components/core/inputs/text-box";
-import { Assignment, Course, CourseUnit, UserData } from "@/lib/schemas/database";
+import {
+  Assignment,
+  Course,
+  CourseUnit,
+  UserData,
+} from "@/lib/schemas/database";
 import { Session } from "next-auth";
 import { useSearchParams } from "next/navigation";
 import { ExtractedAssignment } from "@/lib/schemas/llm";
@@ -54,21 +59,25 @@ export default function EditAssignmentForm({
   const [startDate, setStartDate] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [gradeReleaseDate, setGradeReleaseDate] = useState("");
-  const [submissionType, setSubmissionType] = useState<"file_upload" | "text_entry">("file_upload");
-  const [gradingType, setGradingType] = useState<"percentage" | "pass_fail">("percentage");
-  const [gradingMethod, setGradingMethod] = useState<"direct" | "rubric">("direct");
+  const [submissionType, setSubmissionType] = useState<
+    "file_upload" | "text_entry"
+  >("file_upload");
+  const [gradingType, setGradingType] = useState<"percentage" | "pass_fail">(
+    "percentage",
+  );
+  const [gradingMethod, setGradingMethod] = useState<"direct" | "rubric">(
+    "direct",
+  );
   const [totalPoints, setTotalPoints] = useState<number>(100);
   const [rubricCriteria, setRubricCriteria] = useState<RubricCriteria[]>([
-    { description: "", points: 0 }
+    { description: "", points: 0 },
   ]);
-  const [rubricLevels, setRubricLevels] = useState<RubricLevel[]>(
-    [
-      { description: "Excellent", rank: 4 },
-      { description: "Good", rank: 3 },
-      { description: "Satisfactory", rank: 2 },
-      { description: "Needs Improvement", rank: 1 }
-    ]
-  );
+  const [rubricLevels, setRubricLevels] = useState<RubricLevel[]>([
+    { description: "Excellent", rank: 4 },
+    { description: "Good", rank: 3 },
+    { description: "Satisfactory", rank: 2 },
+    { description: "Needs Improvement", rank: 1 },
+  ]);
 
   const [allTopics, setAllTopics] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -76,7 +85,8 @@ export default function EditAssignmentForm({
 
   // Load course and file info from query params or existing content
   useEffect(() => {
-    if (!searchParams) throw new Error("Search params not available in new content form");
+    if (!searchParams)
+      throw new Error("Search params not available in new content form");
     if (isNew) {
       const courseId = searchParams.get("courseId");
       const hasFile = searchParams.get("hasFile") === "true";
@@ -100,20 +110,28 @@ export default function EditAssignmentForm({
       const assignmentData = existingContent as ExtractedAssignment; // Type assertion for assignment fields
       if (assignmentData.startDate) setStartDate(assignmentData.startDate);
       if (assignmentData.dueDate) setDueDate(assignmentData.dueDate);
-      if (assignmentData.gradeReleaseDate) setGradeReleaseDate(assignmentData.gradeReleaseDate);
-      if (assignmentData.submissionType) setSubmissionType(assignmentData.submissionType);
+      if (assignmentData.gradeReleaseDate)
+        setGradeReleaseDate(assignmentData.gradeReleaseDate);
+      if (assignmentData.submissionType)
+        setSubmissionType(assignmentData.submissionType);
       if (assignmentData.grading) {
         setGradingType(assignmentData.grading.type || "percentage");
         setGradingMethod(assignmentData.grading.method || "direct");
         setTotalPoints(assignmentData.grading.total_points || 100);
         if (assignmentData.grading.rubric) {
-          setRubricCriteria(assignmentData.grading.rubric.criteria || [{ description: "", points: 0 }]);
-          setRubricLevels(assignmentData.grading.rubric.level || [
-            { description: "Excellent", rank: 4 },
-            { description: "Good", rank: 3 },
-            { description: "Satisfactory", rank: 2 },
-            { description: "Needs Improvement", rank: 1 }
-          ]);
+          setRubricCriteria(
+            assignmentData.grading.rubric.criteria || [
+              { description: "", points: 0 },
+            ],
+          );
+          setRubricLevels(
+            assignmentData.grading.rubric.level || [
+              { description: "Excellent", rank: 4 },
+              { description: "Good", rank: 3 },
+              { description: "Satisfactory", rank: 2 },
+              { description: "Needs Improvement", rank: 1 },
+            ],
+          );
         }
       }
 
@@ -145,7 +163,12 @@ export default function EditAssignmentForm({
 
   // When allTopics or existingContent.topics changes, update selectedTopics to indexes
   useEffect(() => {
-    if (!isNew && existingContent && Array.isArray(existingContent.topics) && allTopics.length > 0) {
+    if (
+      !isNew &&
+      existingContent &&
+      Array.isArray(existingContent.topics) &&
+      allTopics.length > 0
+    ) {
       // Convert 1-based indexes to 0-based indexes
       const indexes = existingContent.topics
         .map((topicIndex: number) => topicIndex - 1)
@@ -156,9 +179,7 @@ export default function EditAssignmentForm({
 
   const handleTopicChange = (idx: number) => {
     setSelectedTopics((prev) =>
-      prev.includes(idx)
-        ? prev.filter((i) => i !== idx)
-        : [...prev, idx]
+      prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx],
     );
   };
 
@@ -172,14 +193,18 @@ export default function EditAssignmentForm({
     }
   };
 
-  const updateRubricCriteria = (index: number, field: keyof RubricCriteria, value: string | number) => {
+  const updateRubricCriteria = (
+    index: number,
+    field: keyof RubricCriteria,
+    value: string | number,
+  ) => {
     const updated = [...rubricCriteria];
     updated[index] = { ...updated[index], [field]: value };
     setRubricCriteria(updated);
   };
 
   const addRubricLevel = () => {
-    const newRank = Math.max(...rubricLevels.map(l => l.rank)) + 1;
+    const newRank = Math.max(...rubricLevels.map((l) => l.rank)) + 1;
     setRubricLevels([...rubricLevels, { description: "", rank: newRank }]);
   };
 
@@ -189,7 +214,11 @@ export default function EditAssignmentForm({
     }
   };
 
-  const updateRubricLevel = (index: number, field: keyof RubricLevel, value: string | number) => {
+  const updateRubricLevel = (
+    index: number,
+    field: keyof RubricLevel,
+    value: string | number,
+  ) => {
     const updated = [...rubricLevels];
     updated[index] = { ...updated[index], [field]: value };
     setRubricLevels(updated);
@@ -198,8 +227,10 @@ export default function EditAssignmentForm({
   const isFormValid = () => {
     if (!title || !description || selectedTopics.length === 0) return false;
     if (gradingMethod === "rubric") {
-      const hasValidCriteria = rubricCriteria.every(c => c.description.trim() && c.points > 0);
-      const hasValidLevels = rubricLevels.every(l => l.description.trim());
+      const hasValidCriteria = rubricCriteria.every(
+        (c) => c.description.trim() && c.points > 0,
+      );
+      const hasValidLevels = rubricLevels.every((l) => l.description.trim());
       return hasValidCriteria && hasValidLevels;
     }
     return totalPoints > 0;
@@ -231,8 +262,8 @@ export default function EditAssignmentForm({
               rubric: {
                 criteria: rubricCriteria,
                 level: rubricLevels,
-              }
-            })
+              },
+            }),
           },
         },
       };
@@ -248,7 +279,7 @@ export default function EditAssignmentForm({
       if (!response.ok) {
         const errorData = await response.json();
         setError(
-          `Failed to save assignment: ${errorData.error || response.statusText}`
+          `Failed to save assignment: ${errorData.error || response.statusText}`,
         );
         setLoading(false);
         return;
@@ -333,7 +364,9 @@ export default function EditAssignmentForm({
               />
             </div>
             <div>
-              <label className="block mb-2 font-medium">Grade Release Date:</label>
+              <label className="block mb-2 font-medium">
+                Grade Release Date:
+              </label>
               <input
                 type="datetime-local"
                 value={gradeReleaseDate}
@@ -351,7 +384,9 @@ export default function EditAssignmentForm({
                 { value: "text_entry", label: "Text Entry" },
               ]}
               value={submissionType}
-              onChange={(value) => setSubmissionType(value as "file_upload" | "text_entry")}
+              onChange={(value) =>
+                setSubmissionType(value as "file_upload" | "text_entry")
+              }
             />
           </div>
 
@@ -411,31 +446,41 @@ export default function EditAssignmentForm({
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block mb-2 font-medium">Grading Type: *</label>
+                <label className="block mb-2 font-medium">
+                  Grading Type: *
+                </label>
                 <Dropdown
                   options={[
                     { value: "percentage", label: "Percentage" },
                     { value: "pass_fail", label: "Pass/Fail" },
                   ]}
                   value={gradingType}
-                  onChange={(value) => setGradingType(value as "percentage" | "pass_fail")}
+                  onChange={(value) =>
+                    setGradingType(value as "percentage" | "pass_fail")
+                  }
                 />
               </div>
 
               <div>
-                <label className="block mb-2 font-medium">Grading Method: *</label>
+                <label className="block mb-2 font-medium">
+                  Grading Method: *
+                </label>
                 <Dropdown
                   options={[
                     { value: "direct", label: "Direct Grading" },
                     { value: "rubric", label: "Rubric-based" },
                   ]}
                   value={gradingMethod}
-                  onChange={(value) => setGradingMethod(value as "direct" | "rubric")}
+                  onChange={(value) =>
+                    setGradingMethod(value as "direct" | "rubric")
+                  }
                 />
               </div>
 
               <div>
-                <label className="block mb-2 font-medium">Total Points: *</label>
+                <label className="block mb-2 font-medium">
+                  Total Points: *
+                </label>
                 <TextBox
                   type="number"
                   value={totalPoints.toString()}
@@ -462,9 +507,15 @@ export default function EditAssignmentForm({
                     <table className="w-full border border-gray-300">
                       <thead>
                         <tr className="bg-gray-50">
-                          <th className="border border-gray-300 px-3 py-2 text-left">Description</th>
-                          <th className="border border-gray-300 px-3 py-2 text-left">Points</th>
-                          <th className="border border-gray-300 px-3 py-2 text-left">Action</th>
+                          <th className="border border-gray-300 px-3 py-2 text-left">
+                            Description
+                          </th>
+                          <th className="border border-gray-300 px-3 py-2 text-left">
+                            Points
+                          </th>
+                          <th className="border border-gray-300 px-3 py-2 text-left">
+                            Action
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -473,7 +524,13 @@ export default function EditAssignmentForm({
                             <td className="border border-gray-300 px-3 py-2">
                               <TextBox
                                 value={criteria.description}
-                                onChange={(value) => updateRubricCriteria(index, "description", value)}
+                                onChange={(value) =>
+                                  updateRubricCriteria(
+                                    index,
+                                    "description",
+                                    value,
+                                  )
+                                }
                                 placeholder="Criteria description"
                               />
                             </td>
@@ -481,7 +538,13 @@ export default function EditAssignmentForm({
                               <TextBox
                                 type="number"
                                 value={criteria.points.toString()}
-                                onChange={(value) => updateRubricCriteria(index, "points", Number(value))}
+                                onChange={(value) =>
+                                  updateRubricCriteria(
+                                    index,
+                                    "points",
+                                    Number(value),
+                                  )
+                                }
                                 placeholder="0"
                               />
                             </td>
@@ -518,9 +581,15 @@ export default function EditAssignmentForm({
                     <table className="w-full border border-gray-300">
                       <thead>
                         <tr className="bg-gray-50">
-                          <th className="border border-gray-300 px-3 py-2 text-left">Description</th>
-                          <th className="border border-gray-300 px-3 py-2 text-left">Rank</th>
-                          <th className="border border-gray-300 px-3 py-2 text-left">Action</th>
+                          <th className="border border-gray-300 px-3 py-2 text-left">
+                            Description
+                          </th>
+                          <th className="border border-gray-300 px-3 py-2 text-left">
+                            Rank
+                          </th>
+                          <th className="border border-gray-300 px-3 py-2 text-left">
+                            Action
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -529,7 +598,9 @@ export default function EditAssignmentForm({
                             <td className="border border-gray-300 px-3 py-2">
                               <TextBox
                                 value={level.description}
-                                onChange={(value) => updateRubricLevel(index, "description", value)}
+                                onChange={(value) =>
+                                  updateRubricLevel(index, "description", value)
+                                }
                                 placeholder="Level description"
                               />
                             </td>
@@ -537,7 +608,13 @@ export default function EditAssignmentForm({
                               <TextBox
                                 type="number"
                                 value={level.rank.toString()}
-                                onChange={(value) => updateRubricLevel(index, "rank", Number(value))}
+                                onChange={(value) =>
+                                  updateRubricLevel(
+                                    index,
+                                    "rank",
+                                    Number(value),
+                                  )
+                                }
                                 placeholder="1"
                               />
                             </td>
@@ -567,7 +644,11 @@ export default function EditAssignmentForm({
             className="px-4 py-2"
             disabled={!isFormValid() || loading}
           >
-            {loading ? "Saving..." : (isNew ? "Create Assignment" : "Update Assignment")}
+            {loading
+              ? "Saving..."
+              : isNew
+                ? "Create Assignment"
+                : "Update Assignment"}
           </PrimaryButton>
 
           {error && <div className="text-red-600 mt-2">{error}</div>}

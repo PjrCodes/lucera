@@ -21,7 +21,7 @@ export const syllabusExtractorSchema = z.object({
     z.object({
       name: z.string(),
       description: z.string(),
-    })
+    }),
   ),
   timeline: z.array(
     z.object({
@@ -43,12 +43,12 @@ export const syllabusExtractorSchema = z.object({
       startDate: z.string(),
       dueDate: z.string(),
       gradeReleaseDate: z.string(),
-    })
+    }),
   ),
 });
 
 export const syllabusExtractorLLMSchema = z.toJSONSchema(
-  syllabusExtractorSchema
+  syllabusExtractorSchema,
 );
 
 export type ExtractedSyllabus = z.infer<typeof syllabusExtractorSchema>;
@@ -70,20 +70,20 @@ export const assignmentExtractorSchema = z.object({
         z.object({
           description: z.string(),
           points: z.number(),
-        })
+        }),
       ),
       level: z.array(
         z.object({
           description: z.string(),
           rank: z.number(),
-        })
+        }),
       ),
     }),
   }),
 });
 
 export const assignmentExtractorLLMSchema = z.toJSONSchema(
-  assignmentExtractorSchema
+  assignmentExtractorSchema,
 );
 
 export type ExtractedAssignment = z.infer<typeof assignmentExtractorSchema>;

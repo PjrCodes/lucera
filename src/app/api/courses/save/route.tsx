@@ -10,7 +10,7 @@ import { ObjectId } from "mongodb";
 export const POST = auth(
   withTeacherSession(async function POST(
     req: NextAuthRequest,
-    session: AuthenticatedSession
+    session: AuthenticatedSession,
   ) {
     const body = await req.json();
     console.log(body);
@@ -23,7 +23,7 @@ export const POST = auth(
             .map((issue) => issue.message)
             .join(", "),
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -62,7 +62,7 @@ export const POST = auth(
       if (!courseRecord.acknowledged) {
         return NextResponse.json(
           { error: "Failed to create course record" },
-          { status: 500 }
+          { status: 500 },
         );
       }
 
@@ -72,7 +72,7 @@ export const POST = auth(
       if (!parsedBody.data._id) {
         return NextResponse.json(
           { error: "Course ID is required for update" },
-          { status: 400 }
+          { status: 400 },
         );
       }
       // Only update fields if the new value is not null
@@ -102,13 +102,13 @@ export const POST = auth(
         { _id: new ObjectId(parsedBody.data._id) },
         {
           $set: updateFields,
-        }
+        },
       );
 
       if (!courseRecord.acknowledged) {
         return NextResponse.json(
           { error: "Failed to update course record" },
-          { status: 500 }
+          { status: 500 },
         );
       }
 
@@ -121,7 +121,7 @@ export const POST = auth(
     const userCollection = db.collection("user_data");
     const userUpdateResult = await userCollection.updateOne(
       { id: session.user.id },
-      { $addToSet: { relatedCourses: courseId } }
+      { $addToSet: { relatedCourses: courseId } },
     );
     if (
       userUpdateResult.modifiedCount === 0 &&
@@ -129,7 +129,7 @@ export const POST = auth(
     ) {
       return NextResponse.json(
         { error: "Failed to update user relatedCourses" },
-        { status: 500 }
+        { status: 500 },
       );
     }
     // }
@@ -139,5 +139,5 @@ export const POST = auth(
       courseId,
       created: isNewCourse,
     });
-  })
+  }),
 );

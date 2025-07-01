@@ -1,4 +1,7 @@
-import { getUserData, serverComponentRedirectUnauthenticated } from "@/lib/database-service/auth";
+import {
+  getUserData,
+  serverComponentRedirectUnauthenticated,
+} from "@/lib/database-service/auth";
 import { redirect } from "next/navigation";
 
 export default async function HandleInvalidUserPage() {

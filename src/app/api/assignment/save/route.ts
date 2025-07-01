@@ -10,7 +10,7 @@ import { ObjectId } from "mongodb";
 export const POST = auth(
   withTeacherSession(async function POST(
     req: NextAuthRequest,
-    session: AuthenticatedSession
+    session: AuthenticatedSession,
   ) {
     const body = await req.json();
     console.log(body);
@@ -23,7 +23,7 @@ export const POST = auth(
             .map((issue) => issue.message)
             .join(", "),
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -54,12 +54,13 @@ export const POST = auth(
         status: "draft",
       };
 
-      assignmentRecord = await assignmentCollection.insertOne(newAssignmentData);
+      assignmentRecord =
+        await assignmentCollection.insertOne(newAssignmentData);
 
       if (!assignmentRecord.acknowledged) {
         return NextResponse.json(
           { error: "Failed to create assignment record" },
-          { status: 500 }
+          { status: 500 },
         );
       }
 
@@ -69,7 +70,7 @@ export const POST = auth(
       if (!parsedBody.data._id) {
         return NextResponse.json(
           { error: "Assignment ID is required for update" },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
@@ -88,7 +89,8 @@ export const POST = auth(
       ];
 
       for (const field of fieldsToUpdate) {
-        const value = parsedBody.data.data[field as keyof typeof parsedBody.data.data];
+        const value =
+          parsedBody.data.data[field as keyof typeof parsedBody.data.data];
         if (value !== null && value !== undefined) {
           updateFields[field] = value;
         }
@@ -100,24 +102,25 @@ export const POST = auth(
         { _id: new ObjectId(parsedBody.data._id) },
         {
           $set: updateFields,
-        }
+        },
       );
 
       if (!assignmentRecord.acknowledged) {
         return NextResponse.json(
           { error: "Failed to update assignment record" },
-          { status: 500 }
+          { status: 500 },
         );
       }
 
-      assignmentId = parsedBody.data._id || assignmentRecord.upsertedId?.toString() || "";
+      assignmentId =
+        parsedBody.data._id || assignmentRecord.upsertedId?.toString() || "";
     }
 
     // Add the assignment to the user's related content array
     const userCollection = db.collection("user_data");
     const userUpdateResult = await userCollection.updateOne(
       { id: session.user.id },
-      { $addToSet: { relatedContent: assignmentId } }
+      { $addToSet: { relatedContent: assignmentId } },
     );
     if (
       userUpdateResult.modifiedCount === 0 &&
@@ -125,7 +128,7 @@ export const POST = auth(
     ) {
       return NextResponse.json(
         { error: "Failed to update user relatedContent" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -134,5 +137,5 @@ export const POST = auth(
       assignmentId,
       created: isNewAssignment,
     });
-  })
+  }),
 );

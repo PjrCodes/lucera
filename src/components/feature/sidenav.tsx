@@ -21,7 +21,9 @@ export async function AppSidebar() {
       </div>
       <SidebarContent>
         {!isLoggedIn ? (
-          <div className="h-full bg-yellow-50 px-4 py-4">Log in to continue</div>
+          <div className="h-full bg-yellow-50 px-4 py-4">
+            Log in to continue
+          </div>
         ) : (
           <div className="h-full flex flex-col bg-yellow-50">
             <nav className="flex-1">

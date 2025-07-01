@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import * as React from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -12,23 +12,27 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export type Option = {
-  value: string
-  label: string
-}
+  value: string;
+  label: string;
+};
 
 interface MultiSelectProps {
-  options: Option[]
-  selected: string[]
-  onChange: (selected: string[]) => void
-  placeholder?: string
-  emptyText?: string
-  className?: string
+  options: Option[];
+  selected: string[];
+  onChange: (selected: string[]) => void;
+  placeholder?: string;
+  emptyText?: string;
+  className?: string;
   /** Optional trigger icon; if provided, only icon is shown in trigger */
-  icon?: React.ReactNode
+  icon?: React.ReactNode;
 }
 
 export function MultiSelect({
@@ -40,17 +44,17 @@ export function MultiSelect({
   className,
   icon,
 }: MultiSelectProps) {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(false);
 
   const handleSelect = React.useCallback(
     (value: string) => {
       const updatedSelected = selected.includes(value)
         ? selected.filter((item) => item !== value)
-        : [...selected, value]
-      onChange(updatedSelected)
+        : [...selected, value];
+      onChange(updatedSelected);
     },
     [selected, onChange],
-  )
+  );
 
   const selectedLabels = React.useMemo(
     () =>
@@ -59,7 +63,7 @@ export function MultiSelect({
         .filter(Boolean)
         .join(", "),
     [selected, options],
-  )
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -75,7 +79,9 @@ export function MultiSelect({
             icon
           ) : (
             <>
-              <span className="truncate">{selected.length > 0 ? selectedLabels : placeholder}</span>
+              <span className="truncate">
+                {selected.length > 0 ? selectedLabels : placeholder}
+              </span>
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </>
           )}
@@ -88,10 +94,19 @@ export function MultiSelect({
             <CommandEmpty>{emptyText}</CommandEmpty>
             <CommandGroup>
               {options.map((option) => (
-                <CommandItem key={option.value} value={option.value} onSelect={() => handleSelect(option.value)}>
+                <CommandItem
+                  key={option.value}
+                  value={option.value}
+                  onSelect={() => handleSelect(option.value)}
+                >
                   {option.label}
                   <Check
-                    className={cn("ml-auto h-4 w-4", selected.includes(option.value) ? "opacity-100" : "opacity-0")}
+                    className={cn(
+                      "ml-auto h-4 w-4",
+                      selected.includes(option.value)
+                        ? "opacity-100"
+                        : "opacity-0",
+                    )}
                   />
                 </CommandItem>
               ))}
@@ -100,5 +115,5 @@ export function MultiSelect({
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }

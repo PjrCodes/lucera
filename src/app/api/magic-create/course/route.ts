@@ -14,7 +14,7 @@ import { AuthenticatedSession } from "@/lib/types/auth";
 export const POST = auth(
   withTeacherSession(async function POST(
     req: NextAuthRequest,
-    session: AuthenticatedSession
+    session: AuthenticatedSession,
   ) {
     const body = await req.json();
     const parsedBody = MagicCreateCourseRequestSchema.safeParse(body);
@@ -25,7 +25,7 @@ export const POST = auth(
             .map((issue) => issue.message)
             .join(", "),
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
     const { fileId } = parsedBody.data;
@@ -73,7 +73,7 @@ export const POST = auth(
     if (!courseRecord.acknowledged) {
       return NextResponse.json(
         { error: "Failed to create course record" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -93,7 +93,7 @@ export const POST = auth(
     if (!contentRecord.acknowledged) {
       return NextResponse.json(
         { error: "Failed to create content record" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -101,5 +101,5 @@ export const POST = auth(
       success: true,
       courseId: courseRecord.insertedId.toString(),
     });
-  })
+  }),
 );

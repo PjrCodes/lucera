@@ -27,14 +27,62 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
 
   // @TODO: Replace with actual course-based data from database
   const wordPuzzles: WordPuzzle[] = [
-    { id: 1, word: "ALGORITHM", hint: "Step-by-step procedure for solving problems", course: "CS101", difficulty: "medium" },
-    { id: 2, word: "VARIABLE", hint: "Storage location with an associated name", course: "CS101", difficulty: "easy" },
-    { id: 3, word: "RECURSION", hint: "Function that calls itself", course: "CS201", difficulty: "hard" },
-    { id: 4, word: "ARRAY", hint: "Collection of elements in contiguous memory", course: "CS101", difficulty: "easy" },
-    { id: 5, word: "INHERITANCE", hint: "OOP concept where class derives from another", course: "CS201", difficulty: "medium" },
-    { id: 6, word: "POLYMORPHISM", hint: "Ability to take many forms", course: "CS201", difficulty: "hard" },
-    { id: 7, word: "FUNCTION", hint: "Reusable block of code", course: "CS101", difficulty: "easy" },
-    { id: 8, word: "DATABASE", hint: "Organized collection of data", course: "CS301", difficulty: "medium" },
+    {
+      id: 1,
+      word: "ALGORITHM",
+      hint: "Step-by-step procedure for solving problems",
+      course: "CS101",
+      difficulty: "medium",
+    },
+    {
+      id: 2,
+      word: "VARIABLE",
+      hint: "Storage location with an associated name",
+      course: "CS101",
+      difficulty: "easy",
+    },
+    {
+      id: 3,
+      word: "RECURSION",
+      hint: "Function that calls itself",
+      course: "CS201",
+      difficulty: "hard",
+    },
+    {
+      id: 4,
+      word: "ARRAY",
+      hint: "Collection of elements in contiguous memory",
+      course: "CS101",
+      difficulty: "easy",
+    },
+    {
+      id: 5,
+      word: "INHERITANCE",
+      hint: "OOP concept where class derives from another",
+      course: "CS201",
+      difficulty: "medium",
+    },
+    {
+      id: 6,
+      word: "POLYMORPHISM",
+      hint: "Ability to take many forms",
+      course: "CS201",
+      difficulty: "hard",
+    },
+    {
+      id: 7,
+      word: "FUNCTION",
+      hint: "Reusable block of code",
+      course: "CS101",
+      difficulty: "easy",
+    },
+    {
+      id: 8,
+      word: "DATABASE",
+      hint: "Organized collection of data",
+      course: "CS301",
+      difficulty: "medium",
+    },
   ];
 
   const shuffleWord = (word: string): string => {
@@ -82,11 +130,17 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
   const checkAnswer = () => {
     if (!currentPuzzle) return;
 
-    const correct = userAnswer.toUpperCase() === currentPuzzle.word.toUpperCase();
+    const correct =
+      userAnswer.toUpperCase() === currentPuzzle.word.toUpperCase();
     setIsCorrect(correct);
 
     if (correct) {
-      const points = currentPuzzle.difficulty === "easy" ? 10 : currentPuzzle.difficulty === "medium" ? 20 : 30;
+      const points =
+        currentPuzzle.difficulty === "easy"
+          ? 10
+          : currentPuzzle.difficulty === "medium"
+            ? 20
+            : 30;
       setScore(score + points + streak * 5); // Bonus for streak
       setStreak(streak + 1);
     } else {
@@ -126,23 +180,34 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
         </div>
 
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">🔠 Word Whiz</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+            🔠 Word Whiz
+          </h1>
           <p className="text-gray-600">Choose your game mode!</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <button
-            onClick={() => setGameMode("anagram")}            className="bg-primary-100 border-2 border-primary-300 p-6 rounded-lg hover:bg-primary-200 transition-colors"
+            onClick={() => setGameMode("anagram")}
+            className="bg-primary-100 border-2 border-primary-300 p-6 rounded-lg hover:bg-primary-200 transition-colors"
           >
-            <h3 className="text-xl font-bold text-primary-800 mb-2">Anagram Solve</h3>
-            <p className="text-primary-600">Unscramble the letters to form the correct word</p>
+            <h3 className="text-xl font-bold text-primary-800 mb-2">
+              Anagram Solve
+            </h3>
+            <p className="text-primary-600">
+              Unscramble the letters to form the correct word
+            </p>
           </button>
           <button
             onClick={() => setGameMode("guess")}
             className="bg-secondary-100 border-2 border-secondary-300 p-6 rounded-lg hover:bg-secondary-200 transition-colors"
           >
-            <h3 className="text-xl font-bold text-secondary-800 mb-2">Guess the Word</h3>
-            <p className="text-secondary-600">Fill in the blanks with hints provided</p>
+            <h3 className="text-xl font-bold text-secondary-800 mb-2">
+              Guess the Word
+            </h3>
+            <p className="text-secondary-600">
+              Fill in the blanks with hints provided
+            </p>
           </button>
         </div>
       </div>
@@ -160,7 +225,9 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
           <ArrowLeft className="w-4 h-4" />
           Change Mode
         </button>
-        <div className="flex items-center gap-4">          <div className="flex items-center gap-2 bg-primary-100 px-3 py-1 rounded-lg">
+        <div className="flex items-center gap-4">
+          {" "}
+          <div className="flex items-center gap-2 bg-primary-100 px-3 py-1 rounded-lg">
             <Star className="w-4 h-4 text-primary-600" />
             <span className="font-bold text-primary-800">{score}</span>
           </div>
@@ -174,9 +241,14 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              {gameMode === "anagram" ? "🔤 Anagram Solve" : "🔍 Guess the Word"}
-            </h2>            <div className="inline-block bg-secondary-100 px-3 py-1 rounded-full">
-              <span className="text-secondary-800 text-sm font-medium">{currentPuzzle.course}</span>
+              {gameMode === "anagram"
+                ? "🔤 Anagram Solve"
+                : "🔍 Guess the Word"}
+            </h2>{" "}
+            <div className="inline-block bg-secondary-100 px-3 py-1 rounded-full">
+              <span className="text-secondary-800 text-sm font-medium">
+                {currentPuzzle.course}
+              </span>
             </div>
           </div>
 
@@ -190,7 +262,9 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
                 {maskedWord}
               </div>
             )}
-            <p className="text-gray-600 italic">&quot;{currentPuzzle.hint}&quot;</p>
+            <p className="text-gray-600 italic">
+              &quot;{currentPuzzle.hint}&quot;
+            </p>
           </div>
 
           <div className="space-y-4">
@@ -231,11 +305,13 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
             </div>
 
             {isCorrect !== null && (
-              <div className={`text-center p-4 rounded-lg ${
-                isCorrect
-                  ? "bg-green-100 text-green-800"
-                  : "bg-lucerared-1 text-lucerared-5"
-              }`}>
+              <div
+                className={`text-center p-4 rounded-lg ${
+                  isCorrect
+                    ? "bg-green-100 text-green-800"
+                    : "bg-lucerared-1 text-lucerared-5"
+                }`}
+              >
                 <div className="flex items-center justify-center gap-2 mb-2">
                   {isCorrect ? (
                     <CheckCircle className="w-6 h-6" />
@@ -247,7 +323,10 @@ const WordWhizGame: React.FC<WordWhizGameProps> = ({ onBack }) => {
                   </span>
                 </div>
                 {!isCorrect && (
-                  <p>The correct answer was: <span className="font-bold">{currentPuzzle.word}</span></p>
+                  <p>
+                    The correct answer was:{" "}
+                    <span className="font-bold">{currentPuzzle.word}</span>
+                  </p>
                 )}
               </div>
             )}

@@ -1,8 +1,8 @@
-import React from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface DraggableItemProps {
   id: string;
@@ -10,7 +10,11 @@ interface DraggableItemProps {
   onRemove?: () => void;
 }
 
-export default function DraggableItem({ id, label, onRemove }: DraggableItemProps) {
+export default function DraggableItem({
+  id,
+  label,
+  onRemove,
+}: DraggableItemProps) {
   const {
     attributes,
     listeners,

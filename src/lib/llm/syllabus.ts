@@ -8,11 +8,11 @@ import {
 
 const syllabusExtractorUserPrompt = fs.readFileSync(
   "./src/appdata/prompts/syllabus_extractor/user.txt",
-  "utf-8"
+  "utf-8",
 );
 const syllabusExtractorSystemPrompt = fs.readFileSync(
   "./src/appdata/prompts/syllabus_extractor/system.txt",
-  "utf-8"
+  "utf-8",
 );
 
 type LLMSyllabusExtractorResult =
@@ -20,7 +20,7 @@ type LLMSyllabusExtractorResult =
   | { success: false; error: string; data: null };
 
 export async function LLMSyllabusExtractor(
-  fileBuffer: Buffer
+  fileBuffer: Buffer,
 ): Promise<LLMSyllabusExtractorResult> {
   // save the text to a file for debugging purposes
 
@@ -32,7 +32,7 @@ export async function LLMSyllabusExtractor(
       fileBuffer: fileBuffer,
       fileName: "syllabus.pdf",
       mimeType: "application/pdf",
-    }
+    },
   );
 
   try {
@@ -45,9 +45,9 @@ export async function LLMSyllabusExtractor(
       };
     }
 
-
-    const parsedResponse =
-      syllabusExtractorSchema.parse(JSON.parse(llmTextResponse));
+    const parsedResponse = syllabusExtractorSchema.parse(
+      JSON.parse(llmTextResponse),
+    );
 
     // further parsing of content into DATE
 

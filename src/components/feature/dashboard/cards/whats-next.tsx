@@ -10,7 +10,7 @@ interface NextAction {
   dueDate?: string;
 }
 
-export default function WhatsNext({ }: PropsForEveryDashboardCard) {
+export default function WhatsNext({}: PropsForEveryDashboardCard) {
   // Mock data for what's next - replace with actual data fetching later
   const unreadMessages = 3;
 
@@ -20,15 +20,15 @@ export default function WhatsNext({ }: PropsForEveryDashboardCard) {
       action: "Revise",
       subject: "Threads",
       link: "/courses/threads",
-      dueDate: "test on 9th June"
+      dueDate: "test on 9th June",
     },
     {
       id: 2,
       action: "Finish",
       subject: "Discrete Mathematics",
       link: "/courses/discrete-math",
-      dueDate: "assignment, due on 7th June"
-    }
+      dueDate: "assignment, due on 7th June",
+    },
   ];
 
   const focusSessionTime = "9:00 PM";
@@ -43,7 +43,8 @@ export default function WhatsNext({ }: PropsForEveryDashboardCard) {
       {/* Unread Messages */}
       <div className="mb-4">
         <p className="text-primary-700 mb-2">
-          You have <span className="font-bold">{unreadMessages} important</span> unread messages.
+          You have <span className="font-bold">{unreadMessages} important</span>{" "}
+          unread messages.
         </p>
       </div>
 
@@ -66,7 +67,8 @@ export default function WhatsNext({ }: PropsForEveryDashboardCard) {
                 </Link>
                 {action.dueDate && (
                   <>
-                    {" "}for your upcoming{" "}
+                    {" "}
+                    for your upcoming{" "}
                     <span className="font-bold">{action.dueDate}</span>.
                   </>
                 )}
@@ -80,7 +82,8 @@ export default function WhatsNext({ }: PropsForEveryDashboardCard) {
       <div className="mt-auto">
         <p className="text-primary-700">
           Start a focus session at{" "}
-          <span className="font-bold underline">{focusSessionTime}</span>, after your {nextEvent}.
+          <span className="font-bold underline">{focusSessionTime}</span>, after
+          your {nextEvent}.
         </p>
       </div>
     </div>

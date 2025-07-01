@@ -15,7 +15,13 @@ const colorClasses = {
   secondary: "bg-secondary-500 hover:bg-secondary-600 text-white",
 };
 
-const ActionButton: React.FC<ActionButtonProps> = ({ href, icon: Icon, title, description, color }) => {
+const ActionButton: React.FC<ActionButtonProps> = ({
+  href,
+  icon: Icon,
+  title,
+  description,
+  color,
+}) => {
   return (
     <Link
       href={href}

@@ -9,13 +9,13 @@ export const GET = auth(
   withAuthorisation(async function GET(
     request: NextAuthRequest,
     session: AuthenticatedSession,
-    params: Promise<{ fileId: string }>
+    params: Promise<{ fileId: string }>,
   ) {
     const { fileId } = await params;
     if (!fileId) {
       return NextResponse.json(
         { error: "File ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -29,16 +29,16 @@ export const GET = auth(
     const headers = new Headers();
     headers.set(
       "Content-Type",
-      loadResponse.fileRecord.file_type || "application/octet-stream"
+      loadResponse.fileRecord.file_type || "application/octet-stream",
     );
     headers.set(
       "Content-Disposition",
-      `attachment; filename="${loadResponse.fileRecord.name}"`
+      `attachment; filename="${loadResponse.fileRecord.name}"`,
     );
     headers.set("Content-Length", loadResponse.fileBuffer.length.toString());
     return new NextResponse(loadResponse.fileBuffer, {
       status: 200,
       headers,
     });
-  })
+  }),
 );

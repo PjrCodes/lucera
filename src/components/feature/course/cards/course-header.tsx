@@ -9,7 +9,11 @@ interface CourseHeaderProps {
   isBookmarked?: boolean;
 }
 
-export default function CourseHeader({ course, isTeacher = false, isBookmarked = false }: CourseHeaderProps) {
+export default function CourseHeader({
+  course,
+  isTeacher = false,
+  isBookmarked = false,
+}: CourseHeaderProps) {
   return (
     <div className="bg-primary-50 rounded-xl shadow border border-primary-100 p-6">
       <div className="flex items-center justify-between gap-4">
@@ -18,19 +22,21 @@ export default function CourseHeader({ course, isTeacher = false, isBookmarked =
             {course.name.charAt(0).toUpperCase()}
           </div>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-primary-900 mb-2">{course.name}</h1>
+            <h1 className="text-2xl font-bold text-primary-900 mb-2">
+              {course.name}
+            </h1>
           </div>
         </div>
         <div className="flex items-center gap-2">
-            <SecondaryButton variant="outline" size="sm">
+          <SecondaryButton variant="outline" size="sm">
             <Bookmark
-              className={`h-4 w-4 ${isBookmarked ? 'fill-secondary-700 text-secondary-700' : ''}`}
+              className={`h-4 w-4 ${isBookmarked ? "fill-secondary-700 text-secondary-700" : ""}`}
             />
-            </SecondaryButton>
+          </SecondaryButton>
           {isTeacher && (
             <SecondaryButton variant="outline" size="sm">
               <Link href={`/edit/course/${course._id}`}>
-              <Edit className="h-4 w-4" />
+                <Edit className="h-4 w-4" />
               </Link>
             </SecondaryButton>
           )}

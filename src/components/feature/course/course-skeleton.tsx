@@ -48,7 +48,14 @@ export function CourseTimelineSkeleton() {
           {/* Table header */}
           <div className="border-b bg-gray-50 p-2">
             <div className="grid grid-cols-6 gap-2">
-              {['Type', 'Title', 'Start Date', 'Due Date', 'Grade Release', 'Inferred'].map((_, idx) => (
+              {[
+                "Type",
+                "Title",
+                "Start Date",
+                "Due Date",
+                "Grade Release",
+                "Inferred",
+              ].map((_, idx) => (
                 <Skeleton key={idx} className="h-4 w-full" />
               ))}
             </div>

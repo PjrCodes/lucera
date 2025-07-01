@@ -47,8 +47,8 @@ export default function EditContentForm({
 
   // Load course and file info from query params or existing content
   useEffect(() => {
-
-      if (!searchParams) throw new Error("Search params not available in new content form");
+    if (!searchParams)
+      throw new Error("Search params not available in new content form");
     if (isNew) {
       const courseId = searchParams.get("courseId");
       const hasFile = searchParams.get("hasFile") === "true";
@@ -75,11 +75,9 @@ export default function EditContentForm({
 
       if (hasFile && fileName) {
         setUploadedFile({ name: decodeURIComponent(fileName), disabled: true });
-      }
-      else {
+      } else {
         setUploadedFile(null);
       }
-
     }
   }, [isNew, existingContent, searchParams]);
 
@@ -100,7 +98,12 @@ export default function EditContentForm({
 
   // When allTopics or existingContent.topics changes, update selectedTopics to indexes
   useEffect(() => {
-    if (!isNew && existingContent && Array.isArray(existingContent.topics) && allTopics.length > 0) {
+    if (
+      !isNew &&
+      existingContent &&
+      Array.isArray(existingContent.topics) &&
+      allTopics.length > 0
+    ) {
       // Convert 1-based indexes to 0-based indexes
       const indexes = existingContent.topics
         .map((topicIndex: number) => topicIndex - 1)
@@ -111,9 +114,7 @@ export default function EditContentForm({
 
   const handleTopicChange = (idx: number) => {
     setSelectedTopics((prev) =>
-      prev.includes(idx)
-        ? prev.filter((i) => i !== idx)
-        : [...prev, idx]
+      prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx],
     );
   };
 
@@ -145,7 +146,7 @@ export default function EditContentForm({
       if (!response.ok) {
         const errorData = await response.json();
         setError(
-          `Failed to save content: ${errorData.error || response.statusText}`
+          `Failed to save content: ${errorData.error || response.statusText}`,
         );
         setLoading(false);
         return;
@@ -188,10 +189,7 @@ export default function EditContentForm({
             <label className="block mb-2 font-medium">Course:</label>
             <div className="flex items-center gap-2">
               <span className="font-semibold">
-                {
-                  courses.find((c) => c._id.toString() === selectedCourse)
-                    ?.name
-                }
+                {courses.find((c) => c._id.toString() === selectedCourse)?.name}
               </span>
               <SecondaryButton
                 type="button"
@@ -267,9 +265,15 @@ export default function EditContentForm({
           <PrimaryButton
             type="submit"
             className="px-4 py-2"
-            disabled={!title || !description || selectedTopics.length === 0 || loading}
+            disabled={
+              !title || !description || selectedTopics.length === 0 || loading
+            }
           >
-            {loading ? "Saving..." : (isNew ? "Create Content" : "Update Content")}
+            {loading
+              ? "Saving..."
+              : isNew
+                ? "Create Content"
+                : "Update Content"}
           </PrimaryButton>
 
           {error && <div className="text-red-600 mt-2">{error}</div>}

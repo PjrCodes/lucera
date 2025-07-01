@@ -9,7 +9,7 @@ import { uploadFile } from "@/lib/database-service/files";
 export const POST = auth(
   withAuthorisation(async function POST(
     req: NextAuthRequest,
-    session: AuthenticatedSession
+    session: AuthenticatedSession,
   ) {
     let userData;
     try {
@@ -17,12 +17,14 @@ export const POST = auth(
     } catch {
       return NextResponse.json(
         { status: "failed", error: "Failed to fetch user data" },
-        { status: 500 }
+        { status: 500 },
       );
     }
     const data = await req.formData();
 
-    const formData = await UploadFileRequestSchema.safeParseAsync(Object.fromEntries(data.entries()));
+    const formData = await UploadFileRequestSchema.safeParseAsync(
+      Object.fromEntries(data.entries()),
+    );
     if (!formData.success) {
       console.log(formData.error.message);
       return NextResponse.json(
@@ -30,7 +32,7 @@ export const POST = auth(
           status: "failed",
           error: formData.error.issues.map((issue) => issue.message).join(", "),
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
     const { file, content_type } = formData.data;
@@ -45,10 +47,10 @@ export const POST = auth(
           status: "failed",
           error: "Only teachers can upload this type of file",
         },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
     return await uploadFile(session.user.id, file, content_type);
-  })
+  }),
 );

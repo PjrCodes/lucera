@@ -10,36 +10,39 @@ interface Alert {
   severity: "high" | "medium" | "low";
 }
 
-
-export default function StudentAlerts({ }: PropsForEveryDashboardCard) {
+export default function StudentAlerts({}: PropsForEveryDashboardCard) {
   // Example alerts for teachers, sorted by severity
   const dummyAlerts: Alert[] = [
     {
       id: 1,
       message: "Many students struggling with Recursion",
-      detail: "50/75 students are having difficulty with the 'Recursion' topic in CS101.",
+      detail:
+        "50/75 students are having difficulty with the 'Recursion' topic in CS101.",
       date: "2024-06-10",
-      severity: "high"
+      severity: "high",
     },
     {
       id: 2,
       message: "Multiple late submissions",
-      detail: "Student Priya S. has submitted the last 2 assignments late in CS201.",
+      detail:
+        "Student Priya S. has submitted the last 2 assignments late in CS201.",
       date: "2024-06-09",
-      severity: "medium"
+      severity: "medium",
     },
     {
       id: 3,
       message: "Quiz average below passing",
       detail: "Average score for Quiz 3 in CS301 is below passing (42%).",
       date: "2024-06-08",
-      severity: "low"
+      severity: "low",
     },
   ];
 
   // Sort by severity: high > medium > low
   const severityOrder = { high: 0, medium: 1, low: 2 };
-  const alerts = dummyAlerts.sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
+  const alerts = dummyAlerts.sort(
+    (a, b) => severityOrder[a.severity] - severityOrder[b.severity],
+  );
 
   return (
     <div className="bg-primary-100 rounded-lg shadow-md p-4 md:px-6 min-h-[220px] flex flex-col">
@@ -59,15 +62,17 @@ export default function StudentAlerts({ }: PropsForEveryDashboardCard) {
                 href="#"
                 className="bg-white/80 rounded-lg shadow px-3 py-2 flex items-start gap-3 hover:shadow-md transition-shadow cursor-pointer"
                 tabIndex={0}
-                aria-label={alert.message + (alert.detail ? `: ${alert.detail}` : "")}
+                aria-label={
+                  alert.message + (alert.detail ? `: ${alert.detail}` : "")
+                }
               >
                 <span
                   className={`flex items-center h-full text-2xl ${
                     alert.severity === "high"
                       ? "text-primary-700"
                       : alert.severity === "medium"
-                      ? "text-primary-600"
-                      : "text-primary-400"
+                        ? "text-primary-600"
+                        : "text-primary-400"
                   }`}
                   style={{ minHeight: "2.5rem" }}
                 >
@@ -91,4 +96,4 @@ export default function StudentAlerts({ }: PropsForEveryDashboardCard) {
       )}
     </div>
   );
-};
+}

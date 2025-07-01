@@ -1,5 +1,8 @@
 import * as React from "react";
-import { RadioGroup as ShadcnRadioGroup, RadioGroupItem as ShadcnRadioGroupItem } from "@/components/ui/radio-group";
+import {
+  RadioGroup as ShadcnRadioGroup,
+  RadioGroupItem as ShadcnRadioGroupItem,
+} from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 
 interface RadioGroupProps {
@@ -24,7 +27,7 @@ export function RadioGroup({
   value,
   onValueChange,
   className,
-  children
+  children,
 }: RadioGroupProps) {
   return (
     <ShadcnRadioGroup
@@ -43,7 +46,10 @@ export function RadioItem({ value, id, children, className }: RadioItemProps) {
   const radioId = id || `radio-${value}`;
 
   return (
-    <label htmlFor={radioId} className={cn("inline-flex items-center space-x-2", className)}>
+    <label
+      htmlFor={radioId}
+      className={cn("inline-flex items-center space-x-2", className)}
+    >
       <ShadcnRadioGroupItem
         value={value}
         id={radioId}
@@ -52,12 +58,10 @@ export function RadioItem({ value, id, children, className }: RadioItemProps) {
           "data-[state=checked]:bg-secondary-500 data-[state=checked]:border-secondary-500",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary-300",
           "hover:border-secondary-400",
-          "disabled:cursor-not-allowed disabled:opacity-50"
+          "disabled:cursor-not-allowed disabled:opacity-50",
         )}
       />
-      <span className="text-sm text-gray-700">
-        {children}
-      </span>
+      <span className="text-sm text-gray-700">{children}</span>
     </label>
   );
 }

@@ -1,13 +1,12 @@
 {
-    "dashboardLayout": {
-        "teacher": {
-            "leftColumn": ["UPCOMING_DEADLINES", "STUDENT_ALERTS", "CLASS_PROGRESS"],
-            "rightColumn": ["BOOKMARKS", "CREATE"]
-
-        },
-        "student": {
-            "leftColumn":  ["WHATS_NEXT", "RECENTLY_ACCESSED", "PROGRESS"],
-            "rightColumn": ["BOOKMARKS", "YOUR_BADGES"]
-        }
+  "dashboardLayout": {
+    "teacher": {
+      "leftColumn": ["UPCOMING_DEADLINES", "STUDENT_ALERTS", "CLASS_PROGRESS"],
+      "rightColumn": ["BOOKMARKS", "CREATE"]
+    },
+    "student": {
+      "leftColumn": ["WHATS_NEXT", "RECENTLY_ACCESSED", "PROGRESS"],
+      "rightColumn": ["BOOKMARKS", "YOUR_BADGES"]
     }
+  }
 }

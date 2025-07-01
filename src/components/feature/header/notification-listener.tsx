@@ -8,7 +8,9 @@ type NotificationListenerProps = {
   onNotify?: (data: object) => void;
 };
 
-export default function NotificationListener({ onNotify }: NotificationListenerProps) {
+export default function NotificationListener({
+  onNotify,
+}: NotificationListenerProps) {
   useEffect(() => {
     socket.on("new-notification", (data) => {
       console.log("🔔 Notification received:", data);

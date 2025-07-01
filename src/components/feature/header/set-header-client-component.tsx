@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect } from 'react';
-import { useHeader } from '@/components/feature/header/header-context';
+import { useEffect } from "react";
+import { useHeader } from "@/components/feature/header/header-context";
 
 interface SetHeaderClientComponentProps {
   title: string;
 }
 
-export default function SetHeaderClientComponent({ title }: SetHeaderClientComponentProps) {
+export default function SetHeaderClientComponent({
+  title,
+}: SetHeaderClientComponentProps) {
   const { setHeaderTitle } = useHeader();
 
   useEffect(() => {

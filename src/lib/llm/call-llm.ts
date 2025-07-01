@@ -8,7 +8,7 @@ export async function callLLMWithSchema(
     fileBuffer: Buffer;
     fileName: string;
     mimeType: string;
-  } | null
+  } | null,
 ): Promise<string> {
   const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,

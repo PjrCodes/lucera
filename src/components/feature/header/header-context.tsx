@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode } from "react";
 
 interface HeaderContextType {
   headerTitle: string;
@@ -22,7 +22,7 @@ export const HeaderProvider = ({ children }: { children: ReactNode }) => {
 export const useHeader = () => {
   const context = useContext(HeaderContext);
   if (context === undefined) {
-    throw new Error('useHeader must be used within a HeaderProvider');
+    throw new Error("useHeader must be used within a HeaderProvider");
   }
   return context;
 };

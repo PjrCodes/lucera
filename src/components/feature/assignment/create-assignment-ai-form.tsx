@@ -46,7 +46,6 @@ export default function CreateAssignmentAIForm({
       const uploadResult = await result.json();
       if (!uploadResult.fileId) {
         setError("File upload failed. No fileId returned.");
-
       }
 
       const magicCreate = await fetch("/api/magic-create/assignment", {
@@ -79,8 +78,8 @@ export default function CreateAssignmentAIForm({
       // Redirect to edit page with AI-processed data and file info
       router.push(
         `/edit/assignment/${resId}?courseId=${selectedCourse}&hasFile=true&fileName=${encodeURIComponent(
-          file.name
-        )}`
+          file.name,
+        )}`,
       );
     } catch (error) {
       console.error("Error processing PDF:", error);
@@ -91,7 +90,9 @@ export default function CreateAssignmentAIForm({
 
   const handleSkipToEdit = () => {
     if (!selectedCourse) return;
-    router.push(`/edit/assignment/new?courseId=${selectedCourse}&hasFile=false`);
+    router.push(
+      `/edit/assignment/new?courseId=${selectedCourse}&hasFile=false`,
+    );
   };
 
   return (
@@ -117,10 +118,7 @@ export default function CreateAssignmentAIForm({
             <label className="block mb-2 font-medium">Course:</label>
             <div className="flex items-center gap-2">
               <span className="font-semibold">
-                {
-                  courses.find((c) => c._id.toString() === selectedCourse)
-                    ?.name
-                }
+                {courses.find((c) => c._id.toString() === selectedCourse)?.name}
               </span>
               <SecondaryButton
                 type="button"

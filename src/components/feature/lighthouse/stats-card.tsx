@@ -28,7 +28,7 @@ const StatsCard: React.FC<StatsCardProps> = ({
   color,
   subtitle,
   onClick,
-  clickable = false
+  clickable = false,
 }) => {
   const baseClasses = `${colorClasses[color]} rounded-lg shadow-md p-6 border transition-all duration-200`;
   const interactiveClasses = clickable
@@ -46,9 +46,7 @@ const StatsCard: React.FC<StatsCardProps> = ({
         <div>
           <h3 className="font-medium text-sm mb-1 opacity-80">{title}</h3>
           <p className="text-2xl font-bold">{value}</p>
-          {subtitle && (
-            <p className="text-xs opacity-70 mt-1">{subtitle}</p>
-          )}
+          {subtitle && <p className="text-xs opacity-70 mt-1">{subtitle}</p>}
         </div>
         <Icon className={`w-8 h-8 ${iconColorClasses[color]}`} />
       </div>

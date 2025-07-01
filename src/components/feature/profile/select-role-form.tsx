@@ -25,7 +25,7 @@ export default function SelectRoleForm({
             ))
           ) : (
             <input key={key} type="hidden" name={key} value={value ?? ""} />
-          )
+          ),
         )}
 
       <div className="space-y-2">
@@ -45,4 +45,3 @@ export default function SelectRoleForm({
     </form>
   );
 }
-  

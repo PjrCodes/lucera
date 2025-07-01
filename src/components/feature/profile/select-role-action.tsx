@@ -10,7 +10,9 @@ import * as z from "zod/v4";
 const setUserRoleSchema = z.object({
   role: z.enum(["student", "teacher"], {
     error: (issue) =>
-      issue.input === undefined ? "Please pick a role!" : "Invalid role selected!",
+      issue.input === undefined
+        ? "Please pick a role!"
+        : "Invalid role selected!",
   }),
   reason: z.enum(["newuser"]).optional(),
   callbackUrl: z.string().optional(),
@@ -23,13 +25,13 @@ export type SelectRoleFormState = {
 
 export async function setUserRole(
   prevState: SelectRoleFormState,
-  data: FormData
+  data: FormData,
 ): Promise<SelectRoleFormState> {
   "use server";
 
   // Let Zod handle FormData directly
   const parsedData = setUserRoleSchema.safeParse(
-    Object.fromEntries(data.entries())
+    Object.fromEntries(data.entries()),
   );
   if (!parsedData.success) {
     return {
@@ -46,7 +48,7 @@ export async function setUserRole(
     await setUserRoleInDb(
       parsedData.data.reason,
       session.user.id,
-      parsedData.data.role
+      parsedData.data.role,
     );
 
     redirect(parsedData.data.callbackUrl || "/");

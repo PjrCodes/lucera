@@ -101,9 +101,7 @@ export default function MinigamesHome({}: MinigamesHomeProps) {
   return (
     <>
       <SetHeaderClientComponent title="MINIGAMES" />
-      <main className="min-h-screen bg-primary-50 p-6">
-        {renderGame()}
-      </main>
+      <main className="min-h-screen bg-primary-50 p-6">{renderGame()}</main>
     </>
   );
 }

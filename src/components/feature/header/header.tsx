@@ -63,13 +63,16 @@ export default function Header({
         {/* Sidebar button always visible */}
         <div className="flex flex-row items-center space-x-2 flex-shrink-0">
           <div
-          className="cursor-pointer rounded-lg p-2 transition hover:bg-lucerabrown-1"
+            className="cursor-pointer rounded-lg p-2 transition hover:bg-lucerabrown-1"
             onClick={toggleSidebar}
           >
             <SidebarIcon size={20} />
           </div>
           {isLoggedIn && !isHomePage && (
-            <Link href="/" className="cursor-pointer rounded-lg p-2 transition hover:bg-lucerabrown-1">
+            <Link
+              href="/"
+              className="cursor-pointer rounded-lg p-2 transition hover:bg-lucerabrown-1"
+            >
               <House size={20} />
             </Link>
           )}
@@ -79,7 +82,8 @@ export default function Header({
               searchExpanded ? "hidden sm:block" : "block"
             }`}
           >
-            {headerTitle} {/* Remove character limit logic, use CSS truncation */}
+            {headerTitle}{" "}
+            {/* Remove character limit logic, use CSS truncation */}
           </h1>
         </div>
         {isLoggedIn ? (

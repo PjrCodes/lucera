@@ -1,6 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, CheckCircle, XCircle, Star, Timer, Zap } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle,
+  XCircle,
+  Star,
+  Timer,
+  Zap,
+} from "lucide-react";
 
 interface QuizQuestion {
   id: number;
@@ -34,79 +41,120 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
     {
       id: 1,
       question: "What is a variable in programming?",
-      options: ["A constant value", "A storage location with a name", "A type of loop", "A function parameter"],
+      options: [
+        "A constant value",
+        "A storage location with a name",
+        "A type of loop",
+        "A function parameter",
+      ],
       correctAnswer: 1,
-      explanation: "A variable is a storage location with an associated name that can hold data.",
+      explanation:
+        "A variable is a storage location with an associated name that can hold data.",
       course: "CS101",
-      difficulty: "easy"
+      difficulty: "easy",
     },
     {
       id: 2,
-      question: "Which of the following is NOT a primitive data type in most programming languages?",
+      question:
+        "Which of the following is NOT a primitive data type in most programming languages?",
       options: ["Integer", "Boolean", "String", "Array"],
       correctAnswer: 3,
-      explanation: "Array is a composite data type, not a primitive one. Primitive types include integer, boolean, and string.",
+      explanation:
+        "Array is a composite data type, not a primitive one. Primitive types include integer, boolean, and string.",
       course: "CS101",
-      difficulty: "medium"
+      difficulty: "medium",
     },
     {
       id: 3,
       question: "What does 'Big O' notation describe?",
-      options: ["Memory usage", "Algorithm efficiency", "Variable scope", "Code readability"],
+      options: [
+        "Memory usage",
+        "Algorithm efficiency",
+        "Variable scope",
+        "Code readability",
+      ],
       correctAnswer: 1,
-      explanation: "Big O notation describes the worst-case time complexity of an algorithm.",
+      explanation:
+        "Big O notation describes the worst-case time complexity of an algorithm.",
       course: "CS201",
-      difficulty: "medium"
+      difficulty: "medium",
     },
     {
       id: 4,
       question: "In object-oriented programming, what is inheritance?",
-      options: ["Creating multiple objects", "A class acquiring properties from another class", "Hiding implementation details", "Overloading methods"],
+      options: [
+        "Creating multiple objects",
+        "A class acquiring properties from another class",
+        "Hiding implementation details",
+        "Overloading methods",
+      ],
       correctAnswer: 1,
-      explanation: "Inheritance allows a class to acquire properties and methods from another class.",
+      explanation:
+        "Inheritance allows a class to acquire properties and methods from another class.",
       course: "CS201",
-      difficulty: "medium"
+      difficulty: "medium",
     },
     {
       id: 5,
       question: "What is the time complexity of binary search?",
       options: ["O(n)", "O(log n)", "O(n²)", "O(1)"],
       correctAnswer: 1,
-      explanation: "Binary search has O(log n) time complexity as it eliminates half the search space in each iteration.",
+      explanation:
+        "Binary search has O(log n) time complexity as it eliminates half the search space in each iteration.",
       course: "CS301",
-      difficulty: "hard"
+      difficulty: "hard",
     },
     {
       id: 6,
-      question: "Which sorting algorithm has the best average-case time complexity?",
-      options: ["Bubble Sort", "Insertion Sort", "Quick Sort", "Selection Sort"],
+      question:
+        "Which sorting algorithm has the best average-case time complexity?",
+      options: [
+        "Bubble Sort",
+        "Insertion Sort",
+        "Quick Sort",
+        "Selection Sort",
+      ],
       correctAnswer: 2,
-      explanation: "Quick Sort has an average-case time complexity of O(n log n), which is better than the O(n²) of the other options.",
+      explanation:
+        "Quick Sort has an average-case time complexity of O(n log n), which is better than the O(n²) of the other options.",
       course: "CS301",
-      difficulty: "hard"
+      difficulty: "hard",
     },
     {
       id: 7,
       question: "What is a stack data structure?",
-      options: ["First In First Out (FIFO)", "Last In First Out (LIFO)", "Random access", "Sorted collection"],
+      options: [
+        "First In First Out (FIFO)",
+        "Last In First Out (LIFO)",
+        "Random access",
+        "Sorted collection",
+      ],
       correctAnswer: 1,
       explanation: "A stack follows the Last In First Out (LIFO) principle.",
       course: "CS201",
-      difficulty: "easy"
+      difficulty: "easy",
     },
     {
       id: 8,
       question: "What is the purpose of a constructor in OOP?",
-      options: ["To destroy objects", "To initialize objects", "To copy objects", "To compare objects"],
+      options: [
+        "To destroy objects",
+        "To initialize objects",
+        "To copy objects",
+        "To compare objects",
+      ],
       correctAnswer: 1,
-      explanation: "A constructor is used to initialize objects when they are created.",
+      explanation:
+        "A constructor is used to initialize objects when they are created.",
       course: "CS201",
-      difficulty: "easy"
-    }
+      difficulty: "easy",
+    },
   ];
 
   const initializeGame = () => {
-    const shuffledQuestions = [...quizQuestions].sort(() => Math.random() - 0.5);
+    const shuffledQuestions = [...quizQuestions].sort(
+      () => Math.random() - 0.5,
+    );
     setQuestions(shuffledQuestions.slice(0, 6)); // Use 6 random questions
     setCurrentQuestionIndex(0);
     setSelectedAnswer(null);
@@ -140,8 +188,12 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
 
     if (isCorrect) {
       const timeBonus = Math.floor(timeLeft * 2); // 2 points per second remaining
-      const difficultyBonus = currentQuestion.difficulty === "easy" ? 10 :
-                             currentQuestion.difficulty === "medium" ? 20 : 30;
+      const difficultyBonus =
+        currentQuestion.difficulty === "easy"
+          ? 10
+          : currentQuestion.difficulty === "medium"
+            ? 20
+            : 30;
       const streakBonus = streak * 5;
 
       const totalPoints = difficultyBonus + timeBonus + streakBonus;
@@ -203,8 +255,12 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
         </div>
 
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">🧠 Quiz Blitz</h1>
-          <p className="text-gray-600 mb-6">Fast-paced quiz with 15 seconds per question!</p>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+            🧠 Quiz Blitz
+          </h1>
+          <p className="text-gray-600 mb-6">
+            Fast-paced quiz with 15 seconds per question!
+          </p>
 
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <h3 className="text-xl font-bold mb-4">Game Rules</h3>
@@ -245,22 +301,32 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
 
         <div className="bg-white rounded-lg shadow-md p-8 text-center">
           <div className="text-6xl mb-4">🎉</div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Quiz Complete!</h2>
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">
+            Quiz Complete!
+          </h2>
 
-          <div className="grid grid-cols-2 gap-4 mb-6">            <div className="bg-primary-100 p-4 rounded-lg">
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            {" "}
+            <div className="bg-primary-100 p-4 rounded-lg">
               <div className="text-2xl font-bold text-primary-800">{score}</div>
               <div className="text-primary-600">Final Score</div>
             </div>
             <div className="bg-secondary-100 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-secondary-800">{accuracy}%</div>
+              <div className="text-2xl font-bold text-secondary-800">
+                {accuracy}%
+              </div>
               <div className="text-secondary-600">Accuracy</div>
             </div>
             <div className="bg-primary-100 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-primary-800">{correctAnswers}/{questions.length}</div>
+              <div className="text-2xl font-bold text-primary-800">
+                {correctAnswers}/{questions.length}
+              </div>
               <div className="text-primary-600">Correct</div>
             </div>
             <div className="bg-secondary-100 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-secondary-800">{maxStreak}</div>
+              <div className="text-2xl font-bold text-secondary-800">
+                {maxStreak}
+              </div>
               <div className="text-secondary-600">Best Streak</div>
             </div>
           </div>
@@ -286,13 +352,15 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Games
-        </button>        <div className="flex items-center gap-4">
+        </button>{" "}
+        <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 bg-primary-100 px-3 py-1 rounded-lg">
             <Star className="w-4 h-4 text-primary-600" />
             <span className="font-bold text-primary-800">{score}</span>
           </div>
           <div className="text-sm text-gray-600">
-            Streak: <span className="font-bold text-secondary-800">{streak}</span>
+            Streak:{" "}
+            <span className="font-bold text-secondary-800">{streak}</span>
           </div>
         </div>
       </div>
@@ -300,22 +368,30 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
       {/* Progress */}
       <div className="mb-6">
         <div className="flex justify-between text-sm text-gray-600 mb-2">
-          <span>Question {currentQuestionIndex + 1} of {questions.length}</span>
+          <span>
+            Question {currentQuestionIndex + 1} of {questions.length}
+          </span>
           <span>{currentQuestion?.course}</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div
             className="bg-secondary-500 h-2 rounded-full transition-all duration-300"
-            style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
+            style={{
+              width: `${((currentQuestionIndex + 1) / questions.length) * 100}%`,
+            }}
           />
         </div>
       </div>
 
       {/* Timer */}
       <div className="text-center mb-6">
-        <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-lg font-bold ${
-          timeLeft <= 5 ? 'bg-red-100 text-red-800 animate-pulse' : 'bg-secondary-100 text-secondary-800'
-        }`}>
+        <div
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-lg font-bold ${
+            timeLeft <= 5
+              ? "bg-red-100 text-red-800 animate-pulse"
+              : "bg-secondary-100 text-secondary-800"
+          }`}
+        >
           <Timer className="w-5 h-5" />
           {timeLeft}s
         </div>
@@ -332,27 +408,32 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
               <button
                 key={index}
                 onClick={() => handleAnswerSelect(index)}
-                disabled={showResult}                className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 ${
+                disabled={showResult}
+                className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 ${
                   selectedAnswer === index
                     ? showResult
                       ? index === currentQuestion.correctAnswer
-                        ? 'bg-green-100 border-green-300 text-green-800'
-                        : 'bg-red-100 border-red-300 text-red-800'
-                      : 'bg-secondary-100 border-secondary-300 text-secondary-800'
+                        ? "bg-green-100 border-green-300 text-green-800"
+                        : "bg-red-100 border-red-300 text-red-800"
+                      : "bg-secondary-100 border-secondary-300 text-secondary-800"
                     : showResult && index === currentQuestion.correctAnswer
-                    ? 'bg-green-100 border-green-300 text-green-800'
-                    : 'bg-gray-50 border-gray-300 hover:border-secondary-300 hover:bg-secondary-100'
+                      ? "bg-green-100 border-green-300 text-green-800"
+                      : "bg-gray-50 border-gray-300 hover:border-secondary-300 hover:bg-secondary-100"
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <span className="font-bold">{String.fromCharCode(65 + index)}.</span>
+                  <span className="font-bold">
+                    {String.fromCharCode(65 + index)}.
+                  </span>
                   <span>{option}</span>
                   {showResult && index === currentQuestion.correctAnswer && (
                     <CheckCircle className="w-5 h-5 ml-auto" />
                   )}
-                  {showResult && selectedAnswer === index && index !== currentQuestion.correctAnswer && (
-                    <XCircle className="w-5 h-5 ml-auto" />
-                  )}
+                  {showResult &&
+                    selectedAnswer === index &&
+                    index !== currentQuestion.correctAnswer && (
+                      <XCircle className="w-5 h-5 ml-auto" />
+                    )}
                 </div>
               </button>
             ))}
@@ -380,7 +461,9 @@ const QuizBlitzGame: React.FC<QuizBlitzGameProps> = ({ onBack }) => {
                 onClick={nextQuestion}
                 className="bg-primary-500 text-white px-6 py-2 rounded-lg hover:bg-primary-600"
               >
-                {currentQuestionIndex < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
+                {currentQuestionIndex < questions.length - 1
+                  ? "Next Question"
+                  : "Finish Quiz"}
               </button>
             )}
           </div>
