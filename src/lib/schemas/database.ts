@@ -62,12 +62,9 @@ export type CourseUnit = z.infer<typeof courseUnitSchema>;
 export const courseTimelineItemSchema = z.object({
   type: z.string(),
   title: z.string(),
-  start_date: z.string(),
-  due_date: z.string(),
-  grade_release_date: z.string(),
-  start_date_inferred: z.boolean().optional(),
-  due_date_inferred: z.boolean().optional(),
-  grade_release_date_inferred: z.boolean().optional(),
+  startDate: z.string(),
+  dueDate: z.string(),
+  gradeReleaseDate: z.string(),
 });
 
 export type CourseTimelineItem = z.infer<typeof courseTimelineItemSchema>;
@@ -86,8 +83,8 @@ export const courseSchema = z.object({
   units: z.array(courseUnitSchema),
   coverImage: z.string().nullable(),
   status: z.enum(["draft", "published"]).default("draft"),
-  courseStartDate: z.date().nullable(),
-  courseEndDate: z.date().nullable(),
+  courseStartDate: z.coerce.date().nullable(),
+  courseEndDate: z.coerce.date().nullable(),
   llmParsingFailed: z.boolean(),
   enrolledStudentCount: z.number(),
   completedStudentCount: z.number(),

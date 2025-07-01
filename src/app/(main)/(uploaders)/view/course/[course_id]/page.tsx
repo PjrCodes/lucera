@@ -37,8 +37,9 @@ export default async function CourseViewPage({
 
   const course = await getCourse(course_id);
 
+  // console.log("course found");
   if (!course) return notFound();
-
+  // console.log("course success");
   // check access restriction on course
   if (
     !userData.relatedCourses?.some((id: string) => id === course._id.toString())

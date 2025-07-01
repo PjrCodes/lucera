@@ -16,6 +16,7 @@ export const POST = auth(
     session: AuthenticatedSession
   ) {
     const body = await req.json();
+    console.log("Magic Create Content Request Body:", body);
     const parsedBody = MagicCreateContentRequestSchema.safeParse(body);
     if (!parsedBody.success) {
       return NextResponse.json(

@@ -20,7 +20,11 @@ export const POST = auth(
     const parsedBody = MagicCreateCourseRequestSchema.safeParse(body);
     if (!parsedBody.success) {
       return NextResponse.json(
-        { error: parsedBody.error.issues.map((issue) => issue.message).join(", ") },
+        {
+          error: parsedBody.error.issues
+            .map((issue) => issue.message)
+            .join(", "),
+        },
         { status: 400 }
       );
     }
@@ -62,7 +66,6 @@ export const POST = auth(
       updatedAt: new Date(),
       coverImage: null,
       status: "draft",
-      isPublished: false,
       llmParsingFailed: !llmResult.success,
       enrolledStudentCount: 0,
       completedStudentCount: 0,
@@ -77,7 +80,8 @@ export const POST = auth(
     const contentRecord = await db.collection("content").insertOne({
       courseId: courseRecord.insertedId.toString(),
       title: "Syllabus",
-      description: description,
+      description:
+        "Syllabus for the course, as uploaded by the teacher during course creation.",
       topics: [], // Syllabus has no topics
       fileId: fileId,
       createdBy: session.user.id,

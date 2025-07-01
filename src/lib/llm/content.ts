@@ -29,7 +29,7 @@ export async function LLMContentExtractor(
     .map((unit) => `${counter++}. ${unit.name}: ${unit.description}`)
     .join("\n");
 
-  const llmTextResponse = callLLMWithSchema(
+  const llmTextResponse = await callLLMWithSchema(
     contentExtractorLLMSchema,
     contentExtractorSystemPrompt,
     contentExtractorUserPrompt.replace("INSERT_TOPIC_LIST_HERE", topicList),
@@ -42,7 +42,7 @@ export async function LLMContentExtractor(
 
   try {
     const parsedResponse =
-      contentExtractorSchema.parse(llmTextResponse);
+      contentExtractorSchema.parse(JSON.parse(llmTextResponse));
     return {
       success: true,
       error: null,

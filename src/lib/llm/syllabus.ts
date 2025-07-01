@@ -36,8 +36,18 @@ export async function LLMSyllabusExtractor(
   );
 
   try {
+    // json conversion of the text llm response
+    if (!llmTextResponse || typeof llmTextResponse !== "string") {
+      return {
+        success: false,
+        error: "Invalid LLM response",
+        data: null,
+      };
+    }
+
+
     const parsedResponse =
-      syllabusExtractorSchema.parse(llmTextResponse);
+      syllabusExtractorSchema.parse(JSON.parse(llmTextResponse));
 
     // further parsing of content into DATE
 

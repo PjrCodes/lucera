@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { Table } from "ka-table";
 import { DataType, EditingMode } from "ka-table/enums";
 import { Trash2 } from "lucide-react";
@@ -12,27 +12,20 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
 
-const MDEditor = dynamic(
-  () => import("@uiw/react-md-editor"),
-  { ssr: false }
-);
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 type Unit = { name: string; description?: string };
 type TimelineItem = {
   type: string;
   title: string;
-  start_date: string;
-  due_date: string;
-  grade_release_date: string;
-  start_date_inferred?: boolean;
-  due_date_inferred?: boolean;
-  grade_release_date_inferred?: boolean;
+  startDate: string;
+  dueDate: string;
+  gradeReleaseDate: string;
 };
 
 interface Course {
   _id: string;
   name?: string;
-  short_description?: string;
   shortDescription?: string;
   description?: string;
   units?: Unit[];
@@ -48,7 +41,10 @@ interface EditCourseClientProps {
   session?: unknown;
 }
 
-export function EditCourseForm({ course, isNew = false }: EditCourseClientProps) {
+export function EditCourseForm({
+  course,
+  isNew = false,
+}: EditCourseClientProps) {
   // const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -56,17 +52,22 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
   // Form state
   const [name, setName] = useState(course?.name || "");
   const [shortDescription, setShortDescription] = useState(
-    course?.short_description || course?.shortDescription || ""
+    course?.shortDescription || ""
   );
   const [description, setDescription] = useState(course?.description || "");
   const [units, setUnits] = useState<Unit[]>(course?.units || []);
-  const [timeline, setTimeline] = useState<TimelineItem[]>(course?.timeline || []);
-  const [existingSyllabusName, setExistingSyllabusName] = useState<string | null>(null);
-  const [newSyllabusFile, setNewSyllabusFile] = useState<File | null>(null);
+  const [timeline, setTimeline] = useState<TimelineItem[]>(
+    course?.timeline || []
+  );
+  const [syllabusFile, setSyllabusFile] = useState<File | null>(null);
 
   // Ka-table editing states
-  const [editableCells, setEditableCells] = useState<{rowKeyValue: number, columnKey: string}[]>([]);
-  const [timelineEditableCells, setTimelineEditableCells] = useState<{rowKeyValue: number, columnKey: string}[]>([]);
+  const [editableCells, setEditableCells] = useState<
+    { rowKeyValue: number; columnKey: string }[]
+  >([]);
+  const [timelineEditableCells, setTimelineEditableCells] = useState<
+    { rowKeyValue: number; columnKey: string }[]
+  >([]);
   const handleUnitChange = (idx: number, field: keyof Unit, value: string) => {
     setUnits((prev) =>
       prev.map((u, i) => (i === idx ? { ...u, [field]: value } : u))
@@ -109,12 +110,9 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
       {
         type: "",
         title: "",
-        start_date: "",
-        due_date: "",
-        grade_release_date: "",
-        start_date_inferred: false,
-        due_date_inferred: false,
-        grade_release_date_inferred: false,
+        startDate: "",
+        dueDate: "",
+        gradeReleaseDate: "",
       },
     ]);
   const removeTimeline = (idx: number) =>
@@ -124,35 +122,68 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
     e.preventDefault();
     setLoading(true);
     setError(null);
-    // const payload = {
-    //   name,
-    //   short_description: shortDescription,
-    //   description,
-    //   units,
-    //   timeline,
-    // };
-    setError("Failed to update course");
+
+    try {
+      const requestData = {
+        _id: isNew ? null : course?._id,
+        data: {
+          name,
+          shortDescription,
+          description,
+          units,
+          timeline,
+        },
+      };
+
+      const response = await fetch("/api/courses/save", {
+        method: "POST",
+        body: JSON.stringify(requestData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(
+          `Failed to save course: ${errorData.error || response.statusText}`
+        );
+        setLoading(false);
+        return;
+      }
+
+      const resp = await response.json();
+
+      // saved changes means we can redirect to the courses page
+      console.log("Success!", resp);
+      redirect("/");
+    } catch (err) {
+      console.error("Error saving course:", err);
+      // if next_redirect
+
+      if (err instanceof Error && err.message.includes("NEXT_REDIRECT")) {
+        throw err;
+      }
+      setError("Failed to save course. Please try again.");
+    }
     setLoading(false);
   };
 
   useEffect(() => {
-    if (isNew) {
-      if (searchParams) {
-        const hasFile = searchParams.get('hasFile') === 'true';
-        const fileName = searchParams.get('fileName');
+    if (isNew && searchParams) {
+      const hasFile = searchParams.get("hasFile") === "true";
+      const fileName = searchParams.get("fileName");
 
-        if (hasFile && fileName) {
-          setExistingSyllabusName(decodeURIComponent(fileName));
-        } else {
-          setExistingSyllabusName(null);
-        }
+      if (hasFile && fileName) {
+        // Create a placeholder file object for display purposes
+        const placeholderFile = new File([], decodeURIComponent(fileName), {
+          type: "application/pdf",
+        });
+        setSyllabusFile(placeholderFile);
       }
     } else if (course) {
-      if (course.syllabusFileName) {
-        setExistingSyllabusName(course.syllabusFileName);
-      }
       setName(course.name || "");
-      setShortDescription(course.short_description || course.shortDescription || "");
+      setShortDescription(course.shortDescription || "");
       setDescription(course.description || "");
       setUnits(course.units || []);
       setTimeline(course.timeline || []);
@@ -202,10 +233,12 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
               visibleDragbar={true}
             />
           </div>
-        </div>          <div>
+        </div>{" "}
+        <div>
           <label className="block font-semibold mb-1">Units</label>
           <p className="text-sm text-gray-600 mb-2">
-            Define the course units or modules. Drag rows to reorder. Click any cell to edit.
+            Define the course units or modules. Drag rows to reorder. Click any
+            cell to edit.
           </p>
           <button
             type="button"
@@ -214,7 +247,10 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
           >
             + Add Unit
           </button>
-          <div className="border rounded-lg overflow-hidden shadow-sm bg-white" style={{ width: '100%' }}>
+          <div
+            className="border rounded-lg overflow-hidden shadow-sm bg-white"
+            style={{ width: "100%" }}
+          >
             <Table
               data={units.map((unit, index) => ({ ...unit, id: index }))}
               rowKeyField="id"
@@ -236,12 +272,14 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
                   title: "Actions",
                   width: 100,
                   isEditable: false,
-                }
+                },
               ]}
               editableCells={editableCells}
               editingMode={EditingMode.Cell}
               height={Math.max(250, units.length * 50 + 100)}
-              noData={{ text: "No units added yet. Click 'Add Unit' to create your first unit." }}
+              noData={{
+                text: "No units added yet. Click 'Add Unit' to create your first unit.",
+              }}
               rowReordering={true}
               childComponents={{
                 cellText: {
@@ -264,8 +302,13 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
                     // Add placeholder text for empty cells
                     if (!props.value || props.value === "") {
                       return (
-                        <span className="text-gray-400 italic cursor-pointer" title="Click to edit">
-                          {props.column.key === "name" ? "Click to add unit name" : "Click to add description"}
+                        <span
+                          className="text-gray-400 italic cursor-pointer"
+                          title="Click to edit"
+                        >
+                          {props.column.key === "name"
+                            ? "Click to add unit name"
+                            : "Click to add description"}
                         </span>
                       );
                     }
@@ -275,8 +318,8 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
                         {props.value}
                       </span>
                     );
-                  }
-                }
+                  },
+                },
               }}
               dispatch={(action) => {
                 if (action.type === "ReorderRows") {
@@ -297,10 +340,12 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
               }}
             />
           </div>
-        </div>        <div>
+        </div>{" "}
+        <div>
           <label className="block font-semibold mb-1">Timeline</label>
           <p className="text-sm text-gray-600 mb-2">
-            Set up your course timeline with assignments, exams, and deadlines. Drag rows to reorder. Click any cell to edit.
+            Set up your course timeline with assignments, exams, and deadlines.
+            Drag rows to reorder. Click any cell to edit.
           </p>
           <button
             type="button"
@@ -309,7 +354,10 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
           >
             + Add Timeline Item
           </button>
-          <div className="border rounded-lg overflow-hidden shadow-sm bg-white" style={{ width: '100%' }}>
+          <div
+            className="border rounded-lg overflow-hidden shadow-sm bg-white"
+            style={{ width: "100%" }}
+          >
             <Table
               data={timeline.map((item, index) => ({ ...item, id: index }))}
               rowKeyField="id"
@@ -345,34 +393,18 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
                   isEditable: true,
                 },
                 {
-                  key: "start_date_inferred",
-                  title: "Start Inferred",
-                  dataType: DataType.Boolean,
-                  isEditable: true,
-                },
-                {
-                  key: "due_date_inferred",
-                  title: "Due Inferred",
-                  dataType: DataType.Boolean,
-                  isEditable: true,
-                },
-                {
-                  key: "grade_release_date_inferred",
-                  title: "Grade Inferred",
-                  dataType: DataType.Boolean,
-                  isEditable: true,
-                },
-                {
                   key: "actions",
                   title: "Actions",
                   width: 100,
                   isEditable: false,
-                }
+                },
               ]}
               editableCells={timelineEditableCells}
               editingMode={EditingMode.Cell}
               height={Math.max(300, timeline.length * 50 + 100)}
-              noData={{ text: "No timeline items added yet. Click 'Add Timeline Item' to create your first timeline entry." }}
+              noData={{
+                text: "No timeline items added yet. Click 'Add Timeline Item' to create your first timeline entry.",
+              }}
               rowReordering={true}
               childComponents={{
                 cellText: {
@@ -393,10 +425,17 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
                     }
 
                     // Format display for date fields
-                    if (props.column.key === "start_date" || props.column.key === "due_date" || props.column.key === "grade_release_date") {
+                    if (
+                      props.column.key === "start_date" ||
+                      props.column.key === "due_date" ||
+                      props.column.key === "grade_release_date"
+                    ) {
                       if (!props.value || props.value === "") {
                         return (
-                          <span className="text-gray-400 italic cursor-pointer" title="Click to set date">
+                          <span
+                            className="text-gray-400 italic cursor-pointer"
+                            title="Click to set date"
+                          >
                             Click to set date
                           </span>
                         );
@@ -419,12 +458,16 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
 
                     // Other fields
                     if (!props.value || props.value === "") {
-                      const placeholderText = props.column.key === "type"
-                        ? "Click to add type (Assignment, Exam, etc.)"
-                        : `Click to add ${props.column.title?.toLowerCase()}`;
+                      const placeholderText =
+                        props.column.key === "type"
+                          ? "Click to add type (Assignment, Exam, etc.)"
+                          : `Click to add ${props.column.title?.toLowerCase()}`;
 
                       return (
-                        <span className="text-gray-400 italic cursor-pointer" title="Click to edit">
+                        <span
+                          className="text-gray-400 italic cursor-pointer"
+                          title="Click to edit"
+                        >
                           {placeholderText}
                         </span>
                       );
@@ -435,8 +478,8 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
                         {props.value}
                       </span>
                     );
-                  }
-                }
+                  },
+                },
               }}
               dispatch={(action) => {
                 if (action.type === "ReorderRows") {
@@ -445,7 +488,11 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
                 }
                 if (action.type === "UpdateCellValue") {
                   const { rowKeyValue, columnKey, value } = action;
-                  handleTimelineChange(rowKeyValue, columnKey as keyof TimelineItem, value);
+                  handleTimelineChange(
+                    rowKeyValue,
+                    columnKey as keyof TimelineItem,
+                    value
+                  );
                 }
                 if (action.type === "OpenEditor") {
                   const { rowKeyValue, columnKey } = action;
@@ -458,48 +505,32 @@ export function EditCourseForm({ course, isNew = false }: EditCourseClientProps)
             />
           </div>
         </div>
-
-        <div>
-          <label className="block mb-2 font-medium">Syllabus File (PDF)</label>
-          {existingSyllabusName && !newSyllabusFile ? (
-            <div className="p-3 border-2 border-gray-300 rounded-lg bg-gray-50 flex items-center justify-between">
-              <span className="text-sm text-gray-600">
-                Current syllabus: {existingSyllabusName}
-              </span>
-              <button
-                type="button"
-                onClick={() => setExistingSyllabusName(null)}
-                className="text-sm font-medium text-blue-600 hover:text-blue-500"
-              >
-                Replace
-              </button>
-            </div>
-          ) : (
-            <div>
-              <FileDropInput
-                accept="application/pdf"
-                file={newSyllabusFile}
-                onFileChange={setNewSyllabusFile}
-                disabled={!!newSyllabusFile}
-              />
-              {newSyllabusFile && (
-                <div className="mt-2 flex items-center justify-between">
-                  <span className="text-sm text-gray-600">
-                    New file: {newSyllabusFile.name}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setNewSyllabusFile(null)}
-                    className="text-sm font-medium text-blue-600 hover:text-blue-500"
-                  >
-                    Clear
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
+        {isNew && (
+          <div>
+            <label className="block mb-2 font-medium">
+              Syllabus File (PDF) (Optional)
+            </label>
+            <FileDropInput
+              accept="application/pdf"
+              file={syllabusFile}
+              onFileChange={setSyllabusFile}
+            />
+            {syllabusFile && (
+              <div className="mt-2 flex items-center justify-between">
+                <span className="text-sm text-gray-600">
+                  Selected: {syllabusFile.name}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setSyllabusFile(null)}
+                  className="text-sm font-medium text-blue-600 hover:text-blue-500"
+                >
+                  Clear
+                </button>
+              </div>
+            )}
+          </div>
+        )}
         <button
           type="submit"
           className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-semibold transition-colors"

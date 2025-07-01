@@ -19,17 +19,17 @@ export default async function Courses({
         <div className="grid gap-4">
           {isTeacher && (
             <Link
-              href="/courses/create"
-              className="bg-white rounded-lg p-4 shadow-sm flex items-center justify-center"
+              href="/create/course"
+              className="bg-white rounded-lg p-4 shadow-sm flex items-center justify-center hover:shadow-lg transition-shadow duration-200 h-full"
             >
-              <div className="text-yellow-700">
+              <div className="text-yellow-700 text-center">
                 No courses found. <br /> Click here to create a new course.
               </div>
             </Link>
           )}
           {!isTeacher && (
             <div className="bg-white rounded-lg p-4 shadow-sm flex items-center justify-center">
-              <div className="text-yellow-700">
+              <div className="text-yellow-700 text-center">
                 No courses available at the moment.
               </div>
             </div>
