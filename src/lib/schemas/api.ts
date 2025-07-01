@@ -23,3 +23,9 @@ export const UploadFileRequestSchema = z.object({
   }),
   content_type: z.string().min(1, "Content type is required"),
 })
+
+export const InviteStudentsRequestSchema = z.object({
+  courseId: z.string().min(1, "Course ID is required"),
+  studentIds: z.array(z.string().min(1, "Student ID is required")).
+    nonempty("At least one student ID is required"),
+});

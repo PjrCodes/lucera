@@ -7,7 +7,7 @@ import CourseHeader from "@/components/feature/course/cards/course-header";
 import { Course, UserWithData } from "@/lib/schemas/database";
 import CourseTabs from "@/components/feature/course/course-tabs";
 import { getContentForCourse } from "@/lib/database-service/content";
-import { getStudentsForCourse } from "@/lib/database-service/courses";
+import { getAvailableStudents, getStudentsForCourse } from "@/lib/database-service/courses";
 
 async function getCourse(course_id: string): Promise<Course | null> {
   const db = client.db();
@@ -111,6 +111,9 @@ export default async function CourseViewPage({
   const students: UserWithData[] =
     await getStudentsForCourse(course._id.toString());
 
+  // Get available students for invitation (only for teachers)
+  const availableStudents = isTeacher ? await getAvailableStudents(course._id.toString()) : [];
+
   const grades: { id: number; title: string; score: string; date: string }[] =
     [];
 
@@ -136,6 +139,9 @@ export default async function CourseViewPage({
               pollsAndAnnouncements={pollsAndAnnouncements}
               students={students}
               grades={grades}
+              courseId={course._id.toString()}
+              isTeacher={isTeacher}
+              availableStudents={availableStudents}
             />
           </div>
         </div>

@@ -46,7 +46,7 @@ export const userWithDataSchema = userDataSchema.extend({
   name: z.string(),
   email: z.email(),
   image: z.string(),
-  emailVerified: z.boolean().optional(),
+  emailVerified: z.boolean().nullable(),
 });
 
 export type UserWithData = z.infer<typeof userWithDataSchema>;

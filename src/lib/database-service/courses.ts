@@ -59,10 +59,38 @@ export async function getStudentsForCourse(courseId: string) {
       role: "student",
     })
     .toArray();
-  
+
   try {
     return students.map((student) => userWithDataSchema.parse(student));
-  } catch {
+  } catch (error) {
+    console.error("Error parsing students:", error);
     throw new Error("Invalid user data format found in database");
   }
+}
+
+export async function getAvailableStudents(
+  course_id: string
+): Promise<{ id: string; name: string; email: string }[]> {
+  const result = await client
+    .db()
+    .collection("users_and_their_data")
+    .find({
+      relatedCourses: { $nin: [course_id] },
+      role: "student",
+    })
+    .toArray()
+    .then((students) => {
+      // This is where you would process the students data
+      console.log("Available students for course:", course_id, students);
+      return students.map((student) => ({
+        id: student.id,
+        name: student.name,
+        email: student.email,
+      }));
+    })
+    .catch((error) => {
+      console.error("Error fetching available students:", error);
+      throw new Error("Failed to fetch available students");
+    });
+  return result;
 }

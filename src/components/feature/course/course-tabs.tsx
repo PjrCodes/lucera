@@ -34,6 +34,18 @@ interface Grade {
   date: string;
 }
 
+interface CourseTabsProps {
+  course: Course;
+  assignments: Assignment[];
+  courseMaterialsData: ContentWithEmbeddedFile[];
+  pollsAndAnnouncements: PollOrAnnouncement[];
+  students: UserWithData[];
+  grades: Grade[];
+  courseId: string;
+  isTeacher: boolean;
+  availableStudents: { id: string; name: string; email: string }[];
+}
+
 export default function CourseTabs({
   course,
   assignments,
@@ -41,14 +53,10 @@ export default function CourseTabs({
   pollsAndAnnouncements,
   students,
   grades,
-}: {
-  course: Course;
-  assignments: Assignment[];
-  courseMaterialsData: ContentWithEmbeddedFile[];
-  pollsAndAnnouncements: PollOrAnnouncement[];
-  students: UserWithData[];
-  grades: Grade[];
-}) {
+  courseId,
+  isTeacher,
+  availableStudents,
+}: CourseTabsProps) {
 
 
   return (
@@ -138,8 +146,14 @@ export default function CourseTabs({
           <TabsContent value="polls">
             <CoursePollsCard pollsAndAnnouncements={pollsAndAnnouncements} />
           </TabsContent>
-          <TabsContent value="students">
-            <CourseStudentsCard students={students} />
+          {/* Students Tab */}
+          <TabsContent value="students" className="mt-6">
+            <CourseStudentsCard 
+              students={students} 
+              courseId={courseId}
+              isTeacher={isTeacher}
+              availableStudents={availableStudents}
+            />
           </TabsContent>
         </div>
       </Tabs>
