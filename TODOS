@@ -8,14 +8,16 @@
 
 - [X] FIX each page to have a consistent logic for auth checking, etc. and use the latest cool utilities created by us for ourselves.
 - [X] "Logical Flow Features": Teachers must add student to a course.
+- [ ] Important - Fully rich edit capabilities. Currently, some fields are ommitted. Need full editing capability.
+
 - [ ] Properly update the `relatedFiles` field in the UserData schema.
 - [ ] Move all schemas, interfaces, and types to common locations.
 - [ ] Move all utility functions to common locations.
 - [ ] Refactor constant functions / variables appropriately if they are not being used much, etc.
 
-- [ ] FUNCTIONAL Assignments System
-  - [ ] Assignment upload on teacher side
-  - [ ] Assignment download on student side
+- [X] FUNCTIONAL Assignments System
+  - [X] Assignment upload on teacher side
+  - [X] Assignment download on student side
   - [ ] Assignment submission on student side
   - [ ] Assignment grading on teacher side - for now, just a simple text field per question
 - [ ] FUNCTIONAL Bookmarks
