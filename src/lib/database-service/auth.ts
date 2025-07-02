@@ -31,7 +31,8 @@ export async function getUserData(userId: string) {
   }
 
   // remove the _id field from the parsed user data
-  delete parsedUser.data._id;
+  // delete parsedUser.data._id;
+  parsedUser.data._id = parsedUser.data._id.toString();
   return parsedUser.data;
 }
 

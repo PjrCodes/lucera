@@ -123,7 +123,7 @@ export default async function CourseViewPage({
   console.log(safeCourse);
   const safeStudents = students.map((student) => ({
     ...student,
-    _id: student._id?.toString(),
+    _id: student._id.toString(),
   }));
   const safeAssignments = assignments.map((assignment) => ({
     ...assignment,
