@@ -1,5 +1,5 @@
 import { getSessionAndUserData } from "@/lib/database-service/auth";
-import Courses from "@/components/feature/dashboard/cards/courses";
+import Courses from "@/components/feature/dashboard/cards/progress";
 import React from "react";
 
 export default async function ProgressPage() {

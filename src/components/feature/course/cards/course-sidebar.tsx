@@ -178,7 +178,7 @@ export default function CourseSidebar({}: CourseSidebarProps) {
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${
                       assignment.status === "pending"
-                        ? "bg-yellow-100 text-yellow-700"
+                        ? "bg-primary-100 text-primary-700"
                         : assignment.status === "submitted"
                           ? "bg-blue-100 text-blue-700"
                           : "bg-green-100 text-green-700"

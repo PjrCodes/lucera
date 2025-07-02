@@ -61,8 +61,8 @@ export default function Create({}: PropsForEveryDashboardCard) {
   ];
 
   return (
-    <div className="bg-yellow-100 rounded-lg shadow-md p-4">
-      <h2 className="font-bold mb-4 text-yellow-700 text-lg">CREATE</h2>
+    <div className="bg-primary-100 rounded-lg shadow-md p-4">
+      <h2 className="font-bold mb-4 text-primary-700 text-lg">CREATE</h2>
       <div className="grid grid-cols-2 grid-rows-3 gap-3 auto-rows-fr">
         {options.map((opt) => (
           <PrimaryButton
@@ -71,8 +71,8 @@ export default function Create({}: PropsForEveryDashboardCard) {
             className="flex items-center gap-3 text-sm h-full min-h-[3.5rem] w-full"
           >
             <Link href={opt.href}>
-              <span className="text-2xl text-yellow-900">{opt.icon}</span>
-              <span className="text-left text-yellow-900 line-clamp-2 overflow-hidden">
+              <span className="text-2xl text-primary-900">{opt.icon}</span>
+              <span className="text-left text-primary-900 line-clamp-2 overflow-hidden">
                 {opt.label}
               </span>
             </Link>

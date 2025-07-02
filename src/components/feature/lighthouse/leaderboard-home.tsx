@@ -138,7 +138,7 @@ export default function LeaderboardHome({ isTeacher }: LeaderboardHomeProps) {
   };
 
   const getRankIcon = (rank: number) => {
-    if (rank === 1) return <Trophy className="w-6 h-6 text-yellow-500" />;
+    if (rank === 1) return <Trophy className="w-6 h-6 text-primary-500" />;
     if (rank === 2) return <Medal className="w-6 h-6 text-gray-400" />;
     if (rank === 3) return <Medal className="w-6 h-6 text-amber-600" />;
     return (

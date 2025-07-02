@@ -37,7 +37,7 @@ export function FileDropInput({
     <div
       className={`border-4 border-dotted rounded-lg px-4 py-10 text-center transition-colors duration-150 bg-transparent
         border-[#5C2A2B]
-        ${dragActive && !disabled ? "border-[#EFCB7B] bg-yellow-50" : ""}
+        ${dragActive && !disabled ? "border-[#EFCB7B] bg-primary-50" : ""}
         ${!disabled ? "hover:border-[#FFD580] focus:border-[#FFD580] outline-none cursor-pointer" : "cursor-not-allowed bg-gray-100"}`}
       onClick={() => !disabled && inputRef.current?.click()}
       onDragEnter={handleDrag}

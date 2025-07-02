@@ -333,10 +333,10 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
             </div>
           )}
 
-          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div className="mt-4 p-3 bg-primary-50 border border-primary-200 rounded-lg">
             <div className="flex items-start gap-2">
               <svg
-                className="w-5 h-5 text-yellow-600 mt-0.5"
+                className="w-5 h-5 text-primary-600 mt-0.5"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -347,10 +347,10 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
                 />
               </svg>
               <div className="text-sm">
-                <p className="font-medium text-yellow-800">
+                <p className="font-medium text-primary-800">
                   Submission Reminder
                 </p>
-                <p className="text-yellow-700">
+                <p className="text-primary-700">
                   {isOverdue
                     ? "This assignment is overdue. Late submissions may be penalized."
                     : assignment.dueDate

@@ -2,7 +2,7 @@ import { JSX } from "react";
 import { NextPage } from "next";
 import { Session } from "next-auth";
 import UpcomingDeadlines from "./cards/upcoming-deadlines";
-import Courses from "./cards/courses";
+import Courses from "./cards/progress";
 import StudentAlerts from "./cards/student-alerts";
 import Bookmarks from "./cards/bookmarks";
 import Create from "./cards/create";
