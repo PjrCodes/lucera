@@ -10,13 +10,20 @@ import { FileDropInput } from "@/components/core/inputs/file-drop-input";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
-import { Course, CourseTimelineItem, CourseUnit } from "@/lib/schemas/database";
+import {
+  Course,
+  CourseTimelineItem,
+  CourseUnit,
+  CourseWithEmbeddedSyllabus,
+} from "@/lib/schemas/database";
+import { TextArea } from "@/components/core/inputs/text-area";
+import { TextBox } from "@/components/core/inputs/text-box";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 // Client component
 interface EditCourseClientProps {
-  course: Course | null;
+  course: CourseWithEmbeddedSyllabus | null;
   isNew?: boolean;
   userData?: unknown;
   session?: unknown;
@@ -30,6 +37,20 @@ export function EditCourseForm({
   const [error, setError] = useState<string | null>(null);
   // Form state
   const [name, setName] = useState(course?.name || "");
+  const [courseCode, setCourseCode] = useState(course?.courseCode || "");
+  const [courseStartDate, setCourseStartDate] = useState<Date | null>(
+    course?.courseStartDate || null
+  );
+  const [courseEndDate, setCourseEndDate] = useState<Date | null>(
+    course?.courseEndDate || null
+  );
+  const [coverImage, setCoverImage] = useState<string | null>(
+    course?.coverImage || null
+  );
+  const [status, setStatus] = useState<"draft" | "published">(
+    course?.status || "draft"
+  );
+
   const [shortDescription, setShortDescription] = useState(
     course?.shortDescription || ""
   );
@@ -38,7 +59,9 @@ export function EditCourseForm({
   const [timeline, setTimeline] = useState<CourseTimelineItem[]>(
     course?.timeline || []
   );
-  const [syllabusFile, setSyllabusFile] = useState<File | null>(null);
+  const [syllabusFileName, setSyllabusFileName] = useState<string>(
+    course?.syllabusFile?.name || ""
+  );
 
   // Ka-table editing states
   const [editableCells, setEditableCells] = useState<
@@ -47,12 +70,17 @@ export function EditCourseForm({
   const [timelineEditableCells, setTimelineEditableCells] = useState<
     { rowKeyValue: number; columnKey: string }[]
   >([]);
-  const handleUnitChange = (idx: number, field: keyof CourseUnit, value: string) => {
+
+  // sortable units and timeline items
+  const handleUnitChange = (
+    idx: number,
+    field: keyof CourseUnit,
+    value: string
+  ) => {
     setUnits((prev) =>
       prev.map((u, i) => (i === idx ? { ...u, [field]: value } : u))
     );
   };
-
   const handleTimelineChange = (
     idx: number,
     field: keyof CourseTimelineItem,
@@ -148,16 +176,7 @@ export function EditCourseForm({
     setLoading(false);
   };
 
-  // useEffect(() => {
-  //   if (course) {
-  //     setName(course.name || "");
-  //     setShortDescription(course.shortDescription || "");
-  //     setDescription(course.description || "");
-  //     setUnits(course.units || []);
-  //     setTimeline(course.timeline || []);
-  //   }
-  // }, [course]);
-
+  // TODO: change these to be much more user-friendly
   if (loading) return <div className="p-8">Loading...</div>;
   if (error) return <div className="p-8 text-red-600">{error}</div>;
 
@@ -170,20 +189,16 @@ export function EditCourseForm({
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div>
           <label className="block font-semibold mb-1">Name</label>
-          <input
-            className="w-full border px-2 py-1 rounded"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+          <TextBox value={name} onChange={(value) => setName(value)} />
         </div>
         <div>
-          <label className="block font-semibold mb-1">Short Description</label>
-          <textarea
-            className="w-full border px-2 py-1 rounded"
+          <label className="text-secondary-700 block font-semibold mb-1">
+            Short Description
+          </label>
+          <TextArea
             value={shortDescription}
-            onChange={(e) => setShortDescription(e.target.value)}
-            rows={2}
+            onChange={(value) => setShortDescription(value)}
+            rows={5}
             maxLength={400}
           />
         </div>
@@ -480,17 +495,17 @@ export function EditCourseForm({
             </label>
             <FileDropInput
               accept="application/pdf"
-              file={syllabusFile}
-              onFileChange={setSyllabusFile}
+              file={syllabusFileName}
+              onFileChange={setSyllabusFileName}
             />
-            {syllabusFile && (
+            {syllabusFileName && (
               <div className="mt-2 flex items-center justify-between">
                 <span className="text-sm text-gray-600">
-                  Selected: {syllabusFile.name}
+                  Selected: {syllabusFileName.name}
                 </span>
                 <button
                   type="button"
-                  onClick={() => setSyllabusFile(null)}
+                  onClick={() => setSyllabusFileName(null)}
                   className="text-sm font-medium text-blue-600 hover:text-blue-500"
                 >
                   Clear

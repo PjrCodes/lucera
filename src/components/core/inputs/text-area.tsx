@@ -6,6 +6,7 @@ interface TextAreaProps {
   placeholder?: string;
   rows?: number;
   className?: string;
+  maxLength?: number;
 }
 
 export function TextArea({
@@ -13,6 +14,7 @@ export function TextArea({
   onChange,
   placeholder,
   rows = 3,
+  maxLength = 600,
   className = "",
 }: TextAreaProps) {
   return (
@@ -21,7 +23,8 @@ export function TextArea({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       rows={rows}
-      className={`border rounded px-3 py-2 w-full ${className}`}
+      maxLength={maxLength}
+      className={`border rounded px-3 py-1 w-full bg-white font-body border-secondary-700 outline-secondary-700 ${className}`}
     />
   );
 }

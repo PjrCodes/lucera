@@ -21,7 +21,7 @@ export function TextBox({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className={`border rounded px-3 py-2 w-full ${className}`}
+      className={`border rounded px-3 py-1 w-full bg-white font-body border-secondary-700 outline-secondary-700 ${className}`}
     />
   );
 }
