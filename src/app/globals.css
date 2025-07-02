@@ -4,16 +4,11 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  /* --color-primary-100: #FEF9C3;
-    --color-primary-200: #FEF486;
-    --color-primary-300:  #FDE05A;
-    --color-primary-400: #FEF272;
-    --color-primary-500:  #FEEF48;
-    --color-primary-600: #FEEA0B;
-    --color-primary-700: #DFCD01;
-    --color-primary-800: #B7A801;
-    --color-primary-900: #8E8201; */
+  
+  --font-body: var(--font-lato);
+  --font-header: var(--font-urbanist);
 
+  /* Primary (Yellow) */
   --color-primary-50: var(--color-yellow-50);
   --color-primary-100: var(--color-yellow-100);
   --color-primary-200: var(--color-yellow-200);
@@ -24,18 +19,8 @@
   --color-primary-700: var(--color-yellow-700);
   --color-primary-800: var(--color-yellow-800);
   --color-primary-900: var(--color-yellow-900);
-  /*     
-    --color-secondary-100: #C1AFD4;
-    --color-secondary-200: #AD95C6;
-    --color-secondary-300: #A288BF
-    --color-secondary-400:  #987AB8;
-    --color-secondary-500: #977AB8;
-    --color-secondary-600: #8360A9;
-    --color-secondary-700: #8D6DB0;
-    --color-secondary-800: #6F4F92;
-    --color-secondary-900: #5B4077; */
-
-  /* 🌊 Secondary (Blue) */
+  
+  /* Secondary (Brown) */
   --color-secondary-50: #f2e5e7;
   --color-secondary-100: #dcafb5;
   --color-secondary-200: #c79092;
@@ -47,19 +32,8 @@
   --color-secondary-800: #432325;
   --color-secondary-900: #2d1618;
 
-  /* ❤️ Accent (Red) */
-  --color-accent-50: #ffeaea;
-  --color-accent-100: #ffcfcf;
-  --color-accent-200: #ffb3b3;
-  --color-accent-300: #ff9999;
-  --color-accent-400: #ff7f7f;
-  --color-accent-500: #fe6d6d;
-  --color-accent-600: #f44336;
-  --color-accent-700: #e53935;
-  --color-accent-800: #d32f2f;
-  --color-accent-900: #b71c1c;
 
-  /* ✅ Success */
+  /* Success */
   --color-success-50: #e6f9f0;
   --color-success-100: #c0f2db;
   --color-success-200: #99ecc6;
@@ -71,7 +45,7 @@
   --color-success-800: #008a54;
   --color-success-900: #006c43;
 
-  /* ⚠️ Warning */
+  /* Warning */
   --color-warning-50: #fff8e1;
   --color-warning-100: #ffecb3;
   --color-warning-200: #ffe082;
@@ -83,7 +57,7 @@
   --color-warning-800: #ff8f00;
   --color-warning-900: #ff6f00;
 
-  /* ℹ️ Info */
+  /* Info */
   --color-info-50: #e1f5fe;
   --color-info-100: #b3e5fc;
   --color-info-200: #81d4fa;
@@ -95,7 +69,7 @@
   --color-info-800: #0277bd;
   --color-info-900: #01579b;
 
-  /* ❌ Danger */
+  /* Danger */
   --color-danger-50: #ffebee;
   --color-danger-100: #ffcdd2;
   --color-danger-200: #ef9a9a;
@@ -107,37 +81,6 @@
   --color-danger-800: #c62828;
   --color-danger-900: #b71c1c;
 
-  --color-lucerayellow-1: #fff8dc;
-  --color-lucerayellow-2: #ffe9a8;
-  --color-lucerayellow-3: #fee085;
-  --color-lucerayellow-4: #e0b955;
-  --color-lucerayellow-5: #a57f21;
-  --color-lucerablue-1: #e1f9fc;
-  --color-lucerablue-2: #9de4ed;
-  --color-lucerablue-3: #4fcbdb;
-  --color-lucerablue-4: #3ba3b0;
-  --color-lucerablue-5: #2d7882;
-  --color-lucerared-1: #ffe5e5;
-  --color-lucerared-2: #ffa5a5;
-  --color-lucerared-3: #fe6d6d;
-  --color-lucerared-4: #d64343;
-  --color-lucerared-5: #a52020;
-  --color-lucerarose-1: #ffd9e8;
-  --color-lucerarose-2: #ff92bc;
-  --color-lucerarose-3: #f83e85;
-  --color-lucerarose-4: #c12263;
-  --color-lucerarose-5: #841340;
-  --color-luceragreen-1: #e4fad9;
-  --color-luceragreen-2: #a3eb66;
-  --color-luceragreen-3: #3ec300;
-  --color-luceragreen-4: #2e9c00;
-  --color-luceragreen-5: #1c6a00;
-  --color-lucerapurple-1: #f4e6f1;
-  --color-lucerapurple-2: #dbb2d6;
-  --color-lucerapurple-3: #c790bd;
-  --color-lucerapurple-4: #a16d98;
-  --color-lucerapurple-5: #704b69;
-  --color-bgcolor: #fffffa;
   --color-sidebar-border: transparent;
 }
 
@@ -206,52 +149,4 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-}
-
-@layer base {
-  /* Custom ka-table styling for better integration */
-  .ka-table {
-    font-family: inherit;
-    border-radius: 0.5rem;
-  }
-
-  .ka-table .ka-thead-cell {
-    background-color: #f8fafc;
-    border-bottom: 2px solid #e2e8f0;
-    font-weight: 600;
-    padding: 12px 8px;
-  }
-
-  .ka-table .ka-row {
-    border-bottom: 1px solid #e2e8f0;
-  }
-
-  .ka-table .ka-row:hover {
-    background-color: #f8fafc;
-  }
-
-  .ka-table .ka-cell {
-    padding: 10px 8px;
-    border-right: 1px solid #e2e8f0;
-  }
-
-  .ka-table .ka-cell:last-child {
-    border-right: none;
-  }
-
-  .ka-table .ka-cell-editor {
-    border: 2px solid #3b82f6;
-    border-radius: 0.25rem;
-    padding: 6px 8px;
-  }
-
-  .ka-table .ka-cell-editor:focus {
-    outline: none;
-    border-color: #1d4ed8;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-
-  .ka-table .ka-checkbox {
-    accent-color: #3b82f6;
-  }
 }
