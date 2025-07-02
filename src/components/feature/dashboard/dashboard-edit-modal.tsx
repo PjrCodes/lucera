@@ -80,10 +80,10 @@ const SourceDraggableElement = ({
       className={`px-4 py-2 border rounded-md text-sm font-medium whitespace-nowrap transition-all
                   ${
                     isOverlay && !isDropAllowed
-                      ? "border-lucerared-4 bg-lucerared-1 text-lucerared-4 cursor-not-allowed shadow-lg"
+                      ? "border-danger-600 bg-danger-100 text-danger-900 cursor-not-allowed shadow-lg"
                       : isOverlay
-                        ? "border-[color:var(--color-lucerabrown-4)] bg-[color:var(--color-lucerabrown-1)] text-[color:var(--color-lucerabrown-5)] shadow-lg cursor-grabbing"
-                        : "border-[color:var(--color-lucerabrown-3)] bg-[color:var(--color-lucerabrown-2)] text-[color:var(--color-lucerabrown-5)] shadow-sm hover:shadow-md hover:bg-[color:var(--color-lucerabrown-3)] cursor-grab"
+                      ? "bg-primary-400 text-primary-950 shadow-lg border-primary-600 cursor-grabbing"
+                      : "bg-primary-300 text-primary-950 shadow-sm hover:shadow-md hover:bg-primary-400 cursor-grab border-primary-600"
                   }`}
     >
       {
@@ -108,8 +108,8 @@ const DraggedItemOverlay = ({
       className={`p-3 border rounded-lg text-sm font-medium shadow-lg transition-all
                     ${
                       !isDropAllowed
-                        ? "border-[color:var(--color-lucerared-4)] bg-[color:var(--color-lucerared-1)] text-[color:var(--color-lucerared-5)] cursor-not-allowed"
-                        : "border-[color:var(--color-lucerabrown-4)] bg-[color:var(--color-lucerabrown-1)] text-[color:var(--color-lucerabrown-5)] cursor-grabbing"
+                        ? "border-danger-800 bg-danger-100 text-danger-800 cursor-not-allowed"
+                        : "border-primary-900 bg-primary-300 text-primary-800 cursor-grabbing"
                     }`}
     >
       {label}
@@ -141,13 +141,13 @@ const DroppableColumn = ({
       className={`min-h-[300px] p-4 border-2 border-dashed rounded-lg transition-colors
                   ${
                     isOver || isColumnActive
-                      ? "border-[color:var(--color-lucerabrown-5)] bg-[color:var(--color-lucerabrown-2)]"
-                      : "border-[color:var(--color-lucerabrown-3)] bg-[color:var(--color-lucerabrown-1)]"
+                      ? "border-primary-900 bg-primary-200"
+                      : "border-primary-700 bg-primary-100"
                   }`}
     >
       {children}
       {isEmpty && (
-        <p className="text-xs text-gray-400 text-center py-4">
+        <p className="text-xs text-primary-700 text-center py-4">
           Drop elements here
         </p>
       )}
@@ -169,7 +169,7 @@ export default function DashboardEditModal({
   const [isDropCurrentlyAllowed, setIsDropCurrentlyAllowed] = useState(true);
   const [nextUniqueCounter, setNextUniqueCounter] = useState(0); // Global counter for uniqueness
   const [activeColumn, setActiveColumn] = useState<"left" | "right" | null>(
-    null,
+    null
   ); // Track which column is active
 
   const userRole = userData?.role || "student";
@@ -215,10 +215,10 @@ export default function DashboardEditModal({
       });
 
       const filteredLeftItems = leftItems.filter(
-        (item) => item !== null,
+        (item) => item !== null
       ) as DashboardItem[];
       const filteredRightItems = rightItems.filter(
-        (item) => item !== null,
+        (item) => item !== null
       ) as DashboardItem[];
 
       setLeftColumn(filteredLeftItems);
@@ -280,7 +280,7 @@ export default function DashboardEditModal({
   const addElementToColumn = (
     elementType: string,
     column: "left" | "right",
-    index?: number,
+    index?: number
   ) => {
     const instanceId = generateUniqueId(column);
     const newItem: DashboardItem = {
@@ -303,7 +303,7 @@ export default function DashboardEditModal({
   };
 
   const findItemById = (
-    id: string,
+    id: string
   ): {
     item: DashboardItem;
     column: "left" | "right";
@@ -471,7 +471,7 @@ export default function DashboardEditModal({
 
       if (targetColumnName) {
         const isAllowedByRole = roleAllowedElementTypes.includes(
-          elementTypeFromSource,
+          elementTypeFromSource
         );
         const isAllowedInTargetColumn = (
           targetColumnName === "left"
@@ -483,11 +483,11 @@ export default function DashboardEditModal({
           addElementToColumn(
             elementTypeFromSource,
             targetColumnName,
-            targetIndex,
+            targetIndex
           );
         } else {
           console.warn(
-            `Element ${elementTypeFromSource} cannot be added to ${targetColumnName}. Role allowed: ${isAllowedByRole}, Column allowed: ${isAllowedInTargetColumn}.`,
+            `Element ${elementTypeFromSource} cannot be added to ${targetColumnName}. Role allowed: ${isAllowedByRole}, Column allowed: ${isAllowedInTargetColumn}.`
           );
         }
       }
@@ -537,7 +537,7 @@ export default function DashboardEditModal({
         const setColumn =
           targetColumnName === "left" ? setLeftColumn : setRightColumn;
         setColumn((items) =>
-          arrayMove(items, activeLocation.index, targetIndex!),
+          arrayMove(items, activeLocation.index, targetIndex!)
         );
       } else {
         // Moving between columns - generate new unique IDs
@@ -549,7 +549,7 @@ export default function DashboardEditModal({
         ).includes(itemToMove.type);
         if (!isAllowedInNewColumn) {
           console.warn(
-            `Element type ${itemToMove.type} not allowed in ${targetColumnName} column.`,
+            `Element type ${itemToMove.type} not allowed in ${targetColumnName} column.`
           );
           return;
         }
@@ -557,7 +557,7 @@ export default function DashboardEditModal({
         const sourceSetColumn =
           activeLocation.column === "left" ? setLeftColumn : setRightColumn;
         sourceSetColumn((items) =>
-          items.filter((item) => item.id !== activeId),
+          items.filter((item) => item.id !== activeId)
         );
 
         // Generate truly unique IDs for the moved item
@@ -650,7 +650,7 @@ export default function DashboardEditModal({
             <div className="grid grid-cols-2 gap-6">
               {/* Left Column */}
               <div className="space-y-2">
-                <h3 className="font-semibold text-center text-[color:var(--color-lucerabrown-5)]">
+                <h3 className="font-semibold text-center text-primary-900">
                   Left Column
                 </h3>
                 <DroppableColumn
@@ -681,7 +681,7 @@ export default function DashboardEditModal({
 
               {/* Right Column */}
               <div className="space-y-2">
-                <h3 className="font-semibold text-center text-[color:var(--color-lucerabrown-5)]">
+                <h3 className="font-semibold text-center text-primary-900">
                   Right Column
                 </h3>
                 <DroppableColumn
@@ -713,11 +713,11 @@ export default function DashboardEditModal({
 
             {/* Add Elements Panel - Fully Visible Grid */}
             <div>
-              <h3 className="font-semibold text-center text-[color:var(--color-lucerabrown-5)] mb-4">
+              <h3 className="font-semibold text-center text-primary-900 mb-4">
                 Add Elements (Drag to a column)
               </h3>
               {roleAllowedElementTypes.length > 0 ? (
-                <div className="flex flex-wrap gap-3 p-3 justify-center bg-[color:var(--color-lucerabrown-1)] border-2 border-[color:var(--color-lucerabrown-3)] rounded-lg shadow">
+                <div className="flex flex-wrap gap-3 p-3 justify-center border-2 border-primary-800 rounded-lg shadow">
                   {roleAllowedElementTypes.map((elementType) => (
                     <SourceDraggableElement
                       key={`source-${elementType}`}
@@ -726,7 +726,7 @@ export default function DashboardEditModal({
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-500 text-center p-4">
+                <p className="text-sm text-primary-700 text-center p-4">
                   No elements available to add based on your role.
                 </p>
               )}
@@ -756,7 +756,7 @@ export default function DashboardEditModal({
                   )
                 ) : null}
               </DragOverlay>,
-              document.body,
+              document.body
             )}
         </DndContext>
         <DialogFooter className="mt-auto pt-6">

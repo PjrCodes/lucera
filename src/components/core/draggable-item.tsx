@@ -41,7 +41,7 @@ export default function DraggableItem({
         {...attributes}
         {...listeners}
       >
-        <GripVertical className="w-4 h-4 text-gray-400" />
+        <GripVertical className="w-4 h-4 text-gray-500" />
       </div>
       <span className="flex-1 text-sm font-medium">{label}</span>
       {onRemove && (
