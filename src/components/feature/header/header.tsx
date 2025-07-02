@@ -6,7 +6,7 @@ import ProfileCircle from "./profile-circle";
 import SignIn from "@/components/feature/auth/sign-in-button";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "../../ui/sidebar";
-import { Home, House, LayoutDashboard, SidebarIcon, SquarePen } from "lucide-react";
+import { Home, SidebarIcon, SquarePen } from "lucide-react";
 import Link from "next/link";
 import { Session } from "next-auth";
 import Bell from "./bell";

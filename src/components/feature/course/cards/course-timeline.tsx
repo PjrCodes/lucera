@@ -1,7 +1,5 @@
 import { Course } from "@/lib/schemas/database";
 import { iconForType } from "@/lib/constants";
-import { ExternalLink } from "lucide-react";
-import { SecondaryButton } from "@/components/core/buttons/secondary";
 import Link from "next/link";
 
 interface CourseTimelineProps {

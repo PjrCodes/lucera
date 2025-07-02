@@ -30,7 +30,7 @@ export const dashboardLayoutSchema = z.object({
 export type DashboardLayout = z.infer<typeof dashboardLayoutSchema>;
 
 export const userDataSchema = z.object({
-  _id: z.instanceof(ObjectId).or(z.string()),
+  _id: z.instanceof(ObjectId).or(z.string()).optional(),
   role: z.enum(["student", "teacher"]),
   dashboardLayout: dashboardLayoutSchema,
   id: z.string(),
