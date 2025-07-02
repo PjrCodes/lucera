@@ -18,6 +18,7 @@ import {
 import { TextArea } from "@/components/core/inputs/text-area";
 import { TextBox } from "@/components/core/inputs/text-box";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
+import { PrimaryButton } from "@/components/core/buttons/primary";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
@@ -330,21 +331,20 @@ export function EditCourseForm({
           </div>
         </div>{" "}
         <div>
-          <label className="block font-semibold mb-1">Timeline</label>
-          <p className="text-sm text-gray-600 mb-2">
+          <label className="text-secondary-700 block font-semibold mb-1">Timeline</label>
+          <p className="text-secondary-600 text-sm text-gray-600 mb-2">
             Set up your course timeline with assignments, exams, and deadlines.
             Drag rows to reorder. Click any cell to edit.
           </p>
-          <button
+          <SecondaryButton
             type="button"
-            className="mb-2 px-3 py-1 bg-blue-100 hover:bg-blue-200 rounded transition-colors"
+            className="mb-2 px-3 py-1 rounded transition-colors"
             onClick={addTimeline}
           >
             + Add Timeline Item
-          </button>
+          </SecondaryButton>
           <div
-            className="border rounded-lg overflow-hidden shadow-sm bg-white"
-            style={{ width: "100%" }}
+            className="border border-secondary-700 outline-secondary-700 rounded-lg overflow-hidden shadow-sm bg-white w-full"
           >
             <Table
               data={timeline.map((item, index) => ({ ...item, id: index }))}
@@ -363,20 +363,20 @@ export function EditCourseForm({
                   isEditable: true,
                 },
                 {
-                  key: "start_date",
+                  key: "startDate",
                   title: "Start Date",
                   dataType: DataType.Date,
                   isEditable: true,
                 },
                 {
-                  key: "due_date",
+                  key: "dueDate",
                   title: "Due Date",
                   dataType: DataType.Date,
                   isEditable: true,
                 },
                 {
-                  key: "grade_release_date",
-                  title: "Grade Release",
+                  key: "gradeReleaseDate",
+                  title: "Grade Release Reminder",
                   dataType: DataType.Date,
                   isEditable: true,
                 },
@@ -389,9 +389,10 @@ export function EditCourseForm({
               ]}
               editableCells={timelineEditableCells}
               editingMode={EditingMode.Cell}
-              height={Math.max(300, timeline.length * 50 + 100)}
+              // height={400}
               noData={{
                 text: "No timeline items added yet. Click 'Add Timeline Item' to create your first timeline entry.",
+                hideHeader: true,
               }}
               rowReordering={true}
               childComponents={{
@@ -414,9 +415,9 @@ export function EditCourseForm({
 
                     // Format display for date fields
                     if (
-                      props.column.key === "start_date" ||
-                      props.column.key === "due_date" ||
-                      props.column.key === "grade_release_date"
+                      props.column.key === "startDate" ||
+                      props.column.key === "dueDate" ||
+                      props.column.key === "gradeReleaseDate"
                     ) {
                       if (!props.value || props.value === "") {
                         return (
@@ -478,7 +479,7 @@ export function EditCourseForm({
                   const { rowKeyValue, columnKey, value } = action;
                   handleTimelineChange(
                     rowKeyValue,
-                    columnKey as keyof TimelineItem,
+                    columnKey as keyof CourseTimelineItem,
                     value
                   );
                 }
@@ -500,7 +501,6 @@ export function EditCourseForm({
             </label>
             <FileDropInput
               accept="application/pdf"
-              file={syllabusFileName}
               onFileChange={setSyllabusFileName}
             />
             {syllabusFileName && (
@@ -519,13 +519,12 @@ export function EditCourseForm({
             )}
           </div>
         )}
-        <button
+        <PrimaryButton
           type="submit"
-          className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-semibold transition-colors"
           disabled={loading}
         >
           Save Changes
-        </button>
+        </PrimaryButton>
         {error && <div className="text-red-600 mt-2">{error}</div>}
       </form>
     </div>
