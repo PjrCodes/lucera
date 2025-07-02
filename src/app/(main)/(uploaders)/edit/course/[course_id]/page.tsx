@@ -35,6 +35,10 @@ export default async function EditCoursePage({
     courseForClient = {
       ...course,
       _id: course._id.toString(),
+      syllabusFile: {
+        ...course.syllabusFile,
+        _id: course.syllabusFile?._id?.toString?.() ?? course.syllabusFile?._id,
+      },
     };
 
     if (!courseForClient) {

@@ -126,3 +126,16 @@
   padding: 4px 8px;
   cursor: pointer;
 }
+
+.ka-table .ka-no-data-row {
+  text-align: center;
+  color: #9ca3af;
+  padding: 16px;
+}
+
+.ka-table .ka-no-data-cell {
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 16px;
+  color: #6b7280;
+}

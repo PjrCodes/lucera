@@ -11,13 +11,13 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
 import {
-  Course,
   CourseTimelineItem,
   CourseUnit,
   CourseWithEmbeddedSyllabus,
 } from "@/lib/schemas/database";
 import { TextArea } from "@/components/core/inputs/text-area";
 import { TextBox } from "@/components/core/inputs/text-box";
+import { SecondaryButton } from "@/components/core/buttons/secondary";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
@@ -182,13 +182,15 @@ export function EditCourseForm({
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">
+      <h1 className="text-2xl font-bold mb-6 text-secondary-800">
         {isNew ? "Create Course" : "Edit Course"}
       </h1>
 
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div>
-          <label className="block font-semibold mb-1">Name</label>
+          <label className="text-secondary-700 block font-semibold mb-1">
+            Name
+          </label>
           <TextBox value={name} onChange={(value) => setName(value)} />
         </div>
         <div>
@@ -203,8 +205,8 @@ export function EditCourseForm({
           />
         </div>
         <div>
-          <label className="block font-semibold mb-1">
-            Description (Markdown)
+          <label className="text-secondary-700 block font-semibold mb-1">
+            Description
           </label>
           <div data-color-mode="light">
             <MDEditor
@@ -216,24 +218,23 @@ export function EditCourseForm({
               visibleDragbar={true}
             />
           </div>
-        </div>{" "}
+        </div>
         <div>
-          <label className="block font-semibold mb-1">Units</label>
-          <p className="text-sm text-gray-600 mb-2">
+          <label className="text-secondary-700 block font-semibold mb-1">
+            Units
+          </label>
+          <p className="text-sm text-secondary-600 mb-2">
             Define the course units or modules. Drag rows to reorder. Click any
             cell to edit.
           </p>
-          <button
+          <SecondaryButton
             type="button"
-            className="mb-2 px-3 py-1 bg-blue-100 hover:bg-blue-200 rounded transition-colors"
+            className="mb-2 px-3 py-1 rounded transition-colors"
             onClick={addUnit}
           >
             + Add Unit
-          </button>
-          <div
-            className="border rounded-lg overflow-hidden shadow-sm bg-white"
-            style={{ width: "100%" }}
-          >
+          </SecondaryButton>
+          <div className="border border-secondary-700 outline-secondary-700 rounded-lg overflow-hidden shadow-sm bg-white w-full">
             <Table
               data={units.map((unit, index) => ({ ...unit, id: index }))}
               rowKeyField="id"
@@ -253,15 +254,15 @@ export function EditCourseForm({
                 {
                   key: "actions",
                   title: "Actions",
-                  width: 100,
+                  width: 80,
                   isEditable: false,
                 },
               ]}
               editableCells={editableCells}
               editingMode={EditingMode.Cell}
-              height={Math.max(250, units.length * 50 + 100)}
               noData={{
                 text: "No units added yet. Click 'Add Unit' to create your first unit.",
+                hideHeader: true,
               }}
               rowReordering={true}
               childComponents={{
@@ -311,7 +312,11 @@ export function EditCourseForm({
                 }
                 if (action.type === "UpdateCellValue") {
                   const { rowKeyValue, columnKey, value } = action;
-                  handleUnitChange(rowKeyValue, columnKey as keyof Unit, value);
+                  handleUnitChange(
+                    rowKeyValue,
+                    columnKey as keyof CourseUnit,
+                    value
+                  );
                 }
                 if (action.type === "OpenEditor") {
                   const { rowKeyValue, columnKey } = action;
