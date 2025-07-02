@@ -120,25 +120,26 @@ const getDeadlineColor = (dateStr: string) => {
 
   // Same-day deadline with time passed
   if (diffDays === 0 && date.getTime() < now.getTime()) {
-    return "text-lucerared-3 font-bold";
+    return "text-danger-500 font-bold";
   }
 
   // Past deadlines
   if (diffDays < 0) {
-    return "text-lucerared-3 font-bold";
+    return "text-danger-500 font-bold";
   }
 
   // Today, tomorrow, or day after tomorrow
-  if (diffDays === 0) return "text-lucerared-3 font-semibold";
-  if (diffDays === 1) return "text-lucerayellow-5 font-semibold";
-  if (diffDays === 2) return "text-lucerayellow-5";
+  if (diffDays === 0) return "text-danger-500 font-semibold";
+  if (diffDays === 1) return "text-warning-600 font-semibold";
+  if (diffDays === 2) return "text-warning-600 font-semibold";
   // Further in the future
-  return "text-lucerablue-5";
+  return "text-info-700";
 };
 
 export default function UpcomingDeadlines({}: PropsForEveryDashboardCard) {
   // Create deadlines with varied dates to showcase different colors
-  const today = new Date("2025-06-09T19:00:00Z"); // Fixed date for consistency in examples
+  const today = new Date();
+
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
 
@@ -176,23 +177,24 @@ export default function UpcomingDeadlines({}: PropsForEveryDashboardCard) {
       dueDate: formatDateToString(yesterday),
       course: "CS101: Introduction to Programming",
       type: "assignment",
-      courseColor: "bg-lucerablue-2 text-lucerablue-5",
+      courseColor: "bg-amber-2 text-amber-5",
     },
     {
       id: 1,
       title: "Mid-sem Take-Home Examination", // Changed to Exam for variety
-      dueDate: "2025-06-12 20:00:00", // Overdue with time
+      dueDate: "2025-07-04 20:00:00", // Overdue with time
       course: "CS101",
       type: "exam",
-      courseColor: "bg-lucerared-2 text-lucerared-5",
+      courseColor: "bg-green-2 text-green-5",
     },
-    // {
-    //   id: 2,
-    //   title: "Quiz Due Today", // Changed to Quiz
-    //   dueDate: formatDateToString(today),
-    //   course: "CS201",
-    //   type: "quiz"
-    // },
+    {
+      id: 3,
+      title: "Quiz Due Today", // Changed to Quiz
+      dueDate: "2025-08-03 15:00:00", // Due today with time
+      course: "CS201",
+      type: "quiz",
+      courseColor: "bg-blue-2 text-blue-5",
+    },
     // {
     //   id: 3,
     //   title: "Lab Due Tomorrow", // Changed to Lab
