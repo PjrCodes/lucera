@@ -70,9 +70,13 @@ export default function Create({}: PropsForEveryDashboardCard) {
             key={opt.id}
             className="flex items-center gap-3 text-sm h-full min-h-[3.5rem] w-full"
           >
-            <Link href={opt.href}>
-              <span className="text-2xl text-primary-900">{opt.icon}</span>
-              <span className="text-left text-primary-900 line-clamp-2 overflow-hidden">
+            <Link
+              href={opt.href}
+              className="text-left text-primary-900 flex items-center gap-3 overflow-ellipsis"
+            >
+              {/* react element opt.icon */}
+              <span className="text-primary-900">{opt.icon}</span>
+              <span className="line-clamp-2 text-primary-900">
                 {opt.label}
               </span>
             </Link>

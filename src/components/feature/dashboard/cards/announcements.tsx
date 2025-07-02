@@ -84,7 +84,7 @@ export default function Announcements({}: PropsForEveryDashboardCard) {
       courseId: "math201",
       courseName: "Discrete Mathematics",
       courseCode: "MATH201",
-      courseColor: "bg-primary-2 text-primary-5",
+      courseColor: "bg-primary-200 text-primary-500",
       date: "2025-06-06T11:20:00Z",
     },
   ];

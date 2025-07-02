@@ -171,30 +171,30 @@ export default function UpcomingDeadlines({}: PropsForEveryDashboardCard) {
 
   // Dummy data for deadlines showing all deadline states
   const dummyDeadlines: Deadline[] = [
-    {
-      id: 10,
-      title: "Assignment 24: Recursion",
-      dueDate: formatDateToString(yesterday),
-      course: "CS101: Introduction to Programming",
-      type: "assignment",
-      courseColor: "bg-amber-2 text-amber-5",
-    },
-    {
-      id: 1,
-      title: "Mid-sem Take-Home Examination", // Changed to Exam for variety
-      dueDate: "2025-07-04 20:00:00", // Overdue with time
-      course: "CS101",
-      type: "exam",
-      courseColor: "bg-green-2 text-green-5",
-    },
-    {
-      id: 3,
-      title: "Quiz Due Today", // Changed to Quiz
-      dueDate: "2025-08-03 15:00:00", // Due today with time
-      course: "CS201",
-      type: "quiz",
-      courseColor: "bg-blue-2 text-blue-5",
-    },
+    // {
+    //   id: 10,
+    //   title: "Assignment 24: Recursion",
+    //   dueDate: formatDateToString(yesterday),
+    //   course: "CS101: Introduction to Programming",
+    //   type: "assignment",
+    //   courseColor: "bg-amber-2 text-amber-5",
+    // },
+    // {
+    //   id: 1,
+    //   title: "Mid-sem Take-Home Examination", // Changed to Exam for variety
+    //   dueDate: "2025-07-04 20:00:00", // Overdue with time
+    //   course: "CS101",
+    //   type: "exam",
+    //   courseColor: "bg-green-2 text-green-5",
+    // },
+    // {
+    //   id: 3,
+    //   title: "Quiz Due Today", // Changed to Quiz
+    //   dueDate: "2025-08-03 15:00:00", // Due today with time
+    //   course: "CS201",
+    //   type: "quiz",
+    //   courseColor: "bg-blue-2 text-blue-5",
+    // },
     // {
     //   id: 3,
     //   title: "Lab Due Tomorrow", // Changed to Lab
@@ -265,7 +265,7 @@ export default function UpcomingDeadlines({}: PropsForEveryDashboardCard) {
         })}
       </ul>
       {deadlines.length === 0 && (
-        <div className="text-center py-8 text-lucerablue-4">
+        <div className="text-center py-8 text-primary-700">
           <div className="text-5xl mb-2">
             <PiConfetti className="inline-block" />
           </div>
