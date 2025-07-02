@@ -6,7 +6,7 @@ import ProfileCircle from "./profile-circle";
 import SignIn from "@/components/feature/auth/sign-in-button";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "../../ui/sidebar";
-import { House, SidebarIcon, SquarePen } from "lucide-react";
+import { Home, House, LayoutDashboard, SidebarIcon, SquarePen } from "lucide-react";
 import Link from "next/link";
 import { Session } from "next-auth";
 import Bell from "./bell";
@@ -63,17 +63,17 @@ export default function Header({
         {/* Sidebar button always visible */}
         <div className="flex flex-row items-center space-x-2 flex-shrink-0">
           <div
-            className="cursor-pointer rounded-lg p-2 transition hover:bg-lucerabrown-1"
+            className="cursor-pointer rounded-lg p-1 transition hover:bg-secondary-50"
             onClick={toggleSidebar}
           >
-            <SidebarIcon size={20} />
+            <SidebarIcon size={24} />
           </div>
           {isLoggedIn && !isHomePage && (
             <Link
               href="/"
-              className="cursor-pointer rounded-lg p-2 transition hover:bg-lucerabrown-1"
+              className="cursor-pointer rounded-lg p-1 transition hover:bg-secondary-50"
             >
-              <House size={20} />
+              <Home size={24} />
             </Link>
           )}
           {/* Heading: only render once, hide/show with CSS */}
@@ -117,7 +117,7 @@ export default function Header({
               <span className="hidden sm:inline">
                 <div
                   className={
-                    "cursor-pointer rounded-lg p-1 transition hover:bg-lucerabrown-1 text-black"
+                    "cursor-pointer rounded-lg p-1 transition hover:bg-secondary-50 text-black"
                   }
                   onClick={() => setIsEditModalOpen(true)}
                 >
@@ -125,8 +125,8 @@ export default function Header({
                 </div>
               </span>
             )}
-            <div className="flex justify-center">
-              <ProfileCircle imageUrl={session?.user?.image} size={32} />
+            <div className="flex justify-center p-1 hover:bg-secondary-50 rounded-lg">
+              <ProfileCircle imageUrl={session?.user?.image} size={24} />
             </div>
           </div>
         ) : (

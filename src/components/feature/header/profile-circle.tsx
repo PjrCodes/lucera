@@ -13,31 +13,28 @@ const ProfileCircle: React.FC<ProfileCircleProps> = ({
   size = 40,
   alt = "Profile Image",
 }) => {
+  const sizeStyle = { width: size, height: size };
+  const fontSize = size / 2;
+
   return (
     <div
-      style={{
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        overflow: "hidden",
-        backgroundColor: "#e0e0e0",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        cursor: "pointer",
-      }}
+      className="rounded-full overflow-hidden bg-secondary-100 flex items-center justify-center cursor-pointer"
+      style={sizeStyle}
     >
-      <Link href="/profile">
+      <Link
+        href="/profile"
+        className="flex items-center justify-center w-full h-full"
+      >
         {imageUrl ? (
-          <Image src={imageUrl} alt={alt} width={96} height={96} />
+          <Image
+            src={imageUrl}
+            alt={alt}
+            width={size}
+            height={size}
+            className="object-cover rounded-full w-full h-full"
+          />
         ) : (
-          <span
-            style={{
-              color: "#888",
-              fontSize: size / 2,
-              fontWeight: "bold",
-            }}
-          >
+          <span className="text-secondary-600 font-bold" style={{ fontSize }}>
             ?
           </span>
         )}

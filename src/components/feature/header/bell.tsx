@@ -15,11 +15,11 @@ export default function Bell() {
       <div
         onClick={() => setBellState(false)}
         className={
-          "cursor-pointer rounded-lg p-1 transition hover:bg-lucerabrown-1 " +
+          "cursor-pointer rounded-lg p-1 transition hover:bg-secondary-50 " +
           (!bellState ? "text-black" : "text-red-800 bg-red-100 rounded-xl")
         }
       >
-        {!bellState ? <LucideBell size={26} /> : <BellDot size={26} />}
+        {!bellState ? <LucideBell size={24} /> : <BellDot size={24} />}
       </div>
     </>
   );
