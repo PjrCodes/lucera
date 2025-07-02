@@ -57,12 +57,50 @@ export function EditCourseForm({
   );
   const [description, setDescription] = useState(course?.description || "");
   const [units, setUnits] = useState<CourseUnit[]>(course?.units || []);
+  // Normalize timeline date fields to Date objects or null for ka-table date editor compatibility
+  const normalizeDate = (val: string | Date | undefined | null): Date | null => {
+    if (!val) return null;
+    if (val instanceof Date && !isNaN(val.getTime())) return val;
+    if (typeof val === "string") {
+      const d = new Date(val);
+      return isNaN(d.getTime()) ? null : d;
+    }
+    return null;
+  };
+  // Type guard for Date
+  function isDate(val: unknown): val is Date {
+    return (
+      Object.prototype.toString.call(val) === "[object Date]" &&
+      !isNaN((val as Date).getTime())
+    );
+  }
+  // Timeline state stores date fields as strings
   const [timeline, setTimeline] = useState<CourseTimelineItem[]>(
-    course?.timeline || []
+    (course?.timeline || []).map((item: Partial<CourseTimelineItem>) => ({
+      type: item.type ?? "",
+      title: item.title ?? "",
+      startDate:
+        typeof item.startDate === "string"
+          ? item.startDate
+          : isDate(item.startDate)
+          ? (item.startDate as Date).toISOString().slice(0, 10)
+          : "",
+      dueDate:
+        typeof item.dueDate === "string"
+          ? item.dueDate
+          : isDate(item.dueDate)
+          ? (item.dueDate as Date).toISOString().slice(0, 10)
+          : "",
+      gradeReleaseDate:
+        typeof item.gradeReleaseDate === "string"
+          ? item.gradeReleaseDate
+          : isDate(item.gradeReleaseDate)
+          ? (item.gradeReleaseDate as Date).toISOString().slice(0, 10)
+          : "",
+    }))
   );
-  const [syllabusFileName, setSyllabusFileName] = useState<string>(
-    course?.syllabusFile?.name || ""
-  );
+  // Syllabus file state should be File | null, only set by user upload
+  const [syllabusFileName, setSyllabusFileName] = useState<File | null>(null);
 
   // Ka-table editing states
   const [editableCells, setEditableCells] = useState<
@@ -87,8 +125,8 @@ export function EditCourseForm({
     field: keyof CourseTimelineItem,
     value: string | boolean
   ) => {
-    setTimeline((prev) =>
-      prev.map((t, i) => (i === idx ? { ...t, [field]: value } : t))
+    setTimeline((prev: CourseTimelineItem[]) =>
+      prev.map((t: CourseTimelineItem, i: number) => (i === idx ? { ...t, [field]: value } : t))
     );
   };
 
@@ -113,8 +151,8 @@ export function EditCourseForm({
     setUnits(units.filter((_, i) => i !== idx));
 
   const addTimeline = () =>
-    setTimeline([
-      ...timeline,
+    setTimeline((prev: CourseTimelineItem[]) => [
+      ...prev,
       {
         type: "",
         title: "",
@@ -124,7 +162,7 @@ export function EditCourseForm({
       },
     ]);
   const removeTimeline = (idx: number) =>
-    setTimeline(timeline.filter((_, i) => i !== idx));
+    setTimeline((prev: CourseTimelineItem[]) => prev.filter((_, i: number) => i !== idx));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -331,7 +369,9 @@ export function EditCourseForm({
           </div>
         </div>{" "}
         <div>
-          <label className="text-secondary-700 block font-semibold mb-1">Timeline</label>
+          <label className="text-secondary-700 block font-semibold mb-1">
+            Timeline
+          </label>
           <p className="text-secondary-600 text-sm text-gray-600 mb-2">
             Set up your course timeline with assignments, exams, and deadlines.
             Drag rows to reorder. Click any cell to edit.
@@ -343,11 +383,15 @@ export function EditCourseForm({
           >
             + Add Timeline Item
           </SecondaryButton>
-          <div
-            className="border border-secondary-700 outline-secondary-700 rounded-lg overflow-hidden shadow-sm bg-white w-full"
-          >
+          <div className="border border-secondary-700 outline-secondary-700 rounded-lg overflow-hidden shadow-sm bg-white w-full">
             <Table
-              data={timeline.map((item, index) => ({ ...item, id: index }))}
+              data={timeline.map((item: CourseTimelineItem, index: number) => ({
+                ...item,
+                id: index,
+                startDate: item.startDate ? new Date(item.startDate) : null,
+                dueDate: item.dueDate ? new Date(item.dueDate) : null,
+                gradeReleaseDate: item.gradeReleaseDate ? new Date(item.gradeReleaseDate) : null,
+              }))}
               rowKeyField="id"
               columns={[
                 {
@@ -419,7 +463,11 @@ export function EditCourseForm({
                       props.column.key === "dueDate" ||
                       props.column.key === "gradeReleaseDate"
                     ) {
-                      if (!props.value || props.value === "") {
+                      let displayValue = props.value;
+                      if (displayValue instanceof Date) {
+                        displayValue = displayValue.toISOString().slice(0, 10);
+                      }
+                      if (!displayValue || displayValue === "") {
                         return (
                           <span
                             className="text-gray-400 italic cursor-pointer"
@@ -431,7 +479,7 @@ export function EditCourseForm({
                       }
                       return (
                         <span className="cursor-pointer" title="Click to edit">
-                          {props.value}
+                          {displayValue}
                         </span>
                       );
                     }
@@ -501,6 +549,7 @@ export function EditCourseForm({
             </label>
             <FileDropInput
               accept="application/pdf"
+              file={syllabusFileName}
               onFileChange={setSyllabusFileName}
             />
             {syllabusFileName && (
@@ -519,10 +568,7 @@ export function EditCourseForm({
             )}
           </div>
         )}
-        <PrimaryButton
-          type="submit"
-          disabled={loading}
-        >
+        <PrimaryButton type="submit" disabled={loading}>
           Save Changes
         </PrimaryButton>
         {error && <div className="text-red-600 mt-2">{error}</div>}
