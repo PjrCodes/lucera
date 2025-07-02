@@ -6,6 +6,11 @@
 
 ## Requirements for AHM
 
+- Create 10 minute slide deck
+- Think and prepare for the demo - cover every page and feature - fix colors in small areas for the same.
+- Make sure the app is working end to end for certain workflows.
+
+
 - [X] FIX each page to have a consistent logic for auth checking, etc. and use the latest cool utilities created by us for ourselves.
 - [X] "Logical Flow Features": Teachers must add student to a course.
 - [ ] Important - Fully rich edit capabilities. Currently, some fields are ommitted. Need full editing capability.
