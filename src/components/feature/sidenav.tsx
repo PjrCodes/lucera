@@ -32,7 +32,7 @@ export async function AppSidebar() {
                   <li>
                     <Link
                       href="/"
-                      className="flex items-center gap-3 px-4 py-2 text-black  hover:bg-lucerabrown-2 rounded-md transition-colors"
+                      className="flex items-center gap-3 px-4 py-2 text-black  hover:bg-primary-200 rounded-md transition-colors"
                     >
                       <LayoutDashboard size={20} />
                       Dashboard
@@ -41,7 +41,7 @@ export async function AppSidebar() {
                   <li>
                     <Link
                       href="/lisa"
-                      className="flex items-center gap-3 px-4 py-2 text-black hover:bg-lucerabrown-2 rounded-md transition-colors"
+                      className="flex items-center gap-3 px-4 py-2 text-black hover:bg-primary-200 rounded-md transition-colors"
                     >
                       <BotMessageSquare size={20} />
                       LISA
@@ -50,7 +50,7 @@ export async function AppSidebar() {
                   <li>
                     <Link
                       href="/progress"
-                      className="flex items-center gap-3 px-4 py-2 text-black  hover:bg-lucerabrown-2 rounded-md transition-colors"
+                      className="flex items-center gap-3 px-4 py-2 text-black  hover:bg-primary-200 rounded-md transition-colors"
                     >
                       <TrendingUp size={20} />
                       Progress
@@ -59,7 +59,7 @@ export async function AppSidebar() {
                   <li>
                     <Link
                       href="/lighthouse"
-                      className="flex items-center gap-3 px-4 py-2 text-black hover:bg-lucerabrown-2 rounded-md transition-colors"
+                      className="flex items-center gap-3 px-4 py-2 text-black hover:bg-primary-200 rounded-md transition-colors"
                     >
                       <Lightbulb size={20} />
                       Lighthouse
@@ -68,7 +68,7 @@ export async function AppSidebar() {
                   <li>
                     <Link
                       href="/messages"
-                      className="flex items-center gap-3 px-4 py-2 text-black  hover:bg-lucerabrown-2 rounded-md transition-colors"
+                      className="flex items-center gap-3 px-4 py-2 text-black  hover:bg-primary-200 rounded-md transition-colors"
                     >
                       <MessageCircleMore size={20} />
                       Messages
@@ -81,7 +81,7 @@ export async function AppSidebar() {
               {isLoggedIn ? (
                 <Link
                   href="/settings"
-                  className="flex items-center gap-3 px-4 py-2 text-black hover:bg-lucerabrown-2 rounded-md transition-colors mb-4"
+                  className="flex items-center gap-3 px-4 py-2 text-black hover:bg-primary-200 rounded-md transition-colors mb-4"
                 >
                   <Settings size={20} />
                   Settings
