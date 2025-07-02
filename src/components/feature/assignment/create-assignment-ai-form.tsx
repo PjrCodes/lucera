@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PrimaryButton } from "@/components/core/buttons/primary";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { FileDropInput } from "@/components/core/inputs/file-drop-input";
@@ -12,16 +12,24 @@ export default function CreateAssignmentAIForm({
   // userData,
   // session,
   courses,
+  defaultCourseId,
 }: {
   userData: UserData;
   session: Session;
   courses: Course[];
+  defaultCourseId?: string;
 }) {
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    if (defaultCourseId && courses.some((c) => c._id.toString() === defaultCourseId)) {
+      setSelectedCourse(defaultCourseId);
+    }
+  }, [defaultCourseId, courses]);
 
   const handleUploadAndProcess = async () => {
     if (!file || !selectedCourse) return;

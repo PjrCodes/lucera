@@ -41,3 +41,14 @@ After the above, if time permits, then:
   - [ ] This should be shown only once, and then the user should be able to continue using the app.
   - [ ] Or, we don't show the dashboard, and only errors are shown. Until they are fixed, the user cannot use the app.
   - [ ] In the real world, it won't be common to have dashboard layout errors, so this is not a priority.
+
+"assignment", - createable
+"quiz", - grades addable
+"midsem_exam", - grades addable
+"endsem_exam", - grades addable
+"exam", - grades addable
+"lab_exam", - grades addable
+"other", - nothing
+"project", - grades addable
+"tutorial or workshop", - nothing
+"guest lecture", - nothing

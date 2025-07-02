@@ -1,5 +1,8 @@
 import { Course } from "@/lib/schemas/database";
 import { iconForType } from "@/lib/constants";
+import { ExternalLink } from "lucide-react";
+import { SecondaryButton } from "@/components/core/buttons/secondary";
+import Link from "next/link";
 
 interface CourseTimelineProps {
   course: Course;
@@ -59,7 +62,7 @@ function formatPartialDate(dateStr: string) {
     const [, year, month, week] = weekMatch;
     const monthName = new Date(`${year}-${month}-01`).toLocaleString(
       "default",
-      { month: "long" },
+      { month: "long" }
     );
     return `Week ${week} of ${monthName} ${year}`;
   }
@@ -68,7 +71,7 @@ function formatPartialDate(dateStr: string) {
     const [, year, month] = monthMatch;
     const monthName = new Date(`${year}-${month}-01`).toLocaleString(
       "default",
-      { month: "long" },
+      { month: "long" }
     );
     return `${monthName} ${year}`;
   }
@@ -100,7 +103,7 @@ export default function CourseTimeline({ course }: CourseTimelineProps) {
           return (
             <div
               key={idx}
-              className="bg-gray-50 rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow"
+              className="bg-gray-50 rounded-lg border border-gray-200 p-4"
             >
               <div className="flex items-start gap-4">
                 <div
@@ -110,18 +113,35 @@ export default function CourseTimeline({ course }: CourseTimelineProps) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-medium text-gray-900 truncate">
-                      {item.title}
-                    </h3>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium border ${colorClass}`}
-                    >
-                      {item.type.replace("_", " ").toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
-                    <span>📅 Start: {formatPartialDate(item.startDate)}</span>
-                    <span>⏰ Due: {formatPartialDate(item.dueDate)}</span>
+                    <div className="flex flex-col gap-2">
+                      <h3 className="font-medium text-gray-900 truncate">
+                        {item.title}
+                      </h3>
+                      <div className="flex items-center gap-4 text-sm text-gray-600">
+                        <span>
+                          📅 Start: {formatPartialDate(item.startDate)}
+                        </span>
+                        <span>⏰ Due: {formatPartialDate(item.dueDate)}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-end justify-start gap-1 flex-col">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium border ${colorClass}`}
+                      >
+                        {item.type.replace("_", " ").toUpperCase()}
+                      </span>
+                      {item.type === "assignment" ? (
+                        // <SecondaryButton variant="outline" asChild className="rounded-full px-2 py-1">
+                          <Link
+                            href={`/create/assignment?courseId=${course._id.toString()}`}
+                            className="flex items-center text-sm underline text-secondary-300 hover:text-secondary-600"
+                          >
+                            Create
+                            {/* <ExternalLink size={10}/> */}
+                          </Link>
+                        // </SecondaryButton>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
               </div>

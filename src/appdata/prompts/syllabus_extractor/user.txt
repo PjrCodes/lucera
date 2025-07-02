@@ -44,7 +44,7 @@ KEY INSTRUCTIONS:
 * Markdown output should be visually clear, using appropriate lists, tables, and sections.
 * Markdown output should use CORRECT SYNTAX. All the output should be valid Markdown.
 * Do not omit any embedded or implied topics from the syllabus—even if not explicitly listed.
-* Do not add "Lectures", "Units" etc. to the timeline. Only include: assignments, quizzes, exams, field trips, etc. 
+* Do not add "Lectures", "Units" etc. to the timeline. Only include: assignments, quizzes, exams, lab exams, project-related events, etc. 
 * Do not include any personal information about instructors or TAs unless explicitly provided in the syllabus.
 * Ensure the timeline does not have any duplicates. 
 * ALWAYS output the structured output. Continue parsing until all syllabus content is processed. Do not stop. Do not give empty responses.
