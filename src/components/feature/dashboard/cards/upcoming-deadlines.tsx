@@ -156,18 +156,18 @@ export default function UpcomingDeadlines({}: PropsForEveryDashboardCard) {
   farFuture.setDate(today.getDate() + 30);
 
   // Format dates as strings
-  const formatDateToString = (date: Date) => {
-    return (
-      date.toISOString().split("T")[0] +
-      (date === today
-        ? " 08:00:00"
-        : date === yesterday
-          ? " 15:00:00"
-          : date === tomorrow
-            ? " 10:00:00"
-            : "")
-    );
-  };
+  // const formatDateToString = (date: Date) => {
+  //   return (
+  //     date.toISOString().split("T")[0] +
+  //     (date === today
+  //       ? " 08:00:00"
+  //       : date === yesterday
+  //         ? " 15:00:00"
+  //         : date === tomorrow
+  //           ? " 10:00:00"
+  //           : "")
+  //   );
+  // };
 
   // Dummy data for deadlines showing all deadline states
   const dummyDeadlines: Deadline[] = [
