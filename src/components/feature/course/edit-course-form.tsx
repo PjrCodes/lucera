@@ -1,37 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { redirect, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { redirect } from "next/navigation";
 import { Table } from "ka-table";
 import { DataType, EditingMode } from "ka-table/enums";
 import { Trash2 } from "lucide-react";
-import "ka-table/style.css";
 import "./edit-course-table.css";
 import { FileDropInput } from "@/components/core/inputs/file-drop-input";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
+import { Course, CourseTimelineItem, CourseUnit } from "@/lib/schemas/database";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
-
-type Unit = { name: string; description?: string };
-type TimelineItem = {
-  type: string;
-  title: string;
-  startDate: string;
-  dueDate: string;
-  gradeReleaseDate: string;
-};
-
-interface Course {
-  _id: string;
-  name?: string;
-  shortDescription?: string;
-  description?: string;
-  units?: Unit[];
-  timeline?: TimelineItem[];
-  syllabusFileName?: string;
-}
 
 // Client component
 interface EditCourseClientProps {
@@ -45,19 +26,17 @@ export function EditCourseForm({
   course,
   isNew = false,
 }: EditCourseClientProps) {
-  // const router = useRouter();
-  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Form state
   const [name, setName] = useState(course?.name || "");
   const [shortDescription, setShortDescription] = useState(
-    course?.shortDescription || "",
+    course?.shortDescription || ""
   );
   const [description, setDescription] = useState(course?.description || "");
-  const [units, setUnits] = useState<Unit[]>(course?.units || []);
-  const [timeline, setTimeline] = useState<TimelineItem[]>(
-    course?.timeline || [],
+  const [units, setUnits] = useState<CourseUnit[]>(course?.units || []);
+  const [timeline, setTimeline] = useState<CourseTimelineItem[]>(
+    course?.timeline || []
   );
   const [syllabusFile, setSyllabusFile] = useState<File | null>(null);
 
@@ -68,19 +47,19 @@ export function EditCourseForm({
   const [timelineEditableCells, setTimelineEditableCells] = useState<
     { rowKeyValue: number; columnKey: string }[]
   >([]);
-  const handleUnitChange = (idx: number, field: keyof Unit, value: string) => {
+  const handleUnitChange = (idx: number, field: keyof CourseUnit, value: string) => {
     setUnits((prev) =>
-      prev.map((u, i) => (i === idx ? { ...u, [field]: value } : u)),
+      prev.map((u, i) => (i === idx ? { ...u, [field]: value } : u))
     );
   };
 
   const handleTimelineChange = (
     idx: number,
-    field: keyof TimelineItem,
-    value: string | boolean,
+    field: keyof CourseTimelineItem,
+    value: string | boolean
   ) => {
     setTimeline((prev) =>
-      prev.map((t, i) => (i === idx ? { ...t, [field]: value } : t)),
+      prev.map((t, i) => (i === idx ? { ...t, [field]: value } : t))
     );
   };
 
@@ -146,7 +125,7 @@ export function EditCourseForm({
       if (!response.ok) {
         const errorData = await response.json();
         setError(
-          `Failed to save course: ${errorData.error || response.statusText}`,
+          `Failed to save course: ${errorData.error || response.statusText}`
         );
         setLoading(false);
         return;
@@ -169,26 +148,15 @@ export function EditCourseForm({
     setLoading(false);
   };
 
-  useEffect(() => {
-    if (isNew && searchParams) {
-      const hasFile = searchParams.get("hasFile") === "true";
-      const fileName = searchParams.get("fileName");
-
-      if (hasFile && fileName) {
-        // Create a placeholder file object for display purposes
-        const placeholderFile = new File([], decodeURIComponent(fileName), {
-          type: "application/pdf",
-        });
-        setSyllabusFile(placeholderFile);
-      }
-    } else if (course) {
-      setName(course.name || "");
-      setShortDescription(course.shortDescription || "");
-      setDescription(course.description || "");
-      setUnits(course.units || []);
-      setTimeline(course.timeline || []);
-    }
-  }, [course, isNew, searchParams]);
+  // useEffect(() => {
+  //   if (course) {
+  //     setName(course.name || "");
+  //     setShortDescription(course.shortDescription || "");
+  //     setDescription(course.description || "");
+  //     setUnits(course.units || []);
+  //     setTimeline(course.timeline || []);
+  //   }
+  // }, [course]);
 
   if (loading) return <div className="p-8">Loading...</div>;
   if (error) return <div className="p-8 text-red-600">{error}</div>;
@@ -491,7 +459,7 @@ export function EditCourseForm({
                   handleTimelineChange(
                     rowKeyValue,
                     columnKey as keyof TimelineItem,
-                    value,
+                    value
                   );
                 }
                 if (action.type === "OpenEditor") {

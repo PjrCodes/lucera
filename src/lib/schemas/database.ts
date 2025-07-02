@@ -92,6 +92,12 @@ export const courseSchema = z.object({
 
 export type Course = z.infer<typeof courseSchema>;
 
+export const courseWithEmbeddedSyllabusSchema = courseSchema.extend({
+  syllabusFile: fileSchema.optional(),
+});
+
+export type CourseWithEmbeddedSyllabus = z.infer<typeof courseWithEmbeddedSyllabusSchema>;
+
 export const contentSchema = z.object({
   _id: z.instanceof(ObjectId).or(z.string()),
   title: z.string(),

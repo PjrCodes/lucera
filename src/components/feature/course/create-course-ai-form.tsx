@@ -78,7 +78,7 @@ export default function CreateCourseAIForm(
   };
 
   const handleSkipToEdit = () => {
-    router.push("/edit/course/new?hasFile=false");
+    router.push("/edit/course/new");
   };
 
   return (

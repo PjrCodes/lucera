@@ -4,17 +4,15 @@ import client from "@/lib/db";
 import { ObjectId } from "mongodb";
 import { getSessionAndUserData } from "@/lib/database-service/auth";
 import { courseSchema } from "@/lib/schemas/database";
+import { getCourseAndSyllabusById } from "@/lib/database-service/courses";
 
 // Async wrapper to await params
 export default async function EditCoursePage({
   params,
-  searchParams,
 }: {
   params: Promise<{ course_id: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { course_id } = await params;
-  const resolvedSearchParams = await searchParams;
 
   if (!course_id) {
     return notFound();
@@ -27,12 +25,7 @@ export default async function EditCoursePage({
 
   if (!isNewCourse) {
     // Fetch existing course data
-    const db = client.db();
-    const course = await db
-      .collection("courses")
-      .findOne({ _id: new ObjectId(course_id) });
-
-    const parsedCourse = courseSchema.parse(course);
+    const course = await getCourseAndSyllabusById(course_id);
 
     if (!course) {
       return notFound();
@@ -40,24 +33,17 @@ export default async function EditCoursePage({
 
     // Convert ObjectId to string for client component
     courseForClient = {
-      ...parsedCourse,
+      ...course,
       _id: course._id.toString(),
     };
-  }
 
-  if (courseForClient === null && !isNewCourse) {
-    return notFound();
-  }
-
-  // Check for file information in query parameters
-  const hasFile = resolvedSearchParams.hasFile === "true";
-  const fileName = resolvedSearchParams.fileName;
-
-  // If it's a new course with file info, add the syllabus file name
-  if (isNewCourse && hasFile && fileName) {
     if (!courseForClient) {
-      courseForClient = null;
+      // If the course is not found, return notFound
+      return notFound();
     }
+  } else {
+    // For new course, we don't have any course data
+    courseForClient = null;
   }
 
   return (

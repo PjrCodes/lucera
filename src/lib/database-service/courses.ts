@@ -1,14 +1,20 @@
 import client from "@/lib/db";
 import { ObjectId } from "mongodb";
 import { getUserData } from "./auth";
-import { Course, courseSchema, userWithDataSchema } from "../schemas/database";
+import {
+  Course,
+  courseSchema,
+  courseWithEmbeddedSyllabusSchema,
+  userWithDataSchema,
+} from "../schemas/database";
+import { getFileRecord } from "./files";
 
 export async function getCoursesForUser(userId: string) {
   const userData = await getUserData(userId);
 
   // Extract related course IDs from user data
   const relatedCourseIDs = userData.relatedCourses.map(
-    (course) => new ObjectId(course),
+    (course) => new ObjectId(course)
   );
 
   const coursesData = client
@@ -49,6 +55,27 @@ export async function getCourseById(courseId: string) {
   }
 }
 
+export async function getCourseAndSyllabusById(courseId: string) {
+  const course = await getCourseById(courseId);
+  if (!course) {
+    throw new Error("Course does not have a syllabus file");
+  }
+  const syllabusFileId = course.syllabusFileId;
+  const file = await getFileRecord(syllabusFileId ?? "");
+  if (!file) {
+    throw new Error("Syllabus file not found");
+  }
+  try {
+    return courseWithEmbeddedSyllabusSchema.parse({
+      ...course,
+      syllabusFile: file,
+    });
+  } catch (error) {
+    console.error("Error parsing course with syllabus:", error);
+    throw new Error("Invalid course data format with syllabus");
+  }
+}
+
 export async function getStudentsForCourse(courseId: string) {
   const userDataCollection = client.db().collection("users_and_their_data");
   const students = await userDataCollection
@@ -69,7 +96,7 @@ export async function getStudentsForCourse(courseId: string) {
 }
 
 export async function getAvailableStudents(
-  course_id: string,
+  course_id: string
 ): Promise<{ id: string; name: string; email: string }[]> {
   const result = await client
     .db()
