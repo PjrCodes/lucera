@@ -1,6 +1,7 @@
 import { Course } from "@/lib/schemas/database";
 import { iconForType } from "@/lib/constants";
 import Link from "next/link";
+import { CalendarDays } from "lucide-react";
 
 interface CourseTimelineProps {
   course: Course;
@@ -81,7 +82,7 @@ export default function CourseTimeline({ course }: CourseTimelineProps) {
     return (
       <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
         <h2 className="text-base font-semibold text-primary-900 mb-4 flex items-center gap-2">
-          {/* <span className="inline-block w-5 h-5 bg-primary-900 rounded-full mr-1" /> */}
+          <CalendarDays className="w-5 h-5 text-primary-900" />
           <span>Timeline</span>
         </h2>
         <div className="text-center py-8 text-primary-600">
@@ -95,7 +96,7 @@ export default function CourseTimeline({ course }: CourseTimelineProps) {
   return (
     <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
       <h2 className="text-base font-semibold text-primary-900 mb-6 flex items-center gap-2">
-        <span className="inline-block w-5 h-5 bg-primary-900 rounded-full mr-1" />
+        <CalendarDays className="w-5 h-5 text-primary-900" />
         <span>Timeline</span>
       </h2>
       <div className="space-y-4">
