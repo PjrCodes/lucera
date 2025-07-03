@@ -121,10 +121,50 @@ export default function MessagesClientComponent({}: {
   return (
     <>
       <SetHeaderClientComponent title={"MESSAGES"} />
-      <div className="w-full max-w-6xl mx-auto p-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden min-h-[80vh] flex">
-          {/* Sidebar */}
-          <aside className="w-64 bg-secondary-50 border-r border-secondary-200 flex flex-col">
+      <div className="w-full max-w-6xl mx-auto p-0 md:p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden min-h-[80vh] flex flex-col md:flex-row">
+          {/* Mobile Tab Bar */}
+          <nav className="flex md:hidden sticky top-0 z-10 bg-secondary-50 border-b border-secondary-200">
+            {sidebarItems.map((item) => (
+              <button
+                key={item.key}
+                onClick={() => {
+                  setSelected(item.key as "announcements" | "dms");
+                  setSelectedAnnouncementId(null);
+                  setSelectedDmId(null);
+                }}
+                className={`flex-1 flex flex-col items-center justify-center py-3 text-xs font-medium transition-all duration-200 ${
+                  selected === item.key
+                    ? "bg-secondary-100 text-secondary-800 border-b-2 border-secondary-500"
+                    : "text-secondary-700 hover:bg-secondary-100"
+                }`}
+              >
+                <span
+                  className={`text-lg mb-1 ${
+                    selected === item.key
+                      ? "text-secondary-600"
+                      : "text-secondary-400"
+                  }`}
+                >
+                  {item.icon}
+                </span>
+                <span>{item.label}</span>
+                {item.key === "announcements" && announcements.length > 0 && (
+                  <span className="bg-secondary-300 text-secondary-50 text-xs px-2 py-0.5 rounded-full font-medium mt-1">
+                    {announcements.length}
+                  </span>
+                )}
+                {item.key === "dms" &&
+                  dms.filter((dm) => dm.unread).length > 0 && (
+                    <span className="bg-secondary-300 text-secondary-50 text-xs px-2 py-0.5 rounded-full font-medium mt-1">
+                      {dms.filter((dm) => dm.unread).length}
+                    </span>
+                  )}
+              </button>
+            ))}
+          </nav>
+          {/* Sidebar for md+ */}
+          <aside className="hidden md:flex w-64 bg-secondary-50 border-r border-secondary-200 flex-col">
             <div className="p-6 border-b border-secondary-200">
               <h1 className="text-2xl font-bold text-secondary-700">
                 Messages
@@ -172,11 +212,11 @@ export default function MessagesClientComponent({}: {
           </aside>
 
           {/* Main Content */}
-          <main className="flex-1 bg-gray-50 relative">
+          <main className="flex-1 bg-gray-50 relative min-h-[60vh] p-2 md:p-6">
             {/* Announcements List */}
             {selected === "announcements" && (
-              <section className="p-6 h-full overflow-y-auto">
-                <div className="mb-6">
+              <section className="h-full overflow-y-auto">
+                <div className="mb-4 md:mb-6">
                   <h2 className="text-xl font-semibold text-secondary-700 mb-2">
                     Announcements
                   </h2>
@@ -185,7 +225,7 @@ export default function MessagesClientComponent({}: {
                     instructors
                   </p>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-2 md:space-y-3">
                   {announcements.map((a) => (
                     <div
                       key={a.id}
@@ -193,7 +233,7 @@ export default function MessagesClientComponent({}: {
                     >
                       {/* Announcement Header */}
                       <div
-                        className={`p-4 cursor-pointer hover:bg-primary-50 transition-colors ${
+                        className={`p-3 md:p-4 cursor-pointer hover:bg-primary-50 transition-colors ${
                           selectedAnnouncementId === a.id
                             ? "bg-primary-50 border-b border-primary-200"
                             : ""
@@ -204,17 +244,17 @@ export default function MessagesClientComponent({}: {
                           )
                         }
                       >
-                        <div className="flex items-start gap-3">
+                        <div className="flex items-start gap-2 md:gap-3">
                           <Image
                             src={professors[a.from]?.img}
                             alt={a.from}
                             width={40}
                             height={40}
-                            className="w-10 h-10 rounded-full object-cover border border-primary-200"
+                            className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border border-primary-200"
                           />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start justify-between mb-1">
-                              <h3 className="font-medium text-secondary-900 text-sm">
+                              <h3 className="font-medium text-secondary-900 text-xs md:text-sm">
                                 {a.title}
                               </h3>
                               {selectedAnnouncementId === a.id ? (
@@ -223,7 +263,7 @@ export default function MessagesClientComponent({}: {
                                 <FaChevronRight className="text-secondary-400 text-xs mt-1 flex-shrink-0 transition-transform" />
                               )}
                             </div>
-                            <p className="text-secondary-600 text-sm mb-2 line-clamp-2">
+                            <p className="text-secondary-600 text-xs md:text-sm mb-2 line-clamp-2">
                               {a.content}
                             </p>
                             <div className="flex items-center gap-2 text-xs text-secondary-500">
@@ -241,13 +281,13 @@ export default function MessagesClientComponent({}: {
 
                       {/* Announcement Expanded Content */}
                       {selectedAnnouncementId === a.id && (
-                        <div className="px-4 pb-4 bg-primary-50">
-                          <div className="bg-white rounded-lg p-6 border border-primary-100">
-                            <div className="mb-4">
+                        <div className="px-3 md:px-4 pb-3 md:pb-4 bg-primary-50">
+                          <div className="bg-white rounded-lg p-4 md:p-6 border border-primary-100">
+                            <div className="mb-2 md:mb-4">
                               <h3 className="text-lg font-semibold text-secondary-900 mb-2">
                                 {a.title}
                               </h3>
-                              <div className="flex items-center gap-2 text-sm text-secondary-600 mb-4">
+                              <div className="flex items-center gap-2 text-xs md:text-sm text-secondary-600 mb-2 md:mb-4">
                                 <span className="font-medium">{a.from}</span>
                                 <span>•</span>
                                 <span>{a.course}</span>
@@ -273,8 +313,8 @@ export default function MessagesClientComponent({}: {
 
             {/* DMs List */}
             {selected === "dms" && selectedDmId === null && (
-              <section className="p-6 h-full overflow-y-auto">
-                <div className="mb-6">
+              <section className="h-full overflow-y-auto">
+                <div className="mb-4 md:mb-6">
                   <h2 className="text-xl font-semibold text-secondary-700 mb-2">
                     Direct Messages
                   </h2>
@@ -282,25 +322,25 @@ export default function MessagesClientComponent({}: {
                     Private conversations with your instructors
                   </p>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-2 md:space-y-3">
                   {dms.map((dm) => (
                     <div
                       key={dm.id}
-                      className={`bg-white rounded-lg p-4 border transition-all duration-200 cursor-pointer hover:shadow-sm ${
+                      className={`bg-white rounded-lg p-3 md:p-4 border transition-all duration-200 cursor-pointer hover:shadow-sm ${
                         dm.unread
                           ? "border-secondary-400 bg-secondary-50"
                           : "border-primary-200 hover:border-primary-400"
                       }`}
                       onClick={() => setSelectedDmId(dm.id)}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 md:gap-3">
                         <div className="relative">
                           <Image
                             src={professors[dm.from]?.img}
                             alt={dm.from}
                             width={40}
                             height={40}
-                            className="w-10 h-10 rounded-full object-cover border border-primary-200"
+                            className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border border-primary-200"
                           />
                           {dm.unread && (
                             <div className="absolute -top-1 -right-1 w-3 h-3 bg-secondary-500 rounded-full border border-white"></div>
@@ -308,7 +348,7 @@ export default function MessagesClientComponent({}: {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">
-                            <span className="font-medium text-secondary-900 text-sm">
+                            <span className="font-medium text-secondary-900 text-xs md:text-sm">
                               {dm.from}
                             </span>
                             <span
@@ -318,7 +358,7 @@ export default function MessagesClientComponent({}: {
                               {new Date(dm.date).toLocaleDateString()}
                             </span>
                           </div>
-                          <p className="text-secondary-600 text-sm truncate">
+                          <p className="text-secondary-600 text-xs md:text-sm truncate">
                             {dm.message}
                           </p>
                         </div>
@@ -339,9 +379,9 @@ export default function MessagesClientComponent({}: {
                 const history = dmHistory[selectedDmId] || [];
                 const prof = professors[dm.from];
                 return (
-                  <div className="h-full flex flex-col bg-white">
+                  <div className="h-[calc(70vh)] md:h-full flex flex-col bg-white">
                     {/* Chat Header */}
-                    <div className="bg-white border-b border-primary-200 px-6 py-4 flex items-center gap-4">
+                    <div className="bg-white border-b border-primary-200 px-3 md:px-6 py-3 md:py-4 flex items-center gap-2 md:gap-4">
                       <button
                         onClick={() => setSelectedDmId(null)}
                         className="text-secondary-600 hover:text-secondary-900 transition-colors"
@@ -354,10 +394,10 @@ export default function MessagesClientComponent({}: {
                         alt={prof.name}
                         width={40}
                         height={40}
-                        className="w-10 h-10 rounded-full object-cover border border-primary-200"
+                        className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border border-primary-200"
                       />
                       <div>
-                        <h3 className="font-medium text-secondary-900">
+                        <h3 className="font-medium text-secondary-900 text-xs md:text-base">
                           {prof.name}
                         </h3>
                         <p className="text-xs text-secondary-600">Active now</p>
@@ -365,8 +405,8 @@ export default function MessagesClientComponent({}: {
                     </div>
 
                     {/* Chat Messages */}
-                    <div className="flex-1 overflow-y-auto p-6 bg-primary-50">
-                      <div className="max-w-2xl mx-auto space-y-4">
+                    <div className="flex-1 overflow-y-auto p-3 md:p-6 bg-primary-50">
+                      <div className="max-w-full md:max-w-2xl mx-auto space-y-3 md:space-y-4">
                         {history.map((msg, idx) => (
                           <div
                             key={idx}
@@ -377,13 +417,13 @@ export default function MessagesClientComponent({}: {
                             }`}
                           >
                             <div
-                              className={`max-w-xs rounded-lg px-4 py-3 shadow-sm ${
+                              className={`max-w-[90vw] md:max-w-xs rounded-lg px-3 md:px-4 py-2 md:py-3 shadow-sm ${
                                 msg.from === "You"
                                   ? "bg-primary-500 text-white"
                                   : "bg-white text-secondary-800 border border-primary-200"
                               }`}
                             >
-                              <div className="break-words whitespace-pre-line text-sm leading-relaxed">
+                              <div className="break-words whitespace-pre-line text-xs md:text-sm leading-relaxed">
                                 {msg.message}
                               </div>
                               <div
@@ -421,22 +461,22 @@ export default function MessagesClientComponent({}: {
                         }));
                         setDmInput("");
                       }}
-                      className="bg-white border-t border-primary-200 p-4"
+                      className="bg-white border-t border-primary-200 p-3 md:p-4"
                     >
-                      <div className="max-w-2xl mx-auto flex items-center gap-3">
+                      <div className="max-w-full md:max-w-2xl mx-auto flex items-center gap-2 md:gap-3">
                         <input
                           type="text"
                           value={dmInput}
                           onChange={(e) => setDmInput(e.target.value)}
                           placeholder="Type your message..."
-                          className="flex-1 px-4 py-3 border border-primary-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+                          className="flex-1 px-3 md:px-4 py-2 md:py-3 border border-primary-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-xs md:text-sm"
                         />
                         <button
                           type="submit"
-                          className="bg-primary-500 hover:bg-primary-600 text-white p-3 rounded-full transition-colors flex items-center justify-center"
+                          className="bg-primary-500 hover:bg-primary-600 text-white p-2 md:p-3 rounded-full transition-colors flex items-center justify-center"
                           disabled={!dmInput.trim()}
                         >
-                          <FaPaperPlane className="text-sm" />
+                          <FaPaperPlane className="text-xs md:text-sm" />
                         </button>
                       </div>
                     </form>
