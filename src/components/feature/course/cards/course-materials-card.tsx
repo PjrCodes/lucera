@@ -1,11 +1,13 @@
-import { FileText, Download } from "lucide-react";
+import { FileText, Download, Pencil } from "lucide-react";
 import { formatDate, formatFileSize } from "@/lib/utils";
 import { ContentWithEmbeddedFile } from "@/lib/schemas/database";
 
 export default function CourseMaterialsCard({
   courseMaterialsData,
+  isTeacher,
 }: {
   courseMaterialsData: ContentWithEmbeddedFile[];
+  isTeacher: boolean;
 }) {
   return (
     <div className="space-y-6">
@@ -53,6 +55,15 @@ export default function CourseMaterialsCard({
                 >
                   <Download className="w-4 h-4 text-primary-600" />
                 </a>
+                {isTeacher && content.type !== "syllabus" && (
+                  <a
+                    href={`/edit/content/${content._id}`}
+                    className="ml-1 p-2 rounded hover:bg-primary-200 transition-colors"
+                    title="Edit"
+                  >
+                    <Pencil className="w-4 h-4 text-primary-600" />
+                  </a>
+                )}
               </div>
             ))}
           </div>

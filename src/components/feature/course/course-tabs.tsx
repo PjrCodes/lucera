@@ -176,7 +176,7 @@ export default function CourseTabs({
             <CourseGradesCard grades={grades} />
           </TabsContent>
           <TabsContent value="materials">
-            <CourseMaterialsCard courseMaterialsData={courseMaterialsData} />
+            <CourseMaterialsCard courseMaterialsData={courseMaterialsData} isTeacher={isTeacher} />
           </TabsContent>
           <TabsContent value="polls">
             <CoursePollsCard pollsAndAnnouncements={pollsAndAnnouncements} />
