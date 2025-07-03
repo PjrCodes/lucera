@@ -1,5 +1,6 @@
 import { MyMarkdown } from "@/components/core/markdown";
 import { Course } from "@/lib/schemas/database";
+import { BookText } from "lucide-react";
 
 interface CourseDescriptionProps {
   course: Course;
@@ -72,11 +73,12 @@ const markdownComponents = {
 
 export default function CourseDescription({ course }: CourseDescriptionProps) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-wrap max-w-full">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4 text-wrap">
-        Course Description
+    <div className="bg-white rounded-xl shadow border border-primary-100 p-6 text-wrap max-w-full">
+      <h2 className="text-base font-semibold text-primary-900 mb-4 flex items-center gap-2">
+        <BookText className="w-5 h-5 text-primary-900" />
+        <span>Course Description</span>
       </h2>
-      <div className="prose prose-sm prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700">
+      <div className="prose prose-sm prose-headings:text-primary-900 prose-p:text-primary-700 prose-li:text-primary-700">
         <MyMarkdown components={markdownComponents}>
           {course.description}
         </MyMarkdown>

@@ -43,11 +43,11 @@ export default function CourseAssignmentsCard({
   if (assignments.length === 0) {
     return (
       <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
-        <h2 className="text-lg font-semibold text-primary-900 mb-4 flex items-center gap-2">
-          <FiClipboard />
-          Assignments
+        <h2 className="text-base font-semibold text-primary-900 mb-4 flex items-center gap-2">
+          <FiClipboard className="w-5 h-5 text-primary-900" />
+          <span>Assignments</span>
         </h2>
-        <p className="text-primary-600 text-sm">
+        <p className="text-primary-600 text-base">
           No assignments available for this course.
         </p>
       </div>
@@ -56,9 +56,9 @@ export default function CourseAssignmentsCard({
 
   return (
     <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
-      <h2 className="text-lg font-semibold text-primary-900 mb-4 flex items-center gap-2">
-        <FiClipboard />
-        Assignments
+      <h2 className="text-base font-semibold text-primary-900 mb-4 flex items-center gap-2">
+        <FiClipboard className="w-5 h-5 text-primary-900" />
+        <span>Assignments</span>
       </h2>
       <div className="space-y-3">
         {assignments.map((assignment) => {
@@ -73,15 +73,15 @@ export default function CourseAssignmentsCard({
               onClick={(e) => handleAssignmentClick(assignment, e)}
               className={`block w-full text-left border-l-4 ${
                 isSelected
-                  ? "border-primary-500 bg-white"
+                  ? "border-primary-500 bg-primary-50"
                   : "border-secondary-300"
-              } pl-4 py-3 hover:bg-white hover:shadow-sm transition-all duration-200 rounded-r-lg group`}
+              } pl-4 py-3 hover:bg-primary-50 transition-all duration-200 rounded-r-lg group`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <h4
-                      className={`text-sm font-medium ${
+                      className={`text-base font-medium ${
                         isSelected
                           ? "text-primary-700"
                           : "text-primary-900 group-hover:text-primary-700"
@@ -100,7 +100,7 @@ export default function CourseAssignmentsCard({
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-4 text-xs text-primary-600">
+                  <div className="flex items-center gap-4 text-base text-primary-600">
                     {assignment.dueDate ? (
                       <span
                         className={overdue ? "text-red-600 font-medium" : ""}
@@ -108,13 +108,13 @@ export default function CourseAssignmentsCard({
                         Due: {formatDate(assignment.dueDate)}
                       </span>
                     ) : (
-                      <span className="text-gray-500">No due date set</span>
+                      <span className="text-primary-500">No due date set</span>
                     )}
                     <span>{assignment.grading?.total_points || 0} points</span>
                   </div>
                 </div>
                 <FiChevronRight
-                  className={`w-4 h-4 ${
+                  className={`w-5 h-5 ${
                     isSelected
                       ? "text-primary-600"
                       : "text-primary-400 group-hover:text-primary-600"

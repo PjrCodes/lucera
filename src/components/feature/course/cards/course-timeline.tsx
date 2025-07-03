@@ -79,9 +79,12 @@ function formatPartialDate(dateStr: string) {
 export default function CourseTimeline({ course }: CourseTimelineProps) {
   if (!course.timeline || course.timeline.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Timeline</h2>
-        <div className="text-center py-8 text-gray-500">
+      <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
+        <h2 className="text-base font-semibold text-primary-900 mb-4 flex items-center gap-2">
+          {/* <span className="inline-block w-5 h-5 bg-primary-900 rounded-full mr-1" /> */}
+          <span>Timeline</span>
+        </h2>
+        <div className="text-center py-8 text-primary-600">
           <div className="text-4xl mb-2">📅</div>
           <p>No timeline events available</p>
         </div>
@@ -90,8 +93,11 @@ export default function CourseTimeline({ course }: CourseTimelineProps) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-6">Timeline</h2>
+    <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
+      <h2 className="text-base font-semibold text-primary-900 mb-6 flex items-center gap-2">
+        <span className="inline-block w-5 h-5 bg-primary-900 rounded-full mr-1" />
+        <span>Timeline</span>
+      </h2>
       <div className="space-y-4">
         {course.timeline.map((item, idx) => {
           const IconComponent = iconForType(item.type);
@@ -101,7 +107,7 @@ export default function CourseTimeline({ course }: CourseTimelineProps) {
           return (
             <div
               key={idx}
-              className="bg-gray-50 rounded-lg border border-gray-200 p-4"
+              className="bg-primary-50 rounded-lg border border-primary-100 p-4"
             >
               <div className="flex items-start gap-4">
                 <div
@@ -112,10 +118,10 @@ export default function CourseTimeline({ course }: CourseTimelineProps) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex flex-col gap-2">
-                      <h3 className="font-medium text-gray-900 truncate">
+                      <h3 className="font-medium text-primary-900 truncate">
                         {item.title}
                       </h3>
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
+                      <div className="flex items-center gap-4 text-base text-primary-600">
                         <span>
                           📅 Start: {formatPartialDate(item.startDate)}
                         </span>
@@ -129,15 +135,12 @@ export default function CourseTimeline({ course }: CourseTimelineProps) {
                         {item.type.replace("_", " ").toUpperCase()}
                       </span>
                       {item.type === "assignment" ? (
-                        // <SecondaryButton variant="outline" asChild className="rounded-full px-2 py-1">
-                          <Link
-                            href={`/create/assignment?courseId=${course._id.toString()}`}
-                            className="flex items-center text-sm underline text-secondary-300 hover:text-secondary-600"
-                          >
-                            Create
-                            {/* <ExternalLink size={10}/> */}
-                          </Link>
-                        // </SecondaryButton>
+                        <Link
+                          href={`/create/assignment?courseId=${course._id.toString()}`}
+                          className="flex items-center text-base underline text-secondary-600 hover:text-secondary-700"
+                        >
+                          Create
+                        </Link>
                       ) : null}
                     </div>
                   </div>
