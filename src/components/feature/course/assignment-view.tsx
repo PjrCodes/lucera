@@ -1,7 +1,6 @@
 import {
   AssignmentWithEmbeddedFile,
   Course,
-  UserData,
 } from "@/lib/schemas/database";
 import { PrimaryButton } from "@/components/core/buttons/primary";
 import { SecondaryButton } from "@/components/core/buttons/secondary";

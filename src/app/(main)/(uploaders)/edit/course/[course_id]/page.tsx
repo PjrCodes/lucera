@@ -1,9 +1,9 @@
 import { EditCourseForm } from "@/components/feature/course/edit-course-form";
 import { notFound } from "next/navigation";
-import client from "@/lib/db";
-import { ObjectId } from "mongodb";
+// import client from "@/lib/db";
+// import { ObjectId } from "mongodb";
 import { getSessionAndUserData } from "@/lib/database-service/auth";
-import { courseSchema } from "@/lib/schemas/database";
+// import { courseSchema } from "@/lib/schemas/database";
 import { getCourseAndSyllabusById } from "@/lib/database-service/courses";
 
 // Async wrapper to await params

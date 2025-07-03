@@ -38,19 +38,19 @@ export function EditCourseForm({
   const [error, setError] = useState<string | null>(null);
   // Form state
   const [name, setName] = useState(course?.name || "");
-  const [courseCode, setCourseCode] = useState(course?.courseCode || "");
-  const [courseStartDate, setCourseStartDate] = useState<Date | null>(
-    course?.courseStartDate || null
-  );
-  const [courseEndDate, setCourseEndDate] = useState<Date | null>(
-    course?.courseEndDate || null
-  );
-  const [coverImage, setCoverImage] = useState<string | null>(
-    course?.coverImage || null
-  );
-  const [status, setStatus] = useState<"draft" | "published">(
-    course?.status || "draft"
-  );
+  // const [courseCode, setCourseCode] = useState(course?.courseCode || "");
+  // const [courseStartDate, setCourseStartDate] = useState<Date | null>(
+  //   course?.courseStartDate || null
+  // );
+  // const [courseEndDate, setCourseEndDate] = useState<Date | null>(
+  //   course?.courseEndDate || null
+  // );
+  // const [coverImage, setCoverImage] = useState<string | null>(
+  //   course?.coverImage || null
+  // );
+  // const [status, setStatus] = useState<"draft" | "published">(
+  //   course?.status || "draft"
+  // );
 
   const [shortDescription, setShortDescription] = useState(
     course?.shortDescription || ""
@@ -58,15 +58,15 @@ export function EditCourseForm({
   const [description, setDescription] = useState(course?.description || "");
   const [units, setUnits] = useState<CourseUnit[]>(course?.units || []);
   // Normalize timeline date fields to Date objects or null for ka-table date editor compatibility
-  const normalizeDate = (val: string | Date | undefined | null): Date | null => {
-    if (!val) return null;
-    if (val instanceof Date && !isNaN(val.getTime())) return val;
-    if (typeof val === "string") {
-      const d = new Date(val);
-      return isNaN(d.getTime()) ? null : d;
-    }
-    return null;
-  };
+  // const normalizeDate = (val: string | Date | undefined | null): Date | null => {
+  //   if (!val) return null;
+  //   if (val instanceof Date && !isNaN(val.getTime())) return val;
+  //   if (typeof val === "string") {
+  //     const d = new Date(val);
+  //     return isNaN(d.getTime()) ? null : d;
+  //   }
+  //   return null;
+  // };
   // Type guard for Date
   function isDate(val: unknown): val is Date {
     return (

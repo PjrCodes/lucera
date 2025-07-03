@@ -93,7 +93,7 @@ export const courseSchema = z.object({
 export type Course = z.infer<typeof courseSchema>;
 
 export const courseWithEmbeddedSyllabusSchema = courseSchema.extend({
-  syllabusFile: fileSchema.optional(),
+  syllabusFile: fileSchema,
 });
 
 export type CourseWithEmbeddedSyllabus = z.infer<typeof courseWithEmbeddedSyllabusSchema>;
