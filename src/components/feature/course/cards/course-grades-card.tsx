@@ -9,7 +9,7 @@ interface Grade {
 
 export default function CourseGradesCard({ grades }: { grades: Grade[] }) {
   return (
-    <div className="bg-primary-50 rounded-xl shadow border border-primary-100 p-6">
+    <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
       <h2 className="text-lg font-semibold text-primary-900 mb-4 flex items-center gap-2">
         <FiBarChart2 />
         Grades

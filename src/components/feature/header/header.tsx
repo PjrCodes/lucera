@@ -78,7 +78,7 @@ export default function Header({
           )}
           {/* Heading: only render once, hide/show with CSS */}
           <h1
-            className={`font-header text-xl md:text-2xl tracking-wider font-bold truncate max-w-[12rem] sm:max-w-[20dvw] md:max-w-[33dvw] lg:max-w-[45dvw] ${
+            className={`font-header text-xl md:text-2xl tracking-wider font-bold truncate max-w-[10rem] sm:max-w-[20dvw] md:max-w-[33dvw] lg:max-w-[45dvw] ${
               searchExpanded ? "hidden sm:block" : "block"
             }`}
           >

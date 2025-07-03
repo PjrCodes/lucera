@@ -137,13 +137,15 @@ export default async function CourseViewPage({
     <>
       <SetHeaderClientComponent title={course.name.toUpperCase()} />
       <div className="min-h-screen bg-primary-50">
-        <div className="max-w-5xl mx-auto p-6">
+        <div className="max-w-6xl mx-auto p-6">
+          <div className="mx-auto w-full">
           <CourseHeader
             course={safeCourse}
             isTeacher={isTeacher}
             isBookmarked={isBookmarked}
           />
-          <div className="mt-6">
+          </div>
+          <div className="mx-auto mt-6 w-full">
             <CourseTabs
               course={safeCourse}
               assignments={safeAssignments}

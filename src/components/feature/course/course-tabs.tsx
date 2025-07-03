@@ -83,8 +83,8 @@ export default function CourseTabs({
     <div className="w-full flex flex-col items-center">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         {/* Responsive scrollable tab bar */}
-        <div className="w-full min-w-0 max-w-full sm:min-w-[22rem] md:min-w-[36rem] lg:min-w-[48rem] xl:min-w-[64rem] sm:max-w-5xl mx-auto">
-          <TabsList className="flex flex-row flex-wrap gap-1 w-full bg-primary-100 border border-primary-200 rounded-lg p-1 min-h-fit">
+        <div className="w-full min-w-0 max-w-full min-w-full sm:max-w-6xl mx-auto">
+          <TabsList className="flex flex-row flex-wrap gap-1 w-full min-w-full bg-primary-100 border border-primary-200 rounded-lg p-1 min-h-fit">
             <TabsTrigger
               value="description"
               className="data-[state=active]:bg-primary-50 data-[state=active]:text-primary-900 text-primary-700 whitespace-nowrap flex items-center px-3 py-2"
@@ -144,7 +144,7 @@ export default function CourseTabs({
           </TabsList>
         </div>
         {/* Content area with only min-h to prevent jumping, no extra box styling */}
-        <div className="w-full min-w-0 max-w-full sm:min-w-[22rem] md:min-w-[36rem] lg:min-w-[48rem] xl:min-w-[64rem] sm:max-w-5xl mx-auto px-2 sm:px-0 mt-2 min-h-[340px] flex flex-col justify-start">
+        <div className="w-full min-w-0 max-w-full min-w-full sm:max-w-6xl mx-auto px-2 sm:px-0 mt-2 min-h-[340px] flex flex-col justify-start">
           <TabsContent value="description">
             <CourseDescription course={course} />
           </TabsContent>
@@ -182,7 +182,7 @@ export default function CourseTabs({
             <CoursePollsCard pollsAndAnnouncements={pollsAndAnnouncements} />
           </TabsContent>
           {/* Students Tab */}
-          <TabsContent value="students" className="mt-6">
+          <TabsContent value="students">
             <CourseStudentsCard
               students={students}
               courseId={courseId}
