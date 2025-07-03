@@ -281,9 +281,11 @@ function ChatInput({
 
 function InitialSplash({
   userName,
+  userType,
   onQuickAction,
 }: {
   userName: string;
+  userType: string;
   onQuickAction: (action: string) => void;
 }) {
   const AssignmentIcon = iconForType("assignment");
@@ -313,7 +315,9 @@ function InitialSplash({
           <div className="mb-2">
             <AssignmentIcon className="w-6 h-6" />
           </div>
-          What assignments are due this week?
+          {userType === "student"
+            ? "What assignments are due this week?"
+            : "Show my students' assignments"}
         </button>
         <button
           onClick={() => onQuickAction("Show my upcoming quizzes")}
@@ -322,7 +326,9 @@ function InitialSplash({
           <div className="mb-2">
             <QuizIcon className="w-6 h-6" />
           </div>
-          Show my upcoming quizzes
+          {userType === "student"
+            ? "Show my upcoming quizzes?"
+            : "Show the latest quizzes"}
         </button>
         <button
           onClick={() => onQuickAction("Show recently uploaded class content")}
@@ -331,7 +337,9 @@ function InitialSplash({
           <div className="mb-2">
             <ContentIcon className="w-6 h-6" />
           </div>
-          Show recently uploaded class content
+          {userType === "student"
+            ? "Show recently uploaded class content"
+            : "Show the class content uploaded yesterday"}
         </button>
       </div>
     </div>
@@ -372,7 +380,7 @@ function LisaPageContent({
     setSelectedCourses((prev) =>
       prev.includes(courseId)
         ? prev.filter((id) => id !== courseId)
-        : [...prev, courseId],
+        : [...prev, courseId]
     );
   };
 
@@ -380,7 +388,7 @@ function LisaPageContent({
     setSelectedTypes((prev) =>
       prev.includes(typeId)
         ? prev.filter((id) => id !== typeId)
-        : [...prev, typeId],
+        : [...prev, typeId]
     );
   };
 
@@ -489,7 +497,11 @@ function LisaPageContent({
         {/* Main scrollable content area */}
         <div className="flex-1">
           {messages.length === 0 ? (
-            <InitialSplash userName={userName} onQuickAction={handleSend} />
+            <InitialSplash
+              userName={userName}
+              userType={userData.role}
+              onQuickAction={handleSend}
+            />
           ) : (
             <MessageList messages={messages} />
           )}

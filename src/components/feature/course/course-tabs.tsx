@@ -160,6 +160,7 @@ export default function CourseTabs({
                 assignment={selectedAssignment}
                 course={course}
                 backUrl="#"
+                isTeacher={isTeacher}
                 onBack={handleBackToAssignments}
               />
             ) : (
