@@ -2,15 +2,8 @@ import React from "react";
 import { iconForType } from "../../../../lib/constants"; // Import the icons
 import { PiConfetti } from "react-icons/pi";
 import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
-
-interface Deadline {
-  id: number;
-  title: string;
-  dueDate: string;
-  course: string;
-  type: string;
-  courseColor: string;
-}
+// import { Deadline } from "@/lib/types/lib"; // Import the Deadline type
+import { getUpcomingDeadlines } from "@/lib/database-service/assignment";
 
 function formatDate(dateStr: string) {
   if (!dateStr) return "N/A";
@@ -22,12 +15,12 @@ function formatDate(dateStr: string) {
   const nowDateOnly = new Date(
     now.getFullYear(),
     now.getMonth(),
-    now.getDate(),
+    now.getDate()
   );
   const dateOnly = new Date(
     date.getFullYear(),
     date.getMonth(),
-    date.getDate(),
+    date.getDate()
   );
 
   // Calculate difference in days
@@ -106,12 +99,12 @@ const getDeadlineColor = (dateStr: string) => {
   const nowDateOnly = new Date(
     now.getFullYear(),
     now.getMonth(),
-    now.getDate(),
+    now.getDate()
   );
   const dateOnly = new Date(
     date.getFullYear(),
     date.getMonth(),
-    date.getDate(),
+    date.getDate()
   );
 
   // Calculate difference in days
@@ -136,7 +129,9 @@ const getDeadlineColor = (dateStr: string) => {
   return "text-info-700";
 };
 
-export default function UpcomingDeadlines({}: PropsForEveryDashboardCard) {
+export default async function UpcomingDeadlines({
+  userData,
+}: PropsForEveryDashboardCard) {
   // Create deadlines with varied dates to showcase different colors
   const today = new Date();
 
@@ -170,62 +165,62 @@ export default function UpcomingDeadlines({}: PropsForEveryDashboardCard) {
   // };
 
   // Dummy data for deadlines showing all deadline states
-  const dummyDeadlines: Deadline[] = [
-    // {
-    //   id: 10,
-    //   title: "Assignment 24: Recursion",
-    //   dueDate: formatDateToString(yesterday),
-    //   course: "CS101: Introduction to Programming",
-    //   type: "assignment",
-    //   courseColor: "bg-amber-2 text-amber-5",
-    // },
-    // {
-    //   id: 1,
-    //   title: "Mid-sem Take-Home Examination", // Changed to Exam for variety
-    //   dueDate: "2025-07-04 20:00:00", // Overdue with time
-    //   course: "CS101",
-    //   type: "exam",
-    //   courseColor: "bg-green-2 text-green-5",
-    // },
-    // {
-    //   id: 3,
-    //   title: "Quiz Due Today", // Changed to Quiz
-    //   dueDate: "2025-08-03 15:00:00", // Due today with time
-    //   course: "CS201",
-    //   type: "quiz",
-    //   courseColor: "bg-blue-2 text-blue-5",
-    // },
-    // {
-    //   id: 3,
-    //   title: "Lab Due Tomorrow", // Changed to Lab
-    //   dueDate: formatDateToString(tomorrow),
-    //   course: "CS301",
-    //   type: "lab"
-    // },
-    // {
-    //   id: 4,
-    //   title: "Project Presentation",
-    //   dueDate: formatDateToString(dayAfterTomorrow),
-    //   course: "CS401",
-    //   type: "project"
-    // },
-    // {
-    //   id: 5,
-    //   title: "Weekly Quiz",
-    //   dueDate: formatDateToString(nextWeek),
-    //   course: "CS501",
-    //   type: "quiz"
-    // },
-    // {
-    //   id: 6,
-    //   title: "Final Project",
-    //   dueDate: formatDateToString(farFuture),
-    //   course: "CS601",
-    //   type: "project"
-    // }
-  ];
+  // const dummyDeadlines: Deadline[] = [
+  //   // {
+  //   //   id: 10,
+  //   //   title: "Assignment 24: Recursion",
+  //   //   dueDate: formatDateToString(yesterday),
+  //   //   course: "CS101: Introduction to Programming",
+  //   //   type: "assignment",
+  //   //   courseColor: "bg-amber-2 text-amber-5",
+  //   // },
+  //   // {
+  //   //   id: 1,
+  //   //   title: "Mid-sem Take-Home Examination", // Changed to Exam for variety
+  //   //   dueDate: "2025-07-04 20:00:00", // Overdue with time
+  //   //   course: "CS101",
+  //   //   type: "exam",
+  //   //   courseColor: "bg-green-2 text-green-5",
+  //   // },
+  //   // {
+  //   //   id: 3,
+  //   //   title: "Quiz Due Today", // Changed to Quiz
+  //   //   dueDate: "2025-08-03 15:00:00", // Due today with time
+  //   //   course: "CS201",
+  //   //   type: "quiz",
+  //   //   courseColor: "bg-blue-2 text-blue-5",
+  //   // },
+  //   // {
+  //   //   id: 3,
+  //   //   title: "Lab Due Tomorrow", // Changed to Lab
+  //   //   dueDate: formatDateToString(tomorrow),
+  //   //   course: "CS301",
+  //   //   type: "lab"
+  //   // },
+  //   // {
+  //   //   id: 4,
+  //   //   title: "Project Presentation",
+  //   //   dueDate: formatDateToString(dayAfterTomorrow),
+  //   //   course: "CS401",
+  //   //   type: "project"
+  //   // },
+  //   // {
+  //   //   id: 5,
+  //   //   title: "Weekly Quiz",
+  //   //   dueDate: formatDateToString(nextWeek),
+  //   //   course: "CS501",
+  //   //   type: "quiz"
+  //   // },
+  //   // {
+  //   //   id: 6,
+  //   //   title: "Final Project",
+  //   //   dueDate: formatDateToString(farFuture),
+  //   //   course: "CS601",
+  //   //   type: "project"
+  //   // }
+  // ];
 
-  const deadlines = dummyDeadlines;
+  const deadlines = await getUpcomingDeadlines(userData.id);
 
   return (
     <div className="bg-primary-100 rounded-lg shadow-md p-4 md:px-6 min-h-[250px]">
@@ -256,7 +251,9 @@ export default function UpcomingDeadlines({}: PropsForEveryDashboardCard) {
                 </span>
               </div>
               <span
-                className={`text-xs md:text-sm ${getDeadlineColor(dl.dueDate)} mt-1 md:mt-0`}
+                className={`text-xs md:text-sm ${getDeadlineColor(
+                  dl.dueDate
+                )} mt-1 md:mt-0`}
               >
                 {formatDate(dl.dueDate)}
               </span>
