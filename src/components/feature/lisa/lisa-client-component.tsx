@@ -6,7 +6,19 @@ import { useState, useRef, useEffect, Suspense } from "react";
 import { redirect, useSearchParams } from "next/navigation";
 import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
 import { useSession } from "next-auth/react";
-import { PiChatTeardrop, PiCaretUp, PiBooks, PiTag } from "react-icons/pi";
+import {
+  MessageCircle,
+  ChevronUp,
+  BookOpen,
+  Tag,
+  FileText,
+  ClipboardList,
+  Book,
+  File,
+  FlaskConical,
+  FolderKanban,
+  Megaphone,
+} from "lucide-react";
 import { iconForType } from "@/lib/constants";
 import { MultiSelect } from "@/components/core/multi-select";
 import { AuthenticatedSession } from "@/lib/types/auth";
@@ -66,6 +78,21 @@ const CONTENT_TYPES: ContentType[] = [
   { id: "project", name: "Project", icon: "project" },
   { id: "announcement", name: "Announcement", icon: "announcement" },
 ];
+
+// Replace iconForType to use lucide icons
+const LUCIDE_TYPE_ICONS: Record<string, React.ElementType> = {
+  assignment: ClipboardList,
+  quiz: FileText,
+  exam: FileText,
+  content: BookOpen,
+  lab: FlaskConical,
+  project: FolderKanban,
+  announcement: Megaphone,
+};
+
+function iconForTypeLucide(type: string) {
+  return LUCIDE_TYPE_ICONS[type] || File;
+}
 
 function MessageList({ messages }: { messages: Message[] }) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -197,7 +224,7 @@ function ChatInput({
                 {selectedTypes.map((typeId) => {
                   const type = CONTENT_TYPES.find((t) => t.id === typeId);
                   if (!type) return null;
-                  const IconComponent = iconForType(type.icon);
+                  const IconComponent = iconForTypeLucide(type.icon);
                   return (
                     <span
                       key={typeId}
@@ -222,7 +249,7 @@ function ChatInput({
                 selected={selectedCourses}
                 onChange={onCoursesChange}
                 placeholder="Courses"
-                icon={<PiBooks className="w-5 h-5 text-gray-600" />}
+                icon={<BookOpen className="w-5 h-5 text-gray-600" />}
                 className="w-10 h-10"
               />
               <MultiSelect
@@ -233,7 +260,7 @@ function ChatInput({
                 selected={selectedTypes}
                 onChange={onTypesChange}
                 placeholder="Content types"
-                icon={<PiTag className="w-5 h-5 text-gray-600" />}
+                icon={<Tag className="w-5 h-5 text-gray-600" />}
                 className="w-10 h-10"
               />
             </div>
@@ -265,7 +292,7 @@ function ChatInput({
               className="primarybutton p-3 rounded-xl flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={disabled || !input.trim()}
             >
-              <PiCaretUp className="w-5 h-5" />
+              <ChevronUp className="w-5 h-5" />
             </button>
           </div>
 
@@ -288,15 +315,18 @@ function InitialSplash({
   userType: string;
   onQuickAction: (action: string) => void;
 }) {
-  const AssignmentIcon = iconForType("assignment");
-  const QuizIcon = iconForType("quiz");
-  const ContentIcon = iconForType("content");
+  // Replace PiChatTeardrop with lucide MessageCircle
+  // Use iconForTypeLucide for quick actions
+
+  const AssignmentIcon = iconForTypeLucide("assignment");
+  const QuizIcon = iconForTypeLucide("quiz");
+  const ContentIcon = iconForTypeLucide("content");
 
   return (
     <div className="min-h-full flex flex-col items-center justify-center px-6 py-12 text-gray-500">
       <div className="text-center max-w-md mb-8">
         <div className="flex items-center justify-center mb-4">
-          <PiChatTeardrop size={48} className="text-primary-600" />
+          <MessageCircle size={48} className="text-primary-600" />
           <span className="text-3xl tracking-wider font-bold text-primary-700 ml-2">
             LISA
           </span>
@@ -310,7 +340,7 @@ function InitialSplash({
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl w-full">
         <button
           onClick={() => onQuickAction("What assignments are due this week?")}
-          className="secondarybutton p-4 rounded-xl text-sm font-medium text-left hover:bg-primary-50 hover:border-primary-300 hover:text-primary-700 transition-all"
+          className="p-4 rounded-xl text-sm font-medium text-left hover:bg-primary-100 hover:text-primary-700 cursor-pointer"
         >
           <div className="mb-2">
             <AssignmentIcon className="w-6 h-6" />
@@ -321,7 +351,7 @@ function InitialSplash({
         </button>
         <button
           onClick={() => onQuickAction("Show my upcoming quizzes")}
-          className="secondarybutton p-4 rounded-xl text-sm font-medium text-left hover:bg-primary-50 hover:border-primary-300 hover:text-primary-700 transition-all"
+          className="p-4 rounded-xl text-sm font-medium text-left hover:bg-primary-100 hover:text-primary-700 cursor-pointer"
         >
           <div className="mb-2">
             <QuizIcon className="w-6 h-6" />
@@ -332,7 +362,7 @@ function InitialSplash({
         </button>
         <button
           onClick={() => onQuickAction("Show recently uploaded class content")}
-          className="secondarybutton p-4 rounded-xl text-sm font-medium text-left hover:bg-primary-50 hover:border-primary-300 hover:text-primary-700 transition-all"
+          className="p-4 rounded-xl text-sm font-medium text-left hover:bg-primary-100 hover:text-primary-700 cursor-pointer"
         >
           <div className="mb-2">
             <ContentIcon className="w-6 h-6" />
