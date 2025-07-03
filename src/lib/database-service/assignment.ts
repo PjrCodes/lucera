@@ -65,3 +65,26 @@ export async function getAssignmentsForCourse(
     throw new Error("Invalid content data format");
   }
 }
+
+// export async function getUpcomingDeadlines(userId: string) {
+//   // fetches all assignments with deadlines plus or minus 30 days
+//   // across all courses for the current user
+//   const today = new Date();
+//   const startDate = new Date(today);
+//   startDate.setDate(today.getDate() - 30);
+//   const endDate = new Date(today);
+//   endDate.setDate(today.getDate() + 30);
+
+//   const assignments = await client
+//     .db()
+//     .collection("assignment")
+//     .find({
+//       courseId: { $in: relatedCoursesForUser(userId) },
+//       deadline: {
+//         $gte: startDate,
+//         $lte: endDate,
+//       },
+//     })
+//     .toArray();
+
+// }
