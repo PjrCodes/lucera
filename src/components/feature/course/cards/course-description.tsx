@@ -72,11 +72,11 @@ const markdownComponents = {
 
 export default function CourseDescription({ course }: CourseDescriptionProps) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-wrap max-w-full">
+      <h2 className="text-lg font-semibold text-gray-900 mb-4 text-wrap">
         Course Description
       </h2>
-      <div className="prose prose-sm max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700">
+      <div className="prose prose-sm prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700">
         <MyMarkdown components={markdownComponents}>
           {course.description}
         </MyMarkdown>

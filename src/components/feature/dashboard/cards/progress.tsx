@@ -4,6 +4,7 @@ import Image from "next/image";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
 import { getCoursesForUser } from "@/lib/database-service/courses";
+import { BookAlert } from "lucide-react";
 
 export default async function Courses({
   userData,
@@ -13,26 +14,30 @@ export default async function Courses({
 
   if (!courses || courses.length === 0) {
     return (
-      <div className="bg-primary-100 rounded-xl p-4">
-        <div className="font-medium mb-2 text-primary-700">
+      <div className="bg-primary-100 rounded-xl p-4 px-6">
+        <div className="font-bold mb-4 text-primary-700 text-lg">
           {isTeacher ? "CLASS PROGRESS" : "PROGRESS"}
         </div>
         <div className="grid gap-4">
           {isTeacher && (
-            <Link
-              href="/create/course"
-              className="bg-white rounded-lg p-4 shadow-sm flex items-center justify-center hover:shadow-lg transition-shadow duration-200 h-full"
-            >
-              <div className="text-primary-700 text-center">
-                No courses found. <br /> Click here to create a new course.
-              </div>
-            </Link>
+            <div className="flex-1 flex flex-col items-center justify-center text-primary-700 min-h-[100px]">
+              <BookAlert className="text-5xl" />
+              <p className="text-lg">No courses yet.</p>
+              <Link
+                href="/create/course"
+                className="color-primary-600 underline hover:color-primary-500 text-sm"
+              >
+                Create a course.
+              </Link>
+            </div>
           )}
           {!isTeacher && (
-            <div className="bg-white rounded-lg p-4 shadow-sm flex items-center justify-center">
-              <div className="text-primary-700 text-center">
-                No courses available at the moment.
-              </div>
+            <div className="flex-1 flex flex-col items-center justify-center text-primary-700 min-h-[100px]">
+              <BookAlert className="text-5xl" />
+              <p className="text-lg">No courses yet.</p>
+              <p className="text-sm text-primary-600 text-center">
+                Ask your teachers to add you to a course!
+              </p>
             </div>
           )}
         </div>

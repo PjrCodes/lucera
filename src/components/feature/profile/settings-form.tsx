@@ -39,7 +39,7 @@ export default function SettingsForm({}: Props) {
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Notifications */}
         <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-6">📢 Notifications</h2>
+          <h2 className="text-xl font-semibold mb-6">Notifications</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Checkbox
               name="dmNotifications"
@@ -67,7 +67,7 @@ export default function SettingsForm({}: Props) {
 
         {/* AI Assistant */}
         <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-6">🤖 AI Assistant</h2>
+          <h2 className="text-xl font-semibold mb-6">AI Assistant</h2>
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Dropdown
@@ -95,7 +95,7 @@ export default function SettingsForm({}: Props) {
             disabled={loading}
             className="px-6 py-3"
           >
-            {loading ? "🔄 Saving..." : "💾 Save All Settings"}
+            {loading ? "Saving..." : "Save All Settings"}
           </SecondaryButton>
           <SecondaryButton
             type="button"
@@ -103,7 +103,7 @@ export default function SettingsForm({}: Props) {
             onClick={() => window.location.reload()}
             className="px-6 py-3"
           >
-            🔄 Reset to Defaults
+            Reset to Defaults
           </SecondaryButton>
         </div>
 

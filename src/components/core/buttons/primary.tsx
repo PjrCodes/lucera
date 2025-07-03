@@ -18,8 +18,8 @@ export function PrimaryButton({
 }: PrimaryButtonProps) {
   const variantClasses =
     variant === "outline"
-      ? "border-2 border-primary-600 text-primary-600 bg-transparent cursor-pointer hover:bg-primary-50 hover:border-primary-700 hover:text-primary-700 hover:shadow-lg hover:scale-105 transition-transform focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;"
-      : "border-2 border-primary-600 bg-primary-600 text-white cursor-pointer hover:bg-primary-700 focus-visible:ring-2 focus-visible:ring-primary-300 focus-visible:ring-offset-2;";
+      ? "border-2 border-primary-700 text-primary-700 bg-transparent cursor-pointer hover:bg-primary-200 hover:border-primary-800 hover:text-primary-800 transition-transform focus-visible:ring-2 focus-visible:ring-primary-800 focus-visible:ring-offset-2 hover:shadow-lg"
+      : "border-2 border-primary-400 bg-primary-400 text-primary-950 cursor-pointer hover:bg-primary-500 focus-visible:ring-2 focus-visible:ring-primary-300 focus-visible:ring-offset-2 hover:shadow-lg";
 
   return (
     <Button

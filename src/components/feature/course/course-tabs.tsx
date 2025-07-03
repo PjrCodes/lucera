@@ -115,7 +115,7 @@ export default function CourseTabs({
             </TabsTrigger>
             <TabsTrigger
               value="grades"
-              className="data-[state=active]:bg-accent-50 data-[state=active]:text-accent-900 text-accent-700 whitespace-nowrap flex items-center px-3 py-2"
+              className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-900 text-blue-700 whitespace-nowrap flex items-center px-3 py-2"
             >
               <ChartNoAxesColumn className="mr-1" />
               Grades
@@ -129,7 +129,7 @@ export default function CourseTabs({
             </TabsTrigger>
             <TabsTrigger
               value="polls"
-              className="data-[state=active]:bg-accent-50 data-[state=active]:text-accent-900 text-accent-700 whitespace-nowrap flex items-center px-3 py-2"
+              className="data-[state=active]:bg-lime-50 data-[state=active]:text-lime-900 text-lime-700 whitespace-nowrap flex items-center px-3 py-2"
             >
               <MessagesSquare className="mr-1" />
               Polls & Announcements

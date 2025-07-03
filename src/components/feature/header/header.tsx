@@ -78,11 +78,11 @@ export default function Header({
           )}
           {/* Heading: only render once, hide/show with CSS */}
           <h1
-            className={`font-header text-xl md:text-2xl tracking-wider font-bold truncate max-w-[150px] sm:max-w-[200px] md:max-w-none ${
+            className={`font-header text-xl md:text-2xl tracking-wider font-bold truncate max-w-[12rem] sm:max-w-[20dvw] md:max-w-[33dvw] lg:max-w-[45dvw] ${
               searchExpanded ? "hidden sm:block" : "block"
             }`}
           >
-            {headerTitle}{" "}
+            {headerTitle}
             {/* Remove character limit logic, use CSS truncation */}
           </h1>
         </div>
