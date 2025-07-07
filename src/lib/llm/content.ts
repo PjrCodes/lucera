@@ -52,13 +52,24 @@ export async function LLMContentExtractor(
     // Pinecone Database upload
     // let embedding = parsedResponse.description;
     // let content = extractedText;
-
-    await addChatBotDocument(
-      UUIDGeneratorNode(),
-      parsedResponse.description,
-      "course_material",
-      course._id.toString()
-    );
+    try {
+      await addChatBotDocument(
+        UUIDGeneratorNode(),
+        parsedResponse.description,
+        "course_material",
+        course._id.toString()
+      );
+    } catch (error) {
+      console.error(
+        "[LLM_CONTENT_EXTRACTOR]: Error adding document to Pinecone:",
+        error
+      );
+      return {
+        success: false,
+        error: "Failed to add document to Pinecone",
+        data: null,
+      };
+    }
 
     return {
       success: true,
