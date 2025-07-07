@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import crypto from "crypto";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -20,3 +21,11 @@ export function formatDate(date: Date): string {
     day: "numeric",
   }).format(date);
 }
+
+export const UUIDGeneratorNode = () =>
+  "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c: string) =>
+    (
+      parseInt(c, 10) ^
+      (crypto.randomBytes(1)[0] & (15 >> (parseInt(c, 10) / 4)))
+    ).toString(16)
+  );
