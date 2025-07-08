@@ -1,28 +1,68 @@
+import { GoogleGenAI, Type } from "@google/genai";
+import { ChatRequest } from "../schemas/api";
+import fs from "fs";
 
-interface LisaContext {
-  courseIds: string[];
-  content_types: string[];
-  userId: string;
-  query: string;
+const queryAugmentationUserPrompt = fs.readFileSync(
+  "./src/appdata/prompts/query_augmentation/user.txt",
+  "utf-8"
+);
+
+export async function synonymAugmentation(query: string): Promise<string> {
+  const ai = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY,
+  });
+  const config = {
+    thinkingConfig: {
+      thinkingBudget: 0,
+    },
+    responseMimeType: "application/json",
+    responseSchema: {
+      type: Type.OBJECT,
+      properties: {
+        augmentedQuery: {
+          type: Type.STRING,
+        },
+      },
+    },
+  };
+  const model = "gemini-2.5-flash";
+  const contents = [
+    {
+      role: "user",
+      parts: [
+        {
+          text: queryAugmentationUserPrompt.replace("{{USER_QUERY}}", query),
+        },
+      ],
+    },
+  ];
+  let llmTextResponse = "";
+  try {
+    const response = await ai.models.generateContentStream({
+      model,
+      config,
+      contents,
+    });
+    for await (const chunk of response) {
+      if (chunk.text) {
+        llmTextResponse += chunk.text;
+      }
+    }
+  } catch (error) {
+    console.error("Error during LLM call:", error);
+    throw new Error("Failed to augment query with synonyms");
+  }
+
+  console.log("LLM Response:", llmTextResponse);
+
+  return query;
 }
 
-export async function callLisa(context: LisaContext) {
-  const { courseIds, content_types, userId, query } = context;
+export async function callLisa(context: ChatRequest) {
+  console.log(context);
+  const query = await synonymAugmentation(context.query);
 
-  // Construct the prompt for Lisa
-  const prompt = `You are Lisa, an AI assistant for SmartLMS. Your task is to answer questions based on the provided course content.
-
-  Course IDs: ${courseIds.join(", ")}
-  Content Types: ${content_types.join(", ")}
-  User ID: ${userId}
-
-  Question: ${query}
-
-  Please provide a concise and informative answer.`;
-
-  // Here you would typically call your LLM API with the constructed prompt.
-  // For example:
-  // const response = await llmApi.call(prompt);
+  console.log("query", query);
 
   // For now, we will return a mock response
   return {

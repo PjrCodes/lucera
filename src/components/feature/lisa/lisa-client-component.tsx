@@ -16,14 +16,13 @@ import {
 import { MultiSelect } from "@/components/core/multi-select";
 import { AuthenticatedSession } from "@/lib/types/auth";
 import { Course, UserData } from "@/lib/schemas/database";
-import { callLisa } from "@/lib/llm/lisa";
 
 interface Message {
   id: string;
   text: string;
   sender: "user" | "lisa";
   timestamp: Date;
-  type?: "assignment" | "quiz" | "lecture" | "material" | "general";
+  type?: "assignment" | "quiz" | "lecture" | "material" | "general" | "error";
   course?: string;
 }
 
@@ -71,32 +70,37 @@ function MessageList({ messages }: { messages: Message[] }) {
   return (
     <div className="bg-primary-50 w-full px-6 py-6">
       <div className="max-w-4xl mx-auto space-y-4">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${
-              message.sender === "user" ? "justify-end" : "justify-start"
-            }`}
-          >
+        {messages.map((message) => {
+          const isError = message.type === "error";
+          return (
             <div
-              className={`rounded-lg px-4 py-3 max-w-[70%] shadow-sm ${
-                message.sender === "user"
-                  ? "bg-primary-600 text-white"
-                  : "bg-white text-gray-800 border-l-4 border-primary-300"
+              key={message.id}
+              className={`flex ${
+                message.sender === "user" ? "justify-end" : "justify-start"
               }`}
             >
-              <div className="break-words whitespace-pre-line text-sm leading-relaxed">
-                {message.text}
-              </div>
-              <div className="text-xs opacity-70 mt-2">
-                {message.timestamp.toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+              <div
+                className={`rounded-lg px-4 py-3 max-w-[70%] shadow-sm ${
+                  message.sender === "user"
+                    ? "bg-primary-600 text-white"
+                    : isError
+                    ? "bg-red-100 text-red-800 border-l-4 border-red-400"
+                    : "bg-white text-gray-800 border-l-4 border-primary-300"
+                }`}
+              >
+                <div className="break-words whitespace-pre-line text-sm leading-relaxed">
+                  {message.text}
+                </div>
+                <div className="text-xs opacity-70 mt-2">
+                  {message.timestamp.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         <div ref={messagesEndRef} />
       </div>
     </div>
@@ -407,18 +411,44 @@ function LisaPageContent({
         courseIds:
           selectedCourses.length > 0
             ? selectedCourses
-            : courses.map((c) => c.id),
-        content_types:
+            : courses.map((c) => c._id),
+        contentTypes:
           selectedTypes.length > 0
             ? selectedTypes
             : CONTENT_TYPES.map((t) => t.id),
         userId: session.user.id,
         query: msg,
       };
-      const response = await callLisa(context);
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(context),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.log("API call failed");
+        console.log("Status:", response.status);
+        console.log("Status Text:", response.statusText);
+        console.log("Response:", errorText);
+        const errorMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          text: `Sorry, I encountered an error: ${response.statusText} (${response.status}). Please try again.`,
+          sender: "lisa",
+          timestamp: new Date(),
+          type: "error",
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+        return;
+      }
+
+      const data = await response.json();
+
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: response.answer,
+        text: data.answer,
         sender: "lisa",
         timestamp: new Date(),
       };
@@ -428,9 +458,10 @@ function LisaPageContent({
         ...prev,
         {
           id: (Date.now() + 2).toString(),
-          text: "Sorry, I couldn't get a response from LISA.",
+          text: "Sorry, I couldn't get a response from LISA. There might be a network issue.",
           sender: "lisa",
           timestamp: new Date(),
+          type: "error",
         },
       ]);
     } finally {

@@ -118,3 +118,12 @@ export const SaveAssignmentRequestSchema = z.object({
 });
 
 export type SaveContentRequest = z.infer<typeof SaveContentRequestSchema>;
+
+export const chatRequestSchema = z.object({
+  courseIds: z.array(z.string()),
+  contentTypes: z.array(z.enum(["announcement", "content", "assignment", "syllabus"])),
+  query: z.string().min(1, "Query is required"),
+  userId: z.string().min(1, "User ID is required"),
+});
+
+export type ChatRequest = z.infer<typeof chatRequestSchema>;
