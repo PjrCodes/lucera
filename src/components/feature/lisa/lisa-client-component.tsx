@@ -1,11 +1,8 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useState, useRef, useEffect, Suspense } from "react";
-import { redirect, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
-import { useSession } from "next-auth/react";
 import {
   MessageCircle,
   ChevronUp,
@@ -13,16 +10,13 @@ import {
   Tag,
   FileText,
   ClipboardList,
-  Book,
   File,
-  FlaskConical,
-  FolderKanban,
   Megaphone,
 } from "lucide-react";
-import { iconForType } from "@/lib/constants";
 import { MultiSelect } from "@/components/core/multi-select";
 import { AuthenticatedSession } from "@/lib/types/auth";
-import { UserData } from "@/lib/schemas/database";
+import { Course, UserData } from "@/lib/schemas/database";
+import { callLisa } from "@/lib/llm/lisa";
 
 interface Message {
   id: string;
@@ -31,19 +25,6 @@ interface Message {
   timestamp: Date;
   type?: "assignment" | "quiz" | "lecture" | "material" | "general";
   course?: string;
-}
-
-interface FilterState {
-  assignments: boolean;
-  quizzes: boolean;
-  lectures: boolean;
-  materials: boolean;
-}
-
-interface Course {
-  id: string;
-  name: string;
-  color: keyof typeof COURSE_COLORS;
 }
 
 interface ContentType {
@@ -61,32 +42,18 @@ const COURSE_COLORS = {
   red: "bg-accent-200 text-accent-800 border-accent-400",
 };
 
-const MOCK_COURSES: Course[] = [
-  { id: "cs101", name: "Computer Science 101", color: "blue" },
-  { id: "math201", name: "Calculus II", color: "green" },
-  { id: "phys101", name: "Physics I", color: "rose" },
-  { id: "eng102", name: "English Literature", color: "purple" },
-  { id: "hist201", name: "World History", color: "brown" },
-];
-
 const CONTENT_TYPES: ContentType[] = [
   { id: "assignment", name: "Assignment", icon: "assignment" },
-  { id: "quiz", name: "Quiz", icon: "quiz" },
-  { id: "exam", name: "Exam", icon: "exam" },
   { id: "content", name: "Content", icon: "content" },
-  { id: "lab", name: "Lab", icon: "lab" },
-  { id: "project", name: "Project", icon: "project" },
+  { id: "syllabus", name: "Syllabus", icon: "syllabus" },
   { id: "announcement", name: "Announcement", icon: "announcement" },
 ];
 
 // Replace iconForType to use lucide icons
 const LUCIDE_TYPE_ICONS: Record<string, React.ElementType> = {
   assignment: ClipboardList,
-  quiz: FileText,
-  exam: FileText,
   content: BookOpen,
-  lab: FlaskConical,
-  project: FolderKanban,
+  syllabus: FileText,
   announcement: Megaphone,
 };
 
@@ -143,6 +110,7 @@ function ChatInput({
   selectedTypes,
   onCoursesChange,
   onTypesChange,
+  courses,
 }: {
   onSend: (msg: string) => void;
   disabled: boolean;
@@ -150,6 +118,7 @@ function ChatInput({
   selectedTypes: string[];
   onCoursesChange: (selected: string[]) => void;
   onTypesChange: (selected: string[]) => void;
+  courses: Course[];
 }) {
   const [input, setInput] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -173,8 +142,7 @@ function ChatInput({
 
   const getSearchContextText = () => {
     const coursesText =
-      selectedCourses.length === 0 ||
-      selectedCourses.length === MOCK_COURSES.length
+      selectedCourses.length === 0 || selectedCourses.length === courses.length
         ? "all courses"
         : `${selectedCourses.length} course${
             selectedCourses.length > 1 ? "s" : ""
@@ -199,10 +167,10 @@ function ChatInput({
         <div className="max-w-4xl mx-auto">
           {/* Selected course pills */}
           {selectedCourses.length > 0 &&
-            selectedCourses.length < MOCK_COURSES.length && (
+            selectedCourses.length < courses.length && (
               <div className="mb-3 flex flex-wrap gap-2">
                 {selectedCourses.map((courseId) => {
-                  const course = MOCK_COURSES.find((c) => c.id === courseId);
+                  const course = courses.find((c) => c._id === courseId);
                   if (!course) return null;
                   return (
                     <span
@@ -242,7 +210,7 @@ function ChatInput({
             {/* Left side - Filter selectors */}
             <div className="flex gap-2">
               <MultiSelect
-                options={MOCK_COURSES.map((c) => ({
+                options={courses.map((c) => ({
                   value: c.id,
                   label: c.name,
                 }))}
@@ -381,11 +349,13 @@ function LisaPageContent({
   initialQuestion,
   session,
   userData,
+  courses,
 }: {
   initialMessages?: Message[];
   initialQuestion?: string;
   session: AuthenticatedSession;
   userData: UserData;
+  courses: Course[];
 }) {
   const [messages, setMessages] = useState<Message[]>(initialMessages || []);
   const [isLoading, setIsLoading] = useState(false);
@@ -422,84 +392,7 @@ function LisaPageContent({
     );
   };
 
-  const generateMockResponse = (userMessage: string): Message => {
-    let type: Message["type"] = "general";
-    let text = "";
-    let course: string | undefined;
-
-    // Determine response type based on selected types or message content
-    if (selectedTypes.length > 0) {
-      const typeMap: { [key: string]: Message["type"] } = {
-        assignment: "assignment",
-        quiz: "quiz",
-        exam: "quiz",
-        content: "material",
-        lab: "material",
-        project: "assignment",
-        announcement: "general",
-      };
-      type = typeMap[selectedTypes[0]] || "general";
-    } else if (userMessage.toLowerCase().includes("assignment")) {
-      type = "assignment";
-    } else if (userMessage.toLowerCase().includes("quiz")) {
-      type = "quiz";
-    } else if (userMessage.toLowerCase().includes("lecture")) {
-      type = "lecture";
-    } else if (userMessage.toLowerCase().includes("material")) {
-      type = "material";
-    }
-
-    // Select a course if any are selected
-    if (selectedCourses.length > 0) {
-      course =
-        selectedCourses[Math.floor(Math.random() * selectedCourses.length)];
-    }
-
-    // Generate appropriate response
-    switch (type) {
-      case "assignment":
-        text = `Here are your upcoming assignments${
-          course
-            ? ` for ${MOCK_COURSES.find((c) => c.id === course)?.name}`
-            : ""
-        }:\n\n• Essay on Modern Literature - Due Friday\n• Math Problem Set 7 - Due Monday\n• Physics Lab Report - Due Wednesday\n\nWould you like more details on any of these?`;
-        break;
-      case "quiz":
-        text = `Your upcoming quizzes${
-          course
-            ? ` for ${MOCK_COURSES.find((c) => c.id === course)?.name}`
-            : ""
-        }:\n\n• History Quiz Ch. 12-15 - Tomorrow at 2 PM\n• Biology Quiz on Cell Structure - Friday\n\nI can help you review the key topics. What would you like to focus on?`;
-        break;
-      case "lecture":
-        text = `Recent lectures${
-          course
-            ? ` from ${MOCK_COURSES.find((c) => c.id === course)?.name}`
-            : ""
-        }:\n\n• Introduction to Quantum Physics - Today\n• Shakespearean Sonnets Analysis - Yesterday\n• Calculus Integration Methods - Monday\n\nWould you like a summary of any specific lecture?`;
-        break;
-      case "material":
-        text = `Study materials${
-          course
-            ? ` for ${MOCK_COURSES.find((c) => c.id === course)?.name}`
-            : ""
-        }:\n\n• Textbook Chapter 8 - Molecular Biology\n• Video Lecture Series - Advanced Calculus\n• Practice Problems - Physics Mechanics\n\nI can help explain any concepts you're struggling with!`;
-        break;
-      default:
-        text = `I understand you're asking about your studies. I can help you with:\n\n• Finding assignments and due dates\n• Quiz preparation and review\n• Lecture summaries and notes\n• Study materials and resources\n\nWhat specific area would you like to explore?`;
-    }
-
-    return {
-      id: (Date.now() + 1).toString(),
-      text,
-      sender: "lisa",
-      timestamp: new Date(),
-      type,
-      course,
-    };
-  };
-
-  const handleSend = (msg: string) => {
+  const handleSend = async (msg: string) => {
     const userMessage: Message = {
       id: Date.now().toString(),
       text: msg,
@@ -509,11 +402,40 @@ function LisaPageContent({
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
 
-    setTimeout(() => {
-      const aiResponse = generateMockResponse(msg);
+    try {
+      const context = {
+        courseIds:
+          selectedCourses.length > 0
+            ? selectedCourses
+            : courses.map((c) => c.id),
+        content_types:
+          selectedTypes.length > 0
+            ? selectedTypes
+            : CONTENT_TYPES.map((t) => t.id),
+        userId: session.user.id,
+        query: msg,
+      };
+      const response = await callLisa(context);
+      const aiResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        text: response.answer,
+        sender: "lisa",
+        timestamp: new Date(),
+      };
       setMessages((prev) => [...prev, aiResponse]);
+    } catch (e) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 2).toString(),
+          text: "Sorry, I couldn't get a response from LISA.",
+          sender: "lisa",
+          timestamp: new Date(),
+        },
+      ]);
+    } finally {
       setIsLoading(false);
-    }, 1200);
+    }
   };
 
   const handleQuickAction = (action: string) => {
@@ -552,6 +474,7 @@ function LisaPageContent({
           selectedTypes={selectedTypes}
           onCoursesChange={setSelectedCourses}
           onTypesChange={setSelectedTypes}
+          courses={courses}
         />
       </div>
     </>
@@ -561,9 +484,11 @@ function LisaPageContent({
 export default function LisaClientComponent({
   session,
   userData,
+  courses,
 }: {
   session: AuthenticatedSession;
   userData: UserData;
+  courses: Course[];
 }) {
   const searchParams = useSearchParams();
   const question = searchParams ? searchParams.get("question") || "" : "";
@@ -573,6 +498,7 @@ export default function LisaClientComponent({
         initialQuestion={question}
         session={session}
         userData={userData}
+        courses={courses}
       />
     </Suspense>
   );
