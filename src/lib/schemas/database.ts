@@ -88,6 +88,8 @@ export const courseSchema = z.object({
   llmParsingFailed: z.boolean(),
   enrolledStudentCount: z.number(),
   completedStudentCount: z.number(),
+  courseColor: z.string().optional(),
+  courseColorTailwind: z.string().optional(),
 });
 
 export type Course = z.infer<typeof courseSchema>;
