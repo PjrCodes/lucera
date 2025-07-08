@@ -88,7 +88,7 @@ export async function loadFileFromDiskById(
     };
   }
 
-  return { fileBuffer: fileBuffer, fileRecord: fileRecord };
+  return { fileBuffer: fileBuffer, fileRecord: fileRecord, fullPath: filePath };
 }
 
 export async function uploadFile(

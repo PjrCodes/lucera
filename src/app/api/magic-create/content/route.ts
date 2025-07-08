@@ -9,11 +9,28 @@ import { loadFileFromDiskById } from "@/lib/database-service/files";
 import { getCourseById } from "@/lib/database-service/courses";
 import { MagicCreateContentRequestSchema } from "@/lib/schemas/api";
 import { withTeacherSession } from "@/lib/database-service/auth";
+import { addCourseContent } from "@/lib/pinecone";
+import { PdfReader } from "pdfreader";
+
+function parsePdfFile(filePath: string): Promise<string[]> {
+  return new Promise((resolve, reject) => {
+    const items: string[] = [];
+    new PdfReader().parseFileItems(filePath, (err, item) => {
+      if (err) {
+        reject(err);
+      } else if (!item) {
+        resolve(items);
+      } else if (item.text) {
+        items.push(item.text);
+      }
+    });
+  });
+}
 
 export const POST = auth(
   withTeacherSession(async function POST(
     req: NextAuthRequest,
-    session: AuthenticatedSession,
+    session: AuthenticatedSession
   ) {
     const body = await req.json();
     console.log("Magic Create Content Request Body:", body);
@@ -25,7 +42,7 @@ export const POST = auth(
             .map((issue) => issue.message)
             .join(", "),
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
     const { fileId, courseId } = parsedBody.data;
@@ -36,12 +53,30 @@ export const POST = auth(
       return loadResponse.error;
     }
 
+    // extract text from the PDF file
+    let extractedTextArray: string[] = [];
+    try {
+      extractedTextArray = await parsePdfFile(loadResponse.fullPath);
+    } catch (error) {
+      console.error(
+        "[LLM_CONTENT_EXTRACTOR]: Error extracting text from PDF:",
+        error
+      );
+      return NextResponse.json(
+        {
+          error:
+            "Failed to extract text from PDF file. Please ensure the file is a valid PDF and try again.",
+        },
+        { status: 500 }
+      );
+    }
+    const extractedText = extractedTextArray.join("\n");
     // Call LLM parse apis with error handling
     const courseRecord = await getCourseById(courseId);
 
     const llmResult = await LLMContentExtractor(
       loadResponse.fileBuffer,
-      courseRecord,
+      courseRecord
     );
 
     const {
@@ -61,12 +96,34 @@ export const POST = auth(
       createdAt: new Date(),
       updatedAt: new Date(),
       type: "content",
+      extractedText: extractedText,
     });
 
     if (!contentRecord.acknowledged) {
       return NextResponse.json(
         { error: "Failed to create content record" },
-        { status: 500 },
+        { status: 500 }
+      );
+    }
+
+    try {
+      await addCourseContent(
+        contentRecord.insertedId.toString(),
+        description,
+        "course_material",
+        courseId ? courseId.toString() : null
+      );
+    } catch (error) {
+      console.error(
+        "[LLM_CONTENT_EXTRACTOR]: Error adding document to Pinecone:",
+        error
+      );
+      return NextResponse.json(
+        {
+          error:
+            "Failed to add content to Pinecone - content cannot be used for chat bot operations",
+        },
+        { status: 500 }
       );
     }
 
@@ -75,5 +132,5 @@ export const POST = auth(
       message: "Content created successfully",
       status: "success",
     });
-  }),
+  })
 );

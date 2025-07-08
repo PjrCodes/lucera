@@ -14,7 +14,7 @@ export async function getPineconeIndex(indexName: string, host: string) {
   }
 }
 
-export async function addChatBotDocument(
+export async function addCourseContent(
   id: string,
   text: string,
   category: string,
@@ -26,7 +26,7 @@ export async function addChatBotDocument(
         "lucera",
         "https://lucera-hn4ejk3.svc.aped-4627-b74a.pinecone.io"
       )
-    ).namespace("");
+    ).namespace("__default__");
     const response = await index.upsertRecords([
       courseId
         ? {

@@ -6,8 +6,6 @@ import {
   contentExtractorSchema,
   ExtractedContent,
 } from "@/lib/schemas/llm";
-import { addChatBotDocument } from "../pinecone";
-import { UUIDGeneratorNode } from "../utils";
 
 const contentExtractorUserPrompt = fs.readFileSync(
   "./src/appdata/prompts/content_extractor/user.txt",
@@ -46,30 +44,6 @@ export async function LLMContentExtractor(
     const parsedResponse = contentExtractorSchema.parse(
       JSON.parse(llmTextResponse)
     );
-
-    // let extractedText = extractPdfText(fileBuffer);
-
-    // Pinecone Database upload
-    // let embedding = parsedResponse.description;
-    // let content = extractedText;
-    try {
-      await addChatBotDocument(
-        UUIDGeneratorNode(),
-        parsedResponse.description,
-        "course_material",
-        course._id.toString()
-      );
-    } catch (error) {
-      console.error(
-        "[LLM_CONTENT_EXTRACTOR]: Error adding document to Pinecone:",
-        error
-      );
-      return {
-        success: false,
-        error: "Failed to add document to Pinecone",
-        data: null,
-      };
-    }
 
     return {
       success: true,
