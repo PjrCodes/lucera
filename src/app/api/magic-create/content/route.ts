@@ -9,8 +9,9 @@ import { loadFileFromDiskById } from "@/lib/database-service/files";
 import { getCourseById } from "@/lib/database-service/courses";
 import { MagicCreateContentRequestSchema } from "@/lib/schemas/api";
 import { withTeacherSession } from "@/lib/database-service/auth";
-import { addCourseContent } from "@/lib/pinecone";
+import { addManyCourseContent } from "@/lib/pinecone";
 import { PdfReader } from "pdfreader";
+import { reChunkOnWordCount } from "@/lib/llm/lisa";
 
 function parsePdfFile(filePath: string): Promise<string[]> {
   return new Promise((resolve, reject) => {
@@ -70,7 +71,53 @@ export const POST = auth(
         { status: 500 }
       );
     }
-    const extractedText = extractedTextArray.join("\n");
+
+    const reChunkedArray = await reChunkOnWordCount(extractedTextArray);
+
+    // each extracted chunk will be put into the database as a separate record
+    const extractedChunkIds: string[] = [];
+
+    for (const text of reChunkedArray) {
+      const db = client.db();
+      const chunkRecord = await db.collection("extracted_chunks").insertOne({
+        text: text,
+      });
+      if (!chunkRecord.acknowledged) {
+        return NextResponse.json(
+          { error: "Failed to create extracted chunk record" },
+          { status: 500 }
+        );
+      }
+      extractedChunkIds.push(chunkRecord.insertedId.toString());
+    }
+    if (extractedChunkIds.length === 0) {
+      return NextResponse.json(
+        { error: "No text extracted from the PDF file" },
+        { status: 400 }
+      );
+    }
+    // Add extracted chunks to Pinecone
+    try {
+      await addManyCourseContent(
+        extractedChunkIds,
+        reChunkedArray,
+        courseId
+      );
+    } catch (error) {
+      console.error(
+        "[LLM_CONTENT_EXTRACTOR]: Error adding extracted chunks to Pinecone:",
+        error
+      );
+      return NextResponse.json(
+        {
+          error:
+            "Failed to add extracted chunks to Pinecone - content cannot be used for chat bot operations",
+          status: "error",
+        },
+        { status: 500 }
+      );
+    }
+
     // Call LLM parse apis with error handling
     const courseRecord = await getCourseById(courseId);
 
@@ -96,7 +143,7 @@ export const POST = auth(
       createdAt: new Date(),
       updatedAt: new Date(),
       type: "content",
-      extractedText: extractedText,
+      extractedChunks: extractedChunkIds,
     });
 
     if (!contentRecord.acknowledged) {
@@ -107,12 +154,6 @@ export const POST = auth(
     }
 
     try {
-      await addCourseContent(
-        contentRecord.insertedId.toString(),
-        description,
-        "course_material",
-        courseId ? courseId.toString() : null
-      );
     } catch (error) {
       console.error(
         "[LLM_CONTENT_EXTRACTOR]: Error adding document to Pinecone:",

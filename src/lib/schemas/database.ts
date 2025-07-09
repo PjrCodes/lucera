@@ -112,7 +112,7 @@ export const contentSchema = z.object({
   updatedAt: z.date(),
   shortDescription: z.string().optional(),
   type: z.enum(["content", "syllabus"]).default("content"),
-  extractedText: z.string().optional(),
+  extractedChunks: z.array(z.string()).optional(),
 });
 export type Content = z.infer<typeof contentSchema>;
 

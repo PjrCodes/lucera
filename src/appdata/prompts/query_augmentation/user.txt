@@ -16,13 +16,12 @@ incorrect example:
 
 Step 2: Next you want to do Semantic & Synonym expansion, where you have to thoughtfully expand the query with domain specific synonyms with regards to Academics and Education in India. 
 Example Query: “assignment”
-Expanded Query: "assignment OR homework OR take-home”
+Expanded Query: "assignment OR homework”
 
 Example Query: "West Bengal"
-Expanded Query: "West Bengal or WB"
+Expanded Query: "West Bengal OR WB"
 
-I want you to thoughtfully expand the query & want you to work out the reasoning as to why would certain expansions be valid, I want you to work out the reasoning before giving me the final augmented prompt, and do not give me the augmented prompt without working it out
-ensure that the final augmented query is enclosed within triple quotes (```)
+I want you to thoughtfully expand the query & want you to work out the reasoning as to why would certain expansions be valid, I want you to work out the reasoning before giving me the final augmented prompt, and do not give me the augmented prompt without working it out. However, do not expand the query with too many synonyms, as it will lead to too many false positives. You sohuld be mindful of the context in which the query is made, and ensure that your answers are relevant to the user's course material and academic inquiries. Do not add more than 2-3 synonyms for each word in the query, and ensure that the synonyms are relevant to the context of the query.
 
 PROMPT: {{USER_QUERY}}
 
