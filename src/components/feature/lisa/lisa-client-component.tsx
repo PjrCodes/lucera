@@ -32,14 +32,14 @@ interface ContentType {
   icon: string;
 }
 
-const COURSE_COLORS = {
-  blue: "bg-primary-100 text-primary-700 border-primary-300",
-  green: "bg-secondary-100 text-secondary-700 border-secondary-300",
-  rose: "bg-accent-100 text-accent-700 border-accent-300",
-  purple: "bg-primary-200 text-primary-800 border-primary-400",
-  brown: "bg-secondary-200 text-secondary-800 border-secondary-400",
-  red: "bg-accent-200 text-accent-800 border-accent-400",
-};
+// const COURSE_COLORS = {
+//   blue: "bg-primary-100 text-primary-700 border-primary-300",
+//   green: "bg-secondary-100 text-secondary-700 border-secondary-300",
+//   rose: "bg-accent-100 text-accent-700 border-accent-300",
+//   purple: "bg-primary-200 text-primary-800 border-primary-400",
+//   brown: "bg-secondary-200 text-secondary-800 border-secondary-400",
+//   red: "bg-accent-200 text-accent-800 border-accent-400",
+// };
 
 const CONTENT_TYPES: ContentType[] = [
   { id: "assignment", name: "Assignment", icon: "assignment" },
@@ -180,7 +180,7 @@ function ChatInput({
                     <span
                       key={courseId}
                       className={`px-3 py-1 rounded-full text-xs font-medium border ${
-                        COURSE_COLORS[course.color]
+                        course.courseColorTailwind
                       }`}
                     >
                       {course.name}
@@ -215,7 +215,7 @@ function ChatInput({
             <div className="flex gap-2">
               <MultiSelect
                 options={courses.map((c) => ({
-                  value: c.id,
+                  value: c._id.toString(),
                   label: c.name,
                 }))}
                 selected={selectedCourses}
@@ -367,35 +367,6 @@ function LisaPageContent({
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 
   // Remove useSearchParams from here
-
-  // Accept initialQuestion as prop
-  const question: string = initialQuestion || "";
-  const hasSentInitialQuestion = useRef(false);
-  useEffect(() => {
-    if (question && messages.length === 0 && !hasSentInitialQuestion.current) {
-      handleSend(question);
-      hasSentInitialQuestion.current = true;
-    }
-  }, [question, messages.length]);
-
-  const userName = session?.user?.name || "Student";
-
-  const handleToggleCourse = (courseId: string) => {
-    setSelectedCourses((prev) =>
-      prev.includes(courseId)
-        ? prev.filter((id) => id !== courseId)
-        : [...prev, courseId]
-    );
-  };
-
-  const handleToggleType = (typeId: string) => {
-    setSelectedTypes((prev) =>
-      prev.includes(typeId)
-        ? prev.filter((id) => id !== typeId)
-        : [...prev, typeId]
-    );
-  };
-
   const handleSend = async (msg: string) => {
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -453,7 +424,7 @@ function LisaPageContent({
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, aiResponse]);
-    } catch (e) {
+    } catch {
       setMessages((prev) => [
         ...prev,
         {
@@ -469,9 +440,17 @@ function LisaPageContent({
     }
   };
 
-  const handleQuickAction = (action: string) => {
-    handleSend(action);
-  };
+  // Accept initialQuestion as prop
+  const question: string = initialQuestion || "";
+  const hasSentInitialQuestion = useRef(false);
+  useEffect(() => {
+    if (question && messages.length === 0 && !hasSentInitialQuestion.current) {
+      handleSend(question);
+      hasSentInitialQuestion.current = true;
+    }
+  }, [question, messages.length]);
+
+  const userName = session?.user?.name || "Student";
 
   return (
     <>

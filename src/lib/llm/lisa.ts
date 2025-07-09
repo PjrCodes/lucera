@@ -3,7 +3,8 @@ import { ChatRequest } from "../schemas/api";
 import fs from "fs";
 import { retrieveDocuments } from "../pinecone";
 import { Hit } from "@pinecone-database/pinecone/dist/pinecone-generated-ts-fetch/db_data";
-
+// import { chunkit } from 'semantic-chunking';
+// import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 
 const queryAugmentationUserPrompt = fs.readFileSync(
   "./src/appdata/prompts/query_augmentation/user.txt",
@@ -151,8 +152,9 @@ async function getDocData(hits: Hit[]): Promise<string[]> {
     //   // problematic
     //   docs.push(content.description || "");
     // }
-    docs.push(hit.fields.text || ""); // Assuming hit.fields.text contains the document text
+    docs.push((hit.fields as { text?: string }).text || ""); // Assuming hit.fields.text contains the document text
   }
+
   return docs;
 }
 

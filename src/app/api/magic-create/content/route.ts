@@ -72,9 +72,21 @@ export const POST = auth(
       );
     }
 
-    const reChunkedArray = await reChunkOnWordCount(extractedTextArray);
-
-    // each extracted chunk will be put into the database as a separate record
+    let reChunkedArray: string[];
+    try {
+      reChunkedArray = await reChunkOnWordCount(extractedTextArray);
+    } catch (error) {
+      console.error("[LLM_CONTENT_EXTRACTOR]: all chunking failed: ", error);
+      return NextResponse.json(
+        {
+          error:
+            "Failed to re-chunk the extracted text. Please try again with a different file.",
+        },
+        { status: 500 }
+      );
+    }
+    // console.log("[LLM_CONTENT_EXTRACTOR]: Re-chunked Array:", reChunkedArray);
+    // // each extracted chunk will be put into the database as a separate record
     const extractedChunkIds: string[] = [];
 
     for (const text of reChunkedArray) {
@@ -98,11 +110,7 @@ export const POST = auth(
     }
     // Add extracted chunks to Pinecone
     try {
-      await addManyCourseContent(
-        extractedChunkIds,
-        reChunkedArray,
-        courseId
-      );
+      await addManyCourseContent(extractedChunkIds, reChunkedArray, courseId);
     } catch (error) {
       console.error(
         "[LLM_CONTENT_EXTRACTOR]: Error adding extracted chunks to Pinecone:",
