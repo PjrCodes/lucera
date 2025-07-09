@@ -10,23 +10,9 @@ import { getCourseById } from "@/lib/database-service/courses";
 import { MagicCreateContentRequestSchema } from "@/lib/schemas/api";
 import { withTeacherSession } from "@/lib/database-service/auth";
 import { addManyCourseContent } from "@/lib/pinecone";
-import { PdfReader } from "pdfreader";
 import { reChunkOnWordCount } from "@/lib/llm/lisa";
+import { parsePdfFile } from "@/lib/chatbot";
 
-function parsePdfFile(filePath: string): Promise<string[]> {
-  return new Promise((resolve, reject) => {
-    const items: string[] = [];
-    new PdfReader().parseFileItems(filePath, (err, item) => {
-      if (err) {
-        reject(err);
-      } else if (!item) {
-        resolve(items);
-      } else if (item.text) {
-        items.push(item.text);
-      }
-    });
-  });
-}
 
 export const POST = auth(
   withTeacherSession(async function POST(
@@ -34,7 +20,6 @@ export const POST = auth(
     session: AuthenticatedSession
   ) {
     const body = await req.json();
-    console.log("Magic Create Content Request Body:", body);
     const parsedBody = MagicCreateContentRequestSchema.safeParse(body);
     if (!parsedBody.success) {
       return NextResponse.json(

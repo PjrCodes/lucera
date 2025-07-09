@@ -15,6 +15,38 @@ export async function getPineconeIndex(indexName: string, host: string) {
   }
 }
 
+export async function addManySyllabusContent(
+  ids: string[],
+  texts: string[],
+  courseId: string
+) {
+  try {
+    const index = (
+      await getPineconeIndex(
+        "lucera",
+        "https://lucera-hn4ejk3.svc.aped-4627-b74a.pinecone.io"
+      )
+    ).namespace("__default__");
+
+    if (ids.length !== texts.length) {
+      throw new Error("IDs and texts arrays must have the same length");
+    }
+
+    const records = ids.map((id, index) => ({
+      _id: id,
+      text: texts[index],
+      courseId: courseId,
+      contentType: "syllabus",
+    }));
+
+    const response = await index.upsertRecords(records);
+    return response;
+  } catch (error) {
+    console.error("Error adding document to Pinecone:", error);
+    throw error;
+  }
+}
+
 export async function addManyCourseContent(
   ids: string[],
   texts: string[],

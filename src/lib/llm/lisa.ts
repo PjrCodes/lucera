@@ -3,6 +3,8 @@ import { ChatRequest } from "../schemas/api";
 import fs from "fs";
 import { retrieveDocuments } from "../pinecone";
 import { Hit } from "@pinecone-database/pinecone/dist/pinecone-generated-ts-fetch/db_data";
+import { Course } from "../schemas/database";
+import { getCourseById } from "../database-service/courses";
 // import { chunkit } from 'semantic-chunking';
 // import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 
@@ -140,22 +142,47 @@ async function getLisasResponse(
 async function getDocData(hits: Hit[]): Promise<string[]> {
   // retrieve actual document text from hit.id
   const docs = [];
+  const relevantCourses = new Set<string>();
   for (const hit of hits) {
-    // const content = await getContentById(hit._id);
-    // console.log("Content retrieved:", content);
-    // if (content.extractedChunks) {
-    //   // get each content
-    //   const extractedChunk = await client.db().collection("extracted_chunks").findOne({
-    //     _id: content.extractedChunks[0],
-    //   });
-    // } else {
-    //   // problematic
-    //   docs.push(content.description || "");
-    // }
-    docs.push((hit.fields as { text?: string }).text || ""); // Assuming hit.fields.text contains the document text
+    const fields = hit.fields as {
+      courseId: string;
+      text: string;
+      contentType: string;
+    };
+    relevantCourses.add(fields.courseId);
+    docs.push({
+      text: fields.text || "",
+      courseId: fields.courseId,
+      contentType: fields.contentType,
+    });
   }
 
-  return docs;
+  console.log("[LISA] Retrieved Documents:", docs.length, "documents");
+
+  // ping relevantCourses
+  const courseDataMap = new Map<string, Course>();
+  for (const courseId of relevantCourses) {
+    if (courseDataMap.has(courseId)) {
+      continue; // Skip if already fetched
+    }
+    const course = await getCourseById(courseId);
+    if (course) {
+      courseDataMap.set(courseId, course);
+    } else {
+      console.warn(`Course with ID ${courseId} not found`);
+    }
+  }
+
+  // add preface to document - COURSE NAME, ETC.
+  const finalDocs: string[] = docs.map((doc) => {
+    const relevantCourse = courseDataMap.get(doc.courseId);
+    const courseName = relevantCourse ? relevantCourse.name : "Unknown Course";
+    return `Course: ${courseName} | Content Type: ${doc.contentType}\n${doc.text}`;
+  });
+
+  console.log("[LISA] Final Documents:", finalDocs.length, "documents");
+
+  return finalDocs;
 }
 
 export async function callLisa(context: ChatRequest) {
