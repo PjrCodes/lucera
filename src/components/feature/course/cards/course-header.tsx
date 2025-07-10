@@ -98,6 +98,7 @@ export default function CourseHeader({
                 variant="outline"
                 size="sm"
                 onClick={() => setShowDeleteDialog(true)}
+                className="text-danger-600 hover:bg-danger-100 hover:text-danger-900 border-danger-200 hover:border-danger-300 focus-visible:ring-danger-500 transition"
               >
                 <Trash className="h-4 w-4" />
               </SecondaryButton>
@@ -107,8 +108,10 @@ export default function CourseHeader({
               >
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Delete Course</DialogTitle>
-                    <DialogDescription>
+                    <DialogTitle className="text-danger-700">
+                      Delete Course
+                    </DialogTitle>
+                    <DialogDescription className="text-danger-600">
                       Are you sure you want to delete this course? This action
                       cannot be undone.
                       <br />
@@ -119,10 +122,10 @@ export default function CourseHeader({
                     value={deleteInput}
                     onChange={setDeleteInput}
                     placeholder="Type DELETE to confirm"
-                    className="mt-2"
+                    className="mt-2 border-danger-500 focus:outline-danger-700 focus:border-danger-700"
                   />
                   {error && (
-                    <div className="text-red-600 text-sm mt-2">{error}</div>
+                    <div className="text-danger-600 text-sm mt-2">{error}</div>
                   )}
                   <DialogFooter>
                     <DialogClose asChild>
@@ -134,6 +137,7 @@ export default function CourseHeader({
                       variant="default"
                       onClick={handleDelete}
                       disabled={deleteInput !== "DELETE" || deleting}
+                      className="bg-danger-600 border-danger-600 text-white hover:bg-danger-700 hover:border-danger-700 focus-visible:ring-danger-500 transition"
                     >
                       {deleting ? "Deleting..." : "Delete"}
                     </SecondaryButton>
