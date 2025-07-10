@@ -52,7 +52,9 @@ export default function CourseStudentsCard({
               </div>
             ))
           ) : (
-            <div className="text-base text-primary-600">No students enrolled.</div>
+            <div className="text-base text-primary-600">
+              No students enrolled.
+            </div>
           )}
 
           {isTeacher && (

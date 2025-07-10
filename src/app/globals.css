@@ -4,7 +4,6 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  
   --font-body: var(--font-lato);
   --font-header: var(--font-urbanist);
 
@@ -21,7 +20,7 @@
   --color-primary-900: oklch(42.1% 0.095 57.708);
   --color-primary-950: oklch(28.6% 0.066 53.813);
   --color-primary: var(--color-primary-500);
-  
+
   /* Secondary (Brown) */
   --color-secondary-50: #f2e5e7;
   --color-secondary-100: #dcafb5;
@@ -33,7 +32,6 @@
   --color-secondary-700: #593032;
   --color-secondary-800: #432325;
   --color-secondary-900: #2d1618;
-
 
   /* Success */
   --color-success-50: #e6f9f0;

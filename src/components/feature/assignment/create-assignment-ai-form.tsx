@@ -26,7 +26,10 @@ export default function CreateAssignmentAIForm({
   const router = useRouter();
 
   useEffect(() => {
-    if (defaultCourseId && courses.some((c) => c._id.toString() === defaultCourseId)) {
+    if (
+      defaultCourseId &&
+      courses.some((c) => c._id.toString() === defaultCourseId)
+    ) {
       setSelectedCourse(defaultCourseId);
     }
   }, [defaultCourseId, courses]);

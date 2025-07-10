@@ -43,14 +43,14 @@ export const POST = auth(
     } catch (error) {
       console.error(
         "[LLM_SYLLABUS_EXTRACTOR]: Error extracting text from PDF:",
-        error
+        error,
       );
       return NextResponse.json(
         {
           error:
             "Failed to extract text from PDF file. Please ensure the file is a valid PDF and try again.",
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -64,7 +64,7 @@ export const POST = auth(
           error:
             "Failed to re-chunk the extracted text. Please try again with a different file.",
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -109,8 +109,7 @@ export const POST = auth(
       );
     }
 
-
-const extractedChunkIds: string[] = [];
+    const extractedChunkIds: string[] = [];
 
     for (const text of reChunkedArray) {
       const db = client.db();
@@ -120,7 +119,7 @@ const extractedChunkIds: string[] = [];
       if (!chunkRecord.acknowledged) {
         return NextResponse.json(
           { error: "Failed to create extracted chunk record" },
-          { status: 500 }
+          { status: 500 },
         );
       }
       extractedChunkIds.push(chunkRecord.insertedId.toString());
@@ -128,16 +127,20 @@ const extractedChunkIds: string[] = [];
     if (extractedChunkIds.length === 0) {
       return NextResponse.json(
         { error: "No text extracted from the PDF file" },
-        { status: 400 }
+        { status: 400 },
       );
     }
     // Add extracted chunks to Pinecone
     try {
-      await addManySyllabusContent(extractedChunkIds, reChunkedArray, courseRecord.insertedId.toString());
+      await addManySyllabusContent(
+        extractedChunkIds,
+        reChunkedArray,
+        courseRecord.insertedId.toString(),
+      );
     } catch (error) {
       console.error(
         "[LLM_CONTENT_EXTRACTOR]: Error adding extracted chunks to Pinecone:",
-        error
+        error,
       );
       return NextResponse.json(
         {
@@ -145,7 +148,7 @@ const extractedChunkIds: string[] = [];
             "Failed to add extracted chunks to Pinecone - content cannot be used for chat bot operations",
           status: "error",
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 

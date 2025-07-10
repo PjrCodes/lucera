@@ -1,7 +1,4 @@
-import {
-  AssignmentWithEmbeddedFile,
-  Course,
-} from "@/lib/schemas/database";
+import { AssignmentWithEmbeddedFile, Course } from "@/lib/schemas/database";
 import { PrimaryButton } from "@/components/core/buttons/primary";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { FiDownload, FiArrowLeft } from "react-icons/fi";
@@ -276,7 +273,7 @@ export default function AssignmentView({
                               </td>
                             ))}
                         </tr>
-                      )
+                      ),
                     )}
                   </tbody>
                 </table>
@@ -377,8 +374,8 @@ export default function AssignmentView({
                   {isOverdue
                     ? "This assignment is overdue. Late submissions may be penalized."
                     : assignment.dueDate
-                    ? `This assignment is due ${formatDate(assignment.dueDate)}`
-                    : "Make sure to submit your work before the deadline."}
+                      ? `This assignment is due ${formatDate(assignment.dueDate)}`
+                      : "Make sure to submit your work before the deadline."}
                 </p>
               </div>
             </div>

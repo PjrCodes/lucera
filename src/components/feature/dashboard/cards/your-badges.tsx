@@ -75,7 +75,7 @@ const YourBadges: React.FC<PropsForEveryDashboardCard> = ({}) => {
                 </span>
               </div>
             </Link>
-          )
+          ),
         )}
       </div>
     </div>

@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     if (!parsedBody.success) {
       return NextResponse.json(
         { error: `Invalid request body: ${parsedBody.error}` },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     console.error("Error in /api/chat:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

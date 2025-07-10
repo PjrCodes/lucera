@@ -10,12 +10,12 @@ import { getCourseById } from "../database-service/courses";
 
 const queryAugmentationUserPrompt = fs.readFileSync(
   "./src/appdata/prompts/query_augmentation/user.txt",
-  "utf-8"
+  "utf-8",
 );
 
 const chatUserPrompt = fs.readFileSync(
   "./src/appdata/prompts/chatbot/user.txt",
-  "utf-8"
+  "utf-8",
 );
 
 export async function synonymAugmentation(query: string): Promise<string> {
@@ -76,7 +76,7 @@ export async function synonymAugmentation(query: string): Promise<string> {
 
 async function getLisasResponse(
   query: string,
-  documents: string[]
+  documents: string[],
 ): Promise<string> {
   const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
@@ -100,7 +100,7 @@ async function getLisasResponse(
     .replace("{{USER_QUERY}}", query)
     .replace(
       "{{DOCUMENTS}}",
-      documents.map((doc) => `\n- ${doc}`).join("\n--------------\n")
+      documents.map((doc) => `\n- ${doc}`).join("\n--------------\n"),
     );
   console.log("LLMPrompt:", LLMPrompt);
   const contents = [
@@ -204,7 +204,7 @@ export async function callLisa(context: ChatRequest) {
 
 export async function reChunkOnWordCount(
   textArray: string[],
-  count: number = 1000
+  count: number = 1000,
 ): Promise<string[]> {
   const allText = textArray.join(" ");
   const words = allText.split(/\s+/);

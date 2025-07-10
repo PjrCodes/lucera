@@ -15,12 +15,12 @@ function formatDate(dateStr: string) {
   const nowDateOnly = new Date(
     now.getFullYear(),
     now.getMonth(),
-    now.getDate()
+    now.getDate(),
   );
   const dateOnly = new Date(
     date.getFullYear(),
     date.getMonth(),
-    date.getDate()
+    date.getDate(),
   );
 
   // Calculate difference in days
@@ -99,12 +99,12 @@ const getDeadlineColor = (dateStr: string) => {
   const nowDateOnly = new Date(
     now.getFullYear(),
     now.getMonth(),
-    now.getDate()
+    now.getDate(),
   );
   const dateOnly = new Date(
     date.getFullYear(),
     date.getMonth(),
-    date.getDate()
+    date.getDate(),
   );
 
   // Calculate difference in days
@@ -252,7 +252,7 @@ export default async function UpcomingDeadlines({
               </div>
               <span
                 className={`text-xs md:text-sm ${getDeadlineColor(
-                  dl.dueDate
+                  dl.dueDate,
                 )} mt-1 md:mt-0`}
               >
                 {formatDate(dl.dueDate)}

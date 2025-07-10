@@ -84,8 +84,8 @@ function MessageList({ messages }: { messages: Message[] }) {
                   message.sender === "user"
                     ? "bg-primary-600 text-white"
                     : isError
-                    ? "bg-red-100 text-red-800 border-l-4 border-red-400"
-                    : "bg-white text-gray-800 border-l-4 border-primary-300"
+                      ? "bg-red-100 text-red-800 border-l-4 border-red-400"
+                      : "bg-white text-gray-800 border-l-4 border-primary-300"
                 }`}
               >
                 <div className="break-words whitespace-pre-line text-sm leading-relaxed">

@@ -14,7 +14,7 @@ const urbanist = Urbanist({
 const lato = Lato({
   variable: "--font-lato",
   subsets: ["latin"],
-  weight: ["100", "300", "400", "700","900"],
+  weight: ["100", "300", "400", "700", "900"],
 });
 
 export const metadata: Metadata = {
@@ -29,7 +29,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${urbanist.variable} ${lato.variable} antialiased`}>
+    <html
+      lang="en"
+      className={`${urbanist.variable} ${lato.variable} antialiased`}
+    >
       <body className="font-body">
         <ClientProviders>
           <SessionProvider>

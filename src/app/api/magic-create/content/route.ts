@@ -13,11 +13,10 @@ import { addManyCourseContent } from "@/lib/pinecone";
 import { reChunkOnWordCount } from "@/lib/llm/lisa";
 import { parsePdfFile } from "@/lib/chatbot";
 
-
 export const POST = auth(
   withTeacherSession(async function POST(
     req: NextAuthRequest,
-    session: AuthenticatedSession
+    session: AuthenticatedSession,
   ) {
     const body = await req.json();
     const parsedBody = MagicCreateContentRequestSchema.safeParse(body);
@@ -28,7 +27,7 @@ export const POST = auth(
             .map((issue) => issue.message)
             .join(", "),
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
     const { fileId, courseId } = parsedBody.data;
@@ -46,14 +45,14 @@ export const POST = auth(
     } catch (error) {
       console.error(
         "[LLM_CONTENT_EXTRACTOR]: Error extracting text from PDF:",
-        error
+        error,
       );
       return NextResponse.json(
         {
           error:
             "Failed to extract text from PDF file. Please ensure the file is a valid PDF and try again.",
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -67,7 +66,7 @@ export const POST = auth(
           error:
             "Failed to re-chunk the extracted text. Please try again with a different file.",
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
     // console.log("[LLM_CONTENT_EXTRACTOR]: Re-chunked Array:", reChunkedArray);
@@ -82,7 +81,7 @@ export const POST = auth(
       if (!chunkRecord.acknowledged) {
         return NextResponse.json(
           { error: "Failed to create extracted chunk record" },
-          { status: 500 }
+          { status: 500 },
         );
       }
       extractedChunkIds.push(chunkRecord.insertedId.toString());
@@ -90,7 +89,7 @@ export const POST = auth(
     if (extractedChunkIds.length === 0) {
       return NextResponse.json(
         { error: "No text extracted from the PDF file" },
-        { status: 400 }
+        { status: 400 },
       );
     }
     // Add extracted chunks to Pinecone
@@ -99,7 +98,7 @@ export const POST = auth(
     } catch (error) {
       console.error(
         "[LLM_CONTENT_EXTRACTOR]: Error adding extracted chunks to Pinecone:",
-        error
+        error,
       );
       return NextResponse.json(
         {
@@ -107,7 +106,7 @@ export const POST = auth(
             "Failed to add extracted chunks to Pinecone - content cannot be used for chat bot operations",
           status: "error",
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -116,7 +115,7 @@ export const POST = auth(
 
     const llmResult = await LLMContentExtractor(
       loadResponse.fileBuffer,
-      courseRecord
+      courseRecord,
     );
 
     const {
@@ -142,7 +141,7 @@ export const POST = auth(
     if (!contentRecord.acknowledged) {
       return NextResponse.json(
         { error: "Failed to create content record" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -150,14 +149,14 @@ export const POST = auth(
     } catch (error) {
       console.error(
         "[LLM_CONTENT_EXTRACTOR]: Error adding document to Pinecone:",
-        error
+        error,
       );
       return NextResponse.json(
         {
           error:
             "Failed to add content to Pinecone - content cannot be used for chat bot operations",
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -166,5 +165,5 @@ export const POST = auth(
       message: "Content created successfully",
       status: "success",
     });
-  })
+  }),
 );

@@ -30,7 +30,7 @@ export default function CourseAssignmentsCard({
 
   const handleAssignmentClick = (
     assignment: AssignmentWithEmbeddedFile,
-    e: React.MouseEvent
+    e: React.MouseEvent,
   ) => {
     // If we have an onAssignmentSelect handler, prevent navigation and show in-place
     if (onAssignmentSelect) {

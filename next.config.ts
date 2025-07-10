@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       new URL("https://lh3.googleusercontent.com/a/*"),
       new URL("https://placehold.co/**"),
-      new URL("https://randomuser.me/**")
+      new URL("https://randomuser.me/**"),
     ],
   },
   experimental: {

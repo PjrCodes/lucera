@@ -98,7 +98,9 @@ export const courseWithEmbeddedSyllabusSchema = courseSchema.extend({
   syllabusFile: fileSchema,
 });
 
-export type CourseWithEmbeddedSyllabus = z.infer<typeof courseWithEmbeddedSyllabusSchema>;
+export type CourseWithEmbeddedSyllabus = z.infer<
+  typeof courseWithEmbeddedSyllabusSchema
+>;
 
 export const contentSchema = z.object({
   _id: z.instanceof(ObjectId).or(z.string()),

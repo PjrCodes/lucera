@@ -27,7 +27,7 @@ export async function getAssignmentById(assignmentId: string) {
 }
 
 export async function getAssignmentsForCourse(
-  courseId: string
+  courseId: string,
 ): Promise<AssignmentWithEmbeddedFile[]> {
   const contents = await client
     .db()
@@ -58,7 +58,7 @@ export async function getAssignmentsForCourse(
           ...parsedData,
           file: file,
         } as AssignmentWithEmbeddedFile;
-      })
+      }),
     );
 
     return parsedContents;
@@ -69,7 +69,7 @@ export async function getAssignmentsForCourse(
 }
 
 export async function getUpcomingDeadlines(
-  userId: string
+  userId: string,
 ): Promise<Deadline[]> {
   const courses = await getCoursesForUser(userId);
   const courseIds = courses.map((course) => course._id.toString());
@@ -138,7 +138,7 @@ export async function getUpcomingDeadlines(
   // 4. Combine and sort all deadlines by dueDate ascending
   const allDeadlines = [...assignmentDeadlines, ...timelineDeadlines];
   allDeadlines.sort(
-    (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
+    (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime(),
   );
 
   return allDeadlines;

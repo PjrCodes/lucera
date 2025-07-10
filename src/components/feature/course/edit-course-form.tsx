@@ -53,7 +53,7 @@ export function EditCourseForm({
   // );
 
   const [shortDescription, setShortDescription] = useState(
-    course?.shortDescription || ""
+    course?.shortDescription || "",
   );
   const [description, setDescription] = useState(course?.description || "");
   const [units, setUnits] = useState<CourseUnit[]>(course?.units || []);
@@ -83,21 +83,21 @@ export function EditCourseForm({
         typeof item.startDate === "string"
           ? item.startDate
           : isDate(item.startDate)
-          ? (item.startDate as Date).toISOString().slice(0, 10)
-          : "",
+            ? (item.startDate as Date).toISOString().slice(0, 10)
+            : "",
       dueDate:
         typeof item.dueDate === "string"
           ? item.dueDate
           : isDate(item.dueDate)
-          ? (item.dueDate as Date).toISOString().slice(0, 10)
-          : "",
+            ? (item.dueDate as Date).toISOString().slice(0, 10)
+            : "",
       gradeReleaseDate:
         typeof item.gradeReleaseDate === "string"
           ? item.gradeReleaseDate
           : isDate(item.gradeReleaseDate)
-          ? (item.gradeReleaseDate as Date).toISOString().slice(0, 10)
-          : "",
-    }))
+            ? (item.gradeReleaseDate as Date).toISOString().slice(0, 10)
+            : "",
+    })),
   );
   // Syllabus file state should be File | null, only set by user upload
   const [syllabusFileName, setSyllabusFileName] = useState<File | null>(null);
@@ -114,19 +114,21 @@ export function EditCourseForm({
   const handleUnitChange = (
     idx: number,
     field: keyof CourseUnit,
-    value: string
+    value: string,
   ) => {
     setUnits((prev) =>
-      prev.map((u, i) => (i === idx ? { ...u, [field]: value } : u))
+      prev.map((u, i) => (i === idx ? { ...u, [field]: value } : u)),
     );
   };
   const handleTimelineChange = (
     idx: number,
     field: keyof CourseTimelineItem,
-    value: string | boolean
+    value: string | boolean,
   ) => {
     setTimeline((prev: CourseTimelineItem[]) =>
-      prev.map((t: CourseTimelineItem, i: number) => (i === idx ? { ...t, [field]: value } : t))
+      prev.map((t: CourseTimelineItem, i: number) =>
+        i === idx ? { ...t, [field]: value } : t,
+      ),
     );
   };
 
@@ -162,7 +164,9 @@ export function EditCourseForm({
       },
     ]);
   const removeTimeline = (idx: number) =>
-    setTimeline((prev: CourseTimelineItem[]) => prev.filter((_, i: number) => i !== idx));
+    setTimeline((prev: CourseTimelineItem[]) =>
+      prev.filter((_, i: number) => i !== idx),
+    );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -192,7 +196,7 @@ export function EditCourseForm({
       if (!response.ok) {
         const errorData = await response.json();
         setError(
-          `Failed to save course: ${errorData.error || response.statusText}`
+          `Failed to save course: ${errorData.error || response.statusText}`,
         );
         setLoading(false);
         return;
@@ -354,7 +358,7 @@ export function EditCourseForm({
                   handleUnitChange(
                     rowKeyValue,
                     columnKey as keyof CourseUnit,
-                    value
+                    value,
                   );
                 }
                 if (action.type === "OpenEditor") {
@@ -390,7 +394,9 @@ export function EditCourseForm({
                 id: index,
                 startDate: item.startDate ? new Date(item.startDate) : null,
                 dueDate: item.dueDate ? new Date(item.dueDate) : null,
-                gradeReleaseDate: item.gradeReleaseDate ? new Date(item.gradeReleaseDate) : null,
+                gradeReleaseDate: item.gradeReleaseDate
+                  ? new Date(item.gradeReleaseDate)
+                  : null,
               }))}
               rowKeyField="id"
               columns={[
@@ -528,7 +534,7 @@ export function EditCourseForm({
                   handleTimelineChange(
                     rowKeyValue,
                     columnKey as keyof CourseTimelineItem,
-                    value
+                    value,
                   );
                 }
                 if (action.type === "OpenEditor") {

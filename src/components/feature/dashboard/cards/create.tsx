@@ -77,9 +77,7 @@ export default function Create({}: PropsForEveryDashboardCard) {
             >
               {/* react element opt.icon */}
               <span>{opt.icon}</span>
-              <span className="line-clamp-2">
-                {opt.label}
-              </span>
+              <span className="line-clamp-2">{opt.label}</span>
             </Link>
           </PrimaryButton>
         ))}

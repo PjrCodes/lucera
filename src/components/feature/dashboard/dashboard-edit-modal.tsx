@@ -82,8 +82,8 @@ const SourceDraggableElement = ({
                     isOverlay && !isDropAllowed
                       ? "border-danger-600 bg-danger-100 text-danger-900 cursor-not-allowed shadow-lg"
                       : isOverlay
-                      ? "bg-primary-400 text-primary-950 shadow-lg border-primary-600 cursor-grabbing"
-                      : "bg-primary-300 text-primary-950 shadow-sm hover:shadow-md hover:bg-primary-400 cursor-grab border-primary-600"
+                        ? "bg-primary-400 text-primary-950 shadow-lg border-primary-600 cursor-grabbing"
+                        : "bg-primary-300 text-primary-950 shadow-sm hover:shadow-md hover:bg-primary-400 cursor-grab border-primary-600"
                   }`}
     >
       {
@@ -169,7 +169,7 @@ export default function DashboardEditModal({
   const [isDropCurrentlyAllowed, setIsDropCurrentlyAllowed] = useState(true);
   const [nextUniqueCounter, setNextUniqueCounter] = useState(0); // Global counter for uniqueness
   const [activeColumn, setActiveColumn] = useState<"left" | "right" | null>(
-    null
+    null,
   ); // Track which column is active
 
   const userRole = userData?.role || "student";
@@ -215,10 +215,10 @@ export default function DashboardEditModal({
       });
 
       const filteredLeftItems = leftItems.filter(
-        (item) => item !== null
+        (item) => item !== null,
       ) as DashboardItem[];
       const filteredRightItems = rightItems.filter(
-        (item) => item !== null
+        (item) => item !== null,
       ) as DashboardItem[];
 
       setLeftColumn(filteredLeftItems);
@@ -280,7 +280,7 @@ export default function DashboardEditModal({
   const addElementToColumn = (
     elementType: string,
     column: "left" | "right",
-    index?: number
+    index?: number,
   ) => {
     const instanceId = generateUniqueId(column);
     const newItem: DashboardItem = {
@@ -303,7 +303,7 @@ export default function DashboardEditModal({
   };
 
   const findItemById = (
-    id: string
+    id: string,
   ): {
     item: DashboardItem;
     column: "left" | "right";
@@ -471,7 +471,7 @@ export default function DashboardEditModal({
 
       if (targetColumnName) {
         const isAllowedByRole = roleAllowedElementTypes.includes(
-          elementTypeFromSource
+          elementTypeFromSource,
         );
         const isAllowedInTargetColumn = (
           targetColumnName === "left"
@@ -483,11 +483,11 @@ export default function DashboardEditModal({
           addElementToColumn(
             elementTypeFromSource,
             targetColumnName,
-            targetIndex
+            targetIndex,
           );
         } else {
           console.warn(
-            `Element ${elementTypeFromSource} cannot be added to ${targetColumnName}. Role allowed: ${isAllowedByRole}, Column allowed: ${isAllowedInTargetColumn}.`
+            `Element ${elementTypeFromSource} cannot be added to ${targetColumnName}. Role allowed: ${isAllowedByRole}, Column allowed: ${isAllowedInTargetColumn}.`,
           );
         }
       }
@@ -537,7 +537,7 @@ export default function DashboardEditModal({
         const setColumn =
           targetColumnName === "left" ? setLeftColumn : setRightColumn;
         setColumn((items) =>
-          arrayMove(items, activeLocation.index, targetIndex!)
+          arrayMove(items, activeLocation.index, targetIndex!),
         );
       } else {
         // Moving between columns - generate new unique IDs
@@ -549,7 +549,7 @@ export default function DashboardEditModal({
         ).includes(itemToMove.type);
         if (!isAllowedInNewColumn) {
           console.warn(
-            `Element type ${itemToMove.type} not allowed in ${targetColumnName} column.`
+            `Element type ${itemToMove.type} not allowed in ${targetColumnName} column.`,
           );
           return;
         }
@@ -557,7 +557,7 @@ export default function DashboardEditModal({
         const sourceSetColumn =
           activeLocation.column === "left" ? setLeftColumn : setRightColumn;
         sourceSetColumn((items) =>
-          items.filter((item) => item.id !== activeId)
+          items.filter((item) => item.id !== activeId),
         );
 
         // Generate truly unique IDs for the moved item
@@ -756,7 +756,7 @@ export default function DashboardEditModal({
                   )
                 ) : null}
               </DragOverlay>,
-              document.body
+              document.body,
             )}
         </DndContext>
         <DialogFooter className="mt-auto pt-6">

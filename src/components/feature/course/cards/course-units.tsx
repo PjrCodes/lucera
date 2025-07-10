@@ -18,7 +18,10 @@ export default function CourseUnits({ course }: CourseUnitsProps) {
       </h2>
       <div className="space-y-4">
         {course.units.map((unit, idx) => (
-          <div key={idx} className="border-l-4 border-secondary-300 pl-4 py-2 hover:bg-primary-50 rounded transition-colors">
+          <div
+            key={idx}
+            className="border-l-4 border-secondary-300 pl-4 py-2 hover:bg-primary-50 rounded transition-colors"
+          >
             <h3 className="text-base font-medium text-primary-900 mb-1">
               Unit {idx + 1}: {unit.name}
             </h3>

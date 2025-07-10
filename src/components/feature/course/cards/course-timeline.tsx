@@ -61,7 +61,7 @@ function formatPartialDate(dateStr: string) {
     const [, year, month, week] = weekMatch;
     const monthName = new Date(`${year}-${month}-01`).toLocaleString(
       "default",
-      { month: "long" }
+      { month: "long" },
     );
     return `Week ${week} of ${monthName} ${year}`;
   }
@@ -70,7 +70,7 @@ function formatPartialDate(dateStr: string) {
     const [, year, month] = monthMatch;
     const monthName = new Date(`${year}-${month}-01`).toLocaleString(
       "default",
-      { month: "long" }
+      { month: "long" },
     );
     return `${monthName} ${year}`;
   }

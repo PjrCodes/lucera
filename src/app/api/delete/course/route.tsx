@@ -15,7 +15,7 @@ const deleteCourseRequestSchema = z.object({
 export const DELETE = auth(
   withTeacherSession(async function DELETE(
     req: NextAuthRequest,
-    session: AuthenticatedSession
+    session: AuthenticatedSession,
   ) {
     // Currently, the DELETE API endpoint is not implemented.
     const body = await req.json();
@@ -28,7 +28,7 @@ export const DELETE = auth(
             .map((issue) => issue.message)
             .join(", "),
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -36,7 +36,7 @@ export const DELETE = auth(
     // Here you would typically call a service to delete the course by ID.
     // For now, we will just return a not implemented response.
     console.log(
-      `Request to delete course with ID: ${courseId} by user: ${session.user.id}`
+      `Request to delete course with ID: ${courseId} by user: ${session.user.id}`,
     );
 
     try {
@@ -45,18 +45,18 @@ export const DELETE = auth(
       if (!(error instanceof Error)) {
         return NextResponse.json(
           { error: "Request Blocked for unknown reason" },
-          { status: 500 }
+          { status: 500 },
         );
       }
       console.error("Error deleting course:", error);
       return NextResponse.json(
         { error: "Request Blocked: " + error.message },
-        { status: 500 }
+        { status: 500 },
       );
     }
     return NextResponse.json(
       { message: "Course deleted successfully" },
-      { status: 200 }
+      { status: 200 },
     );
-  })
+  }),
 );

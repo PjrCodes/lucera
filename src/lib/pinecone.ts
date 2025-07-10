@@ -18,13 +18,13 @@ export async function getPineconeIndex(indexName: string, host: string) {
 export async function addManySyllabusContent(
   ids: string[],
   texts: string[],
-  courseId: string
+  courseId: string,
 ) {
   try {
     const index = (
       await getPineconeIndex(
         "lucera",
-        "https://lucera-hn4ejk3.svc.aped-4627-b74a.pinecone.io"
+        "https://lucera-hn4ejk3.svc.aped-4627-b74a.pinecone.io",
       )
     ).namespace("__default__");
 
@@ -50,13 +50,13 @@ export async function addManySyllabusContent(
 export async function addManyCourseContent(
   ids: string[],
   texts: string[],
-  courseId: string
+  courseId: string,
 ) {
   try {
     const index = (
       await getPineconeIndex(
         "lucera",
-        "https://lucera-hn4ejk3.svc.aped-4627-b74a.pinecone.io"
+        "https://lucera-hn4ejk3.svc.aped-4627-b74a.pinecone.io",
       )
     ).namespace("__default__");
 
@@ -84,7 +84,7 @@ export async function retrieveDocuments(query: string, context: ChatRequest) {
     const index = (
       await getPineconeIndex(
         "lucera",
-        "https://lucera-hn4ejk3.svc.aped-4627-b74a.pinecone.io"
+        "https://lucera-hn4ejk3.svc.aped-4627-b74a.pinecone.io",
       )
     ).namespace("__default__");
 
@@ -107,7 +107,7 @@ export async function retrieveDocuments(query: string, context: ChatRequest) {
 
     // check if hits are hit enough, only then pass them on
     const hits = response.result.hits.filter(
-      (hit) => hit._score && hit._score > 0.3
+      (hit) => hit._score && hit._score > 0.3,
     );
 
     return hits;

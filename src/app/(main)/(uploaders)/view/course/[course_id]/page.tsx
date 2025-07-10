@@ -92,7 +92,7 @@ export default async function CourseViewPage({
   ];
 
   const students: UserWithData[] = await getStudentsForCourse(
-    course._id.toString()
+    course._id.toString(),
   );
 
   // Get available students for invitation (only for teachers)
@@ -139,11 +139,11 @@ export default async function CourseViewPage({
       <div className="min-h-screen bg-primary-50">
         <div className="max-w-6xl mx-auto p-6">
           <div className="mx-auto w-full">
-          <CourseHeader
-            course={safeCourse}
-            isTeacher={isTeacher}
-            isBookmarked={isBookmarked}
-          />
+            <CourseHeader
+              course={safeCourse}
+              isTeacher={isTeacher}
+              isBookmarked={isBookmarked}
+            />
           </div>
           <div className="mx-auto mt-6 w-full">
             <CourseTabs
