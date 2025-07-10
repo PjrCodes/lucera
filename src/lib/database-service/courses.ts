@@ -9,6 +9,29 @@ import {
 } from "../schemas/database";
 import { getFileRecord } from "./files";
 
+export async function deleteCourseById(
+  courseId: string,
+  userId: string
+): Promise<void> {
+  const courseObjectId = new ObjectId(courseId);
+
+  // Delete the course from the courses collection
+  await client
+    .db()
+    .collection("courses")
+    .deleteOne({ _id: courseObjectId, userId: userId });
+
+  await client
+    .db()
+    .collection("user_data")
+    .updateMany(
+      { relatedCourses: courseId },
+      { $pull: { relatedCourses: courseId } }
+    );
+
+  return;
+}
+
 export async function getCoursesForUser(userId: string) {
   const userData = await getUserData(userId);
 
