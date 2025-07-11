@@ -52,7 +52,7 @@ export default function CourseMaterialsCard({
               >
                 <Download className="w-4 h-4 text-primary-600" />
               </a>
-              {isTeacher && content.type !== "syllabus" && (
+              {isTeacher && (
                 <a
                   href={`/edit/content/${content._id}`}
                   className="ml-1 p-2 rounded hover:bg-primary-50 transition-colors"

@@ -30,6 +30,8 @@ export const POST = auth(
         { $addToSet: { relatedCourses: courseId } },
       );
 
+
+
     if (result.modifiedCount === 0) {
       return NextResponse.json(
         { status: "failed", message: "No students were invited" },

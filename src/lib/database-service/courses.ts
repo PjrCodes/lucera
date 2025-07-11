@@ -11,7 +11,7 @@ import { getFileRecord } from "./files";
 
 export async function deleteCourseById(
   courseId: string,
-  userId: string,
+  userId: string
 ): Promise<void> {
   const courseObjectId = new ObjectId(courseId);
 
@@ -26,7 +26,8 @@ export async function deleteCourseById(
     .collection("user_data")
     .updateMany(
       { relatedCourses: courseId },
-      { $pull: { relatedCourses: courseId } },
+      // @ts-expect-error: $pull may not be fully typed for this usage
+      { $pull: { relatedCourses: courseId } }
     );
 
   return;
@@ -37,7 +38,7 @@ export async function getCoursesForUser(userId: string) {
 
   // Extract related course IDs from user data
   const relatedCourseIDs = userData.relatedCourses.map(
-    (course) => new ObjectId(course),
+    (course) => new ObjectId(course)
   );
 
   const coursesData = client
@@ -119,7 +120,7 @@ export async function getStudentsForCourse(courseId: string) {
 }
 
 export async function getAvailableStudents(
-  course_id: string,
+  course_id: string
 ): Promise<{ id: string; name: string; email: string }[]> {
   const result = await client
     .db()

@@ -68,6 +68,21 @@ export async function getAssignmentsForCourse(
   }
 }
 
+export async function deleteAssignmentById(assignmentId: string) {
+  const db = client.db();
+  const assignmentObjectId = new ObjectId(assignmentId);
+
+  const deleteResult = await db
+    .collection("assignment")
+    .deleteOne({ _id: assignmentObjectId });
+
+  if (deleteResult.deletedCount === 0) {
+    throw new Error("Assignment not found or could not be deleted.");
+  }
+
+  return { success: true, message: "Assignment deleted successfully." };
+}
+
 export async function getUpcomingDeadlines(
   userId: string,
 ): Promise<Deadline[]> {

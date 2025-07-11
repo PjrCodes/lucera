@@ -2,20 +2,8 @@
 
 import { Course } from "@/lib/schemas/database";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
-import { Edit, Bookmark, Trash } from "lucide-react";
+import { Edit, Bookmark } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog";
-import { TextBox } from "@/components/core/inputs/text-box";
-import { redirect } from "next/navigation";
 
 interface CourseHeaderProps {
   course: Course;
@@ -28,44 +16,6 @@ export default function CourseHeader({
   isTeacher = false,
   isBookmarked = false,
 }: CourseHeaderProps) {
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [deleteInput, setDeleteInput] = useState("");
-  const [deleting, setDeleting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function handleDelete() {
-    setDeleting(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/delete/course", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ courseId: course._id.toString() }),
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        setError(data.error || "Failed to delete course");
-        setDeleting(false);
-        return;
-      }
-      setShowDeleteDialog(false);
-      // Optionally: refresh page or redirect
-      redirect("/");
-    } catch (e) {
-      if (!(e instanceof Error)) {
-        setError("Unknown error while deleting course");
-        setDeleting(false);
-        return;
-      }
-      if (e.message.includes("NEXT_REDIRECT")) {
-        throw e;
-      }
-
-      setError(e.message || "Unknown error");
-      setDeleting(false);
-    }
-  }
-
   return (
     <div className="bg-primary-50 rounded-xl shadow border border-primary-100 p-6">
       <div className="flex items-center justify-between gap-4">
@@ -88,63 +38,11 @@ export default function CourseHeader({
             />
           </SecondaryButton>
           {isTeacher && (
-            <>
-              <SecondaryButton variant="outline" size="sm">
-                <Link href={`/edit/course/${course._id}`}>
-                  <Edit className="h-4 w-4" />
-                </Link>
-              </SecondaryButton>
-              <SecondaryButton
-                variant="outline"
-                size="sm"
-                onClick={() => setShowDeleteDialog(true)}
-                className="text-danger-600 hover:bg-danger-100 hover:text-danger-900 border-danger-200 hover:border-danger-300 focus-visible:ring-danger-500 transition"
-              >
-                <Trash className="h-4 w-4" />
-              </SecondaryButton>
-              <Dialog
-                open={showDeleteDialog}
-                onOpenChange={setShowDeleteDialog}
-              >
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle className="text-danger-700">
-                      Delete Course
-                    </DialogTitle>
-                    <DialogDescription className="text-danger-600">
-                      Are you sure you want to delete this course? This action
-                      cannot be undone.
-                      <br />
-                      Please type <b>DELETE</b> to confirm.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <TextBox
-                    value={deleteInput}
-                    onChange={setDeleteInput}
-                    placeholder="Type DELETE to confirm"
-                    className="mt-2 border-danger-500 focus:outline-danger-700 focus:border-danger-700"
-                  />
-                  {error && (
-                    <div className="text-danger-600 text-sm mt-2">{error}</div>
-                  )}
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <SecondaryButton variant="outline" disabled={deleting}>
-                        Cancel
-                      </SecondaryButton>
-                    </DialogClose>
-                    <SecondaryButton
-                      variant="default"
-                      onClick={handleDelete}
-                      disabled={deleteInput !== "DELETE" || deleting}
-                      className="bg-danger-600 border-danger-600 text-white hover:bg-danger-700 hover:border-danger-700 focus-visible:ring-danger-500 transition"
-                    >
-                      {deleting ? "Deleting..." : "Delete"}
-                    </SecondaryButton>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </>
+            <SecondaryButton variant="outline" size="sm">
+              <Link href={`/edit/course/${course._id}`}>
+                <Edit className="h-4 w-4" />
+              </Link>
+            </SecondaryButton>
           )}
           {/* ...existing code for !isTeacher... */}
         </div>

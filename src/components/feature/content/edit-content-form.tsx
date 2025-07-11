@@ -10,6 +10,17 @@ import { TextBox } from "@/components/core/inputs/text-box";
 import { Content, Course, CourseUnit, UserData } from "@/lib/schemas/database";
 import { Session } from "next-auth";
 import { useSearchParams } from "next/navigation";
+import { Trash } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 
 interface EditContentFormProps {
   userData: UserData;
@@ -29,6 +40,7 @@ export default function EditContentForm({
   isNew,
 }: EditContentFormProps) {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   // const [file, setFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
@@ -44,6 +56,12 @@ export default function EditContentForm({
   const [allTopics, setAllTopics] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Delete-related states
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleteInput, setDeleteInput] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // Load course and file info from query params or existing content
   useEffect(() => {
@@ -164,6 +182,35 @@ export default function EditContentForm({
     setLoading(false);
   };
 
+  const handleDelete = async () => {
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      const res = await fetch("/api/delete/content", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contentId: contentId }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setDeleteError(data.error || "Failed to delete content");
+        setDeleting(false);
+        return;
+      }
+      setShowDeleteDialog(false);
+      // Redirect to course content or home
+      router.push("/");
+    } catch (e) {
+      if (!(e instanceof Error)) {
+        setDeleteError("Unknown error while deleting content");
+        setDeleting(false);
+        return;
+      }
+      setDeleteError(e.message || "Unknown error");
+      setDeleting(false);
+    }
+  };
+
   return (
     <div className="max-w-xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">
@@ -262,22 +309,77 @@ export default function EditContentForm({
             </div>
           </div>
 
-          <PrimaryButton
-            type="submit"
-            className="px-4 py-2"
-            disabled={
-              !title || !description || selectedTopics.length === 0 || loading
-            }
-          >
-            {loading
-              ? "Saving..."
-              : isNew
-                ? "Create Content"
-                : "Update Content"}
-          </PrimaryButton>
+          <div className="flex gap-3 items-center">
+            <PrimaryButton
+              type="submit"
+              className="px-4 py-2"
+              disabled={
+                !title || !description || selectedTopics.length === 0 || loading
+              }
+            >
+              {loading
+                ? "Saving..."
+                : isNew
+                  ? "Create Content"
+                  : "Update Content"}
+            </PrimaryButton>
+
+            {!isNew && (
+              <SecondaryButton
+                type="button"
+                onClick={() => setShowDeleteDialog(true)}
+                className="px-4 py-2 text-danger-600 hover:bg-danger-100 hover:text-danger-900 border-danger-200 hover:border-danger-300 focus-visible:ring-danger-500 transition"
+              >
+                <Trash className="h-4 w-4 mr-2" />
+                Delete Content
+              </SecondaryButton>
+            )}
+          </div>
 
           {error && <div className="text-red-600 mt-2">{error}</div>}
         </form>
+      )}
+
+      {!isNew && (
+        <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="text-danger-700">
+                Delete Content
+              </DialogTitle>
+              <DialogDescription className="text-danger-600">
+                Are you sure you want to delete this content? This action cannot
+                be undone.
+                <br />
+                Please type <b>DELETE</b> to confirm.
+              </DialogDescription>
+            </DialogHeader>
+            <TextBox
+              value={deleteInput}
+              onChange={setDeleteInput}
+              placeholder="Type DELETE to confirm"
+              className="mt-2 border-danger-500 focus:outline-danger-700 focus:border-danger-700"
+            />
+            {deleteError && (
+              <div className="text-danger-600 text-sm mt-2">{deleteError}</div>
+            )}
+            <DialogFooter>
+              <DialogClose asChild>
+                <SecondaryButton variant="outline" disabled={deleting}>
+                  Cancel
+                </SecondaryButton>
+              </DialogClose>
+              <SecondaryButton
+                variant="default"
+                onClick={handleDelete}
+                disabled={deleteInput !== "DELETE" || deleting}
+                className="bg-danger-600 border-danger-600 text-white hover:bg-danger-700 hover:border-danger-700 focus-visible:ring-danger-500 transition"
+              >
+                {deleting ? "Deleting..." : "Delete"}
+              </SecondaryButton>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );

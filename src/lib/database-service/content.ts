@@ -62,3 +62,18 @@ export async function getContentForCourse(
     throw new Error("Invalid content data format");
   }
 }
+
+export async function deleteContentById(contentId: string) {
+  const db = client.db();
+  const contentObjectId = new ObjectId(contentId);
+
+  const deleteResult = await db
+    .collection("content")
+    .deleteOne({ _id: contentObjectId });
+
+  if (deleteResult.deletedCount === 0) {
+    throw new Error("Content not found or could not be deleted.");
+  }
+
+  return { success: true, message: "Content deleted successfully." };
+}
