@@ -1,12 +1,12 @@
 {
   "dashboardLayout": {
     "teacher": {
-      "leftColumn": ["UPCOMING_DEADLINES", "STUDENT_ALERTS", "CLASS_PROGRESS"],
+      "leftColumn": ["UPCOMING_DEADLINES", "CLASS_PROGRESS"],
       "rightColumn": ["BOOKMARKS", "CREATE"]
     },
     "student": {
-      "leftColumn": ["WHATS_NEXT", "RECENTLY_ACCESSED", "PROGRESS"],
-      "rightColumn": ["BOOKMARKS", "YOUR_BADGES"]
+      "leftColumn": ["UPCOMING_DEADLINES", "PROGRESS"],
+      "rightColumn": ["BOOKMARKS", "ANNOUNCEMENTS", "YOUR_BADGES"]
     }
   }
 }
