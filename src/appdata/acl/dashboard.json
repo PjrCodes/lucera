@@ -4,37 +4,25 @@
       "PROGRESS",
       "BOOKMARKS",
       "UPCOMING_DEADLINES",
-      "WHATS_NEXT",
+
       "YOUR_BADGES",
-      "ANNOUNCEMENTS",
-      "RECENTLY_ACCESSED"
+      "ANNOUNCEMENTS"
     ],
     "teacher": [
-      "STUDENT_ALERTS",
       "CLASS_PROGRESS",
       "BOOKMARKS",
       "CREATE",
       "UPCOMING_DEADLINES",
-      "ANNOUNCEMENTS",
-      "RECENTLY_ACCESSED"
+      "ANNOUNCEMENTS"
     ]
   },
   "column_restrictions": {
     "leftColumn": [
       "PROGRESS",
-      "WHATS_NEXT",
       "CLASS_PROGRESS",
-      "STUDENT_ALERTS",
-      "RECENTLY_ACCESSED",
       "UPCOMING_DEADLINES",
       "ANNOUNCEMENTS"
     ],
-    "rightColumn": [
-      "BOOKMARKS",
-      "YOUR_BADGES",
-      "ANNOUNCEMENTS",
-      "CREATE",
-      "STUDENT_ALERTS"
-    ]
+    "rightColumn": ["BOOKMARKS", "YOUR_BADGES", "ANNOUNCEMENTS", "CREATE"]
   }
 }

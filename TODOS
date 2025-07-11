@@ -1,51 +1,58 @@
 # TODOS
 
-- [ ] Shift to using React Aria components for all form elements since we are Adobe.
-- [ ] Progress Dashboard page needs to be overhauled. New designs are required - maybe make mocks for tomorrow, or don't show it for tomorrow.
-- [ ] Form components - beautification a little bit. Radix can be used as the base for now.
+## Requirements for Completion
 
-## Requirements for AHM
-
-- Create 10 minute slide deck
-- Think and prepare for the demo - cover every page and feature - fix colors in small areas for the same.
-- Make sure the app is working end to end for certain workflows.
-
-
-- [X] FIX each page to have a consistent logic for auth checking, etc. and use the latest cool utilities created by us for ourselves.
-- [X] "Logical Flow Features": Teachers must add student to a course.
+- [ ] Progress Dashboard page needs to be overhauled.
 - [ ] Important - Fully rich edit capabilities. Currently, some fields are ommitted. Need full editing capability.
 
 - [ ] Properly update the `relatedFiles` field in the UserData schema.
 - [ ] Move all schemas, interfaces, and types to common locations.
 - [ ] Move all utility functions to common locations.
 - [ ] Refactor constant functions / variables appropriately if they are not being used much, etc.
-
-- [X] FUNCTIONAL Assignments System
-  - [X] Assignment upload on teacher side
-  - [X] Assignment download on student side
-  - [ ] Assignment submission on student side
-  - [ ] Assignment grading on teacher side - for now, just a simple text field per question
-- [ ] FUNCTIONAL Bookmarks
-- [ ] UI Improvements
-  - [ ] Make it more consistent
-  - [ ] Make it more visually appealing
-- [ ] FUNCTIONAL Upcoming Deadlines: From the timeline, only the events that are *activated* should be shown in upcoming deadlines.
-  - [ ] Midsems, Endsems always show up.
-  - [ ] Assignments should show up only if an assignment is created for that event - these don't "need" to be linked. They can be created independently.
-  - [ ] Quizzes should always show up.
-  - [ ] Field trips, etc. should always show up.
-
-- [ ] FUNCTIONAL Recently Accessed System
-
-After the above, if time permits, then:
-
-- [ ] FUNCTIONAL Polls, announcements and notifications for the same.
-- [ ] FUNCTIONAL Direct Messages.
+- [ ] Beautification of the form elements / website so it looks better on over saturated screen.
 - [ ] Better Dashboard Layout error showcasing, if possible.
   - [ ] They shouldn't even be something that is shown, perhaps just a message that says "Dashboard was reset to default state because of errors."
   - [ ] This should be shown only once, and then the user should be able to continue using the app.
   - [ ] Or, we don't show the dashboard, and only errors are shown. Until they are fixed, the user cannot use the app.
   - [ ] In the real world, it won't be common to have dashboard layout errors, so this is not a priority.
+- [ ] Block download option
+  - [ ] View only PDF option (IF POSSIBLE)
+- [ ] Block chatting w/ PDF option
+- [ ] Grading
+  - [ ] View assignment submissions: text
+  - [ ] View assignment submissions: pdf
+  - [ ] Grade based on rubric, fin % (no auto calc) / straightforward grading, fin %
+  - [ ] Add grading component (no assignment) - title, description, grade or rubric, fin %
+- [ ] Chat bot
+  - [ ] Show links to referenced content
+  - [ ] Internal MCP server that can retrieve grade data, analyse, and plot graphs
+    - [ ] Thinking required
+- [ ] Assignments
+  - [ ] Instant Feedback before grading. Very easy.
+  - [ ] Upload submission (text / pdf)
+- [ ] Bookmarks
+- [ ] Badges - Thinking Required
+- [ ] Report Generation - simple, PDF reports. No advanced analytics page.
+- [ ] Messaging
+- [ ] Announcements
+- [ ] In-App Notifications
+  - [ ] Grade Release
+  - [ ] Announcements
+  - [ ] Assignment Release
+  - [ ] Message
+  - [ ] Reminder: Grade Assignment!
+  - [ ] Reminder: Deadline Approaching!
+  - [ ] Reminder: Upload Today's Slide Deck!
+  - [ ] Can be a toast.
+- [ ] DELETE stuff.
+
+## Future Scope
+
+- Limited functionality shown to demonstrate AI features
+- Can have inline commenting, etc. later.
+- Fully featured LMS grading features not in scope. Grading workflow added to showcase chat bot retrieval and assignment instant feedback.
+
+## Timeline Items and how they are handled
 
 "assignment", - createable
 "quiz", - grades addable
