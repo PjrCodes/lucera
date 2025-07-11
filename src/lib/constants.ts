@@ -5,6 +5,8 @@ import {
   MdOutlineAssignment,
   MdOutlineLibraryBooks,
   MdOutlinePoll,
+  MdOutlineLink,
+  MdOutlineAssessment,
 } from "react-icons/md";
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";
 import { PiExam } from "react-icons/pi";
@@ -32,6 +34,8 @@ export const ourIconWidgets = {
   project: AiOutlineFundProjectionScreen,
   quiz: MdOutlineQuiz,
   lab: RiTestTubeLine,
+  report: MdOutlineAssessment,
+  link: MdOutlineLink,
   fallback: MdOutlineLibraryBooks,
 };
 
@@ -48,6 +52,8 @@ export const ourIconColors = {
   project: "bg-lucerayellow-2 text-lucerayellow-5",
   quiz: "bg-lucerablue-2 text-lucerablue-5",
   lab: "bg-lucerabrown-2 text-lucerabrown-5",
+  report: "bg-lucerapurple-2 text-lucerapurple-5",
+  link: "bg-luceragreen-2 text-luceragreen-5",
   fallback: "bg-gray-100 text-gray-800", // Fallback color
 };
 

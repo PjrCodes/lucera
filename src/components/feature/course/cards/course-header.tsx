@@ -4,6 +4,7 @@ import { Course } from "@/lib/schemas/database";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { Edit, Bookmark } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 interface CourseHeaderProps {
   course: Course;
@@ -14,8 +15,36 @@ interface CourseHeaderProps {
 export default function CourseHeader({
   course,
   isTeacher = false,
-  isBookmarked = false,
+  isBookmarked: initialIsBookmarked = false,
 }: CourseHeaderProps) {
+  const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked);
+  const [isTogglingBookmark, setIsTogglingBookmark] = useState(false);
+
+  const handleBookmarkToggle = async () => {
+    setIsTogglingBookmark(true);
+    try {
+      const response = await fetch("/api/bookmarks/toggle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "course",
+          relatedId: course._id,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setIsBookmarked(data.isBookmarked);
+      } else {
+        console.error("Failed to toggle bookmark");
+      }
+    } catch (error) {
+      console.error("Error toggling bookmark:", error);
+    } finally {
+      setIsTogglingBookmark(false);
+    }
+  };
+
   return (
     <div className="bg-primary-50 rounded-xl shadow border border-primary-100 p-6">
       <div className="flex items-center justify-between gap-4">
@@ -30,7 +59,12 @@ export default function CourseHeader({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <SecondaryButton variant="outline" size="sm">
+          <SecondaryButton
+            variant="outline"
+            size="sm"
+            onClick={handleBookmarkToggle}
+            disabled={isTogglingBookmark}
+          >
             <Bookmark
               className={`h-4 w-4 ${
                 isBookmarked ? "fill-secondary-700 text-secondary-700" : ""

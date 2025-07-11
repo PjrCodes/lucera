@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { PrimaryButton } from "@/components/core/buttons/primary";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { getSessionAndUserData } from "@/lib/database-service/auth";
+import { isBookmarked as checkIfBookmarked } from "@/lib/database-service/bookmarks";
+import AssignmentBookmarkButton from "@/components/feature/assignment/assignment-bookmark-button";
 
 interface AssignmentPageProps {
   params: Promise<{
@@ -14,11 +16,18 @@ interface AssignmentPageProps {
 
 export default async function AssignmentPage({ params }: AssignmentPageProps) {
   const resolvedParams = await params;
-  await getSessionAndUserData();
+  const { session } = await getSessionAndUserData();
 
   try {
     const assignment = await getAssignmentById(resolvedParams.assignment_id);
     const course = await getCourseById(assignment.courseId);
+
+    // Check if assignment is bookmarked
+    const isBookmarked = await checkIfBookmarked(
+      session.user.id,
+      "assignment",
+      assignment._id.toString()
+    );
 
     let assignmentFile = null;
     if (assignment.fileId) {
@@ -50,7 +59,11 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
               </h1>
               <p className="text-lg text-gray-600">{course.name}</p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
+              <AssignmentBookmarkButton
+                assignmentId={assignment._id.toString()}
+                initialIsBookmarked={isBookmarked}
+              />
               {isOverdue && (
                 <span className="px-3 py-1 bg-red-100 text-red-800 text-sm font-medium rounded-full">
                   Overdue

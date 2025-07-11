@@ -4,6 +4,7 @@ import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { FiDownload, FiArrowLeft } from "react-icons/fi";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
+import AssignmentBookmarkButton from "@/components/feature/assignment/assignment-bookmark-button";
 
 interface AssignmentViewProps {
   assignment: AssignmentWithEmbeddedFile;
@@ -11,6 +12,8 @@ interface AssignmentViewProps {
   backUrl?: string;
   isTeacher?: boolean;
   onBack?: () => void;
+  showBookmarkButton?: boolean;
+  initialIsBookmarked?: boolean;
 }
 
 export default function AssignmentView({
@@ -18,6 +21,8 @@ export default function AssignmentView({
   course,
   onBack,
   isTeacher,
+  showBookmarkButton = false,
+  initialIsBookmarked = false,
 }: AssignmentViewProps) {
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "Not set";
@@ -50,6 +55,12 @@ export default function AssignmentView({
             <p className="text-lg text-primary-600">{course.name}</p>
           </div>
           <div className="flex gap-2 items-center">
+            {showBookmarkButton && (
+              <AssignmentBookmarkButton
+                assignmentId={assignment._id.toString()}
+                initialIsBookmarked={initialIsBookmarked}
+              />
+            )}
             {isOverdue && (
               <span className="px-3 py-1 bg-red-100 text-red-800 text-sm font-medium rounded-full">
                 Overdue

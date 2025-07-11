@@ -12,6 +12,7 @@ import {
   getStudentsForCourse,
 } from "@/lib/database-service/courses";
 import { getAssignmentsForCourse } from "@/lib/database-service/assignment";
+import { isBookmarked as checkIfBookmarked } from "@/lib/database-service/bookmarks";
 
 async function getCourse(course_id: string): Promise<Course | null> {
   const db = client.db();
@@ -34,7 +35,7 @@ export default async function CourseViewPage({
 }: {
   params: Promise<{ course_id: string }>;
 }) {
-  const { userData } = await getSessionAndUserData();
+  const { session, userData } = await getSessionAndUserData();
   const isTeacher = userData.role === "teacher";
 
   const { course_id } = await params;
@@ -103,7 +104,11 @@ export default async function CourseViewPage({
   const grades: { id: number; title: string; score: string; date: string }[] =
     [];
 
-  const isBookmarked = false;
+  const isBookmarked = await checkIfBookmarked(
+    session.user.id,
+    "course",
+    course._id.toString()
+  );
 
   const courseMaterialsData = (
     await getContentForCourse(course._id.toString())

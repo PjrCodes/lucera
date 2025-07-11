@@ -117,7 +117,18 @@ export const SaveAssignmentRequestSchema = z.object({
   }),
 });
 
+export const CreateBookmarkRequestSchema = z.object({
+  type: z.enum(["assignment", "content", "course", "poll", "quiz"]),
+  relatedId: z.string().min(1, "Related ID is required"),
+});
+
+export const DeleteBookmarkRequestSchema = z.object({
+  bookmarkId: z.string().min(1, "Bookmark ID is required"),
+});
+
 export type SaveContentRequest = z.infer<typeof SaveContentRequestSchema>;
+export type CreateBookmarkRequest = z.infer<typeof CreateBookmarkRequestSchema>;
+export type DeleteBookmarkRequest = z.infer<typeof DeleteBookmarkRequestSchema>;
 
 export const chatRequestSchema = z.object({
   courseIds: z.array(z.string()),

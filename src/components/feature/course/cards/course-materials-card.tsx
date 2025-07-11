@@ -1,6 +1,7 @@
 import { FileText, Download, Pencil } from "lucide-react";
 import { formatDate, formatFileSize } from "@/lib/utils";
 import { ContentWithEmbeddedFile } from "@/lib/schemas/database";
+import ContentBookmarkButton from "@/components/feature/content/content-bookmark-button";
 
 export default function CourseMaterialsCard({
   courseMaterialsData,
@@ -44,6 +45,9 @@ export default function CourseMaterialsCard({
                   </span>
                 </div>
               </div>
+              <ContentBookmarkButton
+                contentId={content._id.toString()}
+              />
               <a
                 href={`/api/files/download/${content.fileId}`}
                 download={content.file.name}

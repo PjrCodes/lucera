@@ -1,20 +1,13 @@
-"use client";
 import React from "react";
 import { iconForType } from "@/lib/constants";
 import { MdBookmarkBorder } from "react-icons/md";
 import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
+import { getBookmarks } from "@/lib/database-service/bookmarks";
 
-interface Bookmark {
-  id: number;
-  title: string;
-  url: string;
-  type: "assignment" | "content" | "report" | "poll" | "link" | "quiz"; // Added 'quiz' for variety
-  subtitle: string;
-}
-
-export default function Bookmarks({}: PropsForEveryDashboardCard) {
-  // Dummy data for bookmarks - replace with actual data fetching later
-  const bookmarks: Bookmark[] = [];
+export default async function Bookmarks({
+  userData,
+}: PropsForEveryDashboardCard) {
+  const bookmarks = await getBookmarks(userData.id);
 
   return (
     <div className="bg-primary-100 rounded-lg shadow-md p-4 md:px-6 min-h-[300px] flex flex-col">
@@ -35,8 +28,6 @@ export default function Bookmarks({}: PropsForEveryDashboardCard) {
             <a
               key={bm.id}
               href={bm.url}
-              target="_blank"
-              rel="noopener noreferrer"
               className="bg-white/80 rounded-lg shadow p-3 hover:shadow-lg transition-shadow flex items-center space-x-3"
             >
               <div className="text-primary-700 text-2xl">
