@@ -8,7 +8,7 @@ interface Badge {
   collected: boolean;
   description?: string;
   requirement?: string;
-  points?: number;
+  unlockedTime?: string;
 }
 
 interface BadgeDetailModalProps {
@@ -26,53 +26,45 @@ const BadgeDetailModal: React.FC<BadgeDetailModalProps> = ({
 
   const badgeDetails: Record<
     string,
-    { requirement: string; points: number; longDescription: string }
+    { requirement: string; longDescription: string }
   > = {
     "First Steps": {
       requirement: "Complete your first course module",
-      points: 50,
       longDescription:
         "Welcome to your learning journey! This badge is awarded when you take your first steps into the world of knowledge by completing your very first course module.",
     },
     "Speed Demon": {
       requirement: "Submit 5 assignments before the deadline",
-      points: 100,
       longDescription:
         "You're quick on your feet! This badge recognizes students who consistently submit their work early, demonstrating excellent time management skills.",
     },
     Scholar: {
       requirement: "Maintain an average grade of 85% or higher",
-      points: 200,
       longDescription:
         "Academic excellence at its finest! This prestigious badge is awarded to students who maintain consistently high grades across their courses.",
     },
     "Night Owl": {
       requirement: "Complete 10 activities between 10 PM and 6 AM",
-      points: 75,
       longDescription:
         "Burning the midnight oil! This badge celebrates the dedicated night studiers who put in extra hours when others are sleeping.",
     },
     Perfectionist: {
       requirement: "Score 100% on 3 different assignments",
-      points: 150,
       longDescription:
         "Flawless execution! This badge is for students who demand nothing less than perfection from themselves and achieve it multiple times.",
     },
     "Team Player": {
       requirement: "Participate in 5 group projects or discussions",
-      points: 125,
       longDescription:
         "Collaboration champion! This badge recognizes students who actively contribute to group work and foster a collaborative learning environment.",
     },
     Mastermind: {
       requirement: "Solve 20 complex problem-solving challenges",
-      points: 250,
       longDescription:
         "Strategic thinking at its best! This elite badge is awarded to students who excel at tackling complex problems and finding innovative solutions.",
     },
     Explorer: {
       requirement: "Access 50 different course materials",
-      points: 100,
       longDescription:
         "Curiosity drives learning! This badge celebrates students who explore beyond the required materials, diving deep into additional resources.",
     },
@@ -80,7 +72,6 @@ const BadgeDetailModal: React.FC<BadgeDetailModalProps> = ({
 
   const details = badgeDetails[badge.name] || {
     requirement: "Complete specific learning objectives",
-    points: 50,
     longDescription:
       "This badge recognizes achievement in a specific area of learning.",
   };
@@ -145,17 +136,19 @@ const BadgeDetailModal: React.FC<BadgeDetailModalProps> = ({
             <p className="text-gray-600 text-sm">{details.requirement}</p>
           </div>
 
-          {/* Points */}
-          <div className="bg-primary-100 p-3 rounded-lg">
-            <div className="flex items-center justify-between">
-              <span className="text-primary-800 font-medium">
-                Points Reward
-              </span>
-              <span className="text-primary-800 font-bold">
-                {details.points} pts
-              </span>
+          {/* Unlocked Time - only for collected badges */}
+          {badge.collected && badge.unlockedTime && (
+            <div className="bg-primary-100 p-3 rounded-lg">
+              <div className="flex items-center justify-between">
+                <span className="text-primary-800 font-medium">
+                  Unlocked
+                </span>
+                <span className="text-primary-800 font-bold">
+                  {badge.unlockedTime}
+                </span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
