@@ -3,7 +3,7 @@
 ## Requirements for Completion
 
 - [ ] Progress Dashboard page needs to be overhauled.
-- [ ] Important - Fully rich edit capabilities. Currently, some fields are ommitted. Need full editing capability.
+- [ ] Important - Fully rich edit capabilities. Currently, some fields are ommitted. Need full editing capability. - image
 
 - [ ] Properly update the `relatedFiles` field in the UserData schema.
 - [ ] Move all schemas, interfaces, and types to common locations.
@@ -31,7 +31,7 @@
 - [ ] Assignments
   - [ ] Instant Feedback before grading. Very easy.
   - [ ] Upload submission (text / pdf)
-- [ ] Bookmarks
+- [X] Bookmarks
 - [ ] Badges - Thinking Required
 - [ ] Report Generation - simple, PDF reports. No advanced analytics page.
 - [ ] Messaging
