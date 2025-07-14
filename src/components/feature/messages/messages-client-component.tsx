@@ -341,7 +341,7 @@ export default function MessagesClientComponent({
                   {item.icon}
                 </span>
                 <span>{item.label}</span>
-                {item.key === "announcements" && !isTeacher && 
+                {item.key === "announcements" && !isTeacher &&
                   announcements.filter((ann) => !ann.isRead).length > 0 && (
                   <span className="bg-secondary-300 text-secondary-50 text-xs px-2 py-0.5 rounded-full font-medium mt-1">
                     {announcements.filter((ann) => !ann.isRead).length}
@@ -389,7 +389,7 @@ export default function MessagesClientComponent({
                     {item.icon}
                   </span>
                   <span className="flex-1">{item.label}</span>
-                  {item.key === "announcements" && !isTeacher && 
+                  {item.key === "announcements" && !isTeacher &&
                     announcements.filter((ann) => !ann.isRead).length > 0 && (
                     <span className="bg-secondary-300 text-secondary-50 text-xs px-2 py-1 rounded-full font-medium">
                       {announcements.filter((ann) => !ann.isRead).length}
