@@ -1,6 +1,7 @@
 "use client";
 import { AssignmentWithEmbeddedFile } from "@/lib/schemas/database";
 import { FiClipboard, FiChevronRight } from "react-icons/fi";
+import { Ban, MessageSquareOff } from "lucide-react";
 import Link from "next/link";
 
 interface CourseAssignmentsCardProps {
@@ -98,6 +99,19 @@ export default function CourseAssignmentsCard({
                       <span className="text-primary-500">No due date set</span>
                     )}
                     <span>{assignment.grading?.total_points || 0} points</span>
+                    {/* Security indicators */}
+                    {assignment.blockDownload && (
+                      <div className="flex items-center gap-1" title="Download blocked by instructor">
+                        <Ban className="w-3 h-3 text-red-500" />
+                        <span className="text-xs text-red-600">No Download</span>
+                      </div>
+                    )}
+                    {assignment.blockChatbot && (
+                      <div className="flex items-center gap-1" title="LISA chatbot blocked for this document">
+                        <MessageSquareOff className="w-3 h-3 text-orange-500" />
+                        <span className="text-xs text-orange-600">No Chat</span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <FiChevronRight

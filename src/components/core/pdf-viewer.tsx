@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Document, Page, pdfjs } from 'react-pdf';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
-import './pdf-viewer-security.css';
+import { Document, Page, pdfjs } from "react-pdf";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
+import "./pdf-viewer-security.css";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import {
   FiZoomIn,
@@ -12,13 +12,13 @@ import {
   FiMaximize2,
   FiDownload,
   FiSettings,
-  FiX
+  FiX,
 } from "react-icons/fi";
 
 // Configure PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url,
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
 ).toString();
 
 interface PDFViewerProps {
@@ -38,24 +38,27 @@ export default function PDFViewer({
   className = "",
   height = "60vh",
   preventCopy = false,
-  downloadDisabled = false
+  downloadDisabled = false,
 }: PDFViewerProps) {
   const [numPages, setNumPages] = useState<number>();
   const [scale, setScale] = useState<number>(1.0);
   const [loading, setLoading] = useState(true);
   const [showControls, setShowControls] = useState(false);
 
-  const onDocumentLoadSuccess = useCallback(({ numPages }: { numPages: number }) => {
-    setNumPages(numPages);
-    setLoading(false);
-  }, []);
+  const onDocumentLoadSuccess = useCallback(
+    ({ numPages }: { numPages: number }) => {
+      setNumPages(numPages);
+      setLoading(false);
+    },
+    []
+  );
 
   const zoomIn = useCallback(() => {
-    setScale(prevScale => Math.min(prevScale + 0.25, 3.0));
+    setScale((prevScale) => Math.min(prevScale + 0.25, 3.0));
   }, []);
 
   const zoomOut = useCallback(() => {
-    setScale(prevScale => Math.max(prevScale - 0.25, 0.5));
+    setScale((prevScale) => Math.max(prevScale - 0.25, 0.5));
   }, []);
 
   const resetZoom = useCallback(() => {
@@ -66,12 +69,12 @@ export default function PDFViewer({
     if (onDownload) {
       onDownload();
     } else {
-      window.open(fileUrl, '_blank');
+      window.open(fileUrl, "_blank");
     }
   }, [fileUrl, onDownload]);
 
   const toggleControls = useCallback(() => {
-    setShowControls(prev => !prev);
+    setShowControls((prev) => !prev);
   }, []);
 
   return (
@@ -109,7 +112,9 @@ export default function PDFViewer({
           {/* New Grid Layout Controls */}
           <div
             className={`absolute top-4 right-4 z-20 transition-all duration-300 ease-in-out ${
-              showControls ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+              showControls
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 -translate-y-2 pointer-events-none"
             }`}
           >
             <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200 p-3 w-48">
@@ -155,22 +160,6 @@ export default function PDFViewer({
                 </SecondaryButton>
 
                 {/* Middle Row: [+] ZOOM [-] */}
-                <SecondaryButton
-                  size="sm"
-                  onClick={zoomIn}
-                  disabled={scale >= 3.0 || loading}
-                  variant="outline"
-                  className="h-10 w-full rounded-lg hover:bg-green-50 hover:border-green-200 transition-colors flex items-center justify-center"
-                  title="Zoom In"
-                >
-                  <FiZoomIn className="w-4 h-4" />
-                </SecondaryButton>
-
-                <div className="bg-gray-50 rounded-lg px-2 py-2 flex items-center justify-center">
-                  <span className="text-xs font-medium text-gray-600 whitespace-nowrap">
-                    {Math.round(scale * 100)}%
-                  </span>
-                </div>
 
                 <SecondaryButton
                   size="sm"
@@ -183,10 +172,26 @@ export default function PDFViewer({
                   <FiZoomOut className="w-4 h-4" />
                 </SecondaryButton>
 
+                <div className="bg-gray-50 rounded-lg px-2 py-2 flex items-center justify-center">
+                  <span className="text-xs font-medium text-gray-600 whitespace-nowrap">
+                    {Math.round(scale * 100)}%
+                  </span>
+                </div>
+                <SecondaryButton
+                  size="sm"
+                  onClick={zoomIn}
+                  disabled={scale >= 3.0 || loading}
+                  variant="outline"
+                  className="h-10 w-full rounded-lg hover:bg-green-50 hover:border-green-200 transition-colors flex items-center justify-center"
+                  title="Zoom In"
+                >
+                  <FiZoomIn className="w-4 h-4" />
+                </SecondaryButton>
+
                 {/* Bottom Row: [PAGES] */}
                 <div className="col-span-3 bg-gray-50 rounded-lg px-3 py-2 flex items-center justify-start">
                   <span className="text-sm font-medium text-gray-700 whitespace-nowrap">
-                    {loading ? '...' : `${numPages || '?'} pages`}
+                    {loading ? "..." : `${numPages || "?"} pages`}
                   </span>
                 </div>
               </div>
@@ -197,7 +202,7 @@ export default function PDFViewer({
           <button
             onClick={toggleControls}
             className={`absolute top-4 right-4 z-10 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-md border border-gray-200 flex items-center justify-center transition-all duration-200 hover:bg-white hover:shadow-lg ${
-              showControls ? 'opacity-0 pointer-events-none' : 'opacity-100'
+              showControls ? "opacity-0 pointer-events-none" : "opacity-100"
             }`}
             title="Show Controls"
           >
@@ -208,17 +213,21 @@ export default function PDFViewer({
           <div
             className="flex-1 overflow-auto p-4"
             style={{
-              userSelect: (readOnly || preventCopy) ? 'none' : 'auto',
-              WebkitUserSelect: (readOnly || preventCopy) ? 'none' : 'auto',
-              MozUserSelect: (readOnly || preventCopy) ? 'none' : 'auto',
+              userSelect: readOnly || preventCopy ? "none" : "auto",
+              WebkitUserSelect: readOnly || preventCopy ? "none" : "auto",
+              MozUserSelect: readOnly || preventCopy ? "none" : "auto",
               // @ts-expect-error - msUserSelect is vendor-specific
-              msUserSelect: (readOnly || preventCopy) ? 'none' : 'auto',
-              WebkitTouchCallout: (readOnly || preventCopy) ? 'none' : 'default',
-              WebkitUserDrag: (readOnly || preventCopy) ? 'none' : 'auto',
-              KhtmlUserSelect: (readOnly || preventCopy) ? 'none' : 'auto',
+              msUserSelect: readOnly || preventCopy ? "none" : "auto",
+              WebkitTouchCallout: readOnly || preventCopy ? "none" : "default",
+              WebkitUserDrag: readOnly || preventCopy ? "none" : "auto",
+              KhtmlUserSelect: readOnly || preventCopy ? "none" : "auto",
             }}
-            onContextMenu={(e: React.MouseEvent) => (readOnly || preventCopy) && e.preventDefault()}
-            onDragStart={(e: React.DragEvent) => (readOnly || preventCopy) && e.preventDefault()}
+            onContextMenu={(e: React.MouseEvent) =>
+              (readOnly || preventCopy) && e.preventDefault()
+            }
+            onDragStart={(e: React.DragEvent) =>
+              (readOnly || preventCopy) && e.preventDefault()
+            }
           >
             <div className="flex items-start justify-center min-h-full">
               {!loading && numPages && (
@@ -228,10 +237,15 @@ export default function PDFViewer({
                       key={`page_${index + 1}`}
                       style={{
                         // Additional copy protection
-                        pointerEvents: (readOnly || preventCopy) ? 'none' : 'auto',
+                        pointerEvents:
+                          readOnly || preventCopy ? "none" : "auto",
                       }}
-                      onCopy={(e: React.ClipboardEvent) => (readOnly || preventCopy) && e.preventDefault()}
-                      onCut={(e: React.ClipboardEvent) => (readOnly || preventCopy) && e.preventDefault()}
+                      onCopy={(e: React.ClipboardEvent) =>
+                        (readOnly || preventCopy) && e.preventDefault()
+                      }
+                      onCut={(e: React.ClipboardEvent) =>
+                        (readOnly || preventCopy) && e.preventDefault()
+                      }
                     >
                       <Page
                         pageNumber={index + 1}

@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { NextAuthRequest } from "next-auth";
 import { AuthenticatedSession } from "@/lib/types/auth";
 import client from "@/lib/db";
+import { ObjectId } from "mongodb";
 
 import { LLMContentExtractor } from "@/lib/llm/content";
 import { loadFileFromDiskById } from "@/lib/database-service/files";
@@ -77,6 +78,7 @@ export const POST = auth(
       const db = client.db();
       const chunkRecord = await db.collection("extracted_chunks").insertOne({
         text: text,
+        contentId: null, // Will be updated after content creation
       });
       if (!chunkRecord.acknowledged) {
         return NextResponse.json(
@@ -131,6 +133,8 @@ export const POST = auth(
       description: description,
       topics: topics,
       fileId: fileId,
+      blockDownload: false, // Default to false for new content
+      blockChatbot: false,  // Default to false for new content
       createdBy: session.user.id,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -145,7 +149,25 @@ export const POST = auth(
       );
     }
 
+    const contentId = contentRecord.insertedId.toString();
+
     try {
+      // Update chunks with contentId reference
+      await db.collection("extracted_chunks").updateMany(
+        { _id: { $in: extractedChunkIds.map(id => new ObjectId(id)) } },
+        { $set: { contentId: contentId } }
+      );
+
+      // Add chunks to Pinecone with proper metadata
+      await addManyCourseContent(
+        extractedChunkIds,
+        reChunkedArray,
+        courseId,
+        {
+          contentId: contentId,
+          blockChatbot: false // Default to false for new content
+        }
+      );
     } catch (error) {
       console.error(
         "[LLM_CONTENT_EXTRACTOR]: Error adding document to Pinecone:",
@@ -161,7 +183,7 @@ export const POST = auth(
     }
 
     return NextResponse.json({
-      contentId: contentRecord.insertedId.toString(),
+      contentId: contentId,
       message: "Content created successfully",
       status: "success",
     });

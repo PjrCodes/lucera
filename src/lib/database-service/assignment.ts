@@ -8,7 +8,7 @@ import { getFileRecord } from "./files";
 import { getCoursesForUser } from "./courses";
 import { Deadline } from "../types/lib";
 
-export async function getAssignmentById(assignmentId: string) {
+export async function getAssignmentById(assignmentId: string): Promise<AssignmentWithEmbeddedFile> {
   const assignment = await client
     .db()
     .collection("assignment")
@@ -33,7 +33,21 @@ export async function getAssignmentById(assignmentId: string) {
       parsedAssignment._id = parsedAssignment._id.toString();
     }
 
-    return parsedAssignment;
+    // Get file details if fileId exists
+    let file = null;
+    if (parsedAssignment.fileId) {
+      try {
+        file = await getFileRecord(parsedAssignment.fileId);
+      } catch (error) {
+        console.error("Error fetching file details:", error);
+        throw new Error("File not found or invalid file ID");
+      }
+    }
+
+    return {
+      ...parsedAssignment,
+      file: file,
+    } as AssignmentWithEmbeddedFile;
   } catch (error) {
     console.error("Error parsing assignment:", error);
     console.error("Assignment data:", assignment);

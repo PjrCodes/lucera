@@ -117,6 +117,9 @@ export async function uploadFile(
     createdAt: new Date(),
     updatedAt: new Date(),
     type: content_type,
+    // Default security settings - will be updated when content/assignment is saved
+    blockDownload: false,
+    blockChatbot: false,
   });
 
   if (!parsedFile.success) {

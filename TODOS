@@ -4,13 +4,17 @@
 
 ### New features / Pages
 
-- [ ] Progress Dashboard page needs to be overhauled.
+- [X] Back button on Assignment Page to Course Page
+- [ ] Protect Create Assignment from Student
+
+- [ ] Progress Dashboard page - should show analytics of the students to some detail and have export report option
 - [ ] University Page Overhaul
-- [ ] Landing Page Overhaul
-- [ ] Important - Fully rich edit capabilities. Currently, some fields are ommitted. Need full editing capability. - image
-- [ ] Block download option
+- [ ] Landing Page
+- [ ] Take Instant Mini-Quiz - based on the course syllabus, create a course!
+- [ ] Important - Fully rich edit capabilities. Currently, some fields are ommitted. Need full editing capability. - Mainly Image
+- [X] Block download option
   - [X] View only PDF option (IF POSSIBLE)
-- [ ] Block chatting w/ PDF option
+- [X] Block chatting w/ PDF option
 - [X] Grading
   - [X] View assignment submissions: text
   - [X] View assignment submissions: pdf
@@ -20,8 +24,8 @@
   - [ ] Show links to referenced content
   - [ ] Internal MCP server that can retrieve grade data, analyse, and plot graphs
     - [ ] Thinking required
-- [ ] Assignments
-  - [ ] Instant Feedback before grading. Very easy.
+- [X] Assignments
+  - [X] Instant Feedback before grading. Very easy.
   - [X] Upload submission (text / pdf)
 - [X] Bookmarks
 - [X] Badges - Thinking Required

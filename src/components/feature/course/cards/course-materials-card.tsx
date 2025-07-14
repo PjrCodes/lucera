@@ -1,7 +1,8 @@
-import { FileText, Download, Pencil } from "lucide-react";
+import { FileText, Download, Pencil, Ban, MessageSquareOff } from "lucide-react";
 import { formatDate, formatFileSize } from "@/lib/utils";
 import { ContentWithEmbeddedFile } from "@/lib/schemas/database";
 import ContentBookmarkButton from "@/components/feature/content/content-bookmark-button";
+import Link from "next/link";
 
 export default function CourseMaterialsCard({
   courseMaterialsData,
@@ -43,19 +44,44 @@ export default function CourseMaterialsCard({
                   <span className="text-base text-primary-400">
                     • {formatFileSize(content.file.size)}
                   </span>
+                  {/* Security indicators */}
+                  {content.blockDownload && (
+                    <div className="flex items-center gap-1" title="Download blocked by instructor">
+                      <Ban className="w-3 h-3 text-red-500" />
+                      <span className="text-xs text-red-600">No Download</span>
+                    </div>
+                  )}
+                  {content.blockChatbot && (
+                    <div className="flex items-center gap-1" title="LISA chatbot blocked for this document">
+                      <MessageSquareOff className="w-3 h-3 text-orange-500" />
+                      <span className="text-xs text-orange-600">No Chat</span>
+                    </div>
+                  )}
                 </div>
               </div>
               <ContentBookmarkButton
                 contentId={content._id.toString()}
               />
-              <a
-                href={`/api/files/download/${content.fileId}`}
-                download={content.file.name}
-                className="ml-2 p-2 rounded hover:bg-primary-50 transition-colors"
-                title="Download"
-              >
-                <Download className="w-4 h-4 text-primary-600" />
-              </a>
+              {content.blockDownload && !isTeacher ? (
+                // Use secure PDF viewer for blocked downloads (students only)
+                <Link
+                  href={`/view/document/${content.fileId}`}
+                  className="ml-2 p-2 rounded hover:bg-primary-50 transition-colors"
+                  title="View (Download blocked)"
+                >
+                  <FileText className="w-4 h-4 text-orange-600" />
+                </Link>
+              ) : (
+                // Normal download for teachers or non-blocked content
+                <a
+                  href={`/api/files/download/${content.fileId}`}
+                  download={content.file.name}
+                  className="ml-2 p-2 rounded hover:bg-primary-50 transition-colors"
+                  title="Download"
+                >
+                  <Download className="w-4 h-4 text-primary-600" />
+                </a>
+              )}
               {isTeacher && (
                 <a
                   href={`/edit/content/${content._id}`}

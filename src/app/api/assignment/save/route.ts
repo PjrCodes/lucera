@@ -6,6 +6,7 @@ import { withTeacherSession } from "@/lib/database-service/auth";
 import { AuthenticatedSession } from "@/lib/types/auth";
 import { SaveAssignmentRequestSchema } from "@/lib/schemas/api";
 import { ObjectId } from "mongodb";
+import { updateAssignmentSecurityMetadata } from "@/lib/pinecone";
 
 export const POST = auth(
   withTeacherSession(async function POST(
@@ -48,6 +49,8 @@ export const POST = auth(
         gradeReleaseDate: parsedBody.data.data.gradeReleaseDate,
         submissionType: parsedBody.data.data.submissionType,
         grading: parsedBody.data.data.grading,
+        blockDownload: parsedBody.data.data.blockDownload || false,
+        blockChatbot: parsedBody.data.data.blockChatbot || false,
         createdBy: session.user.id,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -86,6 +89,8 @@ export const POST = auth(
         "gradeReleaseDate",
         "submissionType",
         "grading",
+        "blockDownload",
+        "blockChatbot",
       ];
 
       for (const field of fieldsToUpdate) {
@@ -130,6 +135,19 @@ export const POST = auth(
         { error: "Failed to update user relatedContent" },
         { status: 500 },
       );
+    }
+
+    // Update Pinecone metadata for security settings (if not new assignment)
+    if (!isNewAssignment) {
+      try {
+        await updateAssignmentSecurityMetadata(
+          assignmentId,
+          parsedBody.data.data.blockChatbot || false
+        );
+      } catch (error) {
+        console.error("Failed to update Pinecone security metadata:", error);
+        // Don't fail the entire request for Pinecone update errors
+      }
     }
 
     return NextResponse.json({

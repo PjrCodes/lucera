@@ -98,6 +98,9 @@ export const SaveContentRequestSchema = z.object({
     courseId: z.string().min(1, "Course ID is required"),
     topics: z.array(z.number()).min(1, "At least one topic must be selected"),
     fileId: z.string().nullable().optional(),
+    // Security features
+    blockDownload: z.boolean().default(false),
+    blockChatbot: z.boolean().default(false),
   }),
 });
 
@@ -134,11 +137,14 @@ export const SaveAssignmentRequestSchema = z.object({
         })
         .optional(),
     }),
+    // Security features
+    blockDownload: z.boolean().default(false),
+    blockChatbot: z.boolean().default(false),
   }),
 });
 
 export const CreateBookmarkRequestSchema = z.object({
-  type: z.enum(["assignment", "content", "course", "poll", "quiz"]),
+  type: z.enum(["assignment", "content", "course"]),
   relatedId: z.string().min(1, "Related ID is required"),
 });
 

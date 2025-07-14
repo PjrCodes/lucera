@@ -1,9 +1,6 @@
 import { getAssignmentById } from "@/lib/database-service/assignment";
 import { getCourseById } from "@/lib/database-service/courses";
-import { getFileRecord } from "@/lib/database-service/files";
 import {
-  checkSubmissionExists,
-  getStudentSubmissionForAssignment,
   getSubmissionData,
 } from "@/lib/database-service/submitted-assignments";
 import { notFound } from "next/navigation";
@@ -16,6 +13,8 @@ import AssignmentSubmissionForm from "@/components/feature/assignment/assignment
 import Link from "next/link";
 import { FiUsers, FiDownload } from "react-icons/fi";
 import { Pencil } from "lucide-react";
+
+// TODO: add back button to course page
 
 interface AssignmentPageProps {
   params: Promise<{
@@ -46,15 +45,6 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
       ? await getSubmissionData(assignment._id.toString(), session.user.id)
       : null;
 
-    let assignmentFile = null;
-    if (assignment.fileId) {
-      try {
-        assignmentFile = await getFileRecord(assignment.fileId);
-      } catch (error) {
-        console.error("Error fetching assignment file:", error);
-      }
-    }
-
     const formatDate = (dateString: string | null) => {
       if (!dateString) return "Not set";
       return new Date(dateString).toLocaleString();
@@ -67,6 +57,15 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
 
     return (
       <div className="max-w-4xl mx-auto p-6 space-y-8">
+        {/* Back Button */}
+        <div className="mb-4">
+          <Link href={`/view/course/${course._id}`} className="inline-flex items-center gap-2 text-primary-700 hover:text-primary-900 font-medium text-sm">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Course
+          </Link>
+        </div>
         {/* Header */}
         <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
           <div className="flex items-start justify-between mb-4">
@@ -117,7 +116,77 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
             </div>
           </div>
 
-          {/* Assignment Dates */}
+          {/* Assignment Description */}
+          {assignment.description && (
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+              <h3 className="text-sm font-medium text-gray-700 mb-2">Description</h3>
+              <p className="text-gray-800 whitespace-pre-wrap">{assignment.description}</p>
+            </div>
+          )}
+
+          {/* Assignment File/Attachment */}
+          {assignment.fileId && (
+            <div className="mt-4">
+              <div className="flex items-center gap-2 mb-3">
+                <h3 className="text-sm font-medium text-gray-700">Assignment Materials</h3>
+                {assignment.blockDownload && (
+                  <span className="px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full">
+                    Download Blocked
+                  </span>
+                )}
+                {assignment.blockChatbot && (
+                  <span className="px-2 py-1 bg-orange-100 text-orange-600 text-xs rounded-full">
+                    LISA Chat Blocked
+                  </span>
+                )}
+              </div>
+
+              {assignment.blockDownload && !isTeacher ? (
+                // Secure viewer link for blocked downloads
+                <div className="flex items-center gap-3 p-4 bg-red-50 rounded-lg border border-red-200">
+                  <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  <div>
+                    <p className="font-medium text-red-900">Secure Document Access</p>
+                    <p className="text-sm text-red-700">Download is blocked. View in secure mode only.</p>
+                  </div>
+                  <a
+                    href={`/view/document/${assignment.fileId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    View Document
+                  </a>
+                </div>
+              ) : (
+                // Normal download option for non-blocked files
+                <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border">
+                  <FiDownload className="w-5 h-5 text-blue-600" />
+                  <div>
+                    <p className="font-medium text-gray-900">Download Assignment File</p>
+                    <p className="text-sm text-gray-600">Click to download the assignment materials</p>
+                  </div>
+                  <a
+                    href={`/api/files/download/${assignment.fileId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Download
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Assignment Dates */}
+        <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
+          <h2 className="text-xl font-semibold text-primary-900 mb-4">
+            Assignment Dates
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="bg-primary-50 p-4 rounded-lg">
               <h3 className="text-sm font-medium text-primary-500 mb-1">
@@ -407,45 +476,6 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
                 <PrimaryButton className="ml-4">
                   Submit Assignment
                 </PrimaryButton>
-              </div>
-            </div>
-          )}
-
-          {/* Assignment File */}
-          {assignmentFile && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <svg
-                      className="w-6 h-6 text-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">
-                      {assignmentFile.name}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Assignment Instructions
-                    </p>
-                  </div>
-                </div>
-                <SecondaryButton variant="outline" className="text-sm" asChild>
-                  <Link href={`/api/files/download/${assignmentFile._id}`}>
-                    <FiDownload className="w-4 h-4 mr-1" />
-                    Download
-                  </Link>
-                </SecondaryButton>
               </div>
             </div>
           )}

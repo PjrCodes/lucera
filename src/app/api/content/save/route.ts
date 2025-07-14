@@ -6,6 +6,7 @@ import { withTeacherSession } from "@/lib/database-service/auth";
 import { AuthenticatedSession } from "@/lib/types/auth";
 import { SaveContentRequestSchema } from "@/lib/schemas/api";
 import { ObjectId } from "mongodb";
+import { updateContentSecurityMetadata } from "@/lib/pinecone";
 
 export const POST = auth(
   withTeacherSession(async function POST(
@@ -43,6 +44,8 @@ export const POST = auth(
         courseId: parsedBody.data.data.courseId,
         topics: parsedBody.data.data.topics,
         fileId: parsedBody.data.data.fileId || null,
+        blockDownload: parsedBody.data.data.blockDownload || false,
+        blockChatbot: parsedBody.data.data.blockChatbot || false,
         userId: session.user.id,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -76,6 +79,8 @@ export const POST = auth(
         "courseId",
         "topics",
         "fileId",
+        "blockDownload",
+        "blockChatbot",
       ];
 
       for (const field of fieldsToUpdate) {
@@ -120,6 +125,19 @@ export const POST = auth(
         { error: "Failed to update user relatedContent" },
         { status: 500 },
       );
+    }
+
+    // Update Pinecone metadata for security settings (if not new content)
+    if (!isNewContent) {
+      try {
+        await updateContentSecurityMetadata(
+          contentId,
+          parsedBody.data.data.blockChatbot || false
+        );
+      } catch (error) {
+        console.error("Failed to update Pinecone security metadata:", error);
+        // Don't fail the entire request for Pinecone update errors
+      }
     }
 
     return NextResponse.json({

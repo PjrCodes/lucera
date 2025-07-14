@@ -69,6 +69,8 @@ export const POST = auth(
       description: description,
       topics: topics,
       fileId: fileId,
+      blockDownload: false, // Default to false for new assignments
+      blockChatbot: false,  // Default to false for new assignments
       createdBy: session.user.id,
       createdAt: new Date(),
       updatedAt: new Date(),

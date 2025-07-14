@@ -124,7 +124,7 @@ export default function StudentGradesView({ studentId, courseId }: StudentGrades
                   </div>
 
                   <p className="text-sm text-primary-600 mb-2">
-                    {submission.course.name}
+                    {submission.course?.name || 'Course not found'}
                   </p>
 
                   <div className="flex items-center gap-4 text-sm text-primary-600 mb-3">

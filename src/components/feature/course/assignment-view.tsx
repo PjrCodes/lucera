@@ -173,12 +173,26 @@ export default function AssignmentView({
                   </p>
                 </div>
               </div>
-              <SecondaryButton variant="outline" className="text-sm" asChild>
-                <Link href={`/api/files/download/${assignment.file._id}`}>
-                  <FiDownload className="w-4 h-4 mr-1" />
-                  Download
-                </Link>
-              </SecondaryButton>
+              {!assignment.blockDownload || isTeacher ? (
+                <SecondaryButton variant="outline" className="text-sm" asChild>
+                  <Link href={`/api/files/download/${assignment.file._id}`}>
+                    <FiDownload className="w-4 h-4 mr-1" />
+                    Download
+                  </Link>
+                </SecondaryButton>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <SecondaryButton variant="outline" className="text-sm" asChild>
+                    <Link href={`/view/document/${assignment.file._id}`} target="_blank">
+                      <FiDownload className="w-4 h-4 mr-1" />
+                      View (Secure)
+                    </Link>
+                  </SecondaryButton>
+                  <span className="text-xs text-red-600 bg-red-50 px-2 py-1 rounded">
+                    Download Blocked
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         )}

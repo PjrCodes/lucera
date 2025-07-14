@@ -18,6 +18,9 @@ export const fileSchema = z.object({
     "solved_assignment",
     "graded_assignment",
   ]),
+  // Security features
+  blockDownload: z.boolean().default(false),
+  blockChatbot: z.boolean().default(false),
 });
 
 export type CustomFile = z.infer<typeof fileSchema>;
@@ -115,6 +118,9 @@ export const contentSchema = z.object({
   shortDescription: z.string().optional(),
   type: z.enum(["content", "syllabus"]).default("content"),
   extractedChunks: z.array(z.string()).optional(),
+  // Security features
+  blockDownload: z.boolean().default(false),
+  blockChatbot: z.boolean().default(false),
 });
 export type Content = z.infer<typeof contentSchema>;
 
@@ -132,6 +138,9 @@ export const assignmentSchema = assignmentExtractorSchema.extend({
   gradesPublished: z.boolean().default(false),
   gradesPublishedAt: z.date().optional(),
   gradesPublishedBy: z.string().optional(),
+  // Security features
+  blockDownload: z.boolean().default(false),
+  blockChatbot: z.boolean().default(false),
 });
 
 export type Assignment = z.infer<typeof assignmentSchema>;

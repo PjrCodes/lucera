@@ -95,6 +95,10 @@ export default function EditAssignmentForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Security features state
+  const [blockDownload, setBlockDownload] = useState(false);
+  const [blockChatbot, setBlockChatbot] = useState(false);
+
   // Delete-related states
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleteInput, setDeleteInput] = useState("");
@@ -123,6 +127,9 @@ export default function EditAssignmentForm({
       setSelectedCourse(existingContent.courseId || null);
       setTitle(existingContent.title || "");
       setDescription(existingContent.description || "");
+      // Load security settings if available
+      setBlockDownload(existingContent.blockDownload || false);
+      setBlockChatbot(existingContent.blockChatbot || false);
 
       // Load assignment-specific data if it exists
       const assignmentData = existingContent as ExtractedAssignment; // Type assertion for assignment fields
@@ -283,6 +290,9 @@ export default function EditAssignmentForm({
               },
             }),
           },
+          // Security features
+          blockDownload,
+          blockChatbot,
         },
       };
 
@@ -471,6 +481,42 @@ export default function EditAssignmentForm({
               placeholder="Describe the assignment..."
               rows={3}
             />
+          </div>
+
+          {/* Security Features Section */}
+          <div className="space-y-4 border rounded-lg p-4 bg-yellow-50">
+            <h3 className="text-lg font-semibold text-yellow-800">Security Features</h3>
+            <p className="text-sm text-yellow-700 mb-3">
+              Control how students can access and interact with this assignment material.
+            </p>
+
+            <div className="space-y-3">
+              <label className="flex items-center gap-3">
+                <Checkbox
+                  checked={blockDownload}
+                  onCheckedChange={setBlockDownload}
+                />
+                <div>
+                  <span className="font-medium text-yellow-800">Block PDF Download</span>
+                  <p className="text-sm text-yellow-600">
+                    Students can only view the document in the secure PDF viewer, no downloading allowed
+                  </p>
+                </div>
+              </label>
+
+              <label className="flex items-center gap-3">
+                <Checkbox
+                  checked={blockChatbot}
+                  onCheckedChange={setBlockChatbot}
+                />
+                <div>
+                  <span className="font-medium text-yellow-800">Block LISA Chatbot Access</span>
+                  <p className="text-sm text-yellow-600">
+                    Prevent LISA from accessing this document for chat responses
+                  </p>
+                </div>
+              </label>
+            </div>
           </div>
 
           <div>

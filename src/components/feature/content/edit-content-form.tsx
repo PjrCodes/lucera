@@ -57,6 +57,10 @@ export default function EditContentForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Security features state
+  const [blockDownload, setBlockDownload] = useState(false);
+  const [blockChatbot, setBlockChatbot] = useState(false);
+
   // Delete-related states
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleteInput, setDeleteInput] = useState("");
@@ -85,6 +89,9 @@ export default function EditContentForm({
       setSelectedCourse(existingContent.courseId || null);
       setTitle(existingContent.title || "");
       setDescription(existingContent.description || "");
+      // Load security settings if available
+      setBlockDownload(existingContent.blockDownload || false);
+      setBlockChatbot(existingContent.blockChatbot || false);
       // Remove this incorrect line - let the second useEffect handle topic mapping
       // setSelectedTopics(existingContent.topics ? existingContent.topics.map((_, idx) => idx - 1) : []);
 
@@ -150,6 +157,9 @@ export default function EditContentForm({
           courseId: selectedCourse,
           topics: selectedTopics.map((i) => i + 1), // Convert to 1-based indexes for backend
           fileId: null, // TODO: Handle file upload if needed
+          // Security features
+          blockDownload,
+          blockChatbot,
         },
       };
 
@@ -306,6 +316,40 @@ export default function EditContentForm({
                   <span>{topic}</span>
                 </label>
               ))}
+            </div>
+          </div>
+
+          {/* Security Options */}
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <h3 className="text-lg font-medium text-yellow-800 mb-3">Security Options</h3>
+            <p className="text-sm text-yellow-700 mb-4">
+              Control how students can access and interact with this content.
+            </p>
+            <div className="space-y-3">
+              <label className="flex items-center gap-3">
+                <Checkbox
+                  checked={blockDownload}
+                  onCheckedChange={setBlockDownload}
+                />
+                <div>
+                  <span className="font-medium text-yellow-800">Block Download</span>
+                  <p className="text-sm text-yellow-600">
+                    Students can only view the content in a secure viewer, downloads are disabled
+                  </p>
+                </div>
+              </label>
+              <label className="flex items-center gap-3">
+                <Checkbox
+                  checked={blockChatbot}
+                  onCheckedChange={setBlockChatbot}
+                />
+                <div>
+                  <span className="font-medium text-yellow-800">Block LISA Chatbot</span>
+                  <p className="text-sm text-yellow-600">
+                    This content will not be available for LISA chatbot queries
+                  </p>
+                </div>
+              </label>
             </div>
           </div>
 

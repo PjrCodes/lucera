@@ -3,7 +3,44 @@ import client from "../db";
 import { contentSchema, ContentWithEmbeddedFile } from "../schemas/database";
 import { getFileRecord } from "./files";
 
-export async function getContentById(courseId: string) {
+export async function getContentById(contentId: string): Promise<ContentWithEmbeddedFile | null> {
+  const content = await client
+    .db()
+    .collection("content")
+    .findOne({ _id: new ObjectId(contentId) });
+
+  if (!content) {
+    return null;
+  }
+
+  try {
+    const parsedData = contentSchema.parse(content);
+    if (parsedData._id instanceof ObjectId) {
+      parsedData._id = parsedData._id.toString();
+    }
+
+    // Get file details if fileId exists
+    let file = null;
+    if (parsedData.fileId) {
+      try {
+        file = await getFileRecord(parsedData.fileId);
+      } catch (error) {
+        console.error("Error fetching file details:", error);
+        throw new Error("File not found or invalid file ID");
+      }
+    }
+
+    return {
+      ...parsedData,
+      file: file,
+    } as ContentWithEmbeddedFile;
+  } catch (error) {
+    console.error("Error parsing content:", error);
+    throw new Error("Invalid content data format");
+  }
+}
+
+export async function getContentByCourseId(courseId: string) {
   const course = await client
     .db()
     .collection("content")
