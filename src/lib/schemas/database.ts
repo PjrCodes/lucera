@@ -198,3 +198,36 @@ export type SubmittedAssignmentWithEmbeddedData = SubmittedAssignment & {
     email: string;
   };
 };
+
+// Announcement Schema
+export const announcementSchema = z.object({
+  _id: z.instanceof(ObjectId).or(z.string()),
+  title: z.string(),
+  content: z.string(),
+  courseId: z.string(),
+  courseName: z.string(), // Denormalized for performance
+  courseCode: z.string(), // Denormalized for performance
+  createdBy: z.string(), // Teacher ID
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  isActive: z.boolean().default(true), // For soft delete
+});
+
+export type Announcement = z.infer<typeof announcementSchema>;
+
+// Schema for announcement read status
+export const announcementReadStatusSchema = z.object({
+  _id: z.instanceof(ObjectId).or(z.string()),
+  announcementId: z.string(),
+  userId: z.string(),
+  readAt: z.date(),
+  createdAt: z.date(),
+});
+
+export type AnnouncementReadStatus = z.infer<typeof announcementReadStatusSchema>;
+
+// Announcement with read status for students
+export type AnnouncementWithReadStatus = Announcement & {
+  isRead: boolean;
+  readAt?: Date;
+};

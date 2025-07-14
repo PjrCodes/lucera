@@ -61,6 +61,27 @@ export async function getCoursesForUser(userId: string) {
   return courses;
 }
 
+export async function getCoursesOwnedByTeacher(teacherId: string) {
+  const coursesData = client
+    .db()
+    .collection("courses")
+    .find({
+      userId: teacherId,
+    })
+    .sort({ createdAt: -1 }); // Sort by creation date, most recent first
+
+  const rawCourses = await coursesData.toArray();
+  let courses: Course[] = [];
+  try {
+    courses = rawCourses.map((course) => courseSchema.parse(course));
+  } catch (error) {
+    console.error("Error parsing teacher's courses:", error);
+    throw new Error("Invalid course data format");
+  }
+
+  return courses;
+}
+
 export async function getCourseById(courseId: string) {
   const course = await client
     .db()

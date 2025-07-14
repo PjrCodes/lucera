@@ -182,3 +182,25 @@ export const InstantFeedbackRequestSchema = z.object({
 export type SubmitAssignmentRequest = z.infer<typeof SubmitAssignmentRequestSchema>;
 export type InstantFeedbackRequest = z.infer<typeof InstantFeedbackRequestSchema>;
 export type ChatRequest = z.infer<typeof chatRequestSchema>;
+
+// Announcement API Schemas
+export const CreateAnnouncementRequestSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  content: z.string().min(1, "Content is required"),
+  courseId: z.string().min(1, "Course ID is required"),
+});
+
+export const UpdateAnnouncementRequestSchema = z.object({
+  _id: z.string().min(1, "Announcement ID is required"),
+  title: z.string().min(1, "Title is required"),
+  content: z.string().min(1, "Content is required"),
+  courseId: z.string().min(1, "Course ID is required"),
+});
+
+export const MarkAnnouncementReadRequestSchema = z.object({
+  announcementId: z.string().min(1, "Announcement ID is required"),
+});
+
+export type CreateAnnouncementRequest = z.infer<typeof CreateAnnouncementRequestSchema>;
+export type UpdateAnnouncementRequest = z.infer<typeof UpdateAnnouncementRequestSchema>;
+export type MarkAnnouncementReadRequest = z.infer<typeof MarkAnnouncementReadRequestSchema>;
