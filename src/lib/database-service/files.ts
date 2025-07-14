@@ -22,7 +22,7 @@ export async function getFileRecord(fileId: string, ownerId?: string) {
     if (!fileRecord) {
       fileRecord = await collection.findOne({
         _id: new ObjectId(fileId),
-        type: { $in: ["syllabus", "assignment", "content"] },
+        // type: { $in: ["syllabus", "assignment", "content"] },
       });
     }
     // if the file will still not be found, error will be thrown below.
@@ -30,7 +30,7 @@ export async function getFileRecord(fileId: string, ownerId?: string) {
     // public file access
     fileRecord = await collection.findOne({
       _id: new ObjectId(fileId),
-      type: { $in: ["syllabus", "assignment", "content"] },
+      // type: { $in: ["syllabus", "assignment", "content"] },
     });
   }
   if (!fileRecord) {

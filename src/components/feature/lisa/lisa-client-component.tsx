@@ -16,6 +16,7 @@ import {
 import { MultiSelect } from "@/components/core/multi-select";
 import { AuthenticatedSession } from "@/lib/types/auth";
 import { Course, UserData } from "@/lib/schemas/database";
+import { MyMarkdown } from "@/components/core/markdown";
 
 interface Message {
   id: string;
@@ -89,7 +90,7 @@ function MessageList({ messages }: { messages: Message[] }) {
                 }`}
               >
                 <div className="break-words whitespace-pre-line text-sm leading-relaxed">
-                  {message.text}
+                  <MyMarkdown>{message.text /* TODO: markdown render */}</MyMarkdown>
                 </div>
                 <div className="text-xs opacity-70 mt-2">
                   {message.timestamp.toLocaleTimeString([], {

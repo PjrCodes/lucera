@@ -1,38 +1,30 @@
-# TODOS
+# t.o.d.o.s
 
 ## Requirements for Completion
 
+### New features / Pages
+
 - [ ] Progress Dashboard page needs to be overhauled.
+- [ ] University Page Overhaul
+- [ ] Landing Page Overhaul
 - [ ] Important - Fully rich edit capabilities. Currently, some fields are ommitted. Need full editing capability. - image
-
-- [ ] Properly update the `relatedFiles` field in the UserData schema.
-- [ ] Move all schemas, interfaces, and types to common locations.
-- [ ] Move all utility functions to common locations.
-- [ ] Refactor constant functions / variables appropriately if they are not being used much, etc.
-- [ ] Beautification of the form elements / website so it looks better on over saturated screen.
-- [ ] Better Dashboard Layout error showcasing, if possible.
-  - [ ] They shouldn't even be something that is shown, perhaps just a message that says "Dashboard was reset to default state because of errors."
-  - [ ] This should be shown only once, and then the user should be able to continue using the app.
-  - [ ] Or, we don't show the dashboard, and only errors are shown. Until they are fixed, the user cannot use the app.
-  - [ ] In the real world, it won't be common to have dashboard layout errors, so this is not a priority.
-
 - [ ] Block download option
-  - [ ] View only PDF option (IF POSSIBLE)
+  - [X] View only PDF option (IF POSSIBLE)
 - [ ] Block chatting w/ PDF option
-- [ ] Grading
-  - [ ] View assignment submissions: text
-  - [ ] View assignment submissions: pdf
-  - [ ] Grade based on rubric, fin % (no auto calc) / straightforward grading, fin %
-  - [ ] Add grading component (no assignment) - title, description, grade or rubric, fin %
+- [X] Grading
+  - [X] View assignment submissions: text
+  - [X] View assignment submissions: pdf
+  - [X] Grade based on rubric, fin % (no auto calc) / straightforward grading, fin %
+  - [X] Add grading component (no assignment) - title, description, grade or rubric, fin %
 - [ ] Chat bot
   - [ ] Show links to referenced content
   - [ ] Internal MCP server that can retrieve grade data, analyse, and plot graphs
     - [ ] Thinking required
 - [ ] Assignments
   - [ ] Instant Feedback before grading. Very easy.
-  - [ ] Upload submission (text / pdf)
+  - [X] Upload submission (text / pdf)
 - [X] Bookmarks
-- [ ] Badges - Thinking Required
+- [X] Badges - Thinking Required
 - [ ] Report Generation - simple, PDF reports. No advanced analytics page.
 - [ ] Messaging
 - [ ] Announcements
@@ -45,8 +37,23 @@
   - [ ] Reminder: Deadline Approaching!
   - [ ] Reminder: Upload Today's Slide Deck!
   - [ ] Can be a toast.
+
 - [X] DELETE stuff.
-- [ ] Lighthouse UI Improvements - charts have huge errors
+- [X] Lighthouse UI Improvements - charts have huge errors
+
+### Refactor
+
+- [ ] Properly update the `relatedFiles` field in the UserData schema.
+- [ ] Move all schemas, interfaces, and types to common locations.
+- [ ] Move all utility functions to common locations.
+- [ ] Refactor constant functions / variables appropriately if they are not being used much, etc.
+- [ ] Beautification of the form elements / website so it looks better on over saturated screen.
+- [ ] Better Dashboard Layout error showcasing, if possible.
+  - [ ] They shouldn't even be something that is shown, perhaps just a message that says "Dashboard was reset to default state because of errors."
+  - [ ] This should be shown only once, and then the user should be able to continue using the app.
+  - [ ] Or, we don't show the dashboard, and only errors are shown. Until they are fixed, the user cannot use the app.
+  - [ ] In the real world, it won't be common to have dashboard layout errors, so this is not a priority.
+
 
 ## Future Scope
 

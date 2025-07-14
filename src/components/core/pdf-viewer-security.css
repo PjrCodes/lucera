@@ -1,0 +1,103 @@
+/* Additional security styles for PDF viewer */
+[data-pdf-viewer="true"] {
+  /* Prevent text selection and image copying */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  
+  /* Prevent drag and drop */
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  
+  /* Prevent right-click context menu */
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Enhanced grid controls styling */
+[data-pdf-viewer="true"] .grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+}
+
+/* Ensure uniform button sizing in grid */
+[data-pdf-viewer="true"] .grid button {
+  height: 2.5rem;
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Center content in info displays */
+[data-pdf-viewer="true"] .grid > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  min-height: 2.5rem;
+}
+
+/* Screenshot protection overlay */
+[data-pdf-viewer="true"][data-screenshot-protection="true"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(45deg, transparent 49%, rgba(255,255,255,0.01) 50%, transparent 51%),
+    linear-gradient(-45deg, transparent 49%, rgba(0,0,0,0.01) 50%, transparent 51%);
+  background-size: 30px 30px, 30px 30px;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: overlay;
+}
+
+/* Anti-screenshot watermark effect */
+[data-pdf-viewer="true"][data-screenshot-protection="true"] .react-pdf__Page {
+  position: relative;
+}
+
+[data-pdf-viewer="true"][data-screenshot-protection="true"] .react-pdf__Page::after {
+  content: 'CONFIDENTIAL';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  font-size: 4rem;
+  color: rgba(0, 0, 0, 0.03);
+  font-weight: bold;
+  pointer-events: none;
+  z-index: 10;
+  user-select: none;
+  font-family: Arial, sans-serif;
+}
+
+/* Prevent print screen detection */
+@media print {
+  [data-pdf-viewer="true"] {
+    display: none !important;
+  }
+  
+  [data-pdf-viewer="true"]::before {
+    content: 'This content cannot be printed';
+    display: block;
+    text-align: center;
+    padding: 2rem;
+    font-size: 2rem;
+    color: #000;
+  }
+}
+
+/* Disable developer tools shortcuts (limited effectiveness) */
+[data-pdf-viewer="true"] {
+  -webkit-user-modify: read-only;
+}

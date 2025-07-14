@@ -6,13 +6,11 @@ import Link from "next/link";
 interface CourseAssignmentsCardProps {
   assignments: AssignmentWithEmbeddedFile[];
   courseId: string;
-  onAssignmentSelect?: (assignment: AssignmentWithEmbeddedFile) => void;
   selectedAssignmentId?: string | null;
 }
 
 export default function CourseAssignmentsCard({
   assignments,
-  onAssignmentSelect,
   selectedAssignmentId,
 }: CourseAssignmentsCardProps) {
   const formatDate = (dateString: string | null) => {
@@ -26,18 +24,6 @@ export default function CourseAssignmentsCard({
 
   const isUpcoming = (startDate: string | null) => {
     return startDate && new Date(startDate) > new Date();
-  };
-
-  const handleAssignmentClick = (
-    assignment: AssignmentWithEmbeddedFile,
-    e: React.MouseEvent,
-  ) => {
-    // If we have an onAssignmentSelect handler, prevent navigation and show in-place
-    if (onAssignmentSelect) {
-      e.preventDefault();
-      onAssignmentSelect(assignment);
-    }
-    // Otherwise, let the Link handle navigation normally
   };
 
   if (assignments.length === 0) {
@@ -70,7 +56,8 @@ export default function CourseAssignmentsCard({
             <Link
               key={assignment._id.toString()}
               href={`/view/assignment/${assignment._id.toString()}`}
-              onClick={(e) => handleAssignmentClick(assignment, e)}
+              target="_blank"
+              rel="noopener noreferrer"
               className={`block w-full text-left border-l-4 ${
                 isSelected
                   ? "border-primary-500 bg-primary-50"

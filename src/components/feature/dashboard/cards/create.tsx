@@ -45,13 +45,6 @@ export default function Create({}: PropsForEveryDashboardCard) {
       href: "/create/content",
     },
     {
-      id: 6,
-      type: "poll",
-      label: "New Poll",
-      icon: React.createElement(iconForType("poll")),
-      href: "/create/poll",
-    },
-    {
       id: 7,
       type: "report",
       label: "Generate Report",

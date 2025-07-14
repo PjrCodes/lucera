@@ -8,7 +8,6 @@ import CourseGradesCard from "@/components/feature/course/cards/course-grades-ca
 import CourseMaterialsCard from "@/components/feature/course/cards/course-materials-card";
 import CoursePollsCard from "@/components/feature/course/cards/course-polls-card";
 import CourseStudentsCard from "@/components/feature/course/cards/course-students-card";
-import AssignmentView from "@/components/feature/course/assignment-view";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   BookOpen,
@@ -65,19 +64,7 @@ export default function CourseTabs({
   isTeacher,
   availableStudents,
 }: CourseTabsProps) {
-  const [selectedAssignment, setSelectedAssignment] =
-    useState<AssignmentWithEmbeddedFile | null>(null);
   const [activeTab, setActiveTab] = useState("description");
-
-  const handleAssignmentSelect = (
-    assignment: AssignmentWithEmbeddedFile | null,
-  ) => {
-    setSelectedAssignment(assignment);
-  };
-
-  const handleBackToAssignments = () => {
-    setSelectedAssignment(null);
-  };
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -155,22 +142,11 @@ export default function CourseTabs({
             <CourseTimeline course={course} />
           </TabsContent>
           <TabsContent value="assignments">
-            {selectedAssignment ? (
-              <AssignmentView
-                assignment={selectedAssignment}
-                course={course}
-                backUrl="#"
-                isTeacher={isTeacher}
-                onBack={handleBackToAssignments}
-              />
-            ) : (
-              <CourseAssignmentsCard
-                assignments={assignments}
-                courseId={courseId}
-                onAssignmentSelect={handleAssignmentSelect}
-                selectedAssignmentId={null}
-              />
-            )}
+            <CourseAssignmentsCard
+              assignments={assignments}
+              courseId={courseId}
+              selectedAssignmentId={null}
+            />
           </TabsContent>
           <TabsContent value="grades">
             <CourseGradesCard grades={grades} />

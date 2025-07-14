@@ -24,11 +24,31 @@ export const MagicCreateAssignmentRequestSchema = z.object({
 export const UploadFileRequestSchema = z.object({
   file: z
     .instanceof(File)
-    .refine((file) => file.size > 0 && file.type === "application/pdf", {
-      message:
-        "File is required and must not be empty. Only PDF files are allowed.",
+    .refine((file) => file.size > 0, {
+      message: "File is required and must not be empty.",
     }),
   content_type: z.string().min(1, "Content type is required"),
+}).refine((data) => {
+  // For syllabus and content uploads, require PDF
+  if (["syllabus", "content"].includes(data.content_type)) {
+    return data.file.type === "application/pdf";
+  }
+
+  // For assignment submissions, allow PDF, DOC, DOCX
+  if (data.content_type === "solved_assignment") {
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ];
+    return allowedTypes.includes(data.file.type);
+  }
+
+  // For other types, default to PDF only
+  return data.file.type === "application/pdf";
+}, {
+  message: "Invalid file type for the specified content type.",
+  path: ["file"]
 });
 
 export const InviteStudentsRequestSchema = z.object({
@@ -139,4 +159,20 @@ export const chatRequestSchema = z.object({
   userId: z.string().min(1, "User ID is required"),
 });
 
+export const SubmitAssignmentRequestSchema = z.object({
+  assignmentId: z.string().min(1, "Assignment ID is required"),
+  submissionType: z.enum(["file_upload", "text_entry"]),
+  submissionContent: z.string().optional(), // For text submissions
+  // fileId will be handled separately through file upload
+});
+
+export const InstantFeedbackRequestSchema = z.object({
+  assignmentId: z.string().min(1, "Assignment ID is required"),
+  submissionType: z.enum(["file_upload", "text_entry"]),
+  submissionContent: z.string().optional(), // For text submissions
+  fileId: z.string().optional(), // For file submissions
+});
+
+export type SubmitAssignmentRequest = z.infer<typeof SubmitAssignmentRequestSchema>;
+export type InstantFeedbackRequest = z.infer<typeof InstantFeedbackRequestSchema>;
 export type ChatRequest = z.infer<typeof chatRequestSchema>;

@@ -19,9 +19,24 @@ export async function getAssignmentById(assignmentId: string) {
   }
 
   try {
-    return assignmentSchema.parse(assignment);
+    // Clean up null values for optional fields to make them undefined
+    const cleanedAssignment = {
+      ...assignment,
+      gradesPublishedAt: assignment.gradesPublishedAt === null ? undefined : assignment.gradesPublishedAt,
+      gradesPublishedBy: assignment.gradesPublishedBy === null ? undefined : assignment.gradesPublishedBy,
+    };
+
+    const parsedAssignment = assignmentSchema.parse(cleanedAssignment);
+
+    // Convert ObjectId to string for client-side usage
+    if (parsedAssignment._id instanceof ObjectId) {
+      parsedAssignment._id = parsedAssignment._id.toString();
+    }
+
+    return parsedAssignment;
   } catch (error) {
     console.error("Error parsing assignment:", error);
+    console.error("Assignment data:", assignment);
     throw new Error("Invalid assignment data format");
   }
 }

@@ -248,7 +248,7 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
     <>
       <SetHeaderClientComponent title={"LIGHTHOUSE"} />
       <main className="min-h-screen bg-primary-50 p-6">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl w-full mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-3 bg-primary-100 text-primary-800 px-8 py-4 rounded-lg shadow-md border border-primary-200">
@@ -289,9 +289,9 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
 
           {/* Teacher Charts Section */}
           {isTeacher && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+            <div className="flex flex-col gap-6 mb-8 items-center justify-center max-w-6xl">
               {/* Badge Distribution Histogram */}
-              <Card>
+              <Card className="w-fit">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <BarChart3 className="w-5 h-5" />
@@ -299,7 +299,7 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
                   </CardTitle>
                   <CardDescription>Number of students by badge count (Engagement levels)</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="w-fit">
                   <ChartContainer config={chartConfig} className="h-[300px]">
                     <BarChart accessibilityLayer data={badgeDistributionData}>
                       <CartesianGrid vertical={false} />
@@ -323,7 +323,7 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
               </Card>
 
               {/* Badge Unlock Timeline */}
-              <Card>
+              <Card className="w-fit">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Activity className="w-5 h-5" />
@@ -380,7 +380,7 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
               </Card>
 
               {/* Per-Badge Unlock Heatmap */}
-              <Card>
+              <Card className="w-fit">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Grid className="w-5 h-5" />

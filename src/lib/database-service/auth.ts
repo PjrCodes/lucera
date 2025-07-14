@@ -119,8 +119,54 @@ export function withTeacherSession(
   };
 }
 
-export function withAuthorisation(
+export function withStudentSession(
   handler: (
+    req: NextAuthRequest,
+    session: AuthenticatedSession,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    params: Promise<any>,
+  ) => Promise<Response>,
+) {
+  return async function (
+    req: NextAuthRequest,
+    ctx: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      params: Promise<any>;
+    },
+  ) {
+    if (!req.auth) {
+      return NextResponse.json(
+        { error: "Unauthorized: No authentication provided" },
+        { status: 401 },
+      );
+    }
+    const session = req.auth;
+    if (!session.user || !session.user.id) {
+      return NextResponse.json(
+        { error: "Unauthorized: No user information found" },
+        { status: 401 },
+      );
+    }
+    try {
+      const userData = await getUserData(session.user.id);
+      if (userData.role !== "student") {
+        return NextResponse.json(
+          { error: "Forbidden: User is not a student" },
+          { status: 403 },
+        );
+      }
+    } catch {
+      return NextResponse.json(
+        { error: "Internal Error: Server error processing user data" },
+        { status: 500 },
+      );
+    }
+
+    return handler(req, session as AuthenticatedSession, ctx?.params);
+  };
+}
+
+export function withAuthorisation(handler: (
     req: NextAuthRequest,
     session: AuthenticatedSession,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
