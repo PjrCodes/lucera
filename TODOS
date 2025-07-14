@@ -4,12 +4,14 @@
 
 ### New features / Pages
 
+- [ ] FIX EVERYTHING THAT WAS AI GENERATED - TO A LENGTH YOU NEVER THOUGHT POSSIBLE.
+
 - [X] Back button on Assignment Page to Course Page
 - [ ] Protect Create Assignment from Student
 
 - [ ] Progress Dashboard page - should show analytics of the students to some detail and have export report option
 - [ ] University Page Overhaul
-- [ ] Landing Page
+- [X] Landing Page
 - [ ] Take Instant Mini-Quiz - based on the course syllabus, create a course!
 - [ ] Important - Fully rich edit capabilities. Currently, some fields are ommitted. Need full editing capability. - Mainly Image
 - [X] Block download option
