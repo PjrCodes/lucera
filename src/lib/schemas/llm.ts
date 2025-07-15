@@ -85,3 +85,33 @@ export const assignmentExtractorLLMSchema = z.toJSONSchema(
 );
 
 export type ExtractedAssignment = z.infer<typeof assignmentExtractorSchema>;
+
+export const quizExtractorSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  questions: z.array(
+    z.object({
+      id: z.number(),
+      question: z.string(),
+      options: z.array(z.string()).length(4),
+      correctAnswer: z.number().min(0).max(3),
+      explanation: z.string(),
+      topic: z.string(),
+      difficulty: z.enum(["easy", "medium", "hard"]),
+      concept: z.string(), // The specific concept being tested
+    }),
+  ).length(10),
+});
+
+export const contentBasedQuizSchema = z.object({
+  courseTopics: z.array(z.string()),
+  contentSummaries: z.array(z.string()),
+  courseName: z.string(),
+  courseCode: z.string(),
+});
+
+export const quizExtractorLLMSchema = z.toJSONSchema(quizExtractorSchema);
+
+export type ExtractedQuiz = z.infer<typeof quizExtractorSchema>;
+
+export type ContentBasedQuizInput = z.infer<typeof contentBasedQuizSchema>;

@@ -1,0 +1,62 @@
+You will be provided with course information including:
+- Course name and code
+- List of course topics/units
+- Content summaries from course materials
+
+Create an instant mini-quiz with exactly 10 multiple-choice questions that test students' understanding of the COURSE CONTENT and ACADEMIC CONCEPTS.
+
+## IMPORTANT: Focus on Subject Matter, NOT Administrative Details
+
+❌ **DO NOT ASK ABOUT:**
+- Grading policies or percentages
+- Assignment due dates
+- Course schedule or timeline
+- Syllabus structure
+- Administrative procedures
+- Course logistics
+
+✅ **DO ASK ABOUT:**
+- Key concepts and theories from the course topics
+- Methodologies and techniques taught in the course
+- Applications of course principles
+- Problem-solving using course knowledge
+- Analysis and interpretation of subject matter
+- Definitions of important terms and concepts
+
+## Quiz Structure:
+
+### Quiz Metadata:
+- **Title**: Create an engaging, subject-specific title (e.g., "Geospatial Data Science Concepts Quiz")
+- **Description**: Brief description focusing on the academic content being tested
+
+### Question Guidelines:
+1. **Content Coverage**: Distribute questions across the provided course topics
+2. **Difficulty Mix**: 
+   - 3-4 easy questions (basic concepts, definitions)
+   - 4-5 medium questions (application, analysis)
+   - 2-3 hard questions (synthesis, evaluation)
+3. **Question Types**:
+   - Conceptual understanding
+   - Application scenarios
+   - Problem-solving
+   - Analysis and interpretation
+
+### Format for Each Question:
+- **ID**: Sequential number (1-10)
+- **Question**: Subject-specific question testing course concepts
+- **Options**: Exactly 4 academically relevant answer choices
+- **Correct Answer**: Index (0=A, 1=B, 2=C, 3=D) of the correct option
+- **Explanation**: Clear explanation of the correct concept/principle
+- **Topic**: The specific course topic/unit this question relates to
+- **Difficulty**: "easy", "medium", or "hard"
+- **Concept**: The specific academic concept being tested
+
+## Content Guidelines:
+- Questions should require understanding of course material, not memorization of syllabus details
+- Use terminology and concepts specific to the subject area
+- Create realistic scenarios that apply course knowledge
+- Ensure all options are plausible within the subject domain
+- Test understanding of relationships between concepts
+- Include questions that require analysis or synthesis of ideas
+
+Generate questions that would help students review and demonstrate mastery of the actual course subject matter and learning objectives.

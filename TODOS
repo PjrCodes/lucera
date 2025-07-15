@@ -12,7 +12,7 @@
 - [X] Progress Dashboard page - should show analytics of the students to some detail and have export report option
 - [ ] University Page Overhaul
 - [X] Landing Page
-- [ ] Take Instant Mini-Quiz - based on the course syllabus, create a course!
+- [X] Take Instant Mini-Quiz - based on the course syllabus, create a small quiz that tests the student (10 questions, 1 mark each). This is for interactivity.
 - [ ] Important - Fully rich edit capabilities. Currently, some fields are ommitted. Need full editing capability. - Mainly Image
 - [X] Block download option
   - [X] View only PDF option (IF POSSIBLE)
@@ -31,7 +31,7 @@
   - [X] Upload submission (text / pdf)
 - [X] Bookmarks
 - [X] Badges - Thinking Required
-- [ ] Report Generation - simple, PDF reports. No advanced analytics page.
+- [X] Report Generation - simple, PDF reports. No advanced analytics page.
 - [X] Messaging
 - [X] Announcements
 - [ ] In-App Notifications

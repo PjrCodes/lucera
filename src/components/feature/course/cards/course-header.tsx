@@ -2,7 +2,7 @@
 
 import { Course } from "@/lib/schemas/database";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
-import { Edit, Bookmark } from "lucide-react";
+import { Edit, Bookmark, Brain } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -71,6 +71,14 @@ export default function CourseHeader({
               }`}
             />
           </SecondaryButton>
+          {!isTeacher && (
+            <SecondaryButton variant="outline" size="sm">
+              <Link href={`/quiz/${course._id}`} className="flex items-center gap-2">
+                <Brain className="h-4 w-4" />
+                Take Quiz
+              </Link>
+            </SecondaryButton>
+          )}
           {isTeacher && (
             <SecondaryButton variant="outline" size="sm">
               <Link href={`/edit/course/${course._id}`}>
@@ -78,7 +86,6 @@ export default function CourseHeader({
               </Link>
             </SecondaryButton>
           )}
-          {/* ...existing code for !isTeacher... */}
         </div>
       </div>
     </div>
