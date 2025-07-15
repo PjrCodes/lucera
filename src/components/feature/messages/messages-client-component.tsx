@@ -4,7 +4,6 @@ import SetHeaderClientComponent from "@/components/feature/header/set-header-cli
 import NotificationListener from "@/components/feature/header/notification-listener";
 import { UserData, Course } from "@/lib/schemas/database";
 import { AuthenticatedSession } from "@/lib/types/auth";
-import { NotificationStreamData } from "@/lib/types/notifications";
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   Megaphone,
@@ -1066,14 +1065,16 @@ export default function MessagesClientComponent({
 
       {/* Real-time notification listener */}
       <NotificationListener
-        onNotify={(data: NotificationStreamData) => {
-          // Handle different notification types
-          if (data.notification.type === "announcement" && selected === "announcements") {
-            // Refresh announcements when a new one is created
-            fetchAnnouncements();
-          } else if (data.notification.type === "message" && selected === "dms") {
-            // Refresh conversations when a new message arrives
-            fetchConversations();
+        onNotify={(data: object) => {
+          // Type assertion for notification data
+          const messageData = data as { senderId?: string; receiverId?: string; message?: string };
+          // Only refresh conversations for announcements or other non-message notifications
+          // Message updates are now handled by the dedicated EventSource stream above
+          if (!messageData.senderId && !messageData.receiverId) {
+            // This is likely an announcement or other notification
+            if (selected === "announcements") {
+              fetchAnnouncements();
+            }
           }
         }}
       />

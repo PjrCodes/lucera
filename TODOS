@@ -34,14 +34,14 @@
 - [ ] Report Generation - simple, PDF reports. No advanced analytics page.
 - [X] Messaging
 - [X] Announcements
-- [X] In-App Notifications
-  - [X] Grade Release
-  - [X] Announcements
-  - [X] Assignment Release
-  - [X] Message
-  - [X] Reminder: Grade Assignment!
-  - [X] Reminder: Deadline Approaching!
-  - [X] Reminder: Upload Today's Slide Deck!
+- [ ] In-App Notifications
+  - [ ] Grade Release
+  - [ ] Announcements
+  - [ ] Assignment Release
+  - [ ] Message
+  - [ ] Reminder: Grade Assignment!
+  - [ ] Reminder: Deadline Approaching!
+  - [ ] Reminder: Upload Today's Slide Deck!
   - [ ] Can be a toast.
 
 - [X] DELETE stuff.
