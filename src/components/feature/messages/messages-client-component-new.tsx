@@ -4,7 +4,7 @@ import SetHeaderClientComponent from "@/components/feature/header/set-header-cli
 import NotificationListener from "@/components/feature/header/notification-listener";
 import { UserData, Course } from "@/lib/schemas/database";
 import { AuthenticatedSession } from "@/lib/types/auth";
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Megaphone,
   Mail,
@@ -124,93 +124,11 @@ export default function MessagesClientComponent({
 
   const isTeacher = userData?.role === "teacher";
 
-  const fetchConversations = useCallback(async () => {
-    try {
-      setIsLoadingConversations(true);
-      const response = await fetch("/api/messages/conversations");
-      const data = await response.json();
-
-      if (data.success) {
-        setConversations(data.conversations);
-      } else {
-        console.error("Failed to fetch conversations:", data.error);
-      }
-    } catch (error) {
-      console.error("Error fetching conversations:", error);
-    } finally {
-      setIsLoadingConversations(false);
-    }
-  }, []);
-
-  const markConversationAsRead = useCallback(async (otherUserId: string) => {
-    try {
-      await fetch("/api/messages/mark-conversation-read", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ otherUserId }),
-      });
-      // Refresh conversations to update unread count
-      fetchConversations();
-    } catch (error) {
-      console.error("Error marking conversation as read:", error);
-    }
-  }, [fetchConversations]);
-
-  // Real-time message stream listener
-  useEffect(() => {
-    if (selected === "dms" && session.user.id) {
-      const eventSource = new EventSource("/api/messages/stream");
-      
-      eventSource.onmessage = (event) => {
-        const newMessage: MessageWithReadStatus = JSON.parse(event.data);
-
-        // Update conversations list for unread count and last message
-        fetchConversations();
-
-        // If the message is for the currently open conversation, add it to the view
-        if (newMessage.senderId === selectedConversationUserId) {
-          setCurrentMessages((prevMessages) => [...prevMessages, newMessage]);
-          // Also mark it as read immediately
-          markConversationAsRead(selectedConversationUserId);
-        }
-      };
-
-      eventSource.onerror = (err) => {
-        console.error("EventSource failed:", err);
-        eventSource.close();
-      };
-
-      return () => {
-        eventSource.close();
-      };
-    }
-  }, [selected, selectedConversationUserId, session.user.id, fetchConversations, markConversationAsRead]);
-
-  const fetchConversationMessages = useCallback(async (otherUserId: string) => {
-    try {
-      setIsLoadingMessages(true);
-      const response = await fetch(`/api/messages/conversation?otherUserId=${otherUserId}`);
-      const data = await response.json();
-
-      if (data.success) {
-        setCurrentMessages(data.messages);
-      } else {
-        console.error("Failed to fetch messages:", data.error);
-      }
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-    } finally {
-      setIsLoadingMessages(false);
-    }
-  }, []);
-
   // Fetch data on component mount
   useEffect(() => {
     fetchAnnouncements();
     fetchConversations();
-  }, [fetchConversations]);
+  }, []);
 
   // Scroll to bottom of chat on new message
   useEffect(() => {
@@ -222,9 +140,8 @@ export default function MessagesClientComponent({
   useEffect(() => {
     if (selectedConversationUserId) {
       fetchConversationMessages(selectedConversationUserId);
-      markConversationAsRead(selectedConversationUserId);
     }
-  }, [selectedConversationUserId, fetchConversationMessages, markConversationAsRead]);
+  }, [selectedConversationUserId]);
 
   const fetchAnnouncements = async () => {
     try {
@@ -241,6 +158,42 @@ export default function MessagesClientComponent({
       console.error("Error fetching announcements:", error);
     } finally {
       setIsLoadingAnnouncements(false);
+    }
+  };
+
+  const fetchConversations = async () => {
+    try {
+      setIsLoadingConversations(true);
+      const response = await fetch("/api/messages/conversations");
+      const data = await response.json();
+
+      if (data.success) {
+        setConversations(data.conversations);
+      } else {
+        console.error("Failed to fetch conversations:", data.error);
+      }
+    } catch (error) {
+      console.error("Error fetching conversations:", error);
+    } finally {
+      setIsLoadingConversations(false);
+    }
+  };
+
+  const fetchConversationMessages = async (otherUserId: string) => {
+    try {
+      setIsLoadingMessages(true);
+      const response = await fetch(`/api/messages/conversation?otherUserId=${otherUserId}`);
+      const data = await response.json();
+
+      if (data.success) {
+        setCurrentMessages(data.messages);
+      } else {
+        console.error("Failed to fetch messages:", data.error);
+      }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    } finally {
+      setIsLoadingMessages(false);
     }
   };
 
@@ -771,12 +724,13 @@ export default function MessagesClientComponent({
         onNotify={(data: object) => {
           // Type assertion for notification data
           const messageData = data as { senderId?: string; receiverId?: string; message?: string };
-          // Only refresh conversations for announcements or other non-message notifications
-          // Message updates are now handled by the dedicated EventSource stream above
-          if (!messageData.senderId && !messageData.receiverId) {
-            // This is likely an announcement or other notification
-            if (selected === "announcements") {
-              fetchAnnouncements();
+          // Refresh conversations when new message is received
+          if (messageData.receiverId === session.user.id || messageData.senderId === session.user.id) {
+            fetchConversations();
+            // If currently viewing the conversation, refresh messages
+            if (selectedConversationUserId &&
+                (messageData.senderId === selectedConversationUserId || messageData.receiverId === selectedConversationUserId)) {
+              fetchConversationMessages(selectedConversationUserId);
             }
           }
         }}

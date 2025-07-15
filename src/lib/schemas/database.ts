@@ -231,3 +231,45 @@ export type AnnouncementWithReadStatus = Announcement & {
   isRead: boolean;
   readAt?: Date;
 };
+
+// Message Schema
+export const messageSchema = z.object({
+  _id: z.instanceof(ObjectId).or(z.string()),
+  senderId: z.string(),
+  receiverId: z.string(),
+  message: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export type Message = z.infer<typeof messageSchema>;
+
+// Message read status schema
+export const messageReadStatusSchema = z.object({
+  _id: z.instanceof(ObjectId).or(z.string()),
+  messageId: z.string(),
+  userId: z.string(),
+  readAt: z.date(),
+  createdAt: z.date(),
+});
+
+export type MessageReadStatus = z.infer<typeof messageReadStatusSchema>;
+
+// Message with read status
+export type MessageWithReadStatus = Message & {
+  isRead: boolean;
+  readAt?: Date;
+  senderName?: string;
+  receiverName?: string;
+};
+
+// Conversation summary type for listing conversations
+export type ConversationSummary = {
+  conversationId: string;
+  otherUserId: string;
+  otherUserName: string;
+  otherUserRole: string;
+  lastMessage: string;
+  lastMessageTime: Date;
+  unreadCount: number;
+};
