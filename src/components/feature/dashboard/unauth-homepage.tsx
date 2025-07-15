@@ -25,7 +25,7 @@ const UnauthHomepage: NextPage = () => {
         <KeyFeaturesSection />
         <ScreenshotGridSection />
         <ComingSoonSection />
-        <FooterSection />
+        {/* <FooterSection /> */}
       </motion.div>
     </>
   );

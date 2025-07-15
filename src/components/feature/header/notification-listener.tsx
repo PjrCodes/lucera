@@ -1,26 +1,78 @@
-// components/NotificationListener.js
-import { useEffect } from "react";
-import { io } from "socket.io-client";
+"use client";
 
-const socket = io("http://localhost:4000");
+import { useEffect, useRef } from "react";
+import { NotificationStreamData, ReminderNotification } from "@/lib/types/notifications";
 
-type NotificationListenerProps = {
-  onNotify?: (data: object) => void;
-};
+interface NotificationListenerProps {
+  onNotify: (data: NotificationStreamData) => void;
+}
 
-export default function NotificationListener({
-  onNotify,
-}: NotificationListenerProps) {
+export default function NotificationListener({ onNotify }: NotificationListenerProps) {
+  const eventSourceRef = useRef<EventSource | null>(null);
+
   useEffect(() => {
-    socket.on("new-notification", (data) => {
-      console.log("🔔 Notification received:", data);
-      onNotify?.(data);
-    });
+    // Create EventSource connection to unified notification stream
+    eventSourceRef.current = new EventSource("/api/notifications/stream");
 
-    return () => {
-      socket.off("new-notification");
+    eventSourceRef.current.onmessage = (event) => {
+      try {
+        const data: NotificationStreamData = JSON.parse(event.data);
+        onNotify(data);
+      } catch (error) {
+        console.error("Error parsing notification data:", error);
+      }
     };
-  }, []);
 
-  return null;
+    eventSourceRef.current.onerror = (error) => {
+      console.error("Notification stream error:", error);
+      
+      // Reconnect after a delay
+      setTimeout(() => {
+        if (eventSourceRef.current) {
+          eventSourceRef.current.close();
+          eventSourceRef.current = new EventSource("/api/notifications/stream");
+        }
+      }, 5000);
+    };
+
+    // Cleanup on unmount
+    return () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+        eventSourceRef.current = null;
+      }
+    };
+  }, [onNotify]);
+
+  // Check for reminder notifications every 30 minutes
+  useEffect(() => {
+    const checkReminders = async () => {
+      try {
+        const response = await fetch("/api/notifications/reminders");
+        const data = await response.json();
+        
+        if (data.success && data.reminders.length > 0) {
+          // Trigger notifications for each reminder
+          data.reminders.forEach((reminder: ReminderNotification) => {
+            onNotify({
+              notification: reminder,
+              unreadCount: data.count,
+            });
+          });
+        }
+      } catch (error) {
+        console.error("Error checking reminders:", error);
+      }
+    };
+
+    // Check immediately
+    checkReminders();
+    
+    // Then check every 30 minutes
+    const intervalId = setInterval(checkReminders, 30 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
+  }, [onNotify]);
+
+  return null; // This component doesn't render anything
 }
