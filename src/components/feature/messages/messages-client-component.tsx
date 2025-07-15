@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TextBox } from "@/components/core/inputs/text-box";
+import { TextArea } from "@/components/core/inputs/text-area";
+import { Dropdown } from "@/components/core/inputs/dropdown";
 import { PrimaryButton } from "@/components/core/buttons/primary";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { MultiSelect } from "@/components/core/multi-select";
@@ -121,6 +123,16 @@ export default function MessagesClientComponent({
   const [availableContacts, setAvailableContacts] = useState<Contact[]>([]);
   const [selectedContactIds, setSelectedContactIds] = useState<string[]>([]);
   const [isLoadingContacts, setIsLoadingContacts] = useState(false);
+
+  // Announcement modal state
+  const [showCreateAnnouncementModal, setShowCreateAnnouncementModal] = useState(false);
+  const [showEditAnnouncementModal, setShowEditAnnouncementModal] = useState(false);
+  const [editingAnnouncement, setEditingAnnouncement] = useState<AnnouncementWithReadStatus | null>(null);
+  const [announcementTitle, setAnnouncementTitle] = useState("");
+  const [announcementContent, setAnnouncementContent] = useState("");
+  const [selectedCourseId, setSelectedCourseId] = useState("");
+  const [isCreatingAnnouncement, setIsCreatingAnnouncement] = useState(false);
+  const [isUpdatingAnnouncement, setIsUpdatingAnnouncement] = useState(false);
 
   const isTeacher = userData?.role === "teacher";
 
@@ -309,6 +321,165 @@ export default function MessagesClientComponent({
     setSelectedContactIds([]);
   };
 
+  // Announcement functions
+  const openCreateAnnouncementModal = () => {
+    setAnnouncementTitle("");
+    setAnnouncementContent("");
+    setSelectedCourseId("");
+    setShowCreateAnnouncementModal(true);
+  };
+
+  const openEditAnnouncementModal = (announcement: AnnouncementWithReadStatus) => {
+    setEditingAnnouncement(announcement);
+    setAnnouncementTitle(announcement.title);
+    setAnnouncementContent(announcement.content);
+    setSelectedCourseId(announcement.courseId);
+    setShowEditAnnouncementModal(true);
+  };
+
+  const closeAnnouncementModals = () => {
+    setShowCreateAnnouncementModal(false);
+    setShowEditAnnouncementModal(false);
+    setEditingAnnouncement(null);
+    setAnnouncementTitle("");
+    setAnnouncementContent("");
+    setSelectedCourseId("");
+  };
+
+  const createAnnouncement = async () => {
+    if (!announcementTitle.trim() || !announcementContent.trim() || !selectedCourseId) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    try {
+      setIsCreatingAnnouncement(true);
+      const response = await fetch("/api/announcement/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: announcementTitle.trim(),
+          content: announcementContent.trim(),
+          courseId: selectedCourseId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        closeAnnouncementModals();
+        fetchAnnouncements();
+      } else {
+        console.error("Failed to create announcement:", data.error);
+        alert("Failed to create announcement: " + data.error);
+      }
+    } catch (error) {
+      console.error("Error creating announcement:", error);
+      alert("Error creating announcement");
+    } finally {
+      setIsCreatingAnnouncement(false);
+    }
+  };
+
+  const updateAnnouncement = async () => {
+    if (!editingAnnouncement || !announcementTitle.trim() || !announcementContent.trim() || !selectedCourseId) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    try {
+      setIsUpdatingAnnouncement(true);
+      const response = await fetch(`/api/announcement/update`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          _id: editingAnnouncement._id,
+          title: announcementTitle.trim(),
+          content: announcementContent.trim(),
+          courseId: selectedCourseId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        closeAnnouncementModals();
+        fetchAnnouncements();
+      } else {
+        console.error("Failed to update announcement:", data.error);
+        alert("Failed to update announcement: " + data.error);
+      }
+    } catch (error) {
+      console.error("Error updating announcement:", error);
+      alert("Error updating announcement");
+    } finally {
+      setIsUpdatingAnnouncement(false);
+    }
+  };
+
+  const deleteAnnouncement = async (announcementId: string) => {
+    if (!confirm("Are you sure you want to delete this announcement?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/announcement/${announcementId}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        fetchAnnouncements();
+        // Close expanded view if this announcement was selected
+        if (selectedAnnouncementId === announcementId) {
+          setSelectedAnnouncementId(null);
+        }
+      } else {
+        console.error("Failed to delete announcement:", data.error);
+        alert("Failed to delete announcement: " + data.error);
+      }
+    } catch (error) {
+      console.error("Error deleting announcement:", error);
+      alert("Error deleting announcement");
+    }
+  };
+
+  const markAnnouncementAsRead = async (announcementId: string) => {
+    try {
+      const response = await fetch("/api/announcement/mark-read", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          announcementId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Update the local state to mark as read
+        setAnnouncements((prevAnnouncements) =>
+          prevAnnouncements.map((ann) =>
+            ann._id === announcementId
+              ? { ...ann, isRead: true, readAt: new Date().toISOString() }
+              : ann
+          )
+        );
+      } else {
+        console.error("Failed to mark announcement as read:", data.error);
+      }
+    } catch (error) {
+      console.error("Error marking announcement as read:", error);
+    }
+  };
+
   const openNewMessageModal = async () => {
     setShowNewMessageModal(true);
     await fetchAvailableContacts();
@@ -427,7 +598,7 @@ export default function MessagesClientComponent({
                     </p>
                   </div>
                   {isTeacher && (
-                    <PrimaryButton onClick={() => alert("Announcement feature coming soon!")}>
+                    <PrimaryButton onClick={openCreateAnnouncementModal}>
                       <Plus className="w-4 h-4 mr-2" />
                       New Announcement
                     </PrimaryButton>
@@ -469,7 +640,7 @@ export default function MessagesClientComponent({
 
                           // Mark as read when expanded (for students only)
                           if (newSelectedId && !isTeacher && !announcement.isRead) {
-                            // TODO: Mark as read
+                            markAnnouncementAsRead(announcement._id);
                           }
                         }}
                       >
@@ -497,7 +668,7 @@ export default function MessagesClientComponent({
                                   <button
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      // TODO: Edit announcement
+                                      openEditAnnouncementModal(announcement);
                                     }}
                                     className="text-secondary-600 hover:text-secondary-800 transition-colors"
                                   >
@@ -506,7 +677,7 @@ export default function MessagesClientComponent({
                                   <button
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      // TODO: Delete announcement
+                                      deleteAnnouncement(announcement._id);
                                     }}
                                     className="text-red-600 hover:text-red-800 transition-colors"
                                   >
@@ -760,6 +931,132 @@ export default function MessagesClientComponent({
               disabled={selectedContactIds.length === 0}
             >
               Start Conversation
+            </PrimaryButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create Announcement Modal */}
+      <Dialog open={showCreateAnnouncementModal} onOpenChange={setShowCreateAnnouncementModal}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-primary-800 text-xl font-semibold">
+              Create New Announcement
+            </DialogTitle>
+            <DialogDescription className="text-primary-600">
+              Share important information with your students.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-primary-800">Course</label>
+              <Dropdown
+                options={courses.map(course => ({
+                  value: course._id.toString(),
+                  label: `${course.courseCode} - ${course.name}`,
+                }))}
+                value={selectedCourseId}
+                onChange={setSelectedCourseId}
+                placeholder="Select a course..."
+                className="w-full"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-primary-800">Title</label>
+              <TextBox
+                value={announcementTitle}
+                onChange={setAnnouncementTitle}
+                placeholder="Enter announcement title..."
+                className="w-full"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-primary-800">Content</label>
+              <TextArea
+                value={announcementContent}
+                onChange={setAnnouncementContent}
+                placeholder="Enter announcement content..."
+                rows={6}
+                className="w-full"
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="flex gap-2">
+            <SecondaryButton onClick={closeAnnouncementModals}>
+              Cancel
+            </SecondaryButton>
+            <PrimaryButton
+              onClick={createAnnouncement}
+              disabled={isCreatingAnnouncement || !announcementTitle.trim() || !announcementContent.trim() || !selectedCourseId}
+            >
+              {isCreatingAnnouncement ? "Creating..." : "Create Announcement"}
+            </PrimaryButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Announcement Modal */}
+      <Dialog open={showEditAnnouncementModal} onOpenChange={setShowEditAnnouncementModal}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-primary-800 text-xl font-semibold">
+              Edit Announcement
+            </DialogTitle>
+            <DialogDescription className="text-primary-600">
+              Update your announcement details.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-primary-800">Course</label>
+              <Dropdown
+                options={courses.map(course => ({
+                  value: course._id.toString(),
+                  label: `${course.courseCode} - ${course.name}`,
+                }))}
+                value={selectedCourseId}
+                onChange={setSelectedCourseId}
+                placeholder="Select a course..."
+                className="w-full"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-primary-800">Title</label>
+              <TextBox
+                value={announcementTitle}
+                onChange={setAnnouncementTitle}
+                placeholder="Enter announcement title..."
+                className="w-full"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-primary-800">Content</label>
+              <TextArea
+                value={announcementContent}
+                onChange={setAnnouncementContent}
+                placeholder="Enter announcement content..."
+                rows={6}
+                className="w-full"
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="flex gap-2">
+            <SecondaryButton onClick={closeAnnouncementModals}>
+              Cancel
+            </SecondaryButton>
+            <PrimaryButton
+              onClick={updateAnnouncement}
+              disabled={isUpdatingAnnouncement || !announcementTitle.trim() || !announcementContent.trim() || !selectedCourseId}
+            >
+              {isUpdatingAnnouncement ? "Updating..." : "Update Announcement"}
             </PrimaryButton>
           </DialogFooter>
         </DialogContent>
