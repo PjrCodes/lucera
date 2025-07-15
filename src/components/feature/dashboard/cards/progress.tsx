@@ -116,7 +116,7 @@ export default async function Courses({
                 <div className="mt-auto pt-2">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-medium text-primary-700">
-                      {isTeacher ? "Progress" : "Assignments Completed"}
+                      {isTeacher ? "Student Completion %" : "Assignments Completed"}
                     </span>
                     <span
                       className={`text-xs font-medium ${
@@ -134,7 +134,7 @@ export default async function Courses({
                     aria-valuenow={courseProgress[idx]}
                     aria-valuemin={0}
                     aria-valuemax={100}
-                    aria-label={`${isTeacher ? 'Course progress' : 'Assignments completed'}: ${courseProgress[idx]}%`}
+                    aria-label={`${isTeacher ? 'Student Completion %' : 'Assignments Completed'}: ${courseProgress[idx]}%`}
                   >
                     <div
                       className={`h-2.5 rounded-full ${

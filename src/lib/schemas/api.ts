@@ -44,6 +44,18 @@ export const UploadFileRequestSchema = z.object({
     return allowedTypes.includes(data.file.type);
   }
 
+  // For course covers, allow common image formats
+  if (data.content_type === "course_cover") {
+    const allowedImageTypes = [
+      "image/jpeg",
+      "image/jpg", 
+      "image/png",
+      "image/webp",
+      "image/gif"
+    ];
+    return allowedImageTypes.includes(data.file.type);
+  }
+
   // For other types, default to PDF only
   return data.file.type === "application/pdf";
 }, {

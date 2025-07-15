@@ -1,21 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { redirect } from "next/navigation";
 import { Table } from "ka-table";
 import { DataType, EditingMode } from "ka-table/enums";
-import { Trash2, Trash } from "lucide-react";
+import { Trash2, Trash, Palette } from "lucide-react";
 import "./edit-course-table.css";
 import { FileDropInput } from "@/components/core/inputs/file-drop-input";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import {
   CourseTimelineItem,
   CourseUnit,
   CourseWithEmbeddedSyllabus,
 } from "@/lib/schemas/database";
-import { TextArea } from "@/components/core/inputs/text-area";
 import { TextBox } from "@/components/core/inputs/text-box";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { PrimaryButton } from "@/components/core/buttons/primary";
@@ -28,9 +28,123 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+
+// Nice light color palette for courses (more accessible and pleasant)
+const COURSE_COLORS = [
+  "#60A5FA", // Light Blue
+  "#34D399", // Light Emerald
+  "#A78BFA", // Light Violet
+  "#FBBF24", // Light Amber
+  "#F87171", // Light Red
+  "#22D3EE", // Light Cyan
+  "#A3E635", // Light Lime
+  "#FB923C", // Light Orange
+  "#F472B6", // Light Pink
+  "#818CF8", // Light Indigo
+  "#C084FC", // Light Purple
+  "#4ADE80", // Light Green
+];
+
+// Calculate appropriate text color using lighter/darker shades of the background color
+const getContrastColor = (hexColor: string): string => {
+  // Remove # if present
+  const hex = hexColor.replace("#", "");
+
+  // Convert to RGB
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+
+  // Calculate relative luminance using WCAG formula
+  const toLinear = (value: number) => {
+    const normalized = value / 255;
+    return normalized <= 0.03928
+      ? normalized / 12.92
+      : Math.pow((normalized + 0.055) / 1.055, 2.4);
+  };
+
+  const luminance = 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+
+  // Create more sophisticated color variations
+  if (luminance > 0.5) {
+    // Light background - create a darker shade by reducing brightness significantly
+    const factor = 0.25; // Make it much darker for better contrast
+    const darkR = Math.round(r * factor);
+    const darkG = Math.round(g * factor);
+    const darkB = Math.round(b * factor);
+    return `#${darkR.toString(16).padStart(2, '0')}${darkG.toString(16).padStart(2, '0')}${darkB.toString(16).padStart(2, '0')}`;
+  } else {
+    // Dark background - create a lighter shade by blending with white
+    const factor = 0.8; // Blend 80% with white for better readability
+    const lightR = Math.round(r + (255 - r) * factor);
+    const lightG = Math.round(g + (255 - g) * factor);
+    const lightB = Math.round(b + (255 - b) * factor);
+    return `#${lightR.toString(16).padStart(2, '0')}${lightG.toString(16).padStart(2, '0')}${lightB.toString(16).padStart(2, '0')}`;
+  }
+};
+
+// Convert hex color to Tailwind class names for both background and text
+const hexToTailwindColors = (hex: string): { bg: string; text: string } => {
+  // Enhanced color mapping with more comprehensive coverage
+  const colorMap: Record<string, string> = {
+    "#60A5FA": "blue-400",
+    "#34D399": "emerald-400",
+    "#A78BFA": "violet-400",
+    "#FBBF24": "amber-400",
+    "#F87171": "red-400",
+    "#22D3EE": "cyan-400",
+    "#A3E635": "lime-400",
+    "#FB923C": "orange-400",
+    "#F472B6": "pink-400",
+    "#818CF8": "indigo-400",
+    "#C084FC": "purple-400",
+    "#4ADE80": "green-400",
+  };
+
+  // Get the background class or default to blue-400
+  const bgClass = colorMap[hex.toUpperCase()] || "blue-400";
+
+  // Calculate luminance to determine appropriate text color
+  const cleanHex = hex.replace("#", "");
+  const r = parseInt(cleanHex.substr(0, 2), 16);
+  const g = parseInt(cleanHex.substr(2, 2), 16);
+  const b = parseInt(cleanHex.substr(4, 2), 16);
+
+  const toLinear = (value: number) => {
+    const normalized = value / 255;
+    return normalized <= 0.03928
+      ? normalized / 12.92
+      : Math.pow((normalized + 0.055) / 1.055, 2.4);
+  };
+
+  const luminance = 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+
+  // Choose text color based on background luminance
+  // For light backgrounds use darker shades, for dark backgrounds use lighter shades
+  let textClass: string;
+  if (luminance > 0.5) {
+    // Light background - use dark text for contrast
+    textClass = "gray-800"; // Very dark gray for excellent contrast
+  } else {
+    // Dark background - use light text for contrast
+    textClass = "gray-100"; // Very light gray for excellent contrast
+  }
+
+  return { bg: bgClass, text: textClass };
+};
+
+// Get random light color from palette
+const getRandomCourseColor = (): string => {
+  return COURSE_COLORS[Math.floor(Math.random() * COURSE_COLORS.length)];
+};
 
 // Client component
 interface EditCourseClientProps {
@@ -56,25 +170,36 @@ export function EditCourseForm({
 
   // Form state
   const [name, setName] = useState(course?.name || "");
-  // const [courseCode, setCourseCode] = useState(course?.courseCode || "");
-  // const [courseStartDate, setCourseStartDate] = useState<Date | null>(
-  //   course?.courseStartDate || null
-  // );
-  // const [courseEndDate, setCourseEndDate] = useState<Date | null>(
-  //   course?.courseEndDate || null
-  // );
-  // const [coverImage, setCoverImage] = useState<string | null>(
-  //   course?.coverImage || null
-  // );
-  // const [status, setStatus] = useState<"draft" | "published">(
-  //   course?.status || "draft"
-  // );
-
-  const [shortDescription, setShortDescription] = useState(
-    course?.shortDescription || "",
+  const [courseCode, setCourseCode] = useState(course?.courseCode || "");
+  const [courseStartDate, setCourseStartDate] = useState<string>(
+    course?.courseStartDate
+      ? new Date(course.courseStartDate).toISOString().slice(0, 10)
+      : ""
   );
+  const [courseEndDate, setCourseEndDate] = useState<string>(
+    course?.courseEndDate
+      ? new Date(course.courseEndDate).toISOString().slice(0, 10)
+      : ""
+  );
+  const [coverImage] = useState<string>(
+    course?.coverImage || ""
+  );
+  const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
+  const [courseColor, setCourseColor] = useState<string>(
+    course?.courseColor || ""
+  );
+  const [showColorPicker, setShowColorPicker] = useState(false);
+
   const [description, setDescription] = useState(course?.description || "");
   const [units, setUnits] = useState<CourseUnit[]>(course?.units || []);
+
+  // Initialize colors for new courses
+  useEffect(() => {
+    if (isNew && !courseColor) {
+      const randomColor = getRandomCourseColor();
+      setCourseColor(randomColor);
+    }
+  }, [isNew, courseColor]);
   // Normalize timeline date fields to Date objects or null for ka-table date editor compatibility
   // const normalizeDate = (val: string | Date | undefined | null): Date | null => {
   //   if (!val) return null;
@@ -97,24 +222,40 @@ export function EditCourseForm({
     (course?.timeline || []).map((item: Partial<CourseTimelineItem>) => ({
       type: item.type ?? "",
       title: item.title ?? "",
-      startDate:
-        typeof item.startDate === "string"
-          ? item.startDate
-          : isDate(item.startDate)
-            ? (item.startDate as Date).toISOString().slice(0, 10)
-            : "",
-      dueDate:
-        typeof item.dueDate === "string"
-          ? item.dueDate
-          : isDate(item.dueDate)
-            ? (item.dueDate as Date).toISOString().slice(0, 10)
-            : "",
-      gradeReleaseDate:
-        typeof item.gradeReleaseDate === "string"
-          ? item.gradeReleaseDate
-          : isDate(item.gradeReleaseDate)
-            ? (item.gradeReleaseDate as Date).toISOString().slice(0, 10)
-            : "",
+      startDate: (() => {
+        if (!item.startDate) return "";
+        if (typeof item.startDate === "string") {
+          // If it's already a string, check if it's a valid date and convert to YYYY-MM-DD
+          const dateObj = new Date(item.startDate);
+          return !isNaN(dateObj.getTime()) ? dateObj.toISOString().slice(0, 10) : "";
+        }
+        if (isDate(item.startDate)) {
+          return (item.startDate as Date).toISOString().slice(0, 10);
+        }
+        return "";
+      })(),
+      dueDate: (() => {
+        if (!item.dueDate) return "";
+        if (typeof item.dueDate === "string") {
+          const dateObj = new Date(item.dueDate);
+          return !isNaN(dateObj.getTime()) ? dateObj.toISOString().slice(0, 10) : "";
+        }
+        if (isDate(item.dueDate)) {
+          return (item.dueDate as Date).toISOString().slice(0, 10);
+        }
+        return "";
+      })(),
+      gradeReleaseDate: (() => {
+        if (!item.gradeReleaseDate) return "";
+        if (typeof item.gradeReleaseDate === "string") {
+          const dateObj = new Date(item.gradeReleaseDate);
+          return !isNaN(dateObj.getTime()) ? dateObj.toISOString().slice(0, 10) : "";
+        }
+        if (isDate(item.gradeReleaseDate)) {
+          return (item.gradeReleaseDate as Date).toISOString().slice(0, 10);
+        }
+        return "";
+      })(),
     })),
   );
   // Syllabus file state should be File | null, only set by user upload
@@ -191,16 +332,81 @@ export function EditCourseForm({
     setLoading(true);
     setError(null);
 
+    // Validate required fields
+    if (!name.trim()) {
+      setError("Course name is required");
+      setLoading(false);
+      return;
+    }
+    if (!courseCode.trim()) {
+      setError("Course code is required");
+      setLoading(false);
+      return;
+    }
+    if (!courseStartDate) {
+      setError("Course start date is required");
+      setLoading(false);
+      return;
+    }
+    if (!courseEndDate) {
+      setError("Course end date is required");
+      setLoading(false);
+      return;
+    }
+    if (courseStartDate && courseEndDate && new Date(courseStartDate) >= new Date(courseEndDate)) {
+      setError("Course end date must be after start date");
+      setLoading(false);
+      return;
+    }
+    if (!courseColor) {
+      setError("Course color is required");
+      setLoading(false);
+      return;
+    }
+
     try {
+      // Handle cover image upload if a new file is selected
+      let finalCoverImageId = coverImage; // Keep existing file ID by default
+
+      if (coverImageFile) {
+        // Upload the new cover image file
+        const formData = new FormData();
+        formData.append('file', coverImageFile);
+        formData.append('content_type', 'course_cover');
+
+        const uploadResponse = await fetch("/api/files/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (uploadResponse.ok) {
+          const uploadResult = await uploadResponse.json();
+          finalCoverImageId = uploadResult.fileId; // Store the file ID for database reference
+        } else {
+          const errorData = await uploadResponse.json();
+          setError(`Failed to upload cover image: ${errorData.error || 'Unknown error'}`);
+          setLoading(false);
+          return;
+        }
+      }
+
       const requestData = {
         _id: isNew ? null : course?._id,
         data: {
           name,
-          shortDescription,
+          courseCode,
+          shortDescription: course?.shortDescription || "", // Keep existing AI-generated shortDescription
           description,
           units,
           timeline,
+          courseStartDate: courseStartDate ? new Date(courseStartDate) : null,
+          courseEndDate: courseEndDate ? new Date(courseEndDate) : null,
+          coverImage: finalCoverImageId || null,
+          courseColor: courseColor || null,
+          courseColorTailwind: courseColor ? hexToTailwindColors(courseColor).bg : null,
+          courseColorTailwindText: courseColor ? hexToTailwindColors(courseColor).text : null,
         },
+        syllabusFile: syllabusFileName, // Only for new courses
       };
 
       const response = await fetch("/api/courses/save", {
@@ -286,17 +492,179 @@ export function EditCourseForm({
           </label>
           <TextBox value={name} onChange={(value) => setName(value)} />
         </div>
+
         <div>
           <label className="text-secondary-700 block font-semibold mb-1">
-            Short Description
+            Course Code *
           </label>
-          <TextArea
-            value={shortDescription}
-            onChange={(value) => setShortDescription(value)}
-            rows={5}
-            maxLength={400}
+          <TextBox
+            value={courseCode}
+            onChange={(value) => setCourseCode(value)}
+            placeholder="e.g., CS101, MATH201"
           />
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="text-secondary-700 block font-semibold mb-1">
+              Course Start Date *
+            </label>
+            <input
+              type="date"
+              value={courseStartDate}
+              onChange={(e) => setCourseStartDate(e.target.value)}
+              className="w-full px-3 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label className="text-secondary-700 block font-semibold mb-1">
+              Course End Date *
+            </label>
+            <input
+              type="date"
+              value={courseEndDate}
+              onChange={(e) => setCourseEndDate(e.target.value)}
+              className="w-full px-3 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              min={courseStartDate}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="text-secondary-700 block font-semibold mb-1">
+            Course Color *
+          </label>
+          <div className="space-y-3">
+            {/* Color Preview and Input */}
+            <div className="flex items-center gap-3">
+              <Popover open={showColorPicker} onOpenChange={setShowColorPicker}>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    className="w-12 h-10 border border-secondary-300 rounded cursor-pointer flex items-center justify-center transition-all hover:scale-105"
+                    style={{ backgroundColor: courseColor }}
+                  >
+                    <Palette
+                      size={16}
+                      color={getContrastColor(courseColor)}
+                      className="opacity-75 hover:opacity-100"
+                    />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-64 p-3">
+                  <div className="space-y-3">
+                    {/* Preset Colors */}
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 mb-2 block">
+                        Preset Colors
+                      </label>
+                      <div className="grid grid-cols-6 gap-2">
+                        {COURSE_COLORS.map((color) => (
+                          <button
+                            key={color}
+                            type="button"
+                            className={`w-8 h-8 rounded border-2 transition-all hover:scale-110 ${
+                              courseColor === color
+                                ? 'border-gray-400 ring-2 ring-blue-200'
+                                : 'border-gray-200'
+                            }`}
+                            style={{ backgroundColor: color }}
+                            onClick={() => {
+                              setCourseColor(color);
+                              setShowColorPicker(false);
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Custom Color Input */}
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 mb-2 block">
+                        Custom Color
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="color"
+                          value={courseColor}
+                          onChange={(e) => setCourseColor(e.target.value)}
+                          className="w-8 h-8 border border-gray-300 rounded cursor-pointer"
+                        />
+                        <TextBox
+                          value={courseColor}
+                          onChange={(value) => setCourseColor(value)}
+                          placeholder="#60A5FA"
+                          className="flex-1 text-sm"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              <div className="flex-1">
+                <TextBox
+                  value={courseColor}
+                  onChange={(value) => setCourseColor(value)}
+                  placeholder="#60A5FA"
+                />
+              </div>
+            </div>
+
+            {/* Color Preview */}
+            <div
+              className="px-4 py-2 rounded-md text-sm font-medium transition-all"
+              style={{
+                backgroundColor: courseColor,
+                color: getContrastColor(courseColor)
+              }}
+            >
+              Course Theme Preview
+            </div>
+          </div>
+          <p className="text-sm text-secondary-600 mt-1">
+            Choose a color theme for your course. Light colors work best for accessibility.
+          </p>
+        </div>
+
+        <div>
+          <label className="text-secondary-700 block font-semibold mb-1">
+            Cover Image (Optional)
+          </label>
+          <FileDropInput
+            accept="image/*"
+            file={coverImageFile}
+            onFileChange={setCoverImageFile}
+          />
+          {coverImageFile && (
+            <div className="mt-2">
+              <Image
+                src={URL.createObjectURL(coverImageFile)}
+                alt="Course cover preview"
+                width={128}
+                height={80}
+                className="w-32 h-20 object-cover rounded border"
+              />
+            </div>
+          )}
+          {!coverImageFile && coverImage && (
+            <div className="mt-2">
+              <Image
+                src={`/api/files/view/${coverImage}`}
+                alt="Current course cover"
+                width={128}
+                height={80}
+                className="w-32 h-20 object-cover rounded border"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                }}
+              />
+              <p className="text-xs text-gray-500 mt-1">Current cover image</p>
+            </div>
+          )}
+        </div>
+
         <div>
           <label className="text-secondary-700 block font-semibold mb-1">
             Description

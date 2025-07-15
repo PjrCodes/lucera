@@ -1,6 +1,7 @@
 import SetHeaderClientComponent from "@/components/feature/header/set-header-client-component";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Globe, MapPin, Phone, GraduationCap, Users, BookOpen, Award, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -156,7 +157,7 @@ export default function UniversityProfile() {
                 </div>
                 <div className="p-3 bg-primary-50 rounded-lg">
                   <h4 className="font-semibold text-primary-800 mb-2">Graduate Studies</h4>
-                  <p className="text-sm text-primary-600">Master&apos;s and doctoral degree programs</p>
+                  <p className="text-sm text-primary-600">Master's and doctoral degree programs</p>
                 </div>
               </div>
             </CardContent>

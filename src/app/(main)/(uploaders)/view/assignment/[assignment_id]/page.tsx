@@ -1,8 +1,6 @@
 import { getAssignmentById } from "@/lib/database-service/assignment";
 import { getCourseById } from "@/lib/database-service/courses";
-import {
-  getSubmissionData,
-} from "@/lib/database-service/submitted-assignments";
+import { getSubmissionData } from "@/lib/database-service/submitted-assignments";
 import { notFound } from "next/navigation";
 import { PrimaryButton } from "@/components/core/buttons/primary";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
@@ -32,14 +30,11 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
     const course = await getCourseById(assignment.courseId);
 
     // Check if assignment is bookmarked (only for students)
-    const isBookmarked = !isTeacher
-      ? await checkIfBookmarked(
-          session.user.id,
-          "assignment",
-          assignment._id.toString()
-        )
-      : false;
-
+    const isBookmarked = await checkIfBookmarked(
+      session.user.id,
+      "assignment",
+      assignment._id.toString()
+    );
     // Get student's submission for this assignment (only for students)
     const studentSubmission = !isTeacher
       ? await getSubmissionData(assignment._id.toString(), session.user.id)
@@ -59,9 +54,22 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
       <div className="max-w-4xl mx-auto p-6 space-y-8">
         {/* Back Button */}
         <div className="mb-4">
-          <Link href={`/view/course/${course._id}`} className="inline-flex items-center gap-2 text-primary-700 hover:text-primary-900 font-medium text-sm">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <Link
+            href={`/view/course/${course._id}`}
+            className="inline-flex items-center gap-2 text-primary-700 hover:text-primary-900 font-medium text-sm"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             Back to Course
           </Link>
@@ -76,12 +84,6 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
               <p className="text-lg text-primary-600">{course.name}</p>
             </div>
             <div className="flex gap-2 items-center">
-              {!isTeacher && (
-                <AssignmentBookmarkButton
-                  assignmentId={assignment._id.toString()}
-                  initialIsBookmarked={isBookmarked}
-                />
-              )}
               {isOverdue && (
                 <span className="px-3 py-1 bg-red-100 text-red-800 text-sm font-medium rounded-full">
                   Overdue
@@ -105,7 +107,8 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
                   <Link href={`/edit/assignment/${assignment._id}`}>
                     <SecondaryButton
                       variant="outline"
-                      className="flex items-center gap-1 text-sm"
+                      className="flex items-center text-sm"
+                      size="sm"
                     >
                       <Pencil className="w-4 h-4" />
                       Edit
@@ -113,14 +116,22 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
                   </Link>
                 </div>
               )}
+              <AssignmentBookmarkButton
+                assignmentId={assignment._id.toString()}
+                initialIsBookmarked={isBookmarked}
+              />
             </div>
           </div>
 
           {/* Assignment Description */}
           {assignment.description && (
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Description</h3>
-              <p className="text-gray-800 whitespace-pre-wrap">{assignment.description}</p>
+              <h3 className="text-sm font-medium text-gray-700 mb-2">
+                Description
+              </h3>
+              <p className="text-gray-800 whitespace-pre-wrap">
+                {assignment.description}
+              </p>
             </div>
           )}
 
@@ -128,7 +139,9 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
           {assignment.fileId && (
             <div className="mt-4">
               <div className="flex items-center gap-2 mb-3">
-                <h3 className="text-sm font-medium text-gray-700">Assignment Materials</h3>
+                <h3 className="text-sm font-medium text-gray-700">
+                  Assignment Materials
+                </h3>
                 {assignment.blockDownload && (
                   <span className="px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full">
                     Download Blocked
@@ -144,12 +157,26 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
               {assignment.blockDownload && !isTeacher ? (
                 // Secure viewer link for blocked downloads
                 <div className="flex items-center gap-3 p-4 bg-red-50 rounded-lg border border-red-200">
-                  <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  <svg
+                    className="w-5 h-5 text-red-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
                   </svg>
                   <div>
-                    <p className="font-medium text-red-900">Secure Document Access</p>
-                    <p className="text-sm text-red-700">Download is blocked. View in secure mode only.</p>
+                    <p className="font-medium text-red-900">
+                      Secure Document Access
+                    </p>
+                    <p className="text-sm text-red-700">
+                      Download is blocked. View in secure mode only.
+                    </p>
                   </div>
                   <a
                     href={`/view/document/${assignment.fileId}`}
@@ -165,8 +192,12 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
                 <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border">
                   <FiDownload className="w-5 h-5 text-blue-600" />
                   <div>
-                    <p className="font-medium text-gray-900">Download Assignment File</p>
-                    <p className="text-sm text-gray-600">Click to download the assignment materials</p>
+                    <p className="font-medium text-gray-900">
+                      Download Assignment File
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Click to download the assignment materials
+                    </p>
                   </div>
                   <a
                     href={`/api/files/download/${assignment.fileId}`}
@@ -330,7 +361,6 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
                       <div className="mt-4 p-4 bg-white rounded-lg border-2 border-green-300 shadow-sm">
                         <div className="flex justify-between items-center">
                           <span className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-
                             Total Score
                           </span>
                           <span className="text-xl font-bold text-green-700">

@@ -17,6 +17,7 @@ export const fileSchema = z.object({
     "assignment",
     "solved_assignment",
     "graded_assignment",
+    "course_cover",
   ]),
   // Security features
   blockDownload: z.boolean().default(false),
@@ -93,6 +94,7 @@ export const courseSchema = z.object({
   completedStudentCount: z.number(),
   courseColor: z.string().optional(),
   courseColorTailwind: z.string().optional(),
+  courseColorTailwindText: z.string().optional(),
 });
 
 export type Course = z.infer<typeof courseSchema>;

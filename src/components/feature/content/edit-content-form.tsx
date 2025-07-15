@@ -44,6 +44,7 @@ export default function EditContentForm({
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   // const [file, setFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
+  const [contentType, setContentType] = useState<"content" | "syllabus">("content");
   const [selectedTopics, setSelectedTopics] = useState<number[]>([]);
   const [title, setTitle] = useState("");
   const [uploadedFile, setUploadedFile] = useState<{
@@ -89,6 +90,7 @@ export default function EditContentForm({
       setSelectedCourse(existingContent.courseId || null);
       setTitle(existingContent.title || "");
       setDescription(existingContent.description || "");
+      setContentType(existingContent.type || "content");
       // Load security settings if available
       setBlockDownload(existingContent.blockDownload || false);
       setBlockChatbot(existingContent.blockChatbot || false);
@@ -148,12 +150,36 @@ export default function EditContentForm({
     setLoading(true);
     setError(null);
 
+    // Validate required fields
+    if (!title.trim()) {
+      setError("Title is required");
+      setLoading(false);
+      return;
+    }
+    if (!description.trim()) {
+      setError("Description is required");
+      setLoading(false);
+      return;
+    }
+    if (!selectedCourse) {
+      setError("Course selection is required");
+      setLoading(false);
+      return;
+    }
+    if (selectedTopics.length === 0) {
+      setError("At least one topic must be selected");
+      setLoading(false);
+      return;
+    }
+
     try {
       const requestData = {
         _id: isNew ? null : contentId,
         data: {
           title,
           description,
+          shortDescription: existingContent?.shortDescription || "", // Keep existing AI-generated shortDescription
+          type: contentType,
           courseId: selectedCourse,
           topics: selectedTopics.map((i) => i + 1), // Convert to 1-based indexes for backend
           fileId: null, // TODO: Handle file upload if needed
@@ -265,6 +291,19 @@ export default function EditContentForm({
               value={title}
               onChange={setTitle}
               placeholder="Enter content title"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-2 font-medium">Content Type:</label>
+            <Dropdown
+              options={[
+                { value: "content", label: "Course Content" },
+                { value: "syllabus", label: "Syllabus" },
+              ]}
+              value={contentType}
+              onChange={(value) => setContentType(value as "content" | "syllabus")}
+              placeholder="Select content type"
             />
           </div>
 

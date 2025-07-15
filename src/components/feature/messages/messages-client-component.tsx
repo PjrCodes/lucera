@@ -174,7 +174,7 @@ export default function MessagesClientComponent({
   useEffect(() => {
     if (selected === "dms" && session.user.id) {
       const eventSource = new EventSource("/api/messages/stream");
-      
+
       eventSource.onmessage = (event) => {
         const newMessage: MessageWithReadStatus = JSON.parse(event.data);
 
@@ -798,7 +798,7 @@ export default function MessagesClientComponent({
 
             {/* DM Chat Screen */}
             {selected === "dms" && selectedConversationUserId !== null && (
-              <div className="h-[calc(70vh)] md:h-full flex flex-col bg-white">
+              <div className="h-[calc(70vh)] flex flex-col bg-white">
                 {/* Chat Header */}
                 <div className="bg-white border-b border-primary-200 px-3 md:px-6 py-3 md:py-4 flex items-center gap-2 md:gap-4">
                   <button

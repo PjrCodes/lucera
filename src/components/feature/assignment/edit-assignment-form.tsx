@@ -133,10 +133,33 @@ export default function EditAssignmentForm({
 
       // Load assignment-specific data if it exists
       const assignmentData = existingContent as ExtractedAssignment; // Type assertion for assignment fields
-      if (assignmentData.startDate) setStartDate(assignmentData.startDate);
-      if (assignmentData.dueDate) setDueDate(assignmentData.dueDate);
-      if (assignmentData.gradeReleaseDate)
-        setGradeReleaseDate(assignmentData.gradeReleaseDate);
+
+      // Convert date strings to YYYY-MM-DDTHH:MM format for datetime-local inputs
+      if (assignmentData.startDate) {
+        const startDateObj = new Date(assignmentData.startDate);
+        if (!isNaN(startDateObj.getTime())) {
+          // Format for datetime-local input: YYYY-MM-DDTHH:MM
+          const isoString = startDateObj.toISOString();
+          setStartDate(isoString.slice(0, 16)); // Remove seconds and milliseconds
+        }
+      }
+
+      if (assignmentData.dueDate) {
+        const dueDateObj = new Date(assignmentData.dueDate);
+        if (!isNaN(dueDateObj.getTime())) {
+          const isoString = dueDateObj.toISOString();
+          setDueDate(isoString.slice(0, 16));
+        }
+      }
+
+      if (assignmentData.gradeReleaseDate) {
+        const gradeReleaseDateObj = new Date(assignmentData.gradeReleaseDate);
+        if (!isNaN(gradeReleaseDateObj.getTime())) {
+          const isoString = gradeReleaseDateObj.toISOString();
+          setGradeReleaseDate(isoString.slice(0, 16));
+        }
+      }
+
       if (assignmentData.submissionType)
         setSubmissionType(assignmentData.submissionType);
       if (assignmentData.grading) {
@@ -265,6 +288,54 @@ export default function EditAssignmentForm({
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    // Validate required fields
+    if (!title.trim()) {
+      setError("Assignment title is required");
+      setLoading(false);
+      return;
+    }
+    if (!description.trim()) {
+      setError("Assignment description is required");
+      setLoading(false);
+      return;
+    }
+    if (!selectedCourse) {
+      setError("Course selection is required");
+      setLoading(false);
+      return;
+    }
+    if (selectedTopics.length === 0) {
+      setError("At least one topic must be selected");
+      setLoading(false);
+      return;
+    }
+    if (startDate && dueDate && new Date(startDate) >= new Date(dueDate)) {
+      setError("Due date must be after start date");
+      setLoading(false);
+      return;
+    }
+    if (totalPoints <= 0) {
+      setError("Total points must be greater than 0");
+      setLoading(false);
+      return;
+    }
+    if (gradingMethod === "rubric") {
+      const hasValidCriteria = rubricCriteria.every(
+        (c) => c.description.trim() && c.points > 0,
+      );
+      const hasValidLevels = rubricLevels.every((l) => l.description.trim());
+      if (!hasValidCriteria) {
+        setError("All rubric criteria must have descriptions and points > 0");
+        setLoading(false);
+        return;
+      }
+      if (!hasValidLevels) {
+        setError("All rubric levels must have descriptions");
+        setLoading(false);
+        return;
+      }
+    }
 
     try {
       const requestData = {
