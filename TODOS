@@ -9,7 +9,7 @@
 - [X] Back button on Assignment Page to Course Page
 - [ ] Protect Create Assignment from Student
 
-- [ ] Progress Dashboard page - should show analytics of the students to some detail and have export report option
+- [X] Progress Dashboard page - should show analytics of the students to some detail and have export report option
 - [ ] University Page Overhaul
 - [X] Landing Page
 - [ ] Take Instant Mini-Quiz - based on the course syllabus, create a course!
@@ -32,7 +32,7 @@
 - [X] Bookmarks
 - [X] Badges - Thinking Required
 - [ ] Report Generation - simple, PDF reports. No advanced analytics page.
-- [ ] Messaging
+- [X] Messaging
 - [X] Announcements
 - [ ] In-App Notifications
   - [ ] Grade Release
