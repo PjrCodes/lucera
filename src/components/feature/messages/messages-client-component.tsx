@@ -4,8 +4,7 @@ import SetHeaderClientComponent from "@/components/feature/header/set-header-cli
 import NotificationListener from "@/components/feature/header/notification-listener";
 import { UserData, Course } from "@/lib/schemas/database";
 import { AuthenticatedSession } from "@/lib/types/auth";
-import { NotificationStreamData } from "@/lib/types/notifications";
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Megaphone,
   Mail,
@@ -137,7 +136,7 @@ export default function MessagesClientComponent({
 
   const isTeacher = userData?.role === "teacher";
 
-  const fetchConversations = useCallback(async () => {
+  const fetchConversations = async () => {
     try {
       setIsLoadingConversations(true);
       const response = await fetch("/api/messages/conversations");
@@ -153,55 +152,20 @@ export default function MessagesClientComponent({
     } finally {
       setIsLoadingConversations(false);
     }
-  }, []);
+  };
 
-  const markConversationAsRead = useCallback(async (otherUserId: string) => {
-    try {
-      await fetch("/api/messages/mark-conversation-read", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ otherUserId }),
-      });
-      // Refresh conversations to update unread count
-      fetchConversations();
-    } catch (error) {
-      console.error("Error marking conversation as read:", error);
-    }
-  }, [fetchConversations]);
-
-  // Real-time message stream listener
+  // Simple periodic refresh for conversations when on DMs tab
   useEffect(() => {
-    if (selected === "dms" && session.user.id) {
-      const eventSource = new EventSource("/api/messages/stream");
-      
-      eventSource.onmessage = (event) => {
-        const newMessage: MessageWithReadStatus = JSON.parse(event.data);
-
-        // Update conversations list for unread count and last message
+    if (selected === "dms") {
+      const interval = setInterval(() => {
         fetchConversations();
+      }, 10000); // Refresh every 10 seconds
 
-        // If the message is for the currently open conversation, add it to the view
-        if (newMessage.senderId === selectedConversationUserId) {
-          setCurrentMessages((prevMessages) => [...prevMessages, newMessage]);
-          // Also mark it as read immediately
-          markConversationAsRead(selectedConversationUserId);
-        }
-      };
-
-      eventSource.onerror = (err) => {
-        console.error("EventSource failed:", err);
-        eventSource.close();
-      };
-
-      return () => {
-        eventSource.close();
-      };
+      return () => clearInterval(interval);
     }
-  }, [selected, selectedConversationUserId, session.user.id, fetchConversations, markConversationAsRead]);
+  }, [selected, fetchConversations]);
 
-  const fetchConversationMessages = useCallback(async (otherUserId: string) => {
+  const fetchConversationMessages = async (otherUserId: string) => {
     try {
       setIsLoadingMessages(true);
       const response = await fetch(`/api/messages/conversation?otherUserId=${otherUserId}`);
@@ -217,13 +181,13 @@ export default function MessagesClientComponent({
     } finally {
       setIsLoadingMessages(false);
     }
-  }, []);
+  };
 
   // Fetch data on component mount
   useEffect(() => {
     fetchAnnouncements();
     fetchConversations();
-  }, [fetchConversations]);
+  }, []); // Remove fetchConversations dependency
 
   // Scroll to bottom of chat on new message
   useEffect(() => {
@@ -234,10 +198,44 @@ export default function MessagesClientComponent({
   // Fetch conversation messages when a conversation is selected
   useEffect(() => {
     if (selectedConversationUserId) {
-      fetchConversationMessages(selectedConversationUserId);
-      markConversationAsRead(selectedConversationUserId);
+      const loadConversation = async () => {
+        try {
+          setIsLoadingMessages(true);
+          const response = await fetch(`/api/messages/conversation?otherUserId=${selectedConversationUserId}`);
+          const data = await response.json();
+
+          if (data.success) {
+            setCurrentMessages(data.messages);
+          } else {
+            console.error("Failed to fetch messages:", data.error);
+          }
+        } catch (error) {
+          console.error("Error fetching messages:", error);
+        } finally {
+          setIsLoadingMessages(false);
+        }
+      };
+
+      const markAsRead = async () => {
+        try {
+          await fetch("/api/messages/mark-conversation-read", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ otherUserId: selectedConversationUserId }),
+          });
+          // Refresh conversations to update unread count
+          fetchConversations();
+        } catch (error) {
+          console.error("Error marking conversation as read:", error);
+        }
+      };
+
+      loadConversation();
+      markAsRead();
     }
-  }, [selectedConversationUserId, fetchConversationMessages, markConversationAsRead]);
+  }, [selectedConversationUserId]);
 
   const fetchAnnouncements = async () => {
     try {
@@ -1066,13 +1064,11 @@ export default function MessagesClientComponent({
 
       {/* Real-time notification listener */}
       <NotificationListener
-        onNotify={(data: NotificationStreamData) => {
-          // Handle different notification types
-          if (data.notification.type === "announcement" && selected === "announcements") {
-            // Refresh announcements when a new one is created
+        onNotify={() => {
+          // Simple refresh on any notification
+          if (selected === "announcements") {
             fetchAnnouncements();
-          } else if (data.notification.type === "message" && selected === "dms") {
-            // Refresh conversations when a new message arrives
+          } else if (selected === "dms") {
             fetchConversations();
           }
         }}
