@@ -1,6 +1,6 @@
 "use client";
 import { AssignmentWithEmbeddedFile } from "@/lib/schemas/database";
-import { FiClipboard, FiChevronRight } from "react-icons/fi";
+import { FiClipboard, FiChevronRight, FiPlus } from "react-icons/fi";
 import { Ban, MessageSquareOff } from "lucide-react";
 import Link from "next/link";
 
@@ -8,11 +8,14 @@ interface CourseAssignmentsCardProps {
   assignments: AssignmentWithEmbeddedFile[];
   courseId: string;
   selectedAssignmentId?: string | null;
+  isTeacher?: boolean;
 }
 
 export default function CourseAssignmentsCard({
   assignments,
+  courseId,
   selectedAssignmentId,
+  isTeacher,
 }: CourseAssignmentsCardProps) {
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "Not set";
@@ -30,23 +33,57 @@ export default function CourseAssignmentsCard({
   if (assignments.length === 0) {
     return (
       <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
-        <h2 className="text-base font-semibold text-primary-900 mb-4 flex items-center gap-2">
-          <FiClipboard className="w-5 h-5 text-primary-900" />
-          <span>Assignments</span>
-        </h2>
-        <p className="text-primary-600 text-base">
-          No assignments available for this course.
-        </p>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-base font-semibold text-primary-900 flex items-center gap-2">
+            <FiClipboard className="w-5 h-5 text-primary-900" />
+            <span>Assignments</span>
+          </h2>
+          {isTeacher && (
+            <Link 
+              href={`/create/assignment?courseId=${courseId}`}
+              className="inline-flex items-center gap-2 px-3 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
+            >
+              <FiPlus className="w-4 h-4" />
+              Add Assignment
+            </Link>
+          )}
+        </div>
+        <div className="text-center py-8">
+          <FiClipboard className="w-12 h-12 text-primary-300 mx-auto mb-3" />
+          <p className="text-base text-primary-600 mb-4">
+            No assignments available for this course.
+          </p>
+          {isTeacher && (
+            <Link 
+              href={`/create/assignment?courseId=${courseId}`}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
+            >
+              <FiPlus className="w-4 h-4" />
+              Create First Assignment
+            </Link>
+          )}
+        </div>
       </div>
     );
   }
 
   return (
     <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
-      <h2 className="text-base font-semibold text-primary-900 mb-4 flex items-center gap-2">
-        <FiClipboard className="w-5 h-5 text-primary-900" />
-        <span>Assignments</span>
-      </h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-base font-semibold text-primary-900 flex items-center gap-2">
+          <FiClipboard className="w-5 h-5 text-primary-900" />
+          <span>Assignments</span>
+        </h2>
+        {isTeacher && (
+          <Link 
+            href={`/create/assignment?courseId=${courseId}`}
+            className="inline-flex items-center gap-2 px-3 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            <FiPlus className="w-4 h-4" />
+            Add Assignment
+          </Link>
+        )}
+      </div>
       <div className="space-y-3">
         {assignments.map((assignment) => {
           const overdue = isOverdue(assignment.dueDate);

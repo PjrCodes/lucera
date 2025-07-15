@@ -1,4 +1,4 @@
-import { FileText, Download, Pencil, Ban, MessageSquareOff } from "lucide-react";
+import { FileText, Download, Pencil, Ban, MessageSquareOff, Plus } from "lucide-react";
 import { formatDate, formatFileSize } from "@/lib/utils";
 import { ContentWithEmbeddedFile } from "@/lib/schemas/database";
 import ContentBookmarkButton from "@/components/feature/content/content-bookmark-button";
@@ -7,16 +7,29 @@ import Link from "next/link";
 export default function CourseMaterialsCard({
   courseMaterialsData,
   isTeacher,
+  courseId,
 }: {
   courseMaterialsData: ContentWithEmbeddedFile[];
   isTeacher: boolean;
+  courseId: string;
 }) {
   return (
     <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
-      <h2 className="text-base font-semibold text-primary-900 mb-4 flex items-center gap-2">
-        <FileText className="w-5 h-5 text-primary-900" />
-        <span>Course Materials ({courseMaterialsData.length})</span>
-      </h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-base font-semibold text-primary-900 flex items-center gap-2">
+          <FileText className="w-5 h-5 text-primary-900" />
+          <span>Course Materials ({courseMaterialsData.length})</span>
+        </h2>
+        {isTeacher && (
+          <Link 
+            href={`/create/content?courseId=${courseId}`}
+            className="inline-flex items-center gap-2 px-3 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Add Material
+          </Link>
+        )}
+      </div>
       {courseMaterialsData.length > 0 ? (
         <div className="space-y-2">
           {courseMaterialsData.map((content) => (
@@ -97,9 +110,18 @@ export default function CourseMaterialsCard({
       ) : (
         <div className="text-center py-8">
           <FileText className="w-12 h-12 text-primary-300 mx-auto mb-3" />
-          <p className="text-base text-primary-600">
+          <p className="text-base text-primary-600 mb-4">
             No course materials uploaded yet
           </p>
+          {isTeacher && (
+            <Link 
+              href={`/create/content?courseId=${courseId}`}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Add First Material
+            </Link>
+          )}
         </div>
       )}
     </div>

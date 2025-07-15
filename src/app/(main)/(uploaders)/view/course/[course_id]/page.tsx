@@ -61,36 +61,6 @@ export default async function CourseViewPage({
 
   // Fetch assignments for the course
   const assignments = await getAssignmentsForCourse(course._id.toString());
-  const pollsAndAnnouncements = [
-    {
-      id: 1,
-      type: "poll",
-      question: "What's your preferred programming language?",
-      responses: 45,
-      active: true,
-    },
-    {
-      id: 2,
-      type: "poll",
-      question: "Rate the difficulty of last week's content",
-      responses: 38,
-      active: false,
-    },
-    {
-      id: 3,
-      type: "announcement",
-      question: "Class cancelled tomorrow due to holiday",
-      responses: null,
-      active: false,
-    },
-    {
-      id: 4,
-      type: "announcement",
-      question: "New assignment uploaded - check materials section",
-      responses: null,
-      active: false,
-    },
-  ];
 
   const students: UserWithData[] = await getStudentsForCourse(
     course._id.toString(),
@@ -155,7 +125,6 @@ export default async function CourseViewPage({
               course={safeCourse}
               assignments={safeAssignments}
               courseMaterialsData={courseMaterialsData}
-              pollsAndAnnouncements={pollsAndAnnouncements}
               students={safeStudents}
               grades={grades}
               courseId={course._id.toString()}

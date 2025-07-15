@@ -10,7 +10,7 @@ import AssignmentBookmarkButton from "@/components/feature/assignment/assignment
 import AssignmentSubmissionForm from "@/components/feature/assignment/assignment-submission-form";
 
 interface AssignmentViewProps {
-  assignment: AssignmentWithEmbeddedFile;
+assignment: AssignmentWithEmbeddedFile;
   course: Course;
   backUrl?: string;
   isTeacher?: boolean;

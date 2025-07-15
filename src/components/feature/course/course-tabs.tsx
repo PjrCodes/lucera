@@ -6,7 +6,6 @@ import CourseTimeline from "@/components/feature/course/cards/course-timeline";
 import CourseAssignmentsCard from "@/components/feature/course/cards/course-assignments-card";
 import CourseGradesCard from "@/components/feature/course/cards/course-grades-card";
 import CourseMaterialsCard from "@/components/feature/course/cards/course-materials-card";
-import CoursePollsCard from "@/components/feature/course/cards/course-polls-card";
 import CourseStudentsCard from "@/components/feature/course/cards/course-students-card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -16,7 +15,6 @@ import {
   Clock,
   FileText,
   List,
-  MessagesSquare,
   Users,
 } from "lucide-react";
 import {
@@ -25,14 +23,6 @@ import {
   Course,
   UserWithData,
 } from "@/lib/schemas/database";
-
-interface PollOrAnnouncement {
-  id: number;
-  type: string;
-  question: string;
-  responses: number | null;
-  active: boolean;
-}
 
 interface Grade {
   id: number;
@@ -45,7 +35,6 @@ interface CourseTabsProps {
   course: Course;
   assignments: AssignmentWithEmbeddedFile[];
   courseMaterialsData: ContentWithEmbeddedFile[];
-  pollsAndAnnouncements: PollOrAnnouncement[];
   students: UserWithData[];
   grades: Grade[];
   courseId: string;
@@ -57,7 +46,6 @@ export default function CourseTabs({
   course,
   assignments,
   courseMaterialsData,
-  pollsAndAnnouncements,
   students,
   grades,
   courseId,
@@ -115,13 +103,6 @@ export default function CourseTabs({
               Materials
             </TabsTrigger>
             <TabsTrigger
-              value="polls"
-              className="data-[state=active]:bg-lime-50 data-[state=active]:text-lime-900 text-lime-700 whitespace-nowrap flex items-center px-3 py-2"
-            >
-              <MessagesSquare className="mr-1" />
-              Polls & Announcements
-            </TabsTrigger>
-            <TabsTrigger
               value="students"
               className="data-[state=active]:bg-secondary-50 data-[state=active]:text-secondary-900 text-secondary-700 whitespace-nowrap flex items-center px-3 py-2"
             >
@@ -146,6 +127,7 @@ export default function CourseTabs({
               assignments={assignments}
               courseId={courseId}
               selectedAssignmentId={null}
+              isTeacher={isTeacher}
             />
           </TabsContent>
           <TabsContent value="grades">
@@ -155,10 +137,8 @@ export default function CourseTabs({
             <CourseMaterialsCard
               courseMaterialsData={courseMaterialsData}
               isTeacher={isTeacher}
+              courseId={courseId}
             />
-          </TabsContent>
-          <TabsContent value="polls">
-            <CoursePollsCard pollsAndAnnouncements={pollsAndAnnouncements} />
           </TabsContent>
           {/* Students Tab */}
           <TabsContent value="students">

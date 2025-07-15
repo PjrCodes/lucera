@@ -61,7 +61,7 @@ const KeyFeaturesSection = () => {
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-br from-gray-50 to-primary-50">
+    <section id="features" className="py-24 bg-gradient-to-br from-primary-50 via-white to-primary-100">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

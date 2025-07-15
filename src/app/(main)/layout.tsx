@@ -1,5 +1,5 @@
 import "@/app/globals.css";
-import MainFooter from "@/components/feature/footer";
+import { MainFooter } from "@/components/feature/footer";
 import HeaderWrapper from "@/components/feature/header/header-wrapper";
 import { AppSidebar } from "@/components/feature/sidenav";
 import { HeaderProvider } from "@/components/feature/header/header-context";

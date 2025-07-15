@@ -20,7 +20,7 @@ const ComingSoonSection = () => {
   };
 
   return (
-    <section className="py-24 relative overflow-hidden bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800">
+    <section id="coming-soon" className="py-24 relative overflow-hidden bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
