@@ -35,7 +35,7 @@ export default function Create({}: PropsForEveryDashboardCard) {
       type: "announcement",
       label: "New Announcement",
       icon: React.createElement(iconForType("announcement")),
-      href: "/create/announcement",
+      href: "/messages",
     },
     {
       id: 5,
@@ -49,7 +49,7 @@ export default function Create({}: PropsForEveryDashboardCard) {
       type: "report",
       label: "Generate Report",
       icon: React.createElement(iconForType("analytics")),
-      href: "/create/report",
+      href: "/progress",
     },
   ];
 

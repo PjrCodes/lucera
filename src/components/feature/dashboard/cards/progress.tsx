@@ -4,6 +4,8 @@ import Image from "next/image";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
 import { getCoursesForUser } from "@/lib/database-service/courses";
+import { getSubmissionsForStudent } from "@/lib/database-service/submitted-assignments";
+import { getAssignmentsForCourse } from "@/lib/database-service/assignment";
 import { BookAlert } from "lucide-react";
 
 export default async function Courses({
@@ -16,7 +18,7 @@ export default async function Courses({
     return (
       <div className="bg-primary-100 rounded-xl p-4 px-6">
         <div className="font-bold mb-4 text-primary-700 text-lg">
-          {isTeacher ? "CLASS PROGRESS" : "PROGRESS"}
+          {isTeacher ? "CLASS PROGRESS" : "ASSIGNMENTS COMPLETED"}
         </div>
         <div className="grid gap-4">
           {isTeacher && (
@@ -57,21 +59,36 @@ export default async function Courses({
   };
 
   // calculate courseProgress
-  const courseProgress: number[] = courses.map((course) => {
-    if (isTeacher) {
-      return (
-        (course.completedStudentCount / course.enrolledStudentCount) * 100 || 0
-      );
-    } else {
-      // TODO: implementation required
-      return -999;
-    }
-  });
+  const courseProgress: number[] = await Promise.all(
+    courses.map(async (course) => {
+      if (isTeacher) {
+        return (
+          (course.completedStudentCount / course.enrolledStudentCount) * 100 || 0
+        );
+      } else {
+        // For students: calculate percentage of assignments completed
+        try {
+          const assignments = await getAssignmentsForCourse(course._id.toString());
+          const submissions = await getSubmissionsForStudent(userData.id, course._id.toString());
+
+          if (assignments.length === 0) {
+            return 0; // No assignments yet
+          }
+
+          const completionPercentage = Math.round((submissions.length / assignments.length) * 100);
+          return completionPercentage;
+        } catch (error) {
+          console.error(`Error calculating progress for course ${course._id}:`, error);
+          return 0;
+        }
+      }
+    })
+  );
 
   return (
     <div className="bg-primary-100 rounded-lg shadow-md p-4 md:px-6 min-h-[220px] flex flex-col">
       <div className="text-lg font-bold text-primary-700 mb-4">
-        {isTeacher ? "CLASS PROGRESS" : "PROGRESS"}
+        {isTeacher ? "CLASS PROGRESS" : "ASSIGNMENTS COMPLETED"}
       </div>
       <div className={getGridClass()}>
         {courses.map((course, idx) => (
@@ -99,7 +116,7 @@ export default async function Courses({
                 <div className="mt-auto pt-2">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-medium text-primary-700">
-                      Progress
+                      {isTeacher ? "Progress" : "Assignments Completed"}
                     </span>
                     <span
                       className={`text-xs font-medium ${
@@ -117,7 +134,7 @@ export default async function Courses({
                     aria-valuenow={courseProgress[idx]}
                     aria-valuemin={0}
                     aria-valuemax={100}
-                    aria-label={`Course progress: ${courseProgress[idx]}%`}
+                    aria-label={`${isTeacher ? 'Course progress' : 'Assignments completed'}: ${courseProgress[idx]}%`}
                   >
                     <div
                       className={`h-2.5 rounded-full ${

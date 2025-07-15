@@ -60,7 +60,6 @@
   - [ ] Or, we don't show the dashboard, and only errors are shown. Until they are fixed, the user cannot use the app.
   - [ ] In the real world, it won't be common to have dashboard layout errors, so this is not a priority.
 
-
 ## Future Scope
 
 - Limited functionality shown to demonstrate AI features
