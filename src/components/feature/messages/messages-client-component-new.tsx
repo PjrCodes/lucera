@@ -93,7 +93,7 @@ const sidebarItems = [
 export default function MessagesClientComponent({
   session,
   userData,
-  courses
+  // courses
 }: {
   session: AuthenticatedSession;
   userData: UserData;

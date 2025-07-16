@@ -11,10 +11,8 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  ResponsiveContainer,
   PieChart,
   Pie,
-  Cell,
   LineChart,
   Line
 } from "recharts";
