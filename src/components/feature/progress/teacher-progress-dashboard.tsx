@@ -659,29 +659,35 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
 
         {/* Tabs */}
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="flex flex-col sm:flex-row flex-wrap gap-1 w-full bg-primary-100 border border-primary-200 rounded-lg p-1 min-h-fit">
+            <TabsList className="flex flex-col sm:flex-row flex-wrap gap-1 w-full bg-primary-100 border border-primary-200 rounded-lg p-1 min-h-fit text-center">
             <TabsTrigger
               value="overview"
-              className="data-[state=active]:bg-primary-50 data-[state=active]:text-primary-900 text-primary-700 whitespace-nowrap flex items-center justify-center sm:justify-start px-3 py-2 w-full sm:w-auto"
+              className="data-[state=active]:bg-primary-50 data-[state=active]:text-primary-900 text-primary-700 whitespace-nowrap flex items-center justify-center px-3 py-2 w-full sm:w-auto text-center"
             >
+              <div className="flex items-center justify-center w-full">
               <TrendingUp className="mr-2 w-4 h-4" />
               <span className="text-sm">Course Overview</span>
+              </div>
             </TabsTrigger>
             <TabsTrigger
               value="analytics"
-              className="data-[state=active]:bg-success-50 data-[state=active]:text-success-900 text-success-700 whitespace-nowrap flex items-center justify-center sm:justify-start px-3 py-2 w-full sm:w-auto"
+              className="data-[state=active]:bg-success-50 data-[state=active]:text-success-900 text-success-700 whitespace-nowrap flex items-center justify-center px-3 py-2 w-full sm:w-auto text-center"
             >
+              <div className="flex items-center justify-center w-full">
               <BookOpen className="mr-2 w-4 h-4" />
               <span className="text-sm">Assignment Analytics</span>
+              </div>
             </TabsTrigger>
             <TabsTrigger
               value="student"
-              className="data-[state=active]:bg-info-50 data-[state=active]:text-info-900 text-info-700 whitespace-nowrap flex items-center justify-center sm:justify-start px-3 py-2 w-full sm:w-auto"
+              className="data-[state=active]:bg-info-50 data-[state=active]:text-info-900 text-info-700 whitespace-nowrap flex items-center justify-center px-3 py-2 w-full sm:w-auto text-center"
             >
+              <div className="flex items-center justify-center w-full">
               <Users className="mr-2 w-4 h-4" />
               <span className="text-sm">Student View</span>
+              </div>
             </TabsTrigger>
-          </TabsList>
+            </TabsList>
 
         {/* Course Overview Tab */}
         <TabsContent value="overview" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
@@ -1265,18 +1271,18 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                   </ChartContainer>
                   <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-primary-50 rounded-lg border border-primary-100">
                     <div className="text-xs sm:text-sm text-primary-700 space-y-1">
-                      <p className="flex items-center gap-2">
+                      <div className="flex items-center gap-2">
                         <div className="w-2 h-2 sm:w-3 sm:h-3 bg-warning-400 rounded-full"></div>
                         <span>Points above the dashed line indicate late submissions</span>
-                      </p>
-                      <p className="flex items-center gap-2">
+                      </div>
+                      <div className="flex items-center gap-2">
                         <div className="w-2 h-2 sm:w-3 sm:h-3 bg-success-400 rounded-full"></div>
                         <span>Points below the dashed line indicate early submissions</span>
-                      </p>
-                      <p className="flex items-center gap-2">
+                      </div>
+                      <div className="flex items-center gap-2">
                         <div className="w-2 h-2 sm:w-3 sm:h-3 bg-info-400 rounded-full"></div>
                         <span>Points on the dashed line indicate submissions on the due date</span>
-                      </p>
+                      </div>
                     </div>
                   </div>
                 </CardContent>

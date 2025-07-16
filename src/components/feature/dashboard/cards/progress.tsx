@@ -8,6 +8,7 @@ import { getSubmissionsForStudent } from "@/lib/database-service/submitted-assig
 import { getAssignmentsForCourse } from "@/lib/database-service/assignment";
 import { BookAlert } from "lucide-react";
 import { getCourseColorStyle } from "@/lib/utils/course-colors";
+import { getFileRecord } from "@/lib/database-service/files";
 
 export default async function Courses({
   userData,
@@ -64,28 +65,55 @@ export default async function Courses({
     courses.map(async (course) => {
       if (isTeacher) {
         return (
-          (course.completedStudentCount / course.enrolledStudentCount) * 100 || 0
+          (course.completedStudentCount / course.enrolledStudentCount) * 100 ||
+          0
         );
       } else {
         // For students: calculate percentage of assignments completed
         try {
-          const assignments = await getAssignmentsForCourse(course._id.toString());
-          const submissions = await getSubmissionsForStudent(userData.id, course._id.toString());
+          const assignments = await getAssignmentsForCourse(
+            course._id.toString()
+          );
+          const submissions = await getSubmissionsForStudent(
+            userData.id,
+            course._id.toString()
+          );
 
           if (assignments.length === 0) {
             return 0; // No assignments yet
           }
 
-          const completionPercentage = Math.round((submissions.length / assignments.length) * 100);
+          const completionPercentage = Math.round(
+            (submissions.length / assignments.length) * 100
+          );
           return completionPercentage;
         } catch (error) {
-          console.error(`Error calculating progress for course ${course._id}:`, error);
+          console.error(
+            `Error calculating progress for course ${course._id}:`,
+            error
+          );
           return 0;
         }
       }
     })
   );
 
+  const images = await Promise.all(
+    courses.map(async (course) => {
+      if (!course.coverImage) {
+        return "/placeholder.jpg"; // Fallback image
+      }
+      try {
+        const fileRecord = await getFileRecord(course.coverImage);
+        // Use relative URL to avoid hardcoded domain issues across environments
+        return fileRecord._id ? `/api/files/view/${fileRecord._id.toString()}` : "/placeholder.jpg";
+      } catch (error) {
+        console.error(`Error loading cover image for course ${course._id}:`, error);
+        return "/placeholder.jpg"; // Fallback on error
+      }
+    })
+  );
+  
   return (
     <div className="bg-primary-100 rounded-lg shadow-md p-4 md:px-6 min-h-[220px] flex flex-col">
       <div className="text-lg font-bold text-primary-700 mb-4">
@@ -103,9 +131,11 @@ export default async function Courses({
               <Image
                 width={300}
                 height={300}
-                src={course.coverImage || "/placeholder.jpg"}
+                src={images[idx]}
                 alt={`Thumbnail for ${course.name}`}
                 className="w-full h-32 object-cover"
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8A0XqoC1l5s5zzPn0vNuLTcFbJ+TQ9/Y="
               />
               <div className="p-4 flex flex-col flex-grow">
                 <h3 className="text-base font-semibold mb-1 text-primary-700">
@@ -122,7 +152,9 @@ export default async function Courses({
                 <div className="mt-auto pt-2">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-medium text-primary-700">
-                      {isTeacher ? "Student Completion %" : "Assignments Completed"}
+                      {isTeacher
+                        ? "Student Completion %"
+                        : "Assignments Completed"}
                     </span>
                     <span
                       className={`text-xs font-medium ${
@@ -140,7 +172,11 @@ export default async function Courses({
                     aria-valuenow={courseProgress[idx]}
                     aria-valuemin={0}
                     aria-valuemax={100}
-                    aria-label={`${isTeacher ? 'Student Completion %' : 'Assignments Completed'}: ${courseProgress[idx]}%`}
+                    aria-label={`${
+                      isTeacher
+                        ? "Student Completion %"
+                        : "Assignments Completed"
+                    }: ${courseProgress[idx]}%`}
                   >
                     <div
                       className={`h-2.5 rounded-full ${

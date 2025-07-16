@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "concurrently \"next start\" \"node socket_server/server.js\"",
     "lint": "next lint",
-    "socket": "node socket_server/server.js"
+    "socket": "node socket_server/server.js",
+    "gensample": "tsx gen-sample-data/generate.ts"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.9.1",
@@ -79,6 +80,7 @@
     "eslint-config-next": "15.3.2",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "tw-animate-css": "^1.3.3",
     "typescript": "^5.8.3"
   }

@@ -103,13 +103,13 @@ export function AlertDialog({
         showCloseButton={false}
       >
         <DialogHeader className="text-center sm:text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 bg-white shadow-sm">
+          <div className="mx-auto mb-4 flex items-center justify-center rounded-3xl bg-white shadow-sm border-1 border-gray-200">
             <div className={cn(
-              "flex h-12 w-12 items-center justify-center rounded-full border",
+              "flex h-16 w-16 items-center justify-center rounded-3xl",
               config.bgColor,
               config.borderColor
             )}>
-              <IconComponent className={cn("h-6 w-6", config.iconColor)} />
+              <IconComponent className={cn("h-8 w-8", config.iconColor)} />
             </div>
           </div>
           <DialogTitle className={cn(

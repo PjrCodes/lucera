@@ -30,6 +30,7 @@ import { Dropdown } from "@/components/core/inputs/dropdown";
 import { PrimaryButton } from "@/components/core/buttons/primary";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { MultiSelect } from "@/components/core/multi-select";
+import { useAlertDialog } from "@/components/core/alert-dialog";
 import { cn } from "@/lib/utils";
 
 // Types for announcements
@@ -117,6 +118,14 @@ export default function MessagesClientComponent({
   const [isLoadingConversations, setIsLoadingConversations] = useState(true);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [isSendingMessage, setIsSendingMessage] = useState(false);
+
+  // Alert dialog hook
+  const {
+    showConfirm,
+    showError,
+    showSuccess,
+    AlertDialog,
+  } = useAlertDialog();
 
   // Contacts modal state
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
@@ -423,31 +432,38 @@ export default function MessagesClientComponent({
   };
 
   const deleteAnnouncement = async (announcementId: string) => {
-    if (!confirm("Are you sure you want to delete this announcement?")) {
-      return;
-    }
+    showConfirm(
+      "Delete Announcement",
+      "Are you sure you want to delete this announcement? This action cannot be undone.",
+      async () => {
+        try {
+          const response = await fetch(`/api/announcement/${announcementId}`, {
+            method: "DELETE",
+          });
 
-    try {
-      const response = await fetch(`/api/announcement/${announcementId}`, {
-        method: "DELETE",
-      });
+          const data = await response.json();
 
-      const data = await response.json();
-
-      if (data.success) {
-        fetchAnnouncements();
-        // Close expanded view if this announcement was selected
-        if (selectedAnnouncementId === announcementId) {
-          setSelectedAnnouncementId(null);
+          if (data.success) {
+            fetchAnnouncements();
+            // Close expanded view if this announcement was selected
+            if (selectedAnnouncementId === announcementId) {
+              setSelectedAnnouncementId(null);
+            }
+            showSuccess("Success", "Announcement deleted successfully!");
+          } else {
+            console.error("Failed to delete announcement:", data.error);
+            showError("Error", "Failed to delete announcement: " + data.error);
+          }
+        } catch (error) {
+          console.error("Error deleting announcement:", error);
+          showError("Error", "An error occurred while deleting the announcement");
         }
-      } else {
-        console.error("Failed to delete announcement:", data.error);
-        alert("Failed to delete announcement: " + data.error);
+      },
+      {
+        confirmText: "Delete",
+        cancelText: "Cancel"
       }
-    } catch (error) {
-      console.error("Error deleting announcement:", error);
-      alert("Error deleting announcement");
-    }
+    );
   };
 
   const markAnnouncementAsRead = async (announcementId: string) => {
@@ -1015,16 +1031,11 @@ export default function MessagesClientComponent({
           <div className="space-y-6 py-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-primary-800">Course</label>
-              <Dropdown
-                options={courses.map(course => ({
-                  value: course._id.toString(),
-                  label: `${course.courseCode} - ${course.name}`,
-                }))}
-                value={selectedCourseId}
-                onChange={setSelectedCourseId}
-                placeholder="Select a course..."
-                className="w-full"
-              />
+              <div className="w-full px-3 py-2 bg-gray-100 rounded text-primary-900 text-sm">
+              {courses.find(course => course._id.toString() === selectedCourseId)
+                ? `${courses.find(course => course._id.toString() === selectedCourseId)?.courseCode} - ${courses.find(course => course._id.toString() === selectedCourseId)?.name}`
+                : "Unknown Course"}
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -1078,6 +1089,9 @@ export default function MessagesClientComponent({
           }
         }}
       />
+
+      {/* Alert Dialog for confirmations and messages */}
+      <AlertDialog />
     </>
   );
 }

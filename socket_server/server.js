@@ -8,8 +8,6 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const { MongoClient } = require("mongodb");
-const cors = require("cors");
-
 const app = express();
 const server = http.createServer(app);
 

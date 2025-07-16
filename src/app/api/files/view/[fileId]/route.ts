@@ -21,7 +21,7 @@ export const GET = auth(
         return fileData.error;
       }
 
-      // Set appropriate headers for PDF viewing
+      // Set appropriate headers for file viewing and Next.js Image optimization
       const headers = new Headers();
       headers.set("Content-Type", fileData.fileRecord.file_type);
       headers.set("Content-Disposition", `inline; filename="${fileData.fileRecord.name}"`);
