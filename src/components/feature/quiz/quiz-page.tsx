@@ -131,7 +131,7 @@ export default function QuizPage({ courseName, courseId }: QuizPageProps) {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen p-6">
         <div className="max-w-2xl mx-auto">
           <Card className="border-destructive">
             <CardHeader>
@@ -158,7 +158,7 @@ export default function QuizPage({ courseName, courseId }: QuizPageProps) {
 
   if (quizState === "loading") {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen p-6">
         <div className="max-w-2xl mx-auto">
           <Card>
             <CardContent className="flex items-center justify-center py-12">
@@ -175,7 +175,7 @@ export default function QuizPage({ courseName, courseId }: QuizPageProps) {
 
   if (quizState === "ready" && quiz) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen p-6">
         <div className="max-w-2xl mx-auto space-y-6">
           <Card>
             <CardHeader>
@@ -214,7 +214,7 @@ export default function QuizPage({ courseName, courseId }: QuizPageProps) {
     const showFeedback = quizState === "question-feedback";
 
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen p-6">
         <div className="max-w-2xl mx-auto space-y-6">
           {/* Progress Header */}
           <Card>
@@ -360,7 +360,7 @@ export default function QuizPage({ courseName, courseId }: QuizPageProps) {
     }, 0);
 
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen p-6">
         <div className="max-w-2xl mx-auto space-y-6">
           <Card>
             <CardHeader className="text-center">
