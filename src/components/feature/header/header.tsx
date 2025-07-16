@@ -65,7 +65,7 @@ export default function Header({
           <div
             className="cursor-pointer rounded-lg p-1 transition hover:bg-secondary-50"
             onClick={toggleSidebar}
-            aria-label="Toggle Sidebar"
+            // aria-label="Toggle Sidebar"
           >
             <SidebarIcon size={24} />
           </div>
