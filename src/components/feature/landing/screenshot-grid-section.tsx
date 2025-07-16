@@ -6,8 +6,8 @@ import Image from "next/image";
 const ScreenshotGridSection = () => {
   const screenshots = [
     {
-      title: "AI Dashboard",
-      description: "Comprehensive overview of your academic progress",
+      title: "Custom Dashboard",
+      description: "Comprehensive overview for instant information",
       image: "/placeholder.jpg",
     },
     {
@@ -31,7 +31,7 @@ const ScreenshotGridSection = () => {
       image: "/placeholder.jpg",
     },
     {
-      title: "Gamification Hub",
+      title: "Lighthouse",
       description: "Track achievements and unlock badges",
       image: "/placeholder.jpg",
     },

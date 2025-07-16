@@ -20,7 +20,7 @@ const KeyFeaturesSection = () => {
     {
       icon: FileText,
       title: "AI Form Auto-Fill",
-      description: "Intelligent form completion that learns from your patterns and automatically fills out university paperwork, saving hours of administrative time.",
+      description: "Intelligent form completion that understands PDFs and Documents to automatically fill out course details, assignment details and course material information, saving hours of administrative time.",
       color: "text-blue-600",
       bgColor: "bg-blue-50",
     },
