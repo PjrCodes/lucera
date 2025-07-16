@@ -93,8 +93,7 @@ export const courseSchema = z.object({
   enrolledStudentCount: z.number(),
   completedStudentCount: z.number(),
   courseColor: z.string().optional(),
-  courseColorTailwind: z.string().optional(),
-  courseColorTailwindText: z.string().optional(),
+  courseColorStyle: z.string().optional(), // CSS style string like "background-color: #xx00xx; color: #XXXXXX;"
 });
 
 export type Course = z.infer<typeof courseSchema>;

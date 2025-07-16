@@ -34,117 +34,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
+import {
+  COURSE_COLOR_PALETTE,
+  getContrastColor,
+  getRandomCourseColor,
+  createCourseColorStyle,
+} from "@/lib/utils/course-colors";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
-
-// Nice light color palette for courses (more accessible and pleasant)
-const COURSE_COLORS = [
-  "#60A5FA", // Light Blue
-  "#34D399", // Light Emerald
-  "#A78BFA", // Light Violet
-  "#FBBF24", // Light Amber
-  "#F87171", // Light Red
-  "#22D3EE", // Light Cyan
-  "#A3E635", // Light Lime
-  "#FB923C", // Light Orange
-  "#F472B6", // Light Pink
-  "#818CF8", // Light Indigo
-  "#C084FC", // Light Purple
-  "#4ADE80", // Light Green
-];
-
-// Calculate appropriate text color using lighter/darker shades of the background color
-const getContrastColor = (hexColor: string): string => {
-  // Remove # if present
-  const hex = hexColor.replace("#", "");
-
-  // Convert to RGB
-  const r = parseInt(hex.substr(0, 2), 16);
-  const g = parseInt(hex.substr(2, 2), 16);
-  const b = parseInt(hex.substr(4, 2), 16);
-
-  // Calculate relative luminance using WCAG formula
-  const toLinear = (value: number) => {
-    const normalized = value / 255;
-    return normalized <= 0.03928
-      ? normalized / 12.92
-      : Math.pow((normalized + 0.055) / 1.055, 2.4);
-  };
-
-  const luminance = 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
-
-  // Create more sophisticated color variations
-  if (luminance > 0.5) {
-    // Light background - create a darker shade by reducing brightness significantly
-    const factor = 0.25; // Make it much darker for better contrast
-    const darkR = Math.round(r * factor);
-    const darkG = Math.round(g * factor);
-    const darkB = Math.round(b * factor);
-    return `#${darkR.toString(16).padStart(2, '0')}${darkG.toString(16).padStart(2, '0')}${darkB.toString(16).padStart(2, '0')}`;
-  } else {
-    // Dark background - create a lighter shade by blending with white
-    const factor = 0.8; // Blend 80% with white for better readability
-    const lightR = Math.round(r + (255 - r) * factor);
-    const lightG = Math.round(g + (255 - g) * factor);
-    const lightB = Math.round(b + (255 - b) * factor);
-    return `#${lightR.toString(16).padStart(2, '0')}${lightG.toString(16).padStart(2, '0')}${lightB.toString(16).padStart(2, '0')}`;
-  }
-};
-
-// Convert hex color to Tailwind class names for both background and text
-const hexToTailwindColors = (hex: string): { bg: string; text: string } => {
-  // Enhanced color mapping with more comprehensive coverage
-  const colorMap: Record<string, string> = {
-    "#60A5FA": "blue-400",
-    "#34D399": "emerald-400",
-    "#A78BFA": "violet-400",
-    "#FBBF24": "amber-400",
-    "#F87171": "red-400",
-    "#22D3EE": "cyan-400",
-    "#A3E635": "lime-400",
-    "#FB923C": "orange-400",
-    "#F472B6": "pink-400",
-    "#818CF8": "indigo-400",
-    "#C084FC": "purple-400",
-    "#4ADE80": "green-400",
-  };
-
-  // Get the background class or default to blue-400
-  const bgClass = colorMap[hex.toUpperCase()] || "blue-400";
-
-  // Calculate luminance to determine appropriate text color
-  const cleanHex = hex.replace("#", "");
-  const r = parseInt(cleanHex.substr(0, 2), 16);
-  const g = parseInt(cleanHex.substr(2, 2), 16);
-  const b = parseInt(cleanHex.substr(4, 2), 16);
-
-  const toLinear = (value: number) => {
-    const normalized = value / 255;
-    return normalized <= 0.03928
-      ? normalized / 12.92
-      : Math.pow((normalized + 0.055) / 1.055, 2.4);
-  };
-
-  const luminance = 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
-
-  // Choose text color based on background luminance
-  // For light backgrounds use darker shades, for dark backgrounds use lighter shades
-  let textClass: string;
-  if (luminance > 0.5) {
-    // Light background - use dark text for contrast
-    textClass = "gray-800"; // Very dark gray for excellent contrast
-  } else {
-    // Dark background - use light text for contrast
-    textClass = "gray-100"; // Very light gray for excellent contrast
-  }
-
-  return { bg: bgClass, text: textClass };
-};
-
-// Get random light color from palette
-const getRandomCourseColor = (): string => {
-  return COURSE_COLORS[Math.floor(Math.random() * COURSE_COLORS.length)];
-};
 
 // Client component
 interface EditCourseClientProps {
@@ -403,8 +300,7 @@ export function EditCourseForm({
           courseEndDate: courseEndDate ? new Date(courseEndDate) : null,
           coverImage: finalCoverImageId || null,
           courseColor: courseColor || null,
-          courseColorTailwind: courseColor ? hexToTailwindColors(courseColor).bg : null,
-          courseColorTailwindText: courseColor ? hexToTailwindColors(courseColor).text : null,
+          courseColorStyle: courseColor ? createCourseColorStyle(courseColor) : null,
         },
         syllabusFile: syllabusFileName, // Only for new courses
       };
@@ -559,7 +455,7 @@ export function EditCourseForm({
                         Preset Colors
                       </label>
                       <div className="grid grid-cols-6 gap-2">
-                        {COURSE_COLORS.map((color) => (
+                        {COURSE_COLOR_PALETTE.map((color) => (
                           <button
                             key={color}
                             type="button"

@@ -7,6 +7,7 @@ import { getCoursesForUser } from "@/lib/database-service/courses";
 import { getSubmissionsForStudent } from "@/lib/database-service/submitted-assignments";
 import { getAssignmentsForCourse } from "@/lib/database-service/assignment";
 import { BookAlert } from "lucide-react";
+import { getCourseColorStyle } from "@/lib/utils/course-colors";
 
 export default async function Courses({
   userData,
@@ -110,9 +111,14 @@ export default async function Courses({
                 <h3 className="text-base font-semibold mb-1 text-primary-700">
                   {course.name}
                 </h3>
-                <p className="text-sm text-primary-700 mb-2">
-                  {course.courseCode}
-                </p>
+                <div className="mb-2">
+                  <span
+                    className="inline-block px-2 py-1 rounded text-xs font-medium"
+                    style={getCourseColorStyle(course.courseColorStyle)}
+                  >
+                    {course.courseCode}
+                  </span>
+                </div>
                 <div className="mt-auto pt-2">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-medium text-primary-700">

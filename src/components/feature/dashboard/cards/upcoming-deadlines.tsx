@@ -4,6 +4,7 @@ import { PiConfetti } from "react-icons/pi";
 import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
 // import { Deadline } from "@/lib/types/lib"; // Import the Deadline type
 import { getUpcomingDeadlines } from "@/lib/database-service/assignment";
+import { getCourseColorStyle } from "@/lib/utils/course-colors";
 
 function formatDate(dateStr: string) {
   if (!dateStr) return "N/A";
@@ -245,7 +246,8 @@ export default async function UpcomingDeadlines({
                   </span>
                 </div>
                 <span
-                  className={`self-start md:self-center md:ml-2 px-2 py-0.5 rounded text-xs font-medium ${dl.courseColor}`}
+                  className="self-start md:self-center md:ml-2 px-2 py-0.5 rounded text-xs font-medium"
+                  style={getCourseColorStyle(dl.courseColor)}
                 >
                   {dl.course}
                 </span>

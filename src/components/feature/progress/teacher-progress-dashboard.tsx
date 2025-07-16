@@ -580,10 +580,25 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-64 mb-4"></div>
-          <div className="h-96 bg-gray-200 rounded"></div>
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-100 p-6">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-primary-200 p-8">
+            <div className="animate-pulse">
+              <div className="h-8 bg-primary-200 rounded-xl w-1/3 mb-4"></div>
+              <div className="h-4 bg-primary-100 rounded-lg w-1/2"></div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-primary-200 p-6">
+                <div className="animate-pulse">
+                  <div className="h-4 bg-primary-200 rounded-lg w-3/4 mb-4"></div>
+                  <div className="h-8 bg-primary-100 rounded-xl w-1/2"></div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -591,181 +606,266 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
 
   if (courses.length === 0) {
     return (
-      <div className="text-center py-12">
-        <BookOpen className="mx-auto h-12 w-12 text-gray-400" />
-        <h3 className="mt-2 text-sm font-semibold text-gray-900">No courses found</h3>
-        <p className="mt-1 text-sm text-gray-500">Create your first course to see analytics.</p>
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-100 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-primary-200 p-16 text-center">
+            <div className="p-4 bg-primary-100 rounded-xl inline-block mb-6">
+              <BookOpen className="mx-auto h-16 w-16 text-primary-600" />
+            </div>
+            <h3 className="text-2xl font-bold text-primary-800 mb-2">No courses found</h3>
+            <p className="text-primary-600/80">Create your first course to see analytics.</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header with global course selector */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Teacher Analytics</h2>
-          <p className="text-gray-600">Track student performance and course progress</p>
+    <div className="min-h-screen bg-primary-50 p-3 sm:p-6">
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+        {/* Simplified Header */}
+        <div className="flex flex-col gap-4 bg-white rounded-xl shadow-sm border border-primary-200 p-4 sm:p-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary-100 rounded-lg">
+              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-primary-700" />
+            </div>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-primary-800">Teacher Analytics</h1>
+              <p className="text-primary-600/80 text-xs sm:text-sm">Track student performance and course progress</p>
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+            <Select value={selectedCourse} onValueChange={setSelectedCourse}>
+              <SelectTrigger className="w-full sm:w-72 bg-white border-primary-200 hover:border-primary-300 transition-colors rounded-lg">
+                <SelectValue placeholder="Select a course" />
+              </SelectTrigger>
+              <SelectContent className="rounded-lg border-primary-200">
+                {courses.map((course) => (
+                  <SelectItem key={course._id.toString()} value={course._id.toString()}>
+                    {course.name} ({course.code})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button
+              onClick={exportToCSV}
+              className="flex items-center justify-center gap-2 bg-primary-500 hover:bg-primary-600 text-white shadow-sm rounded-lg w-full sm:w-auto"
+            >
+              <Download className="w-4 h-4" />
+              <span className="sm:inline">Export CSV</span>
+            </Button>
+          </div>
         </div>
-        <div className="flex items-center gap-4">
-          <Select value={selectedCourse} onValueChange={setSelectedCourse}>
-            <SelectTrigger className="w-64">
-              <SelectValue placeholder="Select a course" />
-            </SelectTrigger>
-            <SelectContent>
-              {courses.map((course) => (
-                <SelectItem key={course._id.toString()} value={course._id.toString()}>
-                  {course.name} ({course.code})
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Button
-            onClick={exportToCSV}
-            className="flex items-center gap-2"
-            variant="outline"
-          >
-            <Download className="w-4 h-4" />
-            Export CSV
-          </Button>
-        </div>
-      </div>
 
-      {/* Tabs */}
-      <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="overview">Course Overview</TabsTrigger>
-          <TabsTrigger value="analytics">Assignment Analytics</TabsTrigger>
-          <TabsTrigger value="student">Student View</TabsTrigger>
-        </TabsList>
+        {/* Tabs */}
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="flex flex-col sm:flex-row flex-wrap gap-1 w-full bg-primary-100 border border-primary-200 rounded-lg p-1 min-h-fit">
+            <TabsTrigger
+              value="overview"
+              className="data-[state=active]:bg-primary-50 data-[state=active]:text-primary-900 text-primary-700 whitespace-nowrap flex items-center justify-center sm:justify-start px-3 py-2 w-full sm:w-auto"
+            >
+              <TrendingUp className="mr-2 w-4 h-4" />
+              <span className="text-sm">Course Overview</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="analytics"
+              className="data-[state=active]:bg-success-50 data-[state=active]:text-success-900 text-success-700 whitespace-nowrap flex items-center justify-center sm:justify-start px-3 py-2 w-full sm:w-auto"
+            >
+              <BookOpen className="mr-2 w-4 h-4" />
+              <span className="text-sm">Assignment Analytics</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="student"
+              className="data-[state=active]:bg-info-50 data-[state=active]:text-info-900 text-info-700 whitespace-nowrap flex items-center justify-center sm:justify-start px-3 py-2 w-full sm:w-auto"
+            >
+              <Users className="mr-2 w-4 h-4" />
+              <span className="text-sm">Student View</span>
+            </TabsTrigger>
+          </TabsList>
 
         {/* Course Overview Tab */}
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-            <Card>
+        <TabsContent value="overview" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
+            <Card className="bg-white border-primary-200 shadow-sm hover:shadow-md transition-shadow rounded-lg">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Students</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-xs sm:text-sm font-semibold text-primary-700">Total Students</CardTitle>
+                <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                  <Users className="h-3 w-3 sm:h-4 sm:w-4 text-primary-600" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{courseProgress.length}</div>
+                <div className="text-xl sm:text-2xl font-bold text-primary-800">{courseProgress.length}</div>
+                <p className="text-primary-600/70 text-xs mt-1">Enrolled in course</p>
               </CardContent>
             </Card>
-            <Card>
+
+            <Card className="bg-white border-success-200 shadow-sm hover:shadow-md transition-shadow rounded-lg">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Avg Completion</CardTitle>
-                <BookOpen className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-xs sm:text-sm font-semibold text-success-700">Avg Completion</CardTitle>
+                <div className="p-1.5 sm:p-2 bg-success-100 rounded-lg">
+                  <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 text-success-600" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
+                <div className="text-xl sm:text-2xl font-bold text-success-800">
                   {courseProgress.length > 0
                     ? Math.round(courseProgress.reduce((acc, s) => acc + s.completion, 0) / courseProgress.length)
                     : 0}%
                 </div>
+                <p className="text-success-600/70 text-xs mt-1">Course progress</p>
               </CardContent>
             </Card>
-            <Card>
+
+            <Card className="bg-white border-info-200 shadow-sm hover:shadow-md transition-shadow rounded-lg">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Avg Grade</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-xs sm:text-sm font-semibold text-info-700">Avg Grade</CardTitle>
+                <div className="p-1.5 sm:p-2 bg-info-100 rounded-lg">
+                  <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-info-600" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
+                <div className="text-xl sm:text-2xl font-bold text-info-800">
                   {courseProgress.length > 0
                     ? Math.round(courseProgress.reduce((acc, s) => acc + s.averageGrade, 0) / courseProgress.length)
                     : 0}%
                 </div>
+                <p className="text-info-600/70 text-xs mt-1">Class average</p>
               </CardContent>
             </Card>
-            <Card>
+
+            <Card className="bg-white border-danger-200 shadow-sm hover:shadow-md transition-shadow rounded-lg">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">At Risk Students</CardTitle>
-                <AlertTriangle className="h-4 w-4 text-red-500" />
+                <CardTitle className="text-xs sm:text-sm font-semibold text-danger-700">At Risk Students</CardTitle>
+                <div className="p-1.5 sm:p-2 bg-danger-100 rounded-lg">
+                  <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-danger-600" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-red-600">
+                <div className="text-xl sm:text-2xl font-bold text-danger-800">
                   {courseProgress.filter(s => s.completion < 50).length}
                 </div>
+                <p className="text-danger-600/70 text-xs mt-1">Need attention</p>
               </CardContent>
             </Card>
           </div>
 
           {/* Course Completion Chart */}
-          <Card className="mb-6">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg">Student Course Completion %</CardTitle>
-              <CardDescription>Individual student progress in the selected course</CardDescription>
+          <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
+            <CardHeader className="pb-3 sm:pb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                  <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-base sm:text-lg font-semibold text-primary-800">Student Course Completion %</CardTitle>
+                  <CardDescription className="text-primary-600/70 text-xs sm:text-sm">Individual student progress in the selected course</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="pt-2">
-              <ChartContainer config={chartConfig} className="h-[300px]">
-                <BarChart data={courseProgress} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
+              <ChartContainer config={chartConfig} className="h-[300px] sm:h-[350px] w-full">
+                <BarChart
+                  data={courseProgress}
+                  margin={{ top: 20, right: 20, left: 10, bottom: 80 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis
                     dataKey="studentName"
                     angle={-45}
                     textAnchor="end"
-                    height={100}
-                    fontSize={12}
+                    height={80}
+                    fontSize={8}
                     interval={0}
+                    stroke="#64748b"
                   />
-                  <YAxis />
-                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <YAxis
+                    domain={[0, 100]}
+                    label={{ value: 'Completion %', angle: -90, position: 'insideLeft' }}
+                    stroke="#64748b"
+                    fontSize={10}
+                  />
+                  <ChartTooltip
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length > 0) {
+                        const data = payload[0].payload;
+                        return (
+                          <div className="bg-white/95 backdrop-blur-sm p-3 sm:p-4 border border-primary-200 rounded-lg shadow-lg">
+                            <p className="font-bold text-primary-800 text-sm break-words">{label}</p>
+                            <p className="text-sm text-primary-600">
+                              <span className="font-medium text-success-600">{payload[0].value}%</span> completed
+                            </p>
+                            <p className="text-sm text-primary-600">
+                              Grade: <span className="font-medium text-info-600">{data.averageGrade}%</span>
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
                   <Bar
                     dataKey="completion"
-                    name="Completion %"
                     fill="var(--color-chart-1)"
-                  >
-                    {courseProgress.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.fill || "var(--color-chart-1)"} />
-                    ))}
-                  </Bar>
+                    radius={[2, 2, 0, 0]}
+                    name="Completion %"
+                  />
                 </BarChart>
               </ChartContainer>
             </CardContent>
           </Card>
 
           {/* Submission Heatmap */}
-          <Card className="mb-6">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg">Assignment Submission Status</CardTitle>
-              <CardDescription>Overview of student submissions across assignments</CardDescription>
+          <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
+            <CardHeader className="pb-3 sm:pb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-1.5 sm:p-2 bg-success-100 rounded-lg">
+                  <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-success-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-base sm:text-lg font-semibold text-primary-800">Assignment Submission Status</CardTitle>
+                  <CardDescription className="text-primary-600/70 text-xs sm:text-sm">Overview of student submissions across assignments</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="pt-2">
               <div className="overflow-x-auto">
-                <div className="min-w-[1000px] p-6 bg-gray-50 rounded-lg">
-                  <div className="grid grid-cols-6 gap-4 mb-6">
-                    <div className="font-semibold text-sm">Student</div>
+                <div className="min-w-[600px] sm:min-w-[1000px] p-3 sm:p-4 bg-gray-50 rounded-lg border">
+                  <div className="grid grid-cols-6 gap-2 sm:gap-4 mb-3 sm:mb-4">
+                    <div className="font-semibold text-xs sm:text-sm text-gray-700">Student</div>
                     {assignmentAnalytics.slice(0, 5).map((assignment, idx) => (
-                      <div key={idx} className="font-semibold text-xs text-center p-3">
-                        <div className="break-words leading-tight">{assignment.assignmentTitle}</div>
+                      <div key={idx} className="font-semibold text-xs text-center p-1 sm:p-2 bg-white rounded border">
+                        <div className="break-words leading-tight text-gray-700">{assignment.assignmentTitle}</div>
                       </div>
                     ))}
                   </div>
                   {courseProgress.slice(0, 8).map((student, studentIdx) => {
                     return (
-                      <div key={studentIdx} className="grid grid-cols-6 gap-4 mb-3">
-                        <div className="text-sm font-medium py-2">{student.studentName}</div>
+                      <div key={studentIdx} className="grid grid-cols-6 gap-2 sm:gap-4 mb-2 sm:mb-3">
+                        <div className="text-xs sm:text-sm font-medium py-2 text-gray-700 truncate">{student.studentName}</div>
                         {assignmentAnalytics.slice(0, 5).map((_, assignmentIdx) => {
                           // Generate deterministic submission status based on student and assignment
                           const seed = studentIdx * 5 + assignmentIdx;
                           const statusRand = (seed * 7) % 100;
 
-                          let score, bgColor;
+                          let score, bgColor, textColor;
                           if (statusRand < 15) { // 15% not submitted
                             score = null;
                             bgColor = 'bg-gray-400';
+                            textColor = 'text-white';
                           } else if (statusRand < 25) { // 10% late
                             score = Math.round(70 + (seed % 25));
                             bgColor = 'bg-orange-500';
+                            textColor = 'text-white';
                           } else { // 75% on time
                             score = Math.round(75 + (seed % 25));
-                            bgColor = 'bg-green-600';
+                            bgColor = 'bg-green-500';
+                            textColor = 'text-white';
                           }
 
                           return (
                             <div
                               key={assignmentIdx}
-                              className={`h-10 rounded-md text-xs flex items-center justify-center text-white font-semibold ${bgColor}`}
+                              className={`h-8 sm:h-10 rounded-lg text-xs flex items-center justify-center font-semibold ${bgColor} ${textColor}`}
                             >
                               {score !== null ? `${score}%` : '-'}
                             </div>
@@ -774,18 +874,18 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                       </div>
                     );
                   })}
-                  <div className="flex justify-center gap-6 mt-6 text-xs">
+                  <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mt-4 sm:mt-6 text-xs sm:text-sm">
                     <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 bg-green-600 rounded"></div>
-                      <span>On Time</span>
+                      <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded"></div>
+                      <span className="text-gray-700">On Time</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 bg-orange-500 rounded"></div>
-                      <span>Late Submission</span>
+                      <div className="w-3 h-3 sm:w-4 sm:h-4 bg-orange-500 rounded"></div>
+                      <span className="text-gray-700">Late Submission</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 bg-gray-400 rounded"></div>
-                      <span>Not Submitted</span>
+                      <div className="w-3 h-3 sm:w-4 sm:h-4 bg-gray-400 rounded"></div>
+                      <span className="text-gray-700">Not Submitted</span>
                     </div>
                   </div>
                 </div>
@@ -794,30 +894,40 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
           </Card>
 
           {/* Average Grade Trend */}
-          <Card>
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg">Grade Trends</CardTitle>
-              <CardDescription>Average grades across assignments</CardDescription>
+          <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
+            <CardHeader className="pb-3 sm:pb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-1.5 sm:p-2 bg-info-100 rounded-lg">
+                  <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-info-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-base sm:text-lg font-semibold text-primary-800">Grade Trends</CardTitle>
+                  <CardDescription className="text-primary-600/70 text-xs sm:text-sm">Average grades across assignments</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="pt-2">
-              <ChartContainer config={chartConfig} className="h-[300px]">
-                <LineChart data={assignmentAnalytics}>
-                  <CartesianGrid strokeDasharray="3 3" />
+              <ChartContainer config={chartConfig} className="h-[350px] sm:h-[400px] w-full">
+                <LineChart data={assignmentAnalytics} margin={{ top: 20, right: 20, left: 10, bottom: 80 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                   <XAxis
                     dataKey="assignmentTitle"
                     angle={-45}
                     textAnchor="end"
-                    height={80}
-                    fontSize={12}
+                    height={70}
+                    fontSize={9}
+                    stroke="#64748b"
                   />
-                  <YAxis />
+                  <YAxis stroke="#64748b" fontSize={10} />
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <Line
                     type="monotone"
                     dataKey="averageGrade"
                     stroke="var(--color-grade)"
-                    strokeWidth={2}
+                    strokeWidth={3}
                     name="Average Grade %"
+                    dot={{ fill: 'var(--color-grade)', strokeWidth: 2, r: 5 }}
+                    activeDot={{ r: 7, fill: 'var(--color-grade)' }}
                   />
                 </LineChart>
               </ChartContainer>
@@ -826,36 +936,50 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
         </TabsContent>
 
         {/* Assignment Analytics Tab */}
-        <TabsContent value="analytics" className="space-y-6">
+        <TabsContent value="analytics" className="space-y-6 sm:space-y-8 mt-6 sm:mt-8">
           {assignmentAnalytics.length === 0 ? (
-            <Card>
-              <CardContent className="text-center py-12">
-                <BookOpen className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-semibold text-gray-900">No assignments found</h3>
-                <p className="mt-1 text-sm text-gray-500">Create assignments to see analytics.</p>
+            <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
+              <CardContent className="text-center py-12 sm:py-16">
+                <div className="p-3 sm:p-4 bg-primary-100 rounded-xl inline-block mb-4">
+                  <BookOpen className="mx-auto h-8 w-8 sm:h-12 sm:w-12 text-primary-600" />
+                </div>
+                <h3 className="mt-2 text-base sm:text-lg font-bold text-primary-800">No assignments found</h3>
+                <p className="mt-1 text-xs sm:text-sm text-primary-600/70">Create assignments to see analytics.</p>
               </CardContent>
             </Card>
           ) : (
             assignmentAnalytics.map((assignment, index) => (
-              <Card key={index}>
-                <CardHeader>
-                  <CardTitle>{assignment.assignmentTitle}</CardTitle>
-                  <CardDescription>
-                    {assignment.submissionCount} submissions • Average: {assignment.averageGrade}%
-                  </CardDescription>
+              <Card key={index} className="bg-white border-primary-200 shadow-sm rounded-lg">
+                <CardHeader className="border-b border-primary-100 pb-3 sm:pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-1.5 sm:p-2 bg-success-100 rounded-lg">
+                      <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-success-700" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <CardTitle className="text-base sm:text-xl font-bold text-primary-800 break-words">{assignment.assignmentTitle}</CardTitle>
+                      <CardDescription className="text-primary-600/70 text-xs sm:text-sm">
+                        {assignment.submissionCount} submissions • Average: {assignment.averageGrade}%
+                      </CardDescription>
+                    </div>
+                  </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <CardContent className="pt-4 sm:pt-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
                     {/* Grade Distribution */}
-                    <div>
-                      <h4 className="text-sm font-medium mb-3">Grade Distribution</h4>
-                      <ChartContainer config={chartConfig} className="h-[200px]">
+                    <div className="bg-primary-50 p-4 sm:p-6 rounded-lg border border-primary-100">
+                      <h4 className="text-base sm:text-lg font-bold text-primary-800 mb-3 sm:mb-4 flex items-center gap-2">
+                        <div className="p-1 bg-primary-200 rounded-lg">
+                          <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-primary-700" />
+                        </div>
+                        Grade Distribution
+                      </h4>
+                      <ChartContainer config={chartConfig} className="h-[200px] sm:h-[250px]">
                         <BarChart data={assignment.gradeDistribution}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="range" />
-                          <YAxis />
+                          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                          <XAxis dataKey="range" stroke="#64748b" fontSize={10} />
+                          <YAxis stroke="#64748b" fontSize={10} />
                           <ChartTooltip content={<ChartTooltipContent />} />
-                          <Bar dataKey="count">
+                          <Bar dataKey="count" radius={[4, 4, 0, 0]}>
                             {assignment.gradeDistribution.map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={entry.fill} />
                             ))}
@@ -865,9 +989,14 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                     </div>
 
                     {/* Submission Timeliness */}
-                    <div>
-                      <h4 className="text-sm font-medium mb-3">Submission Timeliness</h4>
-                      <ChartContainer config={chartConfig} className="h-[200px]">
+                    <div className="bg-success-50 p-4 sm:p-6 rounded-lg border border-success-100">
+                      <h4 className="text-base sm:text-lg font-bold text-primary-800 mb-3 sm:mb-4 flex items-center gap-2">
+                        <div className="p-1 bg-success-200 rounded-lg">
+                          <Users className="w-3 h-3 sm:w-4 sm:h-4 text-success-700" />
+                        </div>
+                        Submission Timeliness
+                      </h4>
+                      <ChartContainer config={chartConfig} className="h-[200px] sm:h-[250px]">
                         <PieChart>
                           <Pie
                             data={[
@@ -880,6 +1009,9 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                             outerRadius={80}
                             dataKey="value"
                             label={({ name, value }) => `${name}: ${value}`}
+                            stroke="#ffffff"
+                            strokeWidth={2}
+                            fontSize={11}
                           />
                           <ChartTooltip content={<ChartTooltipContent />} />
                         </PieChart>
@@ -893,94 +1025,121 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
         </TabsContent>
 
         {/* Student View Tab */}
-        <TabsContent value="student" className="space-y-6">
-          <div className="flex items-center gap-4">
-            <Select value={selectedStudent} onValueChange={setSelectedStudent}>
-              <SelectTrigger className="w-64">
-                <SelectValue placeholder="Select a student" />
-              </SelectTrigger>
-              <SelectContent>
-                {students.map((student) => (
-                  <SelectItem key={student.id} value={student.id}>
-                    {student.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <TabsContent value="student" className="space-y-4 sm:space-y-8 mt-4 sm:mt-8">
+          <Card className="bg-white border-primary-200 shadow-sm rounded-lg p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+              <div className="flex items-center gap-3">
+                <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                  <Users className="w-4 h-4 sm:w-5 sm:h-5 text-primary-700" />
+                </div>
+                <span className="text-sm sm:text-base font-medium text-primary-800">Select Student:</span>
+              </div>
+              <Select value={selectedStudent} onValueChange={setSelectedStudent}>
+                <SelectTrigger className="w-full sm:w-72 bg-white border-primary-200 shadow-sm hover:shadow-md transition-all duration-200 rounded-lg">
+                  <SelectValue placeholder="Select a student" />
+                </SelectTrigger>
+                <SelectContent className="rounded-lg border-primary-200">
+                  {students.map((student) => (
+                    <SelectItem key={student.id} value={student.id}>
+                      {student.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </Card>
 
           {students.length === 0 ? (
-            <Card>
-              <CardContent className="text-center py-12">
-                <Users className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-semibold text-gray-900">No students enrolled</h3>
-                <p className="mt-1 text-sm text-gray-500">Invite students to see their performance.</p>
+            <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
+              <CardContent className="text-center py-12 sm:py-16">
+                <div className="p-3 sm:p-4 bg-primary-100 rounded-xl inline-block mb-4">
+                  <Users className="mx-auto h-8 w-8 sm:h-12 sm:w-12 text-primary-600" />
+                </div>
+                <h3 className="mt-2 text-base sm:text-lg font-bold text-primary-800">No students enrolled</h3>
+                <p className="mt-1 text-xs sm:text-sm text-primary-600/70">Invite students to see their performance.</p>
               </CardContent>
             </Card>
           ) : studentPerformance && (
             <>
               {/* Student Progress Overview */}
-              <Card className="mb-6">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg">{studentPerformance.studentName} - Progress Overview</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-2">
-                  <div className="flex items-center gap-6 mb-6">
-                    <div className="text-4xl font-bold text-primary-600">
-                      {studentPerformance.courseCompletion}%
+              <Card className="bg-gradient-to-br from-primary-50 to-success-50 border-primary-200 shadow-lg rounded-2xl">
+                <CardHeader className="pb-4 border-b border-primary-100">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary-200 rounded-xl">
+                      <TrendingUp className="w-6 h-6 text-primary-700" />
                     </div>
-                    <div className="text-gray-600 font-medium">Course Completion</div>
+                    <CardTitle className="text-xl font-bold text-primary-800">
+                      {studentPerformance.studentName} - Progress Overview
+                    </CardTitle>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-4">
-                    <div
-                      className="bg-primary-600 h-4 rounded-full transition-all duration-300"
-                      style={{ width: `${studentPerformance.courseCompletion}%` }}
-                    ></div>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-8 mb-6">
+                    <div className="text-center">
+                      <div className="text-5xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
+                        {studentPerformance.courseCompletion}%
+                      </div>
+                      <div className="text-primary-700 font-semibold mt-1">Course Completion</div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm text-primary-600 mb-2">Progress Indicator</div>
+                      <div className="w-full bg-primary-100 rounded-full h-6 overflow-hidden shadow-inner">
+                        <div
+                          className="bg-gradient-to-r from-primary-500 to-primary-600 h-6 rounded-full transition-all duration-500 ease-out shadow-sm"
+                          style={{ width: `${studentPerformance.courseCompletion}%` }}
+                        ></div>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
               {/* Assignment Table */}
-              <Card className="mb-6">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg">Assignment Breakdown</CardTitle>
+              <Card className="bg-white/80 backdrop-blur-sm border-primary-200 shadow-lg rounded-2xl">
+                <CardHeader className="pb-4 border-b border-primary-100">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-success-100 rounded-xl">
+                      <BookOpen className="w-5 h-5 text-success-700" />
+                    </div>
+                    <CardTitle className="text-xl font-bold text-primary-800">Assignment Breakdown</CardTitle>
+                  </div>
                 </CardHeader>
-                <CardContent className="pt-2">
+                <CardContent className="pt-6">
                   <div className="overflow-x-auto">
                     <table className="w-full border-collapse">
                       <thead>
-                        <tr className="border-b-2 border-gray-200">
-                          <th className="text-left py-4 px-4 font-semibold text-gray-700">Assignment</th>
-                          <th className="text-left py-4 px-4 font-semibold text-gray-700">Grade</th>
-                          <th className="text-left py-4 px-4 font-semibold text-gray-700">Submission Date</th>
-                          <th className="text-left py-4 px-4 font-semibold text-gray-700">Status</th>
+                        <tr className="border-b-2 border-primary-200">
+                          <th className="text-left py-4 px-4 font-bold text-primary-800">Assignment</th>
+                          <th className="text-left py-4 px-4 font-bold text-primary-800">Grade</th>
+                          <th className="text-left py-4 px-4 font-bold text-primary-800">Submission Date</th>
+                          <th className="text-left py-4 px-4 font-bold text-primary-800">Status</th>
                         </tr>
                       </thead>
                       <tbody>
                         {studentPerformance.assignments.map((assignment, index) => (
-                          <tr key={index} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                          <tr key={index} className="border-b border-primary-100 hover:bg-primary-50/50 transition-colors">
                             <td className="py-4 px-4">
-                              <div className="font-medium text-gray-900 break-words max-w-xs">
+                              <div className="font-semibold text-primary-800 break-words max-w-xs">
                                 {assignment.title}
                               </div>
                             </td>
                             <td className="py-4 px-4">
                               {assignment.grade !== null ? (
-                                <span className={`font-semibold text-lg ${
-                                  assignment.grade >= 90 ? 'text-green-600' :
-                                  assignment.grade >= 80 ? 'text-blue-600' :
-                                  assignment.grade >= 70 ? 'text-yellow-600' :
-                                  'text-red-600'
+                                <span className={`font-bold text-xl px-3 py-1 rounded-xl ${
+                                  assignment.grade >= 90 ? 'text-success-700 bg-success-100' :
+                                  assignment.grade >= 80 ? 'text-info-700 bg-info-100' :
+                                  assignment.grade >= 70 ? 'text-warning-700 bg-warning-100' :
+                                  'text-danger-700 bg-danger-100'
                                 }`}>
                                   {assignment.grade}%
                                 </span>
                               ) : (
-                                <span className="text-gray-400 font-medium">Not graded</span>
+                                <span className="text-gray-500 font-medium bg-gray-100 px-3 py-1 rounded-xl">Not graded</span>
                               )}
                             </td>
                             <td className="py-4 px-4">
                               {assignment.submissionDate ? (
-                                <div className="text-gray-700">
+                                <div className="text-primary-700 font-medium">
                                   {new Date(assignment.submissionDate).toLocaleDateString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
@@ -988,14 +1147,14 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                                   })}
                                 </div>
                               ) : (
-                                <span className="text-gray-400 font-medium">Not submitted</span>
+                                <span className="text-gray-500 font-medium">Not submitted</span>
                               )}
                             </td>
                             <td className="py-4 px-4">
-                              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                assignment.status === 'submitted' ? 'bg-green-100 text-green-800' :
-                                assignment.status === 'late' ? 'bg-orange-100 text-orange-800' :
-                                'bg-red-100 text-red-800'
+                              <span className={`px-4 py-2 rounded-xl text-sm font-bold shadow-sm ${
+                                assignment.status === 'submitted' ? 'bg-gradient-to-r from-success-100 to-success-200 text-success-800 border border-success-300' :
+                                assignment.status === 'late' ? 'bg-gradient-to-r from-warning-100 to-warning-200 text-warning-800 border border-warning-300' :
+                                'bg-gradient-to-r from-danger-100 to-danger-200 text-danger-800 border border-danger-300'
                               }`}>
                                 {assignment.status === 'submitted' ? 'On Time' :
                                  assignment.status === 'late' ? 'Late' : 'Missing'}
@@ -1010,17 +1169,24 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
               </Card>
 
               {/* Timeline Chart */}
-              <Card>
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg">Submission Timeline</CardTitle>
-                  <CardDescription>Assignment submission pattern over time</CardDescription>
+              <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
+                <CardHeader className="pb-3 sm:pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-1.5 sm:p-2 bg-info-100 rounded-lg">
+                      <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-info-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-base sm:text-lg font-semibold text-primary-800">Submission Timeline</CardTitle>
+                      <CardDescription className="text-primary-600/70 text-xs sm:text-sm">Assignment submission pattern over time</CardDescription>
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent className="pt-2">
-                  <ChartContainer config={chartConfig} className="h-[300px]">
+                  <ChartContainer config={chartConfig} className="h-[350px] sm:h-[400px] w-full">
                     <LineChart
                       data={studentPerformance.assignments.map((assignment, index) => ({
-                        assignment: assignment.title.length > 15 ?
-                          assignment.title.substring(0, 15) + '...' : assignment.title,
+                        assignment: assignment.title.length > 12 ?
+                          assignment.title.substring(0, 12) + '...' : assignment.title,
                         fullTitle: assignment.title,
                         dueDate: new Date(assignment.dueDate).getTime(),
                         submissionDate: assignment.submissionDate ?
@@ -1031,41 +1197,44 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                           Math.round((new Date(assignment.submissionDate).getTime() - new Date(assignment.dueDate).getTime()) / (1000 * 3600 * 24)) : null,
                         index: index + 1
                       }))}
-                      margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
+                      margin={{ top: 20, right: 20, left: 10, bottom: 80 }}
                     >
-                      <CartesianGrid strokeDasharray="3 3" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                       <XAxis
                         dataKey="assignment"
                         angle={-45}
                         textAnchor="end"
-                        height={100}
-                        fontSize={10}
+                        height={70}
+                        fontSize={8}
                         interval={0}
+                        stroke="#64748b"
                       />
                       <YAxis
                         label={{ value: 'Days from Due Date', angle: -90, position: 'insideLeft' }}
                         domain={[-5, 5]}
+                        stroke="#64748b"
+                        fontSize={10}
                       />
                       <ChartTooltip
                         content={({ active, payload }) => {
                           if (active && payload && payload.length > 0) {
                             const data = payload[0].payload;
                             return (
-                              <div className="bg-white p-3 border rounded shadow-lg">
-                                <p className="font-semibold">{data.fullTitle}</p>
-                                <p className="text-sm">Due: {new Date(data.dueDate).toLocaleDateString()}</p>
+                              <div className="bg-white/95 backdrop-blur-sm p-3 sm:p-4 border border-primary-200 rounded-lg shadow-lg">
+                                <p className="font-bold text-primary-800 text-sm">{data.fullTitle}</p>
+                                <p className="text-xs sm:text-sm text-primary-600">Due: {new Date(data.dueDate).toLocaleDateString()}</p>
                                 {data.submissionDate && (
-                                  <p className="text-sm">Submitted: {new Date(data.submissionDate).toLocaleDateString()}</p>
+                                  <p className="text-xs sm:text-sm text-primary-600">Submitted: {new Date(data.submissionDate).toLocaleDateString()}</p>
                                 )}
-                                <p className={`text-sm font-medium ${
-                                  data.status === 'submitted' ? 'text-green-600' :
-                                  data.status === 'late' ? 'text-orange-600' : 'text-red-600'
+                                <p className={`text-xs sm:text-sm font-semibold ${
+                                  data.status === 'submitted' ? 'text-success-600' :
+                                  data.status === 'late' ? 'text-warning-600' : 'text-danger-600'
                                 }`}>
                                   Status: {data.status === 'submitted' ? 'On Time' :
                                           data.status === 'late' ? 'Late' : 'Missing'}
                                 </p>
                                 {data.grade && (
-                                  <p className="text-sm">Grade: {data.grade}%</p>
+                                  <p className="text-xs sm:text-sm font-medium text-primary-700">Grade: {data.grade}%</p>
                                 )}
                               </div>
                             );
@@ -1077,8 +1246,9 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                         type="monotone"
                         dataKey="daysDifference"
                         stroke="var(--color-chart-2)"
-                        strokeWidth={3}
-                        dot={{ fill: 'var(--color-chart-2)', strokeWidth: 2, r: 6 }}
+                        strokeWidth={2}
+                        dot={{ fill: 'var(--color-chart-2)', strokeWidth: 2, r: 4 }}
+                        activeDot={{ r: 6, fill: 'var(--color-chart-2)' }}
                         name="Days from Due Date"
                       />
                       {/* Reference line at y=0 for due date */}
@@ -1093,10 +1263,21 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                       />
                     </LineChart>
                   </ChartContainer>
-                  <div className="mt-4 text-xs text-gray-600 space-y-1">
-                    <p>• Points above the dashed line indicate late submissions</p>
-                    <p>• Points below the dashed line indicate early submissions</p>
-                    <p>• Points on the dashed line indicate submissions on the due date</p>
+                  <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-primary-50 rounded-lg border border-primary-100">
+                    <div className="text-xs sm:text-sm text-primary-700 space-y-1">
+                      <p className="flex items-center gap-2">
+                        <div className="w-2 h-2 sm:w-3 sm:h-3 bg-warning-400 rounded-full"></div>
+                        <span>Points above the dashed line indicate late submissions</span>
+                      </p>
+                      <p className="flex items-center gap-2">
+                        <div className="w-2 h-2 sm:w-3 sm:h-3 bg-success-400 rounded-full"></div>
+                        <span>Points below the dashed line indicate early submissions</span>
+                      </p>
+                      <p className="flex items-center gap-2">
+                        <div className="w-2 h-2 sm:w-3 sm:h-3 bg-info-400 rounded-full"></div>
+                        <span>Points on the dashed line indicate submissions on the due date</span>
+                      </p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -1104,6 +1285,7 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
           )}
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }

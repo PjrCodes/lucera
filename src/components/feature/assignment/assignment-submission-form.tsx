@@ -119,7 +119,7 @@ export default function AssignmentSubmissionForm({
     }
 
     const data = await response.json();
-    console.log("Upload successful:", data);
+    console.log("Upload successful:", data.fileId);
     return data.fileId;
   };
 

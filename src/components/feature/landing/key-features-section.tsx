@@ -9,7 +9,8 @@ import {
   Layers,
   Award,
   BarChart3,
-  ChevronRight
+  ChevronRight,
+  Brain
 } from "lucide-react";
 
 const KeyFeaturesSection = () => {
@@ -32,10 +33,17 @@ const KeyFeaturesSection = () => {
     },
     {
       icon: Bot,
-      title: "Student Assistant Chatbot (LISA)",
-      description: "Your personal AI study companion that answers questions, helps with research, and provides 24/7 academic support.",
+      title: "Personalised Chatbot (LISA)",
+      description: "Your personal AI study companion that answers questions, helps with research, and provides 24/7 academic support. It can also help teachers understand grade analytics!",
       color: "text-purple-600",
       bgColor: "bg-purple-50",
+    },
+    {
+      icon: Brain,
+      title: "Instant Quiz Generation",
+      description: "Instantly generate revision quizzes for courses. Revise anywhere, anytime.",
+      color: "text-lime-600",
+      bgColor: "bg-lime-50"
     },
     {
       icon: Layers,
@@ -46,7 +54,7 @@ const KeyFeaturesSection = () => {
     },
     {
       icon: Award,
-      title: "Gamification & Badges",
+      title: "Badges",
       description: "Earn achievements and unlock badges as you progress through your studies, making learning more engaging and rewarding.",
       color: "text-pink-600",
       bgColor: "bg-pink-50",
@@ -54,7 +62,7 @@ const KeyFeaturesSection = () => {
     {
       icon: BarChart3,
       title: "Analytics & Performance Insights",
-      description: "Track your academic progress with detailed analytics and personalized insights to optimize your learning strategy.",
+      description: "Track your academic progress with detailed analytics and personalized AI-powered insights to optimize your learning strategy.",
       color: "text-indigo-600",
       bgColor: "bg-indigo-50",
     },

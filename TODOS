@@ -13,7 +13,7 @@
   - [ ] Publish grading component grade
   - [ ] Student view grading component grade
   - [ ] Should affect the main progress bar / average grade of student.
-- [ ] Grades tab on Course Page
+- [X] Grades tab on Course Page (Needs debugging)
 - [ ] FIX EVERYTHING THAT WAS AI GENERATED - TO A LENGTH YOU NEVER THOUGHT POSSIBLE.
 - [X] Back button on Assignment Page to Course Page
 - [ ] Protect Create Assignment from Student

@@ -17,6 +17,7 @@ import { MultiSelect } from "@/components/core/multi-select";
 import { AuthenticatedSession } from "@/lib/types/auth";
 import { Course, UserData } from "@/lib/schemas/database";
 import { MyMarkdown } from "@/components/core/markdown";
+import { getCourseColorStyle } from "@/lib/utils/course-colors";
 
 interface Message {
   id: string;
@@ -180,9 +181,8 @@ function ChatInput({
                   return (
                     <span
                       key={courseId}
-                      className={`px-3 py-1 rounded-full text-xs font-medium border ${
-                        course.courseColorTailwind
-                      }`}
+                      className="px-3 py-1 rounded-full text-xs font-medium border"
+                      style={getCourseColorStyle(course.courseColorStyle)}
                     >
                       {course.name}
                     </span>

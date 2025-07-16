@@ -8,7 +8,9 @@ import { getFileRecord } from "./files";
 import { getCoursesForUser } from "./courses";
 import { Deadline } from "../types/lib";
 
-export async function getAssignmentById(assignmentId: string): Promise<AssignmentWithEmbeddedFile> {
+export async function getAssignmentById(
+  assignmentId: string
+): Promise<AssignmentWithEmbeddedFile> {
   const assignment = await client
     .db()
     .collection("assignment")
@@ -22,8 +24,14 @@ export async function getAssignmentById(assignmentId: string): Promise<Assignmen
     // Clean up null values for optional fields to make them undefined
     const cleanedAssignment = {
       ...assignment,
-      gradesPublishedAt: assignment.gradesPublishedAt === null ? undefined : assignment.gradesPublishedAt,
-      gradesPublishedBy: assignment.gradesPublishedBy === null ? undefined : assignment.gradesPublishedBy,
+      gradesPublishedAt:
+        assignment.gradesPublishedAt === null
+          ? undefined
+          : assignment.gradesPublishedAt,
+      gradesPublishedBy:
+        assignment.gradesPublishedBy === null
+          ? undefined
+          : assignment.gradesPublishedBy,
     };
 
     const parsedAssignment = assignmentSchema.parse(cleanedAssignment);
@@ -56,7 +64,7 @@ export async function getAssignmentById(assignmentId: string): Promise<Assignmen
 }
 
 export async function getAssignmentsForCourse(
-  courseId: string,
+  courseId: string
 ): Promise<AssignmentWithEmbeddedFile[]> {
   const contents = await client
     .db()
@@ -87,7 +95,7 @@ export async function getAssignmentsForCourse(
           ...parsedData,
           file: file,
         } as AssignmentWithEmbeddedFile;
-      }),
+      })
     );
 
     return parsedContents;
@@ -113,7 +121,7 @@ export async function deleteAssignmentById(assignmentId: string) {
 }
 
 export async function getUpcomingDeadlines(
-  userId: string,
+  userId: string
 ): Promise<Deadline[]> {
   const courses = await getCoursesForUser(userId);
   const courseIds = courses.map((course) => course._id.toString());
@@ -152,7 +160,8 @@ export async function getUpcomingDeadlines(
       if (date < startDate || date > endDate) continue;
 
       // Compose color (fallback if not present)
-      const courseColor = "bg-primary-200 text-primary-800"; // TODO: change
+      const courseColor =
+        course.courseColorStyle || "background-color: #e2e8f0; color: #334155;";
 
       timelineDeadlines.push({
         id: Math.random(), // Not persisted, so random is fine
@@ -168,7 +177,7 @@ export async function getUpcomingDeadlines(
   // 3. Map assignments to Deadline[]
   const assignmentDeadlines: Deadline[] = assignments.map((a) => {
     const course = courses.find((c) => c._id.toString() === a.courseId);
-    const courseColor = "bg-primary-200 text-primary-800"; // TODO: change
+    const courseColor = course?.courseColorStyle || "background-color: #e2e8f0; color: #334155;";
     return {
       id: Math.random(),
       title: a.title,
@@ -182,7 +191,7 @@ export async function getUpcomingDeadlines(
   // 4. Combine and sort all deadlines by dueDate ascending
   const allDeadlines = [...assignmentDeadlines, ...timelineDeadlines];
   allDeadlines.sort(
-    (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime(),
+    (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
   );
 
   return allDeadlines;

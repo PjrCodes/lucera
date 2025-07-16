@@ -48,7 +48,7 @@ export const UploadFileRequestSchema = z.object({
   if (data.content_type === "course_cover") {
     const allowedImageTypes = [
       "image/jpeg",
-      "image/jpg", 
+      "image/jpg",
       "image/png",
       "image/webp",
       "image/gif"
@@ -83,6 +83,9 @@ export const SaveCourseRequestSchema = z.union([
       courseEndDate: z.string().nullable(),
       units: z.array(courseUnitSchema),
       timeline: z.array(courseTimelineItemSchema),
+      coverImage: z.string().nullable().optional(),
+      courseColor: z.string().optional(),
+      courseColorStyle: z.string().optional(),
     }),
   }),
 
@@ -98,6 +101,9 @@ export const SaveCourseRequestSchema = z.union([
       courseEndDate: z.string().nullable().optional(),
       units: z.array(courseUnitSchema).optional(),
       timeline: z.array(courseTimelineItemSchema).optional(),
+      coverImage: z.string().nullable().optional(),
+      courseColor: z.string().optional(),
+      courseColorStyle: z.string().optional(),
     }),
   }),
 ]);

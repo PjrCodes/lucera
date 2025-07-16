@@ -13,7 +13,7 @@ export const GET = auth(
   ) {
     try {
       const { assignmentId } = await params;
-      console.log("Fetching submissions for assignment:", assignmentId);
+      // console.log("Fetching submissions for assignment:", assignmentId);
       if (!assignmentId) {
         return NextResponse.json(
           { error: "Assignment ID is required" },

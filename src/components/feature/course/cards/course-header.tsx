@@ -5,6 +5,7 @@ import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { Edit, Bookmark, Brain } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { getCourseColorStyle } from "@/lib/utils/course-colors";
 
 interface CourseHeaderProps {
   course: Course;
@@ -53,9 +54,23 @@ export default function CourseHeader({
             {course.name.charAt(0).toUpperCase()}
           </div>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-primary-900 mb-2">
-              {course.name}
-            </h1>
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className="text-2xl font-bold text-primary-900">
+                {course.name}
+              </h1>
+              {course.courseCode && (
+                <span 
+                  className="px-3 py-1 text-sm font-medium rounded-full border"
+                  style={course.courseColorStyle ? getCourseColorStyle(course.courseColorStyle) : {
+                    backgroundColor: '#f3f4f6',
+                    color: '#374151',
+                    borderColor: '#d1d5db'
+                  }}
+                >
+                  {course.courseCode}
+                </span>
+              )}
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-2">

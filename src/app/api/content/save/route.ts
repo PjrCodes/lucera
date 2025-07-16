@@ -14,7 +14,7 @@ export const POST = auth(
     session: AuthenticatedSession,
   ) {
     const body = await req.json();
-    console.log(body);
+    // console.log(body);
     const parsedBody = SaveContentRequestSchema.safeParse(body);
     if (!parsedBody.success) {
       console.log("Validation failed:", parsedBody.error);

@@ -13,7 +13,7 @@ export const POST = auth(
     session: AuthenticatedSession,
   ) {
     const body = await req.json();
-    console.log(body);
+    // console.log(body);
     const parsedBody = SaveCourseRequestSchema.safeParse(body);
     if (!parsedBody.success) {
       console.log("Validation failed:", parsedBody.error);
@@ -50,7 +50,9 @@ export const POST = auth(
         userId: session.user.id,
         createdAt: new Date(),
         updatedAt: new Date(),
-        coverImage: null,
+        coverImage: parsedBody.data.data.coverImage || null,
+        courseColor: parsedBody.data.data.courseColor || null,
+        courseColorStyle: parsedBody.data.data.courseColorStyle || null,
         status: "draft",
         llmParsingFailed: false,
         enrolledStudentCount: 0,
@@ -86,6 +88,9 @@ export const POST = auth(
         "shortDescription",
         "units",
         "timeline",
+        "coverImage",
+        "courseColor",
+        "courseColorStyle",
       ];
 
       for (const field of fieldsToUpdate) {
