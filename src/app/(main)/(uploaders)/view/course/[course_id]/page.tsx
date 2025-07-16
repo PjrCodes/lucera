@@ -71,9 +71,6 @@ export default async function CourseViewPage({
     ? await getAvailableStudents(course._id.toString())
     : [];
 
-  const grades: { id: number; title: string; score: string; date: string }[] =
-    [];
-
   const isBookmarked = await checkIfBookmarked(
     session.user.id,
     "course",
@@ -126,7 +123,6 @@ export default async function CourseViewPage({
               assignments={safeAssignments}
               courseMaterialsData={courseMaterialsData}
               students={safeStudents}
-              grades={grades}
               courseId={course._id.toString()}
               isTeacher={isTeacher}
               availableStudents={availableStudents}

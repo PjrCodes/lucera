@@ -24,19 +24,11 @@ import {
   UserWithData,
 } from "@/lib/schemas/database";
 
-interface Grade {
-  id: number;
-  title: string;
-  score: string;
-  date: string;
-}
-
 interface CourseTabsProps {
   course: Course;
   assignments: AssignmentWithEmbeddedFile[];
   courseMaterialsData: ContentWithEmbeddedFile[];
   students: UserWithData[];
-  grades: Grade[];
   courseId: string;
   isTeacher: boolean;
   availableStudents: { id: string; name: string; email: string }[];
@@ -47,7 +39,6 @@ export default function CourseTabs({
   assignments,
   courseMaterialsData,
   students,
-  grades,
   courseId,
   isTeacher,
   availableStudents,
@@ -131,7 +122,10 @@ export default function CourseTabs({
             />
           </TabsContent>
           <TabsContent value="grades">
-            <CourseGradesCard grades={grades} />
+            <CourseGradesCard
+              courseId={courseId}
+              userRole={isTeacher ? "teacher" : "student"}
+            />
           </TabsContent>
           <TabsContent value="materials">
             <CourseMaterialsCard
