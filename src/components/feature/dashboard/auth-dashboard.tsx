@@ -171,8 +171,8 @@ const AuthDashboard: NextPage<Props> = ({ session, userData }) => {
     currentLayout.rightColumn.length === 0
   ) {
     return (
-      <main className="w-full h-full px-4 py-4 bg-transparent">
-        <div className="w-full h-full flex flex-1 flex-col justify-center text-center text-gray-500">
+      <main className="h-full px-4 py-4 bg-transparent">
+        <div className="h-full flex flex-1 flex-col justify-center text-center text-gray-500">
           <div className="font-header text-6xl font-bold text-primary-800 mb-4">
             Hi, {session?.user?.name || "there"}! Start by adding items to your
             dashboard.
@@ -189,7 +189,7 @@ const AuthDashboard: NextPage<Props> = ({ session, userData }) => {
   }
 
   return (
-    <main className="w-full flex flex-col px-4 py-4 flex-1 bg-transparent">
+    <main className="max-w-[78rem] mx-auto flex flex-col px-4 py-4 flex-1 bg-transparent overflow-y-auto">
       {errors.length > 0 ? (
         <div>
           <h2 className="text-red-600 font-bold">Dashboard Layout Errors:</h2>
@@ -202,13 +202,13 @@ const AuthDashboard: NextPage<Props> = ({ session, userData }) => {
           </ul>
         </div>
       ) : null}
-      <div className="flex flex-wrap w-full gap-4 flex-1">
+      <div className="flex flex-wrap gap-4 flex-1">
         {/* Left Column - takes more space on large screens, full width on small */}
         <div
           className={
             "flex flex-col flex-1 min-w-[300px] gap-4" +
             (currentLayout.rightColumn.length > 0
-              ? "  basis-[60%]"
+              ? " basis-[60%]"
               : " basis-full")
           }
         >
