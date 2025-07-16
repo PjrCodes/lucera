@@ -111,27 +111,42 @@ export default function CourseGradesCard({ courseId, userRole }: CourseGradesCar
           }
           const data = await response.json();
 
-          // Transform submission data to grade format
-          const grades = data.submissions.map((submission: {
-            assignment: { _id: string; title: string; dueDate: string | null };
-            grade: number | null;
-            feedback: string;
-            submittedAt: string;
-            gradedAt: string | null;
-            status: string;
-            rubricGrades?: { criteriaIndex: number; levelRank: number; points: number }[]
-          }) => ({
-            assignmentId: submission.assignment._id,
-            assignmentTitle: submission.assignment.title,
-            grade: submission.grade,
-            feedback: submission.feedback || "",
-            submittedAt: submission.submittedAt,
-            gradedAt: submission.gradedAt,
-            status: submission.status,
-            dueDate: submission.assignment.dueDate,
-            rubricGrades: submission.rubricGrades
-          }));
+          console.log("Raw student grades data:", data);
+          console.log("Number of submissions:", data.submissions?.length || 0);
 
+          // Transform submission data to grade format - temporarily showing all submissions for debugging
+          const grades = data.submissions
+            .map((submission: {
+              assignment: { _id: string; title: string; dueDate: string | null; gradesPublished?: boolean };
+              grade: number | null;
+              feedback: string;
+              submittedAt: string;
+              gradedAt: string | null;
+              status: string;
+              rubricGrades?: { criteriaIndex: number; levelRank: number; points: number }[]
+            }) => {
+              console.log("Processing submission:", {
+                assignmentTitle: submission.assignment.title,
+                gradesPublished: submission.assignment.gradesPublished,
+                grade: submission.grade,
+                status: submission.status,
+                hasGradesPublishedField: 'gradesPublished' in submission.assignment
+              });
+              return {
+                assignmentId: submission.assignment._id,
+                assignmentTitle: submission.assignment.title,
+                grade: submission.grade,
+                feedback: submission.feedback || "",
+                submittedAt: submission.submittedAt,
+                gradedAt: submission.gradedAt,
+                status: submission.status,
+                dueDate: submission.assignment.dueDate,
+                rubricGrades: submission.rubricGrades
+              };
+            });
+
+          console.log("Filtered grades:", grades);
+          console.log("Number of published grades:", grades.length);
           setStudentGrades(grades);
         }
       } catch (error) {

@@ -19,6 +19,11 @@ export const GET = auth(
         courseId || undefined
       );
 
+      console.log("API: Fetched submissions for student:", session.user.id);
+      console.log("API: Course ID:", courseId);
+      console.log("API: Number of submissions:", submissions.length);
+      console.log("API: Submissions data:", JSON.stringify(submissions, null, 2));
+
       return NextResponse.json({
         status: "success",
         submissions
