@@ -84,11 +84,14 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.8 }}
           >
             <Button
+              asChild
               size="lg"
               className="bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 text-lg rounded-full group transition-all duration-300 transform hover:scale-105"
             >
+              <a href="#coming-soon">
               Request Early Access
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+              </a>
             </Button>
           </motion.div>
         </div>

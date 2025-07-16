@@ -108,7 +108,7 @@ const ComingSoonSection = () => {
                   placeholder="Enter your university email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-12 h-14 text-lg border-2 border-primary-400 bg-white/90 backdrop-blur-sm rounded-full focus:border-white focus:ring-2 focus:ring-white/50"
+                  className="pl-8 h-14 text-lg border-2 border-primary-400 bg-white/90 backdrop-blur-sm rounded-full focus:border-white focus:ring-2 focus:ring-white/50"
                   required
                 />
               </div>
@@ -158,7 +158,7 @@ const ComingSoonSection = () => {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle size={20} />
-              <span>Shape the Future</span>
+              <span>Beta AI Tools</span>
             </div>
           </div>
         </motion.div>

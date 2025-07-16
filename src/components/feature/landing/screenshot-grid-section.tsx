@@ -7,7 +7,7 @@ const ScreenshotGridSection = () => {
   const screenshots = [
     {
       title: "Custom Dashboard",
-      description: "Comprehensive overview for instant information",
+      description: "Information at your fingertips",
       image: "/placeholder.jpg",
     },
     {
