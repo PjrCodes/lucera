@@ -16,16 +16,16 @@ export async function AppSidebar() {
 
   return (
     <Sidebar className="h-full">
-      <div className="px-4 pt-4 bg-primary-50 flex flex-col text-3xl font-bold">
+      <div className="px-4 pt-4 bg-white flex flex-col text-3xl font-bold">
         <Link href="/university">Sample University</Link>
       </div>
       <SidebarContent>
         {!isLoggedIn ? (
-          <div className="h-full bg-primary-50 px-4 py-4">
+          <div className="h-full bg-white px-4 py-4">
             Log in to continue
           </div>
         ) : (
-          <div className="h-full flex flex-col bg-primary-50">
+          <div className="h-full flex flex-col bg-white">
             <nav className="flex-1">
               <div className="flex-1 px-4 py-6">
                 <ul className="space-y-4">

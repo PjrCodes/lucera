@@ -8,17 +8,17 @@
   --font-header: var(--font-urbanist);
 
   /* Primary (Yellow) */
-  --color-primary-50: oklch(98.7% 0.026 102.212);
-  --color-primary-100: oklch(0.9615 0.1012 102.59);
-  --color-primary-200: oklch(0.925 0.129 96.77);
-  --color-primary-300: oklch(90.5% 0.182 98.111);
-  --color-primary-400: oklch(85.2% 0.199 91.936);
-  --color-primary-500: oklch(79.5% 0.184 86.047);
-  --color-primary-600: oklch(0.691 0.162 73.83);
-  --color-primary-700: oklch(55.4% 0.135 66.442);
-  --color-primary-800: oklch(47.6% 0.114 61.907);
-  --color-primary-900: oklch(42.1% 0.095 57.708);
-  --color-primary-950: oklch(28.6% 0.066 53.813);
+  --color-primary-50: #f5faff;
+  --color-primary-100: #e3f0fb;
+  --color-primary-200: #cbe2f7;
+  --color-primary-300: #b3d4f3;
+  --color-primary-400: #9bc6ef;
+  --color-primary-500: #83b8eb;
+  --color-primary-600: #6baae7;
+  --color-primary-700: #539ce3;
+  --color-primary-800: #3b8edf;
+  --color-primary-900: #2370b3;
+  --color-primary-950: #17496c;
   --color-primary: var(--color-primary-500);
 
   /* Secondary (Brown) */

@@ -196,6 +196,16 @@ async function getDocData(hits: Hit[]): Promise<string[]> {
 }
 
 export async function callLisa(context: ChatRequest) {
+  // const { toolChosen, toPlot }  = await orchestrator(context);
+  // If no tools chosen -> default response
+  // If tools chosen -> call tool
+  // Tool Output, query -> getLisasResponse
+  // If toPlot -> call plotter with tool output, plotting instructions and query
+  // answer is from getLisasResponse + plotter output (SVG / JS). If JS plotter, need to do much more.
+  // Then, return the final answer
+
+  // FOR NOW: ONLY RAG...
+
   console.log("CONTEXT PAYLOAD:", context);
   const query = await synonymAugmentation(context.query);
   console.log("AUGMENTED QUERY:", query);

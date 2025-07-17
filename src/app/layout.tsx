@@ -36,7 +36,7 @@ export default async function RootLayout({
       <body className="font-body">
         <ClientProviders>
           <SessionProvider>
-            <div className="w-full min-h-screen flex flex-col bg-primary-50">
+            <div className="w-full min-h-screen flex flex-col bg-white">
               {children}
             </div>
           </SessionProvider>
