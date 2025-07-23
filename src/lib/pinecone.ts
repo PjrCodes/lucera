@@ -39,11 +39,20 @@ export async function addManySyllabusContent(
       contentType: "syllabus",
     }));
 
+    if (records.length === 0) {
+      return {
+        error: "No records to add to Pinecone",
+      }
+    }
+
+
     const response = await index.upsertRecords(records);
     return response;
   } catch (error) {
     console.error("Error adding document to Pinecone:", error);
-    throw error;
+    return {
+      error: "Failed to add documents to Pinecone",
+    }
   }
 }
 
