@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Trophy, Users, Filter, BarChart3, Activity, Grid } from "lucide-react";
 import { Session } from "next-auth";
-import StatsCard from "@/components/feature/lighthouse/stats-card";
+// import StatsCard from "@/components/feature/lighthouse/stats-card";
 import BadgeGrid from "@/components/feature/lighthouse/badge-grid";
 import BadgeDetailModal from "@/components/feature/lighthouse/badge-detail-modal";
 import LeaderboardComponent from "@/components/feature/lighthouse/leaderboard-component";
@@ -230,19 +230,19 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
     setIsBadgeModalOpen(true);
   };
 
-  const handleBadgesClick = () => {
-    const badgesSection = document.getElementById("badges-section");
-    if (badgesSection) {
-      badgesSection.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  // const handleBadgesClick = () => {
+  //   const badgesSection = document.getElementById("badges-section");
+  //   if (badgesSection) {
+  //     badgesSection.scrollIntoView({ behavior: "smooth" });
+  //   }
+  // };
 
-  const handleLeaderboardClick = () => {
-    const leaderboardSection = document.getElementById("leaderboard-section");
-    if (leaderboardSection) {
-      leaderboardSection.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  // const handleLeaderboardClick = () => {
+  //   const leaderboardSection = document.getElementById("leaderboard-section");
+  //   if (leaderboardSection) {
+  //     leaderboardSection.scrollIntoView({ behavior: "smooth" });
+  //   }
+  // };
 
   return (
     <>

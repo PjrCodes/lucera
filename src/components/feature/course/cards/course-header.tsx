@@ -1,7 +1,7 @@
 "use client";
 
 import { Course } from "@/lib/schemas/database";
-import { SecondaryButton } from "@/components/core/buttons/secondary";
+// import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { Edit, Bookmark, Brain } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";

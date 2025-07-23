@@ -83,7 +83,7 @@ export function EditCourseForm({
   );
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
   const [courseColor, setCourseColor] = useState<string>(
-    course?.courseColor || ""
+    course?.courseColor || getRandomCourseColor()
   );
   const [showColorPicker, setShowColorPicker] = useState(false);
 
@@ -897,6 +897,7 @@ export function EditCourseForm({
           {!isNew && course && (
             <SecondaryButton
               type="button"
+              variant="outline"
               onClick={() => setShowDeleteDialog(true)}
               className="px-4 py-2 text-danger-600 hover:bg-danger-100 hover:text-danger-900 border-danger-200 hover:border-danger-300 focus-visible:ring-danger-500 transition"
             >

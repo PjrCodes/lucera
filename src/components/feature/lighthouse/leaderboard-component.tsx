@@ -312,7 +312,7 @@ export default function LeaderboardComponent({
       {/* Leaderboard Entries */}
       <CardContent className="p-0">
         <div className="divide-y divide-primary-100">
-          {paginationData.records.map((entry, index) => (
+          {paginationData.records.map((entry) => (
             <div
               key={entry.id}
               className={`p-3 sm:p-4 flex items-center justify-between hover:bg-primary-50 transition-colors ${

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { SecondaryButton } from "@/components/core/buttons/secondary";
+// import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { Bookmark } from "lucide-react";
 import { PrimaryButton } from "@/components/core/buttons/primary";
 

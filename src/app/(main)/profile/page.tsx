@@ -3,7 +3,7 @@ import { getSessionAndUserData } from "@/lib/database-service/auth";
 import SetHeaderClientComponent from "../../../components/feature/header/set-header-client-component";
 import SignOut from "@/components/feature/auth/sign-out-button";
 import Link from "next/link";
-import { SecondaryButton } from "@/components/core/buttons/secondary";
+// import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { Edit, User } from "lucide-react";
 import { PrimaryButton } from "@/components/core/buttons/primary";
 
