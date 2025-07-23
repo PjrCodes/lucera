@@ -22,4 +22,6 @@ export type Deadline = {
   courseCode: string;
   type: string;
   courseColor: string;
+  assignmentId?: string; // For assignment deadlines
+  courseId: string; // For navigation to course
 };

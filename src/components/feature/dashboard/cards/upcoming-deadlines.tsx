@@ -2,10 +2,11 @@ import React from "react";
 import { iconForType } from "../../../../lib/constants"; // Import the icons
 import { PiConfetti } from "react-icons/pi";
 import { SessionAndDataProps } from "@/lib/interfaces/props";
-// import { Deadline } from "@/lib/types/lib"; // Import the Deadline type
+import { Deadline } from "@/lib/types/lib"; // Import the Deadline type
 import { getUpcomingDeadlines } from "@/lib/database-service/assignment";
 import { getCourseColorStyle } from "@/lib/utils/course-colors";
 import { SquareChartGantt } from "lucide-react";
+import Link from "next/link";
 
 function formatDate(dateStr: string) {
   if (!dateStr) return "N/A";
@@ -131,6 +132,34 @@ const getDeadlineColor = (dateStr: string) => {
   return "text-info-700";
 };
 
+// Function to get the correct navigation URL based on deadline type
+const getDeadlineUrl = (deadline: Deadline) => {
+  switch (deadline.type) {
+    case "assignment":
+      // For assignment deadlines, navigate to the specific assignment page if assignmentId exists
+      // Otherwise, fallback to the course page
+      return deadline.assignmentId
+        ? `/view/assignment/${deadline.assignmentId}`
+        : `/view/course/${deadline.courseId}`;
+    case "quiz":
+      // For quiz deadlines, navigate to the course quiz page
+      return `/quiz/${deadline.courseId}`;
+    case "exam":
+    case "midsem_exam":
+    case "endsem_exam":
+    case "lab_exam":
+      // For exam deadlines, navigate to the course page where exam info is displayed
+      return `/view/course/${deadline.courseId}`;
+    case "project":
+    case "lab":
+      // For project and lab deadlines, navigate to the course page
+      return `/view/course/${deadline.courseId}`;
+    default:
+      // Default fallback to course page for any unknown deadline types
+      return `/view/course/${deadline.courseId}`;
+  }
+};
+
 export default async function UpcomingDeadlines({
   userData,
 }: SessionAndDataProps) {
@@ -242,33 +271,36 @@ export default async function UpcomingDeadlines({
       <ul className="space-y-2">
         {deadlines.map((dl) => {
           const IconComponent = iconForType(dl.type);
+          const deadlineUrl = getDeadlineUrl(dl);
           return (
-            <li
-              key={dl.id}
-              className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-3 bg-primary-100/40 rounded-lg shadow-sm hover:shadow-md transition-shadow hover:cursor-pointer py-2 px-2"
-            >
-              <div className="flex items-start md:items-center gap-2 md:gap-3">
-                <div className="">
-                  <IconComponent className="w-4 h-4 md:w-5 md:h-5 text-primary-600" />
-                </div>
-                <p className="font-medium text-primary-700 text-sm md:text-base">
-                  {dl.title}
-                </p>
-
-                <span
-                  className="self-start md:self-center md:ml-2 px-2 py-0.5 rounded text-xs font-medium"
-                  style={getCourseColorStyle(dl.courseColor)}
-                >
-                  {dl.courseCode}
-                </span>
-              </div>
-              <span
-                className={`text-xs md:text-sm ${getDeadlineColor(
-                  dl.dueDate
-                )} mt-1 md:mt-0`}
+            <li key={dl.id}>
+              <Link
+                href={deadlineUrl}
+                className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-3 bg-primary-100/40 rounded-lg shadow-sm hover:shadow-md transition-shadow hover:cursor-pointer py-2 px-2 block"
               >
-                {formatDate(dl.dueDate)}
-              </span>
+                <div className="flex items-start md:items-center gap-2 md:gap-3">
+                  <div className="">
+                    <IconComponent className="w-4 h-4 md:w-5 md:h-5 text-primary-600" />
+                  </div>
+                  <p className="font-medium text-primary-700 text-sm md:text-base">
+                    {dl.title}
+                  </p>
+
+                  <span
+                    className="self-start md:self-center md:ml-2 px-2 py-0.5 rounded text-xs font-medium"
+                    style={getCourseColorStyle(dl.courseColor)}
+                  >
+                    {dl.courseCode}
+                  </span>
+                </div>
+                <span
+                  className={`text-xs md:text-sm ${getDeadlineColor(
+                    dl.dueDate
+                  )} mt-1 md:mt-0`}
+                >
+                  {formatDate(dl.dueDate)}
+                </span>
+              </Link>
             </li>
           );
         })}

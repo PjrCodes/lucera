@@ -376,10 +376,11 @@ export function EditCourseForm({
   if (error) return <div className="p-8 text-red-600">{error}</div>;
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6 text-secondary-800">
-        {isNew ? "Create Course" : "Edit Course"}
-      </h1>
+    <div className="p-4 mx-auto flex flex-col flex-1">
+      <div className="max-w-4xl w-full mx-auto">
+        <h1 className="font-header text-2xl md:text-5xl font-bold text-primary-600 mb-8">
+          {isNew ? "Create Course" : "Edit Course"}
+        </h1>
 
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div>
@@ -948,6 +949,7 @@ export function EditCourseForm({
           </DialogContent>
         </Dialog>
       )}
+      </div>
     </div>
   );
 }

@@ -62,11 +62,11 @@ export default async function Courses({ userData }: SessionAndDataProps) {
   const courseProgress: number[] = await Promise.all(
     courses.map(async (course) => {
       if (isTeacher) {
-        // return (
-        //   (course.completedStudentCount / course.enrolledStudentCount) * 100 ||
-        //   0
-        // );
-        return Math.round((20 / 35) * 100); // Placeholder for teacher progress
+        return (
+          (course.completedStudentCount / course.enrolledStudentCount) * 100 ||
+          0
+        );
+        // return Math.round((20 / 35) * 100); // Placeholder for teacher progress
       } else {
         // For students: calculate percentage of assignments completed
         try {
@@ -77,7 +77,8 @@ export default async function Courses({ userData }: SessionAndDataProps) {
             userData.id,
             course._id.toString()
           );
-
+          console.log("Assignments:", assignments);
+          console.log("Submissions:", submissions);
           if (assignments.length === 0) {
             return 0; // No assignments yet
           }

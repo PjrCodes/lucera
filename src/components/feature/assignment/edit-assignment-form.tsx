@@ -5,6 +5,7 @@ import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { FileDropInput } from "@/components/core/inputs/file-drop-input";
 import { TextArea } from "@/components/core/inputs/text-area";
 import { Checkbox } from "@/components/core/inputs/checkbox";
+import { TopicSelector } from "@/components/core/inputs/topic-selector";
 import { Dropdown } from "@/components/core/inputs/dropdown";
 import { TextBox } from "@/components/core/inputs/text-box";
 import {
@@ -426,10 +427,11 @@ export default function EditAssignmentForm({
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">
-        {isNew ? "Create Assignment" : "Edit Assignment"}
-      </h1>
+    <div className="p-4 mx-auto flex flex-col flex-1">
+      <div className="max-w-4xl w-full mx-auto">
+        <h1 className="font-header text-2xl md:text-5xl font-bold text-primary-600 mb-8">
+          {isNew ? "Create Assignment" : "Edit Assignment"}
+        </h1>
 
       {!selectedCourse ? (
         <div>
@@ -555,9 +557,9 @@ export default function EditAssignmentForm({
           </div>
 
           {/* Security Features Section */}
-          <div className="space-y-4 border rounded-lg p-4 bg-yellow-50">
-            <h3 className="text-lg font-semibold text-yellow-800">Security Features</h3>
-            <p className="text-sm text-yellow-700 mb-3">
+          <div className="space-y-4 border border-gray-200 rounded-lg p-4">
+            <h3 className="text-lg font-semibold text-gray-800">Security Features</h3>
+            <p className="text-sm text-gray-600 mb-3">
               Control how students can access and interact with this assignment material.
             </p>
 
@@ -568,8 +570,8 @@ export default function EditAssignmentForm({
                   onCheckedChange={setBlockDownload}
                 />
                 <div>
-                  <span className="font-medium text-yellow-800">Block PDF Download</span>
-                  <p className="text-sm text-yellow-600">
+                  <span className="font-medium text-gray-800">Block PDF Download</span>
+                  <p className="text-sm text-gray-600">
                     Students can only view the document in the secure PDF viewer, no downloading allowed
                   </p>
                 </div>
@@ -581,8 +583,8 @@ export default function EditAssignmentForm({
                   onCheckedChange={setBlockChatbot}
                 />
                 <div>
-                  <span className="font-medium text-yellow-800">Block LISA Chatbot Access</span>
-                  <p className="text-sm text-yellow-600">
+                  <span className="font-medium text-gray-800">Block LISA Chatbot Access</span>
+                  <p className="text-sm text-gray-600">
                     Prevent LISA from accessing this document for chat responses
                   </p>
                 </div>
@@ -590,20 +592,14 @@ export default function EditAssignmentForm({
             </div>
           </div>
 
-          <div>
-            <label className="block mb-2 font-medium">Topics: *</label>
-            <div className="flex flex-wrap gap-2 mb-2">
-              {allTopics.map((topic, idx) => (
-                <label key={topic} className="flex items-center gap-2">
-                  <Checkbox
-                    checked={selectedTopics.includes(idx)}
-                    onCheckedChange={() => handleTopicChange(idx)}
-                  />
-                  <span>{topic}</span>
-                </label>
-              ))}
-            </div>
-          </div>
+          <TopicSelector
+            topics={allTopics}
+            selectedTopics={selectedTopics}
+            onTopicChange={handleTopicChange}
+            label="Topics"
+            required={true}
+            placeholder="Search assignment topics..."
+          />
 
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Grading Configuration</h3>
@@ -819,6 +815,7 @@ export default function EditAssignmentForm({
             {!isNew && (
               <SecondaryButton
                 type="button"
+                variant="outline"
                 onClick={() => setShowDeleteDialog(true)}
                 className="px-4 py-2 text-danger-600 hover:bg-danger-100 hover:text-danger-900 border-danger-200 hover:border-danger-300 focus-visible:ring-danger-500 transition"
               >
@@ -873,6 +870,7 @@ export default function EditAssignmentForm({
           </DialogContent>
         </Dialog>
       )}
+      </div>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { FileDropInput } from "@/components/core/inputs/file-drop-input";
 import { TextArea } from "@/components/core/inputs/text-area";
 import { Checkbox } from "@/components/core/inputs/checkbox";
+import { TopicSelector } from "@/components/core/inputs/topic-selector";
 import { Dropdown } from "@/components/core/inputs/dropdown";
 import { TextBox } from "@/components/core/inputs/text-box";
 import { Content, Course, CourseUnit, UserData } from "@/lib/schemas/database";
@@ -248,10 +249,11 @@ export default function EditContentForm({
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">
-        {isNew ? "Create Course Content" : "Edit Course Content"}
-      </h1>
+    <div className="p-4 mx-auto flex flex-col flex-1">
+      <div className="max-w-4xl w-full mx-auto">
+        <h1 className="font-header text-2xl md:text-5xl font-bold text-primary-600 mb-8">
+          {isNew ? "Create Course Content" : "Edit Course Content"}
+        </h1>
 
       {!selectedCourse ? (
         <div>
@@ -343,25 +345,19 @@ export default function EditContentForm({
             />
           </div>
 
-          <div>
-            <label className="block mb-2 font-medium">Topics:</label>
-            <div className="flex flex-wrap gap-2 mb-2">
-              {allTopics.map((topic, idx) => (
-                <label key={topic} className="flex items-center gap-2">
-                  <Checkbox
-                    checked={selectedTopics.includes(idx)}
-                    onCheckedChange={() => handleTopicChange(idx)}
-                  />
-                  <span>{topic}</span>
-                </label>
-              ))}
-            </div>
-          </div>
+          <TopicSelector
+            topics={allTopics}
+            selectedTopics={selectedTopics}
+            onTopicChange={handleTopicChange}
+            label="Topics"
+            required={false}
+            placeholder="Search content topics..."
+          />
 
           {/* Security Options */}
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <h3 className="text-lg font-medium text-yellow-800 mb-3">Security Options</h3>
-            <p className="text-sm text-yellow-700 mb-4">
+          <div className="border border-gray-200 rounded-lg p-4">
+            <h3 className="text-lg font-medium text-gray-800 mb-3">Security Options</h3>
+            <p className="text-sm text-gray-600 mb-4">
               Control how students can access and interact with this content.
             </p>
             <div className="space-y-3">
@@ -371,8 +367,8 @@ export default function EditContentForm({
                   onCheckedChange={setBlockDownload}
                 />
                 <div>
-                  <span className="font-medium text-yellow-800">Block Download</span>
-                  <p className="text-sm text-yellow-600">
+                  <span className="font-medium text-gray-800">Block Download</span>
+                  <p className="text-sm text-gray-600">
                     Students can only view the content in a secure viewer, downloads are disabled
                   </p>
                 </div>
@@ -383,8 +379,8 @@ export default function EditContentForm({
                   onCheckedChange={setBlockChatbot}
                 />
                 <div>
-                  <span className="font-medium text-yellow-800">Block LISA Chatbot</span>
-                  <p className="text-sm text-yellow-600">
+                  <span className="font-medium text-gray-800">Block LISA Chatbot</span>
+                  <p className="text-sm text-gray-600">
                     This content will not be available for LISA chatbot queries
                   </p>
                 </div>
@@ -410,6 +406,7 @@ export default function EditContentForm({
             {!isNew && (
               <SecondaryButton
                 type="button"
+                variant={"outline"}
                 onClick={() => setShowDeleteDialog(true)}
                 className="px-4 py-2 text-danger-600 hover:bg-danger-100 hover:text-danger-900 border-danger-200 hover:border-danger-300 focus-visible:ring-danger-500 transition"
               >
@@ -464,6 +461,7 @@ export default function EditContentForm({
           </DialogContent>
         </Dialog>
       )}
+      </div>
     </div>
   );
 }

@@ -94,8 +94,9 @@ export default function CreateContentAIForm({
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Upload Course Content</h1>
+    <div className="p-4 mx-auto flex flex-col flex-1">
+      <div className="w-full max-w-4xl mx-auto">
+        <h1 className="font-header text-2xl md:text-5xl font-bold text-primary-600 mb-8">Upload Course Content</h1>
 
       {!selectedCourse ? (
         <div>
@@ -130,8 +131,8 @@ export default function CreateContentAIForm({
           </div>
 
           {error && (
-            <div>
-              <span className="text-red-600">Error: {error}</span>
+            <div className="bg-danger-100 border border-danger-200 text-danger-700 p-4 rounded-lg">
+              <span>Error: {error}</span>
             </div>
           )}
 
@@ -171,7 +172,8 @@ export default function CreateContentAIForm({
             </SecondaryButton>
           </div>
         </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

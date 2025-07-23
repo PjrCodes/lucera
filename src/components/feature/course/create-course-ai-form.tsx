@@ -82,10 +82,11 @@ export default function CreateCourseAIForm(
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Create Course</h1>
+    <div className="p-4 mx-auto flex flex-col flex-1">
+      <div className="w-full max-w-4xl mx-auto">
+        <h1 className="font-header text-2xl md:text-5xl font-bold text-primary-600 mb-8">Create Course</h1>
 
-      <div className="space-y-6">
+        <div className="space-y-6">
         <div>
           <label className="block mb-2 font-medium">
             Upload Syllabus (PDF):
@@ -132,6 +133,7 @@ export default function CreateCourseAIForm(
           >
             Skip to Manual Entry
           </SecondaryButton>
+        </div>
         </div>
       </div>
     </div>

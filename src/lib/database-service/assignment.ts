@@ -170,6 +170,7 @@ export async function getUpcomingDeadlines(
         courseCode: course.courseCode,
         type: item.type,
         courseColor,
+        courseId: course._id.toString(),
       });
     }
   }
@@ -186,6 +187,8 @@ export async function getUpcomingDeadlines(
       courseCode: course?.courseCode || "UNKNOWN",
       type: "assignment",
       courseColor,
+      assignmentId: a._id.toString(),
+      courseId: a.courseId,
     };
   });
 

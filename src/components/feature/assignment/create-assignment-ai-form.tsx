@@ -19,9 +19,7 @@ export default function CreateAssignmentAIForm({
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [error, setError] = useState<string | null>(
-    "File upload failed: there has been an incident."
-  );
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -113,9 +111,11 @@ export default function CreateAssignmentAIForm({
   };
 
   return (
-    <div className="max-w-(--contentwidth) mx-auto bg-primary-25 shadow-md rounded-xl p-4">
-      <div className="max-w-2xl">
-        <h1 className="text-2xl font-bold mb-6">Create an Assignment</h1>
+    <div className="p-4 mx-auto flex flex-col flex-1">
+      <div className="max-w-4xl w-full mx-auto">
+        <h1 className="font-header text-2xl md:text-5xl font-bold text-primary-600 mb-8">
+          Create an Assignment
+        </h1>
 
         {!selectedCourse ? (
           <div>
@@ -153,8 +153,8 @@ export default function CreateAssignmentAIForm({
             </div>
 
             {error && (
-              <div>
-                <span className="text-red-600">Error: {error}</span>
+              <div className="bg-danger-100 border border-danger-200 text-danger-700 p-4 rounded-lg">
+                <span>Error: {error}</span>
               </div>
             )}
 

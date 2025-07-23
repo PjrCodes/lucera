@@ -92,45 +92,65 @@ export async function getSubmissionsForStudent(
   studentId: string,
   courseId?: string,
 ): Promise<SubmittedAssignmentWithEmbeddedData[]> {
-  const matchQuery: { studentId: string; courseId?: string } = { studentId: studentId };
+  // Build the basic query object
+  const query: { studentId: string; courseId?: string } = { studentId };
   if (courseId) {
-    matchQuery.courseId = courseId;
+    query.courseId = courseId;
   }
 
+  // Fetch submissions using a basic find query
   const submissions = await client
     .db()
     .collection("submitted_assignments")
-    .aggregate([
-      {
-        $match: matchQuery,
-      },
-      {
-        $lookup: {
-          from: "assignment",
-          localField: "assignmentId",
-          foreignField: "_id",
-          as: "assignment",
-        },
-      },
-      {
-        $unwind: "$assignment",
-      },
-    ])
+    .find(query)
     .toArray();
 
   try {
-    const parsedSubmissions = submissions.map(
-      (submission) => submittedAssignmentWithEmbeddedDataSchema.parse(submission),
-    );
+    const parsedSubmissions = await Promise.all(
+      submissions.map(async (submission) => {
+        const parsedData = submittedAssignmentSchema.parse(submission);
+        if (parsedData._id instanceof ObjectId) {
+          parsedData._id = parsedData._id.toString();
+        }
 
-    parsedSubmissions.forEach((submission) => {
-      if (submission._id instanceof ObjectId) {
-        submission._id = submission._id.toString();
-      }
-      if (submission.assignment._id instanceof ObjectId) {
-        submission.assignment._id = submission.assignment._id.toString();
-      }
-    });
+        // Get assignment details
+        const assignment = await getAssignmentById(parsedData.assignmentId);
+        if (assignment._id instanceof ObjectId) {
+          assignment._id = assignment._id.toString();
+        }
+
+        // Get course details
+        const course = await getCourseById(parsedData.courseId);
+
+        // Get submitted file details if exists
+        let submittedFile = null;
+        if (parsedData.submittedFileId) {
+          try {
+            submittedFile = await getFileRecord(parsedData.submittedFileId);
+          } catch (error) {
+            console.error("Error fetching submitted file details:", error);
+          }
+        }
+
+        // Get student details from users collection
+        const student = await client
+          .db()
+          .collection("users")
+          .findOne({ _id: new ObjectId(parsedData.studentId) });
+
+        return {
+          ...parsedData,
+          assignment,
+          course,
+          submittedFile,
+          student: {
+            id: parsedData.studentId,
+            name: student?.name || "Unknown Student",
+            email: student?.email || "unknown@email.com",
+          },
+        } as SubmittedAssignmentWithEmbeddedData;
+      })
+    );
 
     return parsedSubmissions;
   } catch (error) {
