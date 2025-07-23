@@ -95,7 +95,7 @@ export default function AssignmentBookmarkButton({
     >
       <Bookmark
         className={`h-4 w-4 ${
-          isBookmarked ? "fill-secondary-700 text-secondary-700" : ""
+          isBookmarked ? "fill-primary-700 text-primary-700" : ""
         }`}
       />
     </PrimaryButton>

@@ -44,7 +44,7 @@ export async function getBookmarks(userId: string): Promise<Bookmark[]> {
       return {
         id: bookmark._id ? bookmark._id.toString() : String(Math.random()),
         title: miniDetails.title,
-        url: `/view/${bookmark.type}/${bookmark.relatedId}`,
+        url: bookmark.type != "content" ? `/view/${bookmark.type}/${bookmark.relatedId}` : `/`,
         type: bookmark.type,
         subtitle: miniDetails.subtitle,
       };

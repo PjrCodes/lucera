@@ -8,32 +8,32 @@ const ScreenshotGridSection = () => {
     {
       title: "Custom Dashboard",
       description: "Information at your fingertips",
-      image: "/placeholder.jpg",
+      image: "/dash.png",
     },
     {
       title: "LISA Chatbot",
       description: "Interactive AI assistant for instant help",
-      image: "/placeholder.jpg",
+      image: "/lisa.png",
     },
     {
       title: "Assignment Feedback",
       description: "Detailed AI-powered feedback on your work",
-      image: "/placeholder.jpg",
+      image: "/instant.png",
     },
     {
       title: "Performance Analytics",
       description: "Insights into your learning patterns",
-      image: "/placeholder.jpg",
+      image: "/insight.png",
     },
     {
       title: "Course Integration",
       description: "Unified view of all your course materials",
-      image: "/placeholder.jpg",
+      image: "/course.png",
     },
     {
       title: "Lighthouse",
       description: "Track achievements and unlock badges",
-      image: "/placeholder.jpg",
+      image: "/lighthouse.png",
     },
   ];
 

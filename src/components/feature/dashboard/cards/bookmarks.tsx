@@ -30,7 +30,7 @@ export default async function Bookmarks({ userData }: SessionAndDataProps) {
           </p>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-start">
+        <div className="flex-1 flex flex-col items-center justify-start space-y-2">
           {bookmarks.map((bm) => (
             <a
               key={bm.id}

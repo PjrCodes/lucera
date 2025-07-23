@@ -80,7 +80,7 @@ const YourBadges: React.FC<SessionAndDataProps> = ({}) => {
               className="block"
             >
               <div
-                className={`flex items-center gap-3 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 p-3 cursor-pointer bg-primary-100/40`}
+                className={`flex flex-col md:flex-row items-center gap-3 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 p-3 cursor-pointer bg-primary-100/40`}
                 title={badge.description}
               >
                 <div
