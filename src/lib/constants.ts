@@ -36,6 +36,7 @@ export const ourIconWidgets = {
   lab: RiTestTubeLine,
   report: MdOutlineAssessment,
   link: MdOutlineLink,
+  grading: MdOutlineAssessment, // For teacher grading deadlines
   fallback: MdOutlineLibraryBooks,
 };
 

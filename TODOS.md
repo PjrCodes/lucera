@@ -49,7 +49,7 @@
   - [X] Left align everything / alignment on all pages should be similar
   - [X] Table - responsiveness on progress
   - [X] Lighthouse can take more space
-  - [ ] Zig zag topic selection should be 2 column
+  - [X] Zig zag topic selection should be 2 column
   - [ ] Scrolling issues on chat screens
   - [X] Better error messages wherever required.
   - [X] Beautification of the form elements / website so it looks better on over saturated screen.

@@ -141,6 +141,11 @@ const getDeadlineUrl = (deadline: Deadline) => {
       return deadline.assignmentId
         ? `/view/assignment/${deadline.assignmentId}`
         : `/view/course/${deadline.courseId}`;
+    case "grading":
+      // For grading deadlines, navigate to the assignment page for teachers to see submissions
+      return deadline.assignmentId
+        ? `/view/assignment/${deadline.assignmentId}`
+        : `/view/course/${deadline.courseId}`;
     case "quiz":
       // For quiz deadlines, navigate to the course quiz page
       return `/quiz/${deadline.courseId}`;
@@ -264,7 +269,7 @@ export default async function UpcomingDeadlines({
             Upcoming Deadlines
           </h2>
           <p className="text-primary-500">
-            Important deadlines coming up in the next 2 weeks.
+            Important deadlines coming up in the next few weeks.
           </p>
         </div>
       </div>

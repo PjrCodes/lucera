@@ -123,82 +123,139 @@ export async function deleteAssignmentById(assignmentId: string) {
 export async function getUpcomingDeadlines(
   userId: string
 ): Promise<Deadline[]> {
+  // 1. Get user data to check role
+  const { getUserData } = await import("./auth");
+  const userData = await getUserData(userId);
+  const isTeacher = userData.role === "teacher";
+
+  // 2. Get all courses for the user
   const courses = await getCoursesForUser(userId);
-  const courseIds = courses.map((course) => course._id.toString());
 
-  const today = new Date();
-  const startDate = new Date(today);
-  startDate.setDate(today.getDate() - 60);
-  const endDate = new Date(today);
-  endDate.setDate(today.getDate() + 60);
+  // 3. Handle different deadline types based on user role
+  if (isTeacher) {
+    // Teachers see grading deadlines (when they need to finish grading)
+    const assignments = await client
+      .db()
+      .collection("assignment")
+      .find({
+        courseId: {
+          $in: courses.map((course) => course._id.toString()),
+        },
+        gradeReleaseDate: { $ne: null },
+      })
+      .toArray();
 
-  // 1. Get assignments with due dates in the window
-  const assignments = await client
-    .db()
-    .collection("assignment")
-    .find({
-      courseId: { $in: courseIds },
-      dueDate: { $gte: startDate.toISOString(), $lte: endDate.toISOString() },
-    })
-    .toArray();
-
-  // 2. Get timeline items for all courses
-  // Only show timeline items that are *activated* (i.e., have a dueDate or startDate in the window)
-  // and are NOT type "other" and NOT type "assignment"
-  const timelineDeadlines: Deadline[] = [];
-  for (const course of courses) {
-    if (!course.timeline) continue;
-    for (const item of course.timeline) {
-      // Only show if not "other" or "assignment"
-      if (item.type === "other" || item.type === "assignment") {
-        continue;
-      }
-      // Use dueDate if present, else startDate
-      const dateStr = item.dueDate || item.startDate;
-      if (!dateStr) continue;
-      const date = new Date(dateStr);
-      if (date < startDate || date > endDate) continue;
-
-      // Compose color (fallback if not present)
+    // Map assignments to grading deadlines
+    const gradingDeadlines: Deadline[] = assignments.map((a) => {
+      const course = courses.find((c) => c._id.toString() === a.courseId);
       const courseColor =
-        course.courseColorStyle || "background-color: #e2e8f0; color: #334155;";
-
-      timelineDeadlines.push({
-        id: Math.random(), // Not persisted, so random is fine
-        title: item.title,
-        dueDate: dateStr,
-        courseCode: course.courseCode,
-        type: item.type,
+        course?.courseColorStyle || "background-color: #e2e8f0; color: #334155;";
+      return {
+        id: Math.random(),
+        title: `Grade "${a.title}"`,
+        dueDate: a.gradeReleaseDate,
+        courseCode: course?.courseCode || "UNKNOWN",
+        type: "grading",
         courseColor,
-        courseId: course._id.toString(),
-      });
+        assignmentId: a._id.toString(),
+        courseId: a.courseId,
+      };
+    });
+
+    // Filter to next 30 days and sort
+    const today = new Date();
+    const startDate = new Date(today);
+    startDate.setDate(today.getDate() - 7); // Show overdue items from 1 week ago
+    const endDate = new Date(today);
+    endDate.setDate(today.getDate() + 14); // Show upcoming items for 2 weeks
+
+    const filteredDeadlines = gradingDeadlines.filter((deadline) => {
+      const date = new Date(deadline.dueDate);
+      return !isNaN(date.getTime()) && date >= startDate && date <= endDate;
+    });
+
+    filteredDeadlines.sort(
+      (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
+    );
+
+    return filteredDeadlines;
+  } else {
+    // Students see submission deadlines (assignments, quizzes, exams)
+    const assignments = await client
+      .db()
+      .collection("assignment")
+      .find({
+        courseId: {
+          $in: courses.map((course) => course._id.toString()),
+        },
+        dueDate: { $ne: null },
+      })
+      .toArray();
+
+    // Fetch timeline items from courses for other deadlines
+    const timelineDeadlines: Deadline[] = [];
+    for (const course of courses) {
+      if (!course.timeline || course.timeline.length === 0) continue;
+
+      for (const item of course.timeline) {
+        // Skip empty timeline items
+        if (!item.type || !item.title || !item.dueDate) continue;
+
+        // Parse due date
+        const date = new Date(item.dueDate);
+        if (isNaN(date.getTime())) continue;
+
+        // Filter to next 30 days (upcoming)
+        const today = new Date();
+        const startDate = new Date(today);
+        startDate.setDate(today.getDate() - 7); // Show overdue items from 1 week ago
+        const endDate = new Date(today);
+        endDate.setDate(today.getDate() + 14); // Show upcoming items for 2 weeks
+
+        const dateStr = item.dueDate;
+        if (date < startDate || date > endDate) continue;
+
+        // Compose color (fallback if not present)
+        const courseColor =
+          course.courseColorStyle || "background-color: #e2e8f0; color: #334155;";
+
+        timelineDeadlines.push({
+          id: Math.random(), // Not persisted, so random is fine
+          title: item.title,
+          dueDate: dateStr,
+          courseCode: course.courseCode,
+          type: item.type,
+          courseColor,
+          courseId: course._id.toString(),
+        });
+      }
     }
+
+    // Map assignments to submission deadlines
+    const assignmentDeadlines: Deadline[] = assignments.map((a) => {
+      const course = courses.find((c) => c._id.toString() === a.courseId);
+      const courseColor =
+        course?.courseColorStyle || "background-color: #e2e8f0; color: #334155;";
+      return {
+        id: Math.random(),
+        title: a.title,
+        dueDate: a.dueDate,
+        courseCode: course?.courseCode || "UNKNOWN",
+        type: "assignment",
+        courseColor,
+        assignmentId: a._id.toString(),
+        courseId: a.courseId,
+      };
+    });
+
+    // Combine and sort all deadlines by dueDate ascending
+    const allDeadlines = [...assignmentDeadlines, ...timelineDeadlines];
+    allDeadlines.sort(
+      (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
+    );
+
+    return allDeadlines;
   }
-
-  // 3. Map assignments to Deadline[]
-  const assignmentDeadlines: Deadline[] = assignments.map((a) => {
-    const course = courses.find((c) => c._id.toString() === a.courseId);
-    const courseColor =
-      course?.courseColorStyle || "background-color: #e2e8f0; color: #334155;";
-    return {
-      id: Math.random(),
-      title: a.title,
-      dueDate: a.dueDate,
-      courseCode: course?.courseCode || "UNKNOWN",
-      type: "assignment",
-      courseColor,
-      assignmentId: a._id.toString(),
-      courseId: a.courseId,
-    };
-  });
-
-  // 4. Combine and sort all deadlines by dueDate ascending
-  const allDeadlines = [...assignmentDeadlines, ...timelineDeadlines];
-  allDeadlines.sort(
-    (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
-  );
-
-  return allDeadlines;
 }
 
 // export async function getUpcomingAssignments(userId: string) {
