@@ -1,58 +1,26 @@
 import { JSX } from "react";
-import { NextPage } from "next";
-import { Session } from "next-auth";
 import UpcomingDeadlines from "./cards/upcoming-deadlines";
 import Courses from "./cards/progress";
-import StudentAlerts from "./cards/student-alerts";
 import Bookmarks from "./cards/bookmarks";
 import Create from "./cards/create";
-import RecentlyAccessed from "./cards/recently-accessed";
 import Announcements from "./cards/announcements";
 import defaults from "@/appdata/defaults.json";
 import dashboardControlList from "@/appdata/acl/dashboard.json";
 import { MdBrokenImage } from "react-icons/md";
-import { UserData } from "@/lib/schemas/database";
-import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
+import { SessionAndDataProps } from "@/lib/interfaces/props";
 import YourBadges from "./cards/your-badges";
-import WhatsNext from "./cards/whats-next";
-
-interface Props {
-  session: Session;
-  userData: UserData;
-}
 
 // Component map to hold the components for the dashboard
 const componentMap: Record<
   string,
-  (props: PropsForEveryDashboardCard) => JSX.Element
+  (props: SessionAndDataProps) => JSX.Element
 > = {
   PROGRESS: (props) => (
     <Courses key="progress" session={props.session} userData={props.userData} />
   ),
-  WHATS_NEXT: (props) => (
-    <WhatsNext
-      key="whats-next"
-      session={props.session}
-      userData={props.userData}
-    />
-  ),
   CLASS_PROGRESS: (props) => (
     <Courses
       key="class-progress"
-      session={props.session}
-      userData={props.userData}
-    />
-  ),
-  STUDENT_ALERTS: (props) => (
-    <StudentAlerts
-      key="student-alerts"
-      session={props.session}
-      userData={props.userData}
-    />
-  ),
-  RECENTLY_ACCESSED: (props) => (
-    <RecentlyAccessed
-      key="recently-accessed"
       session={props.session}
       userData={props.userData}
     />
@@ -92,7 +60,7 @@ const componentMap: Record<
 
 function checkAndCleanLayout(
   layout: { leftColumn: string[]; rightColumn: string[] },
-  isTeacher: boolean,
+  isTeacher: boolean
 ) {
   const errors: string[] = [];
 
@@ -103,19 +71,23 @@ function checkAndCleanLayout(
   // Helper to filter and collect errors
   function filterColumn(
     column: string[],
-    columnName: "leftColumn" | "rightColumn",
+    columnName: "leftColumn" | "rightColumn"
   ) {
     return column.filter((component) => {
       if (!roleRestrictions.includes(component)) {
         errors.push(
-          `Component "${component}" is not allowed for ${
-            isTeacher ? "teacher" : "student"
-          }`,
+          `"${component.split("_").join(" ")}" is not allowed to be used by ${
+            isTeacher ? "teachers." : "students."
+          }`
         );
         return false;
       }
       if (!columnRestrictions[columnName].includes(component)) {
-        errors.push(`Component "${component}" is not allowed in ${columnName}`);
+        errors.push(
+          `"${
+            component.split("_").join(" ").toWellFormed
+          }" is not allowed to be placed in the ${columnName} column.`
+        );
         return false;
       }
       return true;
@@ -133,27 +105,21 @@ function checkAndCleanLayout(
   };
 }
 
-const AuthDashboard: NextPage<Props> = ({ session, userData }) => {
-  // Props object for component rendering - only session and role data
-  const componentProps: PropsForEveryDashboardCard = {
-    session,
-    userData,
-  };
-
+export default function AuthDashboard(myProps: SessionAndDataProps) {
   // Function to render components based on layout array
   const renderComponents = (layoutArray: string[]) => {
     return (
       layoutArray
         ?.map((componentKey) => {
           const ComponentFunction = componentMap[componentKey];
-          return ComponentFunction ? ComponentFunction(componentProps) : null;
+          return ComponentFunction ? ComponentFunction(myProps) : null;
         })
         .filter(Boolean) || []
     );
   };
 
-  const dashboardLayout = userData.dashboardLayout;
-  const isTeacher = userData.role === "teacher";
+  const dashboardLayout = myProps.userData.dashboardLayout;
+  const isTeacher = myProps.userData.role === "teacher";
 
   // get default layour for user type from data/defaults.json
   const uncleanLayout =
@@ -163,7 +129,7 @@ const AuthDashboard: NextPage<Props> = ({ session, userData }) => {
   // layout ACL checking
   const { layout: currentLayout, errors } = checkAndCleanLayout(
     uncleanLayout,
-    isTeacher,
+    isTeacher
   );
 
   if (
@@ -171,39 +137,47 @@ const AuthDashboard: NextPage<Props> = ({ session, userData }) => {
     currentLayout.rightColumn.length === 0
   ) {
     return (
-      <main className="h-full px-4 py-4 bg-transparent">
-        <div className="h-full flex flex-1 flex-col justify-center text-center text-gray-500">
+      <div className="h-full p-4 bg-transparent">
+        <div className="h-full flex flex-1 min-h-screen flex-col justify-center text-center text-gray-500">
           <div className="font-header text-6xl font-bold text-primary-800 mb-4">
-            Hi, {session?.user?.name || "there"}! Start by adding items to your
-            dashboard.
+            Hi, {myProps.session.user.name}!<br></br>Start by adding items to
+            your dashboard.
           </div>
           <MdBrokenImage size={48} className="mx-auto mb-4" />
-          <h2 className="text-lg font-semibold mb-2">No Components Found</h2>
+          <h2 className="text-lg font-semibold mb-2">Empty.</h2>
           You have no components in your dashboard! Please use the edit button
           to add some!
           <br></br>
           You can also choose to reset your dashboard to the default layout.
         </div>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="max-w-[78rem] mx-auto flex flex-col px-4 py-4 flex-1 bg-transparent overflow-y-auto">
+    <div className="p-4 mx-auto flex flex-col flex-1">
       {errors.length > 0 ? (
-        <div>
-          <h2 className="text-red-600 font-bold">Dashboard Layout Errors:</h2>
+        <div className="bg-danger-100 border border-danger-200 text-danger-700 p-4 rounded-lg mb-4">
+          <h2 className="font-bold text-xl">Dashboard Rendered With Errors!</h2>
           <ul className="list-disc pl-5">
             {errors.map((error, index) => (
-              <li key={index} className="text-red-500">
-                {error}
-              </li>
+              <li key={index}>{error}</li>
             ))}
           </ul>
+          <p className="mt-2">
+            Please edit your dashboard layout to resolve these issues. It is
+            recommended that you reset your dashboard to the default layout.
+          </p>
         </div>
       ) : null}
+
+      <div className="font-header text-2xl md:text-5xl font-bold text-primary-600 mb-8">
+        Hi <span className="text-primary-600">{myProps.session.user.name}</span>
+        <br></br>Welcome to your dashboard.
+      </div>
       <div className="flex flex-wrap gap-4 flex-1">
         {/* Left Column - takes more space on large screens, full width on small */}
+
         <div
           className={
             "flex flex-col flex-1 min-w-[300px] gap-4" +
@@ -212,10 +186,6 @@ const AuthDashboard: NextPage<Props> = ({ session, userData }) => {
               : " basis-full")
           }
         >
-          <div className="font-header text-2xl md:text-5xl font-bold text-secondary-600 mb-4">
-            Hi, {session?.user?.name || "there"}!<br></br>Welcome to your
-            dashboard.
-          </div>
           {renderComponents(currentLayout.leftColumn)}
         </div>
         {/* Right Column - takes less space on large screens, full width on small */}
@@ -230,8 +200,6 @@ const AuthDashboard: NextPage<Props> = ({ session, userData }) => {
           {renderComponents(currentLayout.rightColumn)}
         </div>
       </div>
-    </main>
+    </div>
   );
-};
-
-export default AuthDashboard;
+}

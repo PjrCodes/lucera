@@ -1,7 +1,7 @@
-import { Session } from "next-auth";
 import { UserData } from "@/lib/schemas/database";
+import { AuthenticatedSession } from "../types/auth";
 
-export interface PropsForEveryDashboardCard {
-  session: Session;
+export interface SessionAndDataProps {
+  session: AuthenticatedSession;
   userData: UserData;
 }

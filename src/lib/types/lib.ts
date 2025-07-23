@@ -19,7 +19,7 @@ export type Deadline = {
   id: number;
   title: string;
   dueDate: string;
-  course: string;
+  courseCode: string;
   type: string;
   courseColor: string;
 };

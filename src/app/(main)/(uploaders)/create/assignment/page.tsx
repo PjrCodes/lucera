@@ -2,6 +2,8 @@ import { getSessionAndUserData } from "@/lib/database-service/auth";
 import { getCoursesForUser } from "@/lib/database-service/courses";
 import CreateAssignmentAIForm from "@/components/feature/assignment/create-assignment-ai-form";
 import { ObjectId } from "mongodb";
+import { redirect } from "next/navigation";
+
 export default async function CreateContentPageServer({
   searchParams,
 }: {
@@ -9,6 +11,10 @@ export default async function CreateContentPageServer({
 }) {
   const resolvedParams = await searchParams;
   const { session, userData } = await getSessionAndUserData();
+
+  if (userData.role !== "teacher") {
+    redirect("/");
+  }
 
   const courses = await getCoursesForUser(session.user.id);
   courses.forEach((course) => {
@@ -21,8 +27,6 @@ export default async function CreateContentPageServer({
 
   return (
     <CreateAssignmentAIForm
-      userData={userData}
-      session={session}
       courses={courses}
       defaultCourseId={defaultCourseId}
     />

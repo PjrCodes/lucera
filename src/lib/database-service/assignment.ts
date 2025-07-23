@@ -167,7 +167,7 @@ export async function getUpcomingDeadlines(
         id: Math.random(), // Not persisted, so random is fine
         title: item.title,
         dueDate: dateStr,
-        course: course.name,
+        courseCode: course.courseCode,
         type: item.type,
         courseColor,
       });
@@ -177,12 +177,13 @@ export async function getUpcomingDeadlines(
   // 3. Map assignments to Deadline[]
   const assignmentDeadlines: Deadline[] = assignments.map((a) => {
     const course = courses.find((c) => c._id.toString() === a.courseId);
-    const courseColor = course?.courseColorStyle || "background-color: #e2e8f0; color: #334155;";
+    const courseColor =
+      course?.courseColorStyle || "background-color: #e2e8f0; color: #334155;";
     return {
       id: Math.random(),
       title: a.title,
       dueDate: a.dueDate,
-      course: course?.name || a.courseId,
+      courseCode: course?.courseCode || "UNKNOWN",
       type: "assignment",
       courseColor,
     };

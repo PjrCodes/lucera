@@ -20,7 +20,7 @@ const lato = Lato({
 export const metadata: Metadata = {
   title: "Lucera",
   description:
-    "An AI-First, no-compromise Learning Management System. Built for the future of education.",
+    "An AI-First, no-compromise university platform. Built for the future of education. Improves engagement, performance and classroom experience.",
 };
 
 export default async function RootLayout({
@@ -36,7 +36,7 @@ export default async function RootLayout({
       <body className="font-body">
         <ClientProviders>
           <SessionProvider>
-            <div className="w-full min-h-screen flex flex-col bg-white">
+            <div className="w-full min-h-screen flex flex-col bg-background">
               {children}
             </div>
           </SessionProvider>

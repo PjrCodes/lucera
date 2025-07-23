@@ -2,17 +2,15 @@ import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
-import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
+import { SessionAndDataProps } from "@/lib/interfaces/props";
 import { getCoursesForUser } from "@/lib/database-service/courses";
 import { getSubmissionsForStudent } from "@/lib/database-service/submitted-assignments";
 import { getAssignmentsForCourse } from "@/lib/database-service/assignment";
-import { BookAlert } from "lucide-react";
+import { BookAlert, SquareChartGantt } from "lucide-react";
 import { getCourseColorStyle } from "@/lib/utils/course-colors";
 import { getFileRecord } from "@/lib/database-service/files";
 
-export default async function Courses({
-  userData,
-}: PropsForEveryDashboardCard) {
+export default async function Courses({ userData }: SessionAndDataProps) {
   const isTeacher = userData.role === "teacher";
   const courses = await getCoursesForUser(userData.id);
 
@@ -64,10 +62,11 @@ export default async function Courses({
   const courseProgress: number[] = await Promise.all(
     courses.map(async (course) => {
       if (isTeacher) {
-        return (
-          (course.completedStudentCount / course.enrolledStudentCount) * 100 ||
-          0
-        );
+        // return (
+        //   (course.completedStudentCount / course.enrolledStudentCount) * 100 ||
+        //   0
+        // );
+        return Math.round((20 / 35) * 100); // Placeholder for teacher progress
       } else {
         // For students: calculate percentage of assignments completed
         try {
@@ -106,18 +105,37 @@ export default async function Courses({
       try {
         const fileRecord = await getFileRecord(course.coverImage);
         // Use relative URL to avoid hardcoded domain issues across environments
-        return fileRecord._id ? `/api/files/view/${fileRecord._id.toString()}` : "/placeholder.jpg";
+        return fileRecord._id
+          ? `/api/files/view/${fileRecord._id.toString()}`
+          : "/placeholder.jpg";
       } catch (error) {
-        console.error(`Error loading cover image for course ${course._id}:`, error);
+        console.error(
+          `Error loading cover image for course ${course._id}:`,
+          error
+        );
         return "/placeholder.jpg"; // Fallback on error
       }
     })
   );
-  
+
   return (
-    <div className="bg-primary-100 rounded-lg shadow-md p-4 md:px-6 min-h-[220px] flex flex-col">
-      <div className="text-lg font-bold text-primary-700 mb-4">
-        {isTeacher ? "CLASS PROGRESS" : "COURSE PROGRESS"}
+    <div className="rounded-lg shadow-md p-4 md:px-6 min-h-[220px] flex flex-col border-2 border-primary-100">
+      <div className="text-lg text-primary-700 mb-4">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+            <SquareChartGantt className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+          </div>
+          <div className="flex flex-col text-sm sm:text-base text-primary-700">
+            <h2 className="font-bold text-primary-700 gap-2 text-lg">
+              {isTeacher ? "Class Progress" : "Course Progress"}
+            </h2>
+            <p className="text-primary-500">
+              {isTeacher
+                ? "Track student completion across all classes."
+                : "View your course progress and assignments."}
+            </p>
+          </div>
+        </div>
       </div>
       <div className={getGridClass()}>
         {courses.map((course, idx) => (
@@ -127,7 +145,7 @@ export default async function Courses({
             className="h-full block"
             key={course._id.toString()}
           >
-            <div className="bg-white/80 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-200 h-full flex flex-col overflow-hidden">
+            <div className="bg-primary-100/40 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 h-full flex flex-col overflow-hidden">
               <Image
                 width={300}
                 height={300}
@@ -167,7 +185,7 @@ export default async function Courses({
                     </span>
                   </div>
                   <div
-                    className="w-full bg-primary-300 rounded-full h-2.5"
+                    className="w-full border-1 rounded-full h-2.5"
                     role="progressbar"
                     aria-valuenow={courseProgress[idx]}
                     aria-valuemin={0}

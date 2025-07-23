@@ -3,7 +3,8 @@ import React from "react";
 import Link from "next/link";
 import { iconForType } from "@/lib/constants";
 import { PrimaryButton } from "@/components/core/buttons/primary";
-import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
+import { SessionAndDataProps } from "@/lib/interfaces/props";
+import { BadgePlus } from "lucide-react";
 
 interface Option {
   id: number;
@@ -13,7 +14,7 @@ interface Option {
   href: string;
 }
 
-export default function Create({}: PropsForEveryDashboardCard) {
+export default function Create({}: SessionAndDataProps) {
   // Complete options list with icons
   const options: Option[] = [
     {
@@ -33,7 +34,7 @@ export default function Create({}: PropsForEveryDashboardCard) {
     {
       id: 4,
       type: "announcement",
-      label: "New Announcement",
+      label: "Announcement",
       icon: React.createElement(iconForType("announcement")),
       href: "/messages",
     },
@@ -54,8 +55,20 @@ export default function Create({}: PropsForEveryDashboardCard) {
   ];
 
   return (
-    <div className="bg-primary-100 rounded-lg shadow-md p-4">
-      <h2 className="font-bold mb-4 text-primary-700 text-lg">CREATE</h2>
+    <div className="bg-white border-2 border-primary-100 rounded-lg shadow-md p-4">
+      <div className="flex items-center gap-3 mb-4">
+          <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+            <BadgePlus className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+          </div>
+          <div className="flex flex-col text-sm sm:text-base text-primary-700">
+            <h2 className="font-bold text-primary-700 gap-2 text-lg">
+              Create
+            </h2>
+            <p className="text-primary-500">
+              Create new data on the platform.
+            </p>
+          </div>
+        </div>
       <div className="grid grid-cols-2 grid-rows-3 gap-3 auto-rows-fr">
         {options.map((opt) => (
           <PrimaryButton
@@ -69,8 +82,8 @@ export default function Create({}: PropsForEveryDashboardCard) {
               className="text-left flex items-center gap-3 overflow-ellipsis"
             >
               {/* react element opt.icon */}
-              <span>{opt.icon}</span>
-              <span className="line-clamp-2">{opt.label}</span>
+              <span className="text-primary-25">{opt.icon}</span>
+              <span className="line-clamp-2 text-primary-25">{opt.label}</span>
             </Link>
           </PrimaryButton>
         ))}

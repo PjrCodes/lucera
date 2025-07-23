@@ -277,9 +277,9 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
               assignmentTitle: "Sorting and Searching",
               averageGrade: 85.1,
               submissionCount: 10,
-              onTimeCount: 10,
-              lateCount: 0,
-              notSubmittedCount: 0,
+              onTimeCount: 8,
+              lateCount: 2,
+              notSubmittedCount: 1,
               gradeDistribution: [
                 { range: "90-100%", count: 3, fill: "var(--color-excellent)" },
                 { range: "80-89%", count: 5, fill: "var(--color-good)" },
@@ -580,9 +580,9 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-100 p-6">
+      <div className="min-h-screen bg-white p-6">
         <div className="max-w-7xl mx-auto space-y-8">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-primary-200 p-8">
+          <div className="bg-white rounded-2xl shadow-lg border border-primary-200 p-8">
             <div className="animate-pulse">
               <div className="h-8 bg-primary-200 rounded-xl w-1/3 mb-4"></div>
               <div className="h-4 bg-primary-100 rounded-lg w-1/2"></div>
@@ -591,7 +591,7 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-primary-200 p-6">
+              <div key={i} className="bg-white rounded-2xl shadow-lg border border-primary-200 p-6">
                 <div className="animate-pulse">
                   <div className="h-4 bg-primary-200 rounded-lg w-3/4 mb-4"></div>
                   <div className="h-8 bg-primary-100 rounded-xl w-1/2"></div>
@@ -621,10 +621,10 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
   }
 
   return (
-    <div className="min-h-screen bg-primary-50 p-3 sm:p-6">
-      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+    <div className="min-h-screen bg-transparent p-4">
+      <div className="space-y-4 md:space-y-6">
         {/* Simplified Header */}
-        <div className="flex flex-col gap-4 bg-white rounded-xl shadow-sm border border-primary-200 p-4 sm:p-6">
+        <div className="flex flex-col gap-4 bg-white rounded-xl shadow-sm border border-primary-200 p-4 md:p-6">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary-100 rounded-lg">
               <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-primary-700" />
@@ -665,26 +665,26 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
               className="data-[state=active]:bg-primary-50 data-[state=active]:text-primary-900 text-primary-700 whitespace-nowrap flex items-center justify-center px-3 py-2 w-full sm:w-auto text-center"
             >
               <div className="flex items-center justify-center w-full">
-              <TrendingUp className="mr-2 w-4 h-4" />
-              <span className="text-sm">Course Overview</span>
+              <TrendingUp className="mr-1" />
+              <span>Course Overview</span>
               </div>
             </TabsTrigger>
             <TabsTrigger
               value="analytics"
-              className="data-[state=active]:bg-success-50 data-[state=active]:text-success-900 text-success-700 whitespace-nowrap flex items-center justify-center px-3 py-2 w-full sm:w-auto text-center"
+              className="data-[state=active]:bg-primary-50 data-[state=active]:text-primary-900 text-primary-700 whitespace-nowrap flex items-center justify-center px-3 py-2 w-full sm:w-auto text-center"
             >
               <div className="flex items-center justify-center w-full">
-              <BookOpen className="mr-2 w-4 h-4" />
-              <span className="text-sm">Assignment Analytics</span>
+              <BookOpen className="mr-1" />
+              <span>Assignment Analytics</span>
               </div>
             </TabsTrigger>
             <TabsTrigger
               value="student"
-              className="data-[state=active]:bg-info-50 data-[state=active]:text-info-900 text-info-700 whitespace-nowrap flex items-center justify-center px-3 py-2 w-full sm:w-auto text-center"
+              className="data-[state=active]:bg-primary-50 data-[state=active]:text-primary-900 text-primary-700 whitespace-nowrap flex items-center justify-center px-3 py-2 w-full sm:w-auto text-center"
             >
               <div className="flex items-center justify-center w-full">
-              <Users className="mr-2 w-4 h-4" />
-              <span className="text-sm">Student View</span>
+              <Users className="mr-1" />
+              <span>Student View</span>
               </div>
             </TabsTrigger>
             </TabsList>
@@ -705,37 +705,37 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
               </CardContent>
             </Card>
 
-            <Card className="bg-white border-success-200 shadow-sm hover:shadow-md transition-shadow rounded-lg">
+            <Card className="bg-white border-primary-200 shadow-sm hover:shadow-md transition-shadow rounded-lg">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-xs sm:text-sm font-semibold text-success-700">Avg Completion</CardTitle>
-                <div className="p-1.5 sm:p-2 bg-success-100 rounded-lg">
-                  <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 text-success-600" />
+                <CardTitle className="text-xs sm:text-sm font-semibold text-primary-700">Avg Completion</CardTitle>
+                <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                  <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 text-primary-600" />
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-xl sm:text-2xl font-bold text-success-800">
+                <div className="text-xl sm:text-2xl font-bold text-primary-800">
                   {courseProgress.length > 0
                     ? Math.round(courseProgress.reduce((acc, s) => acc + s.completion, 0) / courseProgress.length)
                     : 0}%
                 </div>
-                <p className="text-success-600/70 text-xs mt-1">Course progress</p>
+                <p className="text-primary-600/70 text-xs mt-1">Course progress</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-white border-info-200 shadow-sm hover:shadow-md transition-shadow rounded-lg">
+            <Card className="bg-white border-primary-200 shadow-sm hover:shadow-md transition-shadow rounded-lg">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-xs sm:text-sm font-semibold text-info-700">Avg Grade</CardTitle>
-                <div className="p-1.5 sm:p-2 bg-info-100 rounded-lg">
-                  <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-info-600" />
+                <CardTitle className="text-xs sm:text-sm font-semibold text-primary-700">Avg Grade</CardTitle>
+                <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                  <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-primary-600" />
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-xl sm:text-2xl font-bold text-info-800">
+                <div className="text-xl sm:text-2xl font-bold text-primary-800">
                   {courseProgress.length > 0
                     ? Math.round(courseProgress.reduce((acc, s) => acc + s.averageGrade, 0) / courseProgress.length)
                     : 0}%
                 </div>
-                <p className="text-info-600/70 text-xs mt-1">Class average</p>
+                <p className="text-primary-600/70 text-xs mt-1">Class average</p>
               </CardContent>
             </Card>
 
@@ -768,8 +768,8 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="pt-2">
-              <ChartContainer config={chartConfig} className="h-[300px] sm:h-[350px] w-full">
+            <CardContent>
+              <ChartContainer config={chartConfig} className="h-[300px] md:h-[350px] w-full">
                 <BarChart
                   data={courseProgress}
                   margin={{ top: 20, right: 20, left: 10, bottom: 80 }}
@@ -779,8 +779,7 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                     dataKey="studentName"
                     angle={-45}
                     textAnchor="end"
-                    height={80}
-                    fontSize={8}
+                    fontSize={12}
                     interval={0}
                     stroke="#64748b"
                   />
@@ -788,26 +787,27 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                     domain={[0, 100]}
                     label={{ value: 'Completion %', angle: -90, position: 'insideLeft' }}
                     stroke="#64748b"
-                    fontSize={10}
+                    fontSize={12}
                   />
                   <ChartTooltip
-                    content={({ active, payload, label }) => {
-                      if (active && payload && payload.length > 0) {
-                        const data = payload[0].payload;
-                        return (
-                          <div className="bg-white/95 backdrop-blur-sm p-3 sm:p-4 border border-primary-200 rounded-lg shadow-lg">
-                            <p className="font-bold text-primary-800 text-sm break-words">{label}</p>
-                            <p className="text-sm text-primary-600">
-                              <span className="font-medium text-success-600">{payload[0].value}%</span> completed
-                            </p>
-                            <p className="text-sm text-primary-600">
-                              Grade: <span className="font-medium text-info-600">{data.averageGrade}%</span>
-                            </p>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
+                    // content={({ active, payload, label }) => {
+                    //   if (active && payload && payload.length > 0) {
+                    //     const data = payload[0].payload;
+                    //     return (
+                    //       <div className="bg-white/95 backdrop-blur-sm p-3 sm:p-4 border border-primary-200 rounded-lg shadow-lg">
+                    //         <p className="font-bold text-primary-800 text-sm break-words">{label}</p>
+                    //         <p className="text-sm text-primary-600">
+                    //           <span className="font-medium text-success-600">{payload[0].value}%</span> completed
+                    //         </p>
+                    //         <p className="text-sm text-primary-600">
+                    //           Grade: <span className="font-medium text-info-600">{data.averageGrade}%</span>
+                    //         </p>
+                    //       </div>
+                    //     );
+                    //   }
+                    //   return null;
+                    // }}
+                    content={<ChartTooltipContent />}
                   />
                   <Bar
                     dataKey="completion"
@@ -824,8 +824,8 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
           <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
             <CardHeader className="pb-3 sm:pb-4">
               <div className="flex items-center gap-3">
-                <div className="p-1.5 sm:p-2 bg-success-100 rounded-lg">
-                  <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-success-600" />
+                <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                  <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
                 </div>
                 <div>
                   <CardTitle className="text-base sm:text-lg font-semibold text-primary-800">Assignment Submission Status</CardTitle>
@@ -833,21 +833,21 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="pt-2">
-              <div className="overflow-x-auto">
-                <div className="min-w-[600px] sm:min-w-[1000px] p-3 sm:p-4 bg-gray-50 rounded-lg border">
+            <CardContent>
+              <div className="overflow-x-auto overflow-y-auto">
+                <div className="min-w-[600px] sm:min-w-[1000px] max-h-[500px] p-3 sm:p-4 bg-gray-50">
                   <div className="grid grid-cols-6 gap-2 sm:gap-4 mb-3 sm:mb-4">
-                    <div className="font-semibold text-xs sm:text-sm text-gray-700">Student</div>
+                    <div className="font-semibold text-xs sm:text-sm text-gray-700 self-center">Student</div>
                     {assignmentAnalytics.slice(0, 5).map((assignment, idx) => (
-                      <div key={idx} className="font-semibold text-xs text-center p-1 sm:p-2 bg-white rounded border">
-                        <div className="break-words leading-tight text-gray-700">{assignment.assignmentTitle}</div>
+                      <div key={idx} className="font-semibold text-center p-1 sm:p-2 bg-white rounded border">
+                        <div className="break-words text-gray-700 text-[12px]">{assignment.assignmentTitle}</div>
                       </div>
                     ))}
                   </div>
-                  {courseProgress.slice(0, 8).map((student, studentIdx) => {
+                  {courseProgress.map((student, studentIdx) => {
                     return (
                       <div key={studentIdx} className="grid grid-cols-6 gap-2 sm:gap-4 mb-2 sm:mb-3">
-                        <div className="text-xs sm:text-sm font-medium py-2 text-gray-700 truncate">{student.studentName}</div>
+                        <div className="font-medium py-2 text-gray-700 truncate text-[12px]">{student.studentName}</div>
                         {assignmentAnalytics.slice(0, 5).map((_, assignmentIdx) => {
                           // Generate deterministic submission status based on student and assignment
                           const seed = studentIdx * 5 + assignmentIdx;
@@ -864,14 +864,14 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                             textColor = 'text-white';
                           } else { // 75% on time
                             score = Math.round(75 + (seed % 25));
-                            bgColor = 'bg-green-500';
+                            bgColor = 'bg-success-900';
                             textColor = 'text-white';
                           }
 
                           return (
                             <div
                               key={assignmentIdx}
-                              className={`h-8 sm:h-10 rounded-lg text-xs flex items-center justify-center font-semibold ${bgColor} ${textColor}`}
+                              className={`h-8 sm:h-10 rounded-lg flex items-center justify-center font-semibold ${bgColor} ${textColor}`}
                             >
                               {score !== null ? `${score}%` : '-'}
                             </div>
@@ -903,8 +903,8 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
           <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
             <CardHeader className="pb-3 sm:pb-4">
               <div className="flex items-center gap-3">
-                <div className="p-1.5 sm:p-2 bg-info-100 rounded-lg">
-                  <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-info-600" />
+                <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                  <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
                 </div>
                 <div>
                   <CardTitle className="text-base sm:text-lg font-semibold text-primary-800">Grade Trends</CardTitle>
@@ -914,17 +914,17 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
             </CardHeader>
             <CardContent className="pt-2">
               <ChartContainer config={chartConfig} className="h-[350px] sm:h-[400px] w-full">
-                <LineChart data={assignmentAnalytics} margin={{ top: 20, right: 20, left: 10, bottom: 80 }}>
+                <LineChart data={assignmentAnalytics} margin={{ top: 20, right: 40, left: 40, bottom: 80 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                   <XAxis
                     dataKey="assignmentTitle"
                     angle={-45}
+                    height={80}
                     textAnchor="end"
-                    height={70}
-                    fontSize={9}
+                    fontSize={12}
                     stroke="#64748b"
                   />
-                  <YAxis stroke="#64748b" fontSize={10} />
+                  <YAxis stroke="#64748b" fontSize={12} />
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <Line
                     type="monotone"
@@ -942,7 +942,7 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
         </TabsContent>
 
         {/* Assignment Analytics Tab */}
-        <TabsContent value="analytics" className="space-y-6 sm:space-y-8 mt-6 sm:mt-8">
+        <TabsContent value="analytics" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
           {assignmentAnalytics.length === 0 ? (
             <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
               <CardContent className="text-center py-12 sm:py-16">
@@ -956,36 +956,42 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
           ) : (
             assignmentAnalytics.map((assignment, index) => (
               <Card key={index} className="bg-white border-primary-200 shadow-sm rounded-lg">
-                <CardHeader className="border-b border-primary-100 pb-3 sm:pb-4">
+                <CardHeader className="pb-3 sm:pb-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-1.5 sm:p-2 bg-success-100 rounded-lg">
-                      <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-success-700" />
+                    <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                      <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <CardTitle className="text-base sm:text-xl font-bold text-primary-800 break-words">{assignment.assignmentTitle}</CardTitle>
+                      <CardTitle className="text-base sm:text-lg font-semibold text-primary-800 break-words">{assignment.assignmentTitle}</CardTitle>
                       <CardDescription className="text-primary-600/70 text-xs sm:text-sm">
                         {assignment.submissionCount} submissions • Average: {assignment.averageGrade}%
                       </CardDescription>
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-4 sm:pt-6">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+                <CardContent>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                     {/* Grade Distribution */}
-                    <div className="bg-primary-50 p-4 sm:p-6 rounded-lg border border-primary-100">
-                      <h4 className="text-base sm:text-lg font-bold text-primary-800 mb-3 sm:mb-4 flex items-center gap-2">
-                        <div className="p-1 bg-primary-200 rounded-lg">
-                          <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-primary-700" />
+                    <div className="bg-white p-4 sm:p-6 rounded-lg border border-primary-200">
+                      <h4 className="text-sm sm:text-base font-semibold text-primary-800 mb-3 sm:mb-4 flex items-center gap-2">
+                        <div className="p-1 bg-primary-100 rounded-lg">
+                          <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-primary-600" />
                         </div>
                         Grade Distribution
                       </h4>
-                      <ChartContainer config={chartConfig} className="h-[200px] sm:h-[250px]">
-                        <BarChart data={assignment.gradeDistribution}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                          <XAxis dataKey="range" stroke="#64748b" fontSize={10} />
-                          <YAxis stroke="#64748b" fontSize={10} />
+                      <ChartContainer config={chartConfig} className="h-[250px] sm:h-[300px] max-w-full mx-auto">
+                        <BarChart data={assignment.gradeDistribution} margin={{ top: 20, right: 20, left: 10, bottom: 60 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                          <XAxis
+                            dataKey="range"
+                            stroke="#64748b"
+                            fontSize={12}
+                            angle={-45}
+                            textAnchor="end"
+                          />
+                          <YAxis stroke="#64748b" fontSize={12} />
                           <ChartTooltip content={<ChartTooltipContent />} />
-                          <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                          <Bar dataKey="count" radius={[2, 2, 0, 0]}>
                             {assignment.gradeDistribution.map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={entry.fill} />
                             ))}
@@ -995,14 +1001,14 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                     </div>
 
                     {/* Submission Timeliness */}
-                    <div className="bg-success-50 p-4 sm:p-6 rounded-lg border border-success-100">
-                      <h4 className="text-base sm:text-lg font-bold text-primary-800 mb-3 sm:mb-4 flex items-center gap-2">
-                        <div className="p-1 bg-success-200 rounded-lg">
-                          <Users className="w-3 h-3 sm:w-4 sm:h-4 text-success-700" />
+                    <div className="bg-white p-4 sm:p-6 rounded-lg border border-primary-200">
+                      <h4 className="text-sm sm:text-base font-semibold text-primary-800 mb-3 sm:mb-4 flex items-center gap-2">
+                        <div className="p-1 bg-primary-100 rounded-lg">
+                          <Users className="w-3 h-3 sm:w-4 sm:h-4 text-primary-600" />
                         </div>
                         Submission Timeliness
                       </h4>
-                      <ChartContainer config={chartConfig} className="h-[200px] sm:h-[250px]">
+                      <ChartContainer config={chartConfig} className="h-[250px] sm:h-[300px] max-w-full mx-auto">
                         <PieChart>
                           <Pie
                             data={[
@@ -1017,7 +1023,7 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                             label={({ name, value }) => `${name}: ${value}`}
                             stroke="#ffffff"
                             strokeWidth={2}
-                            fontSize={11}
+                            fontSize={12}
                           />
                           <ChartTooltip content={<ChartTooltipContent />} />
                         </PieChart>
@@ -1031,28 +1037,30 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
         </TabsContent>
 
         {/* Student View Tab */}
-        <TabsContent value="student" className="space-y-4 sm:space-y-8 mt-4 sm:mt-8">
-          <Card className="bg-white border-primary-200 shadow-sm rounded-lg p-4 sm:p-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
-              <div className="flex items-center gap-3">
-                <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
-                  <Users className="w-4 h-4 sm:w-5 sm:h-5 text-primary-700" />
+        <TabsContent value="student" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
+          <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                    <Users className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+                  </div>
+                  <span className="text-sm sm:text-base font-semibold text-primary-800">Select Student:</span>
                 </div>
-                <span className="text-sm sm:text-base font-medium text-primary-800">Select Student:</span>
+                <Select value={selectedStudent} onValueChange={setSelectedStudent}>
+                  <SelectTrigger className="w-full sm:w-72 bg-white border-primary-200 hover:border-primary-300 transition-colors rounded-lg">
+                    <SelectValue placeholder="Select a student" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-lg border-primary-200">
+                    {students.map((student) => (
+                      <SelectItem key={student.id} value={student.id}>
+                        {student.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-              <Select value={selectedStudent} onValueChange={setSelectedStudent}>
-                <SelectTrigger className="w-full sm:w-72 bg-white border-primary-200 shadow-sm hover:shadow-md transition-all duration-200 rounded-lg">
-                  <SelectValue placeholder="Select a student" />
-                </SelectTrigger>
-                <SelectContent className="rounded-lg border-primary-200">
-                  {students.map((student) => (
-                    <SelectItem key={student.id} value={student.id}>
-                      {student.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            </CardContent>
           </Card>
 
           {students.length === 0 ? (
@@ -1068,30 +1076,33 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
           ) : studentPerformance && (
             <>
               {/* Student Progress Overview */}
-              <Card className="bg-gradient-to-br from-primary-50 to-success-50 border-primary-200 shadow-lg rounded-2xl">
-                <CardHeader className="pb-4 border-b border-primary-100">
+              <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
+                <CardHeader className="pb-3 sm:pb-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-primary-200 rounded-xl">
-                      <TrendingUp className="w-6 h-6 text-primary-700" />
+                    <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                      <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
                     </div>
-                    <CardTitle className="text-xl font-bold text-primary-800">
-                      {studentPerformance.studentName} - Progress Overview
-                    </CardTitle>
+                    <div>
+                      <CardTitle className="text-base sm:text-lg font-semibold text-primary-800">
+                        {studentPerformance.studentName} - Progress Overview
+                      </CardTitle>
+                      <CardDescription className="text-primary-600/70 text-xs sm:text-sm">Individual student performance metrics</CardDescription>
+                    </div>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-8 mb-6">
+                <CardContent className="pt-2">
+                  <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
                     <div className="text-center">
-                      <div className="text-5xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
+                      <div className="text-3xl sm:text-4xl font-bold text-primary-800">
                         {studentPerformance.courseCompletion}%
                       </div>
-                      <div className="text-primary-700 font-semibold mt-1">Course Completion</div>
+                      <div className="text-primary-600/80 font-medium mt-1 text-xs sm:text-sm">Course Completion</div>
                     </div>
-                    <div className="flex-1">
-                      <div className="text-sm text-primary-600 mb-2">Progress Indicator</div>
-                      <div className="w-full bg-primary-100 rounded-full h-6 overflow-hidden shadow-inner">
+                    <div className="flex-1 w-full">
+                      <div className="text-xs sm:text-sm text-primary-600/80 mb-2">Progress Indicator</div>
+                      <div className="w-full bg-primary-100 rounded-full h-4 sm:h-6 overflow-hidden">
                         <div
-                          className="bg-gradient-to-r from-primary-500 to-primary-600 h-6 rounded-full transition-all duration-500 ease-out shadow-sm"
+                          className="bg-primary-500 h-4 sm:h-6 rounded-full transition-all duration-500 ease-out"
                           style={{ width: `${studentPerformance.courseCompletion}%` }}
                         ></div>
                       </div>
@@ -1101,37 +1112,40 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
               </Card>
 
               {/* Assignment Table */}
-              <Card className="bg-white/80 backdrop-blur-sm border-primary-200 shadow-lg rounded-2xl">
-                <CardHeader className="pb-4 border-b border-primary-100">
+              <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
+                <CardHeader className="pb-3 sm:pb-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-success-100 rounded-xl">
-                      <BookOpen className="w-5 h-5 text-success-700" />
+                    <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                      <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
                     </div>
-                    <CardTitle className="text-xl font-bold text-primary-800">Assignment Breakdown</CardTitle>
+                    <div>
+                      <CardTitle className="text-base sm:text-lg font-semibold text-primary-800">Assignment Breakdown</CardTitle>
+                      <CardDescription className="text-primary-600/70 text-xs sm:text-sm">Detailed assignment performance</CardDescription>
+                    </div>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-6">
+                <CardContent className="pt-2">
                   <div className="overflow-x-auto">
                     <table className="w-full border-collapse">
                       <thead>
                         <tr className="border-b-2 border-primary-200">
-                          <th className="text-left py-4 px-4 font-bold text-primary-800">Assignment</th>
-                          <th className="text-left py-4 px-4 font-bold text-primary-800">Grade</th>
-                          <th className="text-left py-4 px-4 font-bold text-primary-800">Submission Date</th>
-                          <th className="text-left py-4 px-4 font-bold text-primary-800">Status</th>
+                          <th className="text-left py-3 px-3 sm:py-4 sm:px-4 font-semibold text-primary-800 text-xs sm:text-sm">Assignment</th>
+                          <th className="text-left py-3 px-3 sm:py-4 sm:px-4 font-semibold text-primary-800 text-xs sm:text-sm">Grade</th>
+                          <th className="text-left py-3 px-3 sm:py-4 sm:px-4 font-semibold text-primary-800 text-xs sm:text-sm">Submission Date</th>
+                          <th className="text-left py-3 px-3 sm:py-4 sm:px-4 font-semibold text-primary-800 text-xs sm:text-sm">Status</th>
                         </tr>
                       </thead>
                       <tbody>
                         {studentPerformance.assignments.map((assignment, index) => (
                           <tr key={index} className="border-b border-primary-100 hover:bg-primary-50/50 transition-colors">
-                            <td className="py-4 px-4">
-                              <div className="font-semibold text-primary-800 break-words max-w-xs">
+                            <td className="py-3 px-3 sm:py-4 sm:px-4">
+                              <div className="font-medium text-primary-800 break-words max-w-xs text-xs sm:text-sm">
                                 {assignment.title}
                               </div>
                             </td>
-                            <td className="py-4 px-4">
+                            <td className="py-3 px-3 sm:py-4 sm:px-4">
                               {assignment.grade !== null ? (
-                                <span className={`font-bold text-xl px-3 py-1 rounded-xl ${
+                                <span className={`font-semibold text-sm sm:text-base px-2 py-1 rounded-lg ${
                                   assignment.grade >= 90 ? 'text-success-700 bg-success-100' :
                                   assignment.grade >= 80 ? 'text-info-700 bg-info-100' :
                                   assignment.grade >= 70 ? 'text-warning-700 bg-warning-100' :
@@ -1140,12 +1154,12 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                                   {assignment.grade}%
                                 </span>
                               ) : (
-                                <span className="text-gray-500 font-medium bg-gray-100 px-3 py-1 rounded-xl">Not graded</span>
+                                <span className="text-gray-500 font-medium bg-gray-100 px-2 py-1 rounded-lg text-xs sm:text-sm">Not graded</span>
                               )}
                             </td>
-                            <td className="py-4 px-4">
+                            <td className="py-3 px-3 sm:py-4 sm:px-4">
                               {assignment.submissionDate ? (
-                                <div className="text-primary-700 font-medium">
+                                <div className="text-primary-700 font-medium text-xs sm:text-sm">
                                   {new Date(assignment.submissionDate).toLocaleDateString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
@@ -1153,14 +1167,14 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                                   })}
                                 </div>
                               ) : (
-                                <span className="text-gray-500 font-medium">Not submitted</span>
+                                <span className="text-gray-500 font-medium text-xs sm:text-sm">Not submitted</span>
                               )}
                             </td>
-                            <td className="py-4 px-4">
-                              <span className={`px-4 py-2 rounded-xl text-sm font-bold shadow-sm ${
-                                assignment.status === 'submitted' ? 'bg-gradient-to-r from-success-100 to-success-200 text-success-800 border border-success-300' :
-                                assignment.status === 'late' ? 'bg-gradient-to-r from-warning-100 to-warning-200 text-warning-800 border border-warning-300' :
-                                'bg-gradient-to-r from-danger-100 to-danger-200 text-danger-800 border border-danger-300'
+                            <td className="py-3 px-3 sm:py-4 sm:px-4">
+                              <span className={`px-3 py-1 rounded-lg text-xs sm:text-sm font-medium ${
+                                assignment.status === 'submitted' ? 'bg-success-100 text-success-800' :
+                                assignment.status === 'late' ? 'bg-warning-100 text-warning-800' :
+                                'bg-danger-100 text-danger-800'
                               }`}>
                                 {assignment.status === 'submitted' ? 'On Time' :
                                  assignment.status === 'late' ? 'Late' : 'Missing'}
@@ -1178,8 +1192,8 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
               <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
                 <CardHeader className="pb-3 sm:pb-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-1.5 sm:p-2 bg-info-100 rounded-lg">
-                      <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-info-600" />
+                    <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                      <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
                     </div>
                     <div>
                       <CardTitle className="text-base sm:text-lg font-semibold text-primary-800">Submission Timeline</CardTitle>
@@ -1188,7 +1202,7 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                   </div>
                 </CardHeader>
                 <CardContent className="pt-2">
-                  <ChartContainer config={chartConfig} className="h-[350px] sm:h-[400px] w-full">
+                  <ChartContainer config={chartConfig} className="h-[300px] sm:h-[350px] w-full">
                     <LineChart
                       data={studentPerformance.assignments.map((assignment, index) => ({
                         assignment: assignment.title.length > 12 ?
@@ -1205,13 +1219,13 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                       }))}
                       margin={{ top: 20, right: 20, left: 10, bottom: 80 }}
                     >
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                       <XAxis
                         dataKey="assignment"
                         angle={-45}
                         textAnchor="end"
                         height={70}
-                        fontSize={8}
+                        fontSize={12}
                         interval={0}
                         stroke="#64748b"
                       />
@@ -1219,7 +1233,7 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                         label={{ value: 'Days from Due Date', angle: -90, position: 'insideLeft' }}
                         domain={[-5, 5]}
                         stroke="#64748b"
-                        fontSize={10}
+                        fontSize={12}
                       />
                       <ChartTooltip
                         content={({ active, payload }) => {
@@ -1227,12 +1241,12 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                             const data = payload[0].payload;
                             return (
                               <div className="bg-white/95 backdrop-blur-sm p-3 sm:p-4 border border-primary-200 rounded-lg shadow-lg">
-                                <p className="font-bold text-primary-800 text-sm">{data.fullTitle}</p>
+                                <p className="font-semibold text-primary-800 text-sm">{data.fullTitle}</p>
                                 <p className="text-xs sm:text-sm text-primary-600">Due: {new Date(data.dueDate).toLocaleDateString()}</p>
                                 {data.submissionDate && (
                                   <p className="text-xs sm:text-sm text-primary-600">Submitted: {new Date(data.submissionDate).toLocaleDateString()}</p>
                                 )}
-                                <p className={`text-xs sm:text-sm font-semibold ${
+                                <p className={`text-xs sm:text-sm font-medium ${
                                   data.status === 'submitted' ? 'text-success-600' :
                                   data.status === 'late' ? 'text-warning-600' : 'text-danger-600'
                                 }`}>
@@ -1269,7 +1283,7 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
                       />
                     </LineChart>
                   </ChartContainer>
-                  <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-primary-50 rounded-lg border border-primary-100">
+                  <div className="mt-4 p-3 sm:p-4 bg-primary-50 rounded-lg border border-primary-100">
                     <div className="text-xs sm:text-sm text-primary-700 space-y-1">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 sm:w-3 sm:h-3 bg-warning-400 rounded-full"></div>

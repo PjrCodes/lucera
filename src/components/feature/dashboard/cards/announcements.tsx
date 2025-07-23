@@ -1,23 +1,25 @@
 import React from "react";
 import Link from "next/link";
 import { FiMessageSquare } from "react-icons/fi";
-import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
+import { SessionAndDataProps } from "@/lib/interfaces/props";
+import {
+  getAnnouncementsForStudent,
+  getAnnouncementsForTeacher,
+} from "@/lib/database-service/announcements";
+import {
+  getCourseById,
+  getCoursesOwnedByTeacher,
+} from "@/lib/database-service/courses";
+import {
+  AnnouncementWithReadStatus,
+  Announcement,
+} from "@/lib/schemas/database";
+import { getCourseColorStyle } from "@/lib/utils/course-colors";
 
-interface Announcement {
-  id: number;
-  title: string;
-  content: string;
-  courseId: string;
-  courseName: string;
-  courseCode: string;
-  courseColor: string;
-  date: string;
-}
-
-function formatAnnouncementDate(dateStr: string) {
+function formatAnnouncementDate(dateStr: string | Date) {
   if (!dateStr) return "N/A";
   const date = new Date(dateStr);
-  if (isNaN(date.getTime())) return dateStr;
+  if (isNaN(date.getTime())) return "N/A";
 
   const now = new Date();
   const diffTime = now.getTime() - date.getTime();
@@ -40,103 +42,95 @@ function formatAnnouncementDate(dateStr: string) {
   }
 }
 
-export default function Announcements({}: PropsForEveryDashboardCard) {
-  // Mock announcements data
-  const dummyAnnouncements: Announcement[] = [
-    {
-      id: 1,
-      title: "Mid-semester Break Notice",
-      content:
-        "Classes will be suspended from June 15-20 for mid-semester break. All assignments due during this period have been extended.",
-      courseId: "cs101",
-      courseName: "Introduction to Programming",
-      courseCode: "CS101",
-      courseColor: "bg-lucerablue-2 text-lucerablue-5",
-      date: "2025-06-09T08:00:00Z",
-    },
-    {
-      id: 2,
-      title: "Guest Lecture Tomorrow",
-      content:
-        "Dr. Sarah Chen from MIT will be giving a guest lecture on 'Advanced Machine Learning Techniques' tomorrow at 2 PM in Hall A.",
-      courseId: "cs301",
-      courseName: "Machine Learning",
-      courseCode: "CS301",
-      courseColor: "bg-lucerared-2 text-lucerared-5",
-      date: "2025-06-08T14:30:00Z",
-    },
-    {
-      id: 3,
-      title: "Lab Session Rescheduled",
-      content:
-        "Thursday's lab session has been moved to Friday 10 AM due to equipment maintenance.",
-      courseId: "cs201",
-      courseName: "Data Structures",
-      courseCode: "CS201",
-      courseColor: "bg-lucerayellow-2 text-lucerayellow-5",
-      date: "2025-06-07T16:45:00Z",
-    },
-    {
-      id: 4,
-      title: "New Study Materials Available",
-      content:
-        "Additional practice problems and solutions for Chapter 5 have been uploaded to the course resources.",
-      courseId: "math201",
-      courseName: "Discrete Mathematics",
-      courseCode: "MATH201",
-      courseColor: "bg-primary-200 text-primary-500",
-      date: "2025-06-06T11:20:00Z",
-    },
-  ];
+export default async function Announcements({ userData }: SessionAndDataProps) {
+  const isTeacher = userData.role === "teacher";
+  let announcements: (AnnouncementWithReadStatus | Announcement)[] = [];
 
-  const announcements = dummyAnnouncements;
+  try {
+    if (isTeacher) {
+      // Get courses owned by the teacher
+      const teacherCourses = await getCoursesOwnedByTeacher(userData.id);
+      const courseIds = teacherCourses.map((course) => course._id.toString());
+      announcements = await getAnnouncementsForTeacher(userData.id, courseIds);
+    } else {
+      // Get announcements for student
+      announcements = await getAnnouncementsForStudent(
+        userData.id,
+        userData.relatedCourses
+      );
+    }
+  } catch (error) {
+    console.error("Error fetching announcements:", error);
+    announcements = [];
+  }
 
   return (
-    <div className="bg-primary-100 rounded-lg shadow-md p-4 md:px-6 min-h-[300px] flex flex-col">
-      <h2 className="text-lg font-bold text-primary-700 mb-4 flex items-center gap-2">
-        ANNOUNCEMENTS
-      </h2>
+    <div className="rounded-lg shadow-md p-4 md:px-6 min-h-[300px] flex flex-col border-2 border-primary-100">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+          <FiMessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+        </div>
+        <div className="flex flex-col text-sm sm:text-base text-primary-700">
+          <h2 className="font-bold text-primary-700 text-lg">Announcements</h2>
+          <p className="text-primary-500">
+            {isTeacher
+              ? "Your recent course announcements."
+              : "Latest announcements from your courses."}
+          </p>
+        </div>
+      </div>
 
       {announcements.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center text-primary-500">
           <FiMessageSquare className="text-5xl mb-2" />
           <p className="text-lg">No announcements yet.</p>
           <p className="text-sm text-center">
-            New course announcements will appear here.
+            {isTeacher
+              ? "Create announcements to communicate with your students."
+              : "New course announcements will appear here."}
           </p>
         </div>
       ) : (
-        <div className="space-y-2 flex-1 overflow-y-auto">
-          {announcements.map((announcement) => (
-            <Link
-              key={announcement.id}
-              href={`/courses/${announcement.courseId}#announcements`}
-              className="block"
-            >
-              <div className="bg-white/80 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer p-2">
-                <div className="flex items-start justify-between mb-1">
-                  <h3 className="font-medium text-primary-700 text-sm line-clamp-1">
-                    {announcement.title}
-                  </h3>
-                  <span className="text-xs text-gray-400 whitespace-nowrap ml-2">
-                    {formatAnnouncementDate(announcement.date)}
+        <div className="space-y-3 flex-1 overflow-y-auto">
+          {announcements.map(async (announcement) => {
+            const isUnread = "isRead" in announcement && !announcement.isRead;
+            const course = await getCourseById(announcement.courseId);
+            return (
+              <Link
+                key={announcement._id.toString()}
+                href={`/messages`}
+                className="block"
+              >
+                <div
+                  className={`bg-primary-100/40 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-200 cursor-pointer p-4 ${
+                    isUnread ? "border-l-4 border-primary-500" : ""
+                  }`}
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-primary-700 text-base line-clamp-1 flex-1">
+                      {announcement.title}
+                    </h3>
+                    <span
+                      className="inline-block px-2 py-1 rounded text-xs font-medium"
+                      style={getCourseColorStyle(course.courseColorStyle)}
+                    >
+                      {announcement.courseCode}
+                    </span>
+                    {isUnread && (
+                      <span className="self-center ml-2 inline-block w-2 h-2 bg-primary-500 rounded-full"></span>
+                    )}
+                  </div>
+
+                  <p className="text-sm text-primary-600 line-clamp-2">
+                    {announcement.content}
+                  </p>
+                  <span className="text-xs text-primary-400 whitespace-nowrap">
+                    {formatAnnouncementDate(announcement.createdAt)}
                   </span>
                 </div>
-
-                <div className="mb-1">
-                  <span
-                    className={`inline-block px-1.5 py-0.5 rounded text-xs font-medium ${announcement.courseColor}`}
-                  >
-                    {announcement.courseCode}
-                  </span>
-                </div>
-
-                <p className="text-xs text-gray-600 line-clamp-2">
-                  {announcement.content}
-                </p>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>

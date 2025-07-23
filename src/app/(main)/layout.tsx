@@ -5,12 +5,17 @@ import { AppSidebar } from "@/components/feature/sidenav";
 import { HeaderProvider } from "@/components/feature/header/header-context";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import React from "react";
+import { getSessionAndUserData } from "@/lib/database-service/auth";
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  // protect all pages with authentication
+  await getSessionAndUserData();
+
   return (
     <HeaderProvider>
       <SidebarProvider>
@@ -18,7 +23,7 @@ export default async function RootLayout({
         <SidebarInset>
           <HeaderWrapper />
           <main>
-            <div>{children}</div>
+            {children}
           </main>
           <MainFooter />
         </SidebarInset>

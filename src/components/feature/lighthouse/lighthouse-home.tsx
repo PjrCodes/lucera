@@ -247,7 +247,7 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
   return (
     <>
       <SetHeaderClientComponent title={"LIGHTHOUSE"} />
-      <main className="min-h-screen bg-primary-50 p-6">
+      <main className="min-h-screen bg-background p-6">
         <div className="max-w-6xl w-full mx-auto">
           {/* Header */}
           <div className="text-center mb-8">

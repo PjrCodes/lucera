@@ -47,7 +47,7 @@ export default function CourseHeader({
   };
 
   return (
-    <div className="bg-primary-50 rounded-xl shadow border border-primary-100 p-6">
+    <div className="bg-linear-to-r from-primary-25 to-primary-50 rounded-xl shadow border border-primary-100 p-6">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 bg-gradient-to-br from-secondary-400 to-secondary-700 rounded-lg flex items-center justify-center text-white font-bold text-xl">
@@ -59,7 +59,7 @@ export default function CourseHeader({
                 {course.name}
               </h1>
               {course.courseCode && (
-                <span 
+                <span
                   className="px-3 py-1 text-sm font-medium rounded-full border"
                   style={course.courseColorStyle ? getCourseColorStyle(course.courseColorStyle) : {
                     backgroundColor: '#f3f4f6',
@@ -75,19 +75,19 @@ export default function CourseHeader({
         </div>
         <div className="flex items-center gap-2">
           <SecondaryButton
-            variant="outline"
+            // variant="outline"
             size="sm"
             onClick={handleBookmarkToggle}
             disabled={isTogglingBookmark}
           >
             <Bookmark
               className={`h-4 w-4 ${
-                isBookmarked ? "fill-secondary-700 text-secondary-700" : ""
+                isBookmarked ? "fill-secondary-200 text-secondary-200" : ""
               }`}
             />
           </SecondaryButton>
           {!isTeacher && (
-            <SecondaryButton variant="outline" size="sm">
+            <SecondaryButton size="sm">
               <Link href={`/quiz/${course._id}`} className="flex items-center gap-2">
                 <Brain className="h-4 w-4" />
                 Take Quiz
@@ -95,7 +95,7 @@ export default function CourseHeader({
             </SecondaryButton>
           )}
           {isTeacher && (
-            <SecondaryButton variant="outline" size="sm">
+            <SecondaryButton size="sm">
               <Link href={`/edit/course/${course._id}`}>
                 <Edit className="h-4 w-4" />
               </Link>

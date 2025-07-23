@@ -18,6 +18,7 @@ import { AuthenticatedSession } from "@/lib/types/auth";
 import { Course, UserData } from "@/lib/schemas/database";
 import { MyMarkdown } from "@/components/core/markdown";
 import { getCourseColorStyle } from "@/lib/utils/course-colors";
+import { PrimaryButton } from "@/components/core/buttons/primary";
 
 interface Message {
   id: string;
@@ -66,44 +67,49 @@ function MessageList({ messages }: { messages: Message[] }) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   }, [messages]);
 
   return (
-    <div className="bg-primary-50 w-full px-6 py-6">
-      <div className="max-w-4xl mx-auto space-y-4">
-        {messages.map((message) => {
+    <div className="bg-background w-full px-6 py-6">
+      <div className="max-w-2xl mx-auto space-y-4">
+        {messages.map((message, idx) => {
           const isError = message.type === "error";
           return (
-            <div
-              key={message.id}
-              className={`flex ${
-                message.sender === "user" ? "justify-end" : "justify-start"
-              }`}
-            >
+            <div key={message.id}>
+              {idx === messages.length - 1 && <div ref={messagesEndRef} />}
               <div
-                className={`rounded-lg px-4 py-3 max-w-[70%] shadow-sm ${
-                  message.sender === "user"
-                    ? "bg-primary-600 text-white"
-                    : isError
-                      ? "bg-red-100 text-red-800 border-l-4 border-red-400"
-                      : "bg-white text-gray-800 border-l-4 border-primary-300"
+                className={`flex ${
+                  message.sender === "user" ? "justify-end" : "justify-start"
                 }`}
               >
-                <div className="break-words whitespace-pre-line text-sm leading-relaxed">
-                  <MyMarkdown>{message.text /* TODO: markdown render */}</MyMarkdown>
-                </div>
-                <div className="text-xs opacity-70 mt-2">
-                  {message.timestamp.toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                <div
+                  className={`rounded-lg px-4 py-3 shadow-sm ${
+                    message.sender === "user"
+                      ? "bg-primary-600 text-white"
+                      : isError
+                      ? "bg-red-100 text-red-800 border-l-4 border-red-400"
+                      : "bg-primary-100 text-primary-800 border-l-4 border-primary-300"
+                  }`}
+                >
+                  <div className="break-words whitespace-pre-line text-sm leading-relaxed">
+                    <MyMarkdown>{message.text}</MyMarkdown>
+                  </div>
+                  <div className="text-xs opacity-70 mt-2">
+                    {message.timestamp.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
           );
+          // add the messagesEndRef at the end of the list, just before the last message
         })}
-        <div ref={messagesEndRef} />
       </div>
     </div>
   );
@@ -169,8 +175,8 @@ function ChatInput({
   };
   return (
     <>
-      <div className="sticky bottom-0 w-full bg-primary-50 border-t border-gray-200 px-4 py-4">
-        <div className="max-w-4xl mx-auto">
+      <div className="sticky bottom-0 w-full bg-background border-t border-gray-200 px-4 py-4">
+        <div className="max-w-2xl mx-auto">
           {/* Selected course pills */}
           {selectedCourses.length > 0 &&
             selectedCourses.length < courses.length && (
@@ -213,60 +219,64 @@ function ChatInput({
           {/* Course & Content type selectors */}
           <div className="flex items-center gap-3">
             {/* Left side - Filter selectors */}
-            <div className="flex gap-2">
-              <MultiSelect
-                options={courses.map((c) => ({
-                  value: c._id.toString(),
-                  label: c.name,
-                }))}
-                selected={selectedCourses}
-                onChange={onCoursesChange}
-                placeholder="Courses"
-                icon={<BookOpen className="w-5 h-5 text-gray-600" />}
-                className="w-10 h-10"
-              />
-              <MultiSelect
-                options={CONTENT_TYPES.map((t) => ({
-                  value: t.id,
-                  label: t.name,
-                }))}
-                selected={selectedTypes}
-                onChange={onTypesChange}
-                placeholder="Content types"
-                icon={<Tag className="w-5 h-5 text-gray-600" />}
-                className="w-10 h-10"
-              />
-            </div>
+            <div className="flex gap-2 w-full">
+              {/* Center - Textarea */}
+              <div className="flex-1 flex flex-col w-full bg-primary-35 rounded-2xl border border-gray-300">
+                <textarea
+                  ref={textareaRef}
+                  className="rounded-2xl w-full px-4 py-3 resize-none focus:outline-none bg-primary-35 placeholder-primary-500/70 text-primary-500 h-fit"
+                  placeholder="Message LISA..."
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  disabled={disabled}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSend();
+                    }
+                  }}
+                  rows={1}
+                />
 
-            {/* Center - Textarea */}
-            <div className="flex-1">
-              <textarea
-                ref={textareaRef}
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent bg-secondary-50 placeholder-gray-500"
-                placeholder="Message LISA..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                disabled={disabled}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSend();
-                  }
-                }}
-                rows={1}
-                style={{ minHeight: "60px", maxHeight: "200px" }}
-              />
-            </div>
+                <div className="flex flex-row items-center justify-between m-2">
+                  <div className="flex flex-row items-center justify-start gap-2">
+                    <MultiSelect
+                      options={courses.map((c) => ({
+                        value: c._id.toString(),
+                        label: c.name,
+                      }))}
+                      selected={selectedCourses}
+                      onChange={onCoursesChange}
+                      placeholder="Courses"
+                      icon={<BookOpen className="w-5 h-5 text-gray-600" />}
+                      className="w-10 h-10 bg-primary-100 text-primary-700 border border-primary-300 rounded-bl-xl"
+                    />
+                    <MultiSelect
+                      options={CONTENT_TYPES.map((t) => ({
+                        value: t.id,
+                        label: t.name,
+                      }))}
+                      selected={selectedTypes}
+                      onChange={onTypesChange}
+                      placeholder="Content types"
+                      icon={<Tag className="w-5 h-5 text-gray-600" />}
+                      className="w-10 h-10 bg-primary-100 text-primary-700 border border-primary-300 rounded-lg"
+                    />
+                  </div>
+                  {/* Right side - Send button */}
+                  <PrimaryButton
+                    type="button"
+                    onClick={handleSend}
+                    className="h-full rounded-br-xl"
 
-            {/* Right side - Send button */}
-            <button
-              type="button"
-              onClick={handleSend}
-              className="primarybutton p-3 rounded-xl flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={disabled || !input.trim()}
-            >
-              <ChevronUp className="w-5 h-5" />
-            </button>
+                    disabled={disabled || !input.trim()}
+
+                  >
+                    <ChevronUp className="w-10 h-10" />
+                  </PrimaryButton>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Search context text below textarea */}
@@ -296,8 +306,8 @@ function InitialSplash({
   const ContentIcon = iconForTypeLucide("content");
 
   return (
-    <div className="min-h-full flex flex-col items-center justify-center px-6 py-12 text-gray-500">
-      <div className="text-center max-w-md mb-8">
+    <div className="bg-background min-h-full flex flex-col items-center justify-center px-6 py-12 text-gray-500">
+      <div className="text-center max-w-2xl mb-8">
         <div className="flex items-center justify-center mb-4">
           <MessageCircle size={48} className="text-primary-600" />
           <span className="text-3xl tracking-wider font-bold text-primary-700 ml-2">
@@ -456,7 +466,7 @@ function LisaPageContent({
   return (
     <>
       <SetHeaderClientComponent title="LISA" />
-      <div className="mx-auto w-full max-w-4xl flex flex-col min-h-screen bg-primary-50">
+      <div className="mx-auto w-full max-w-2xl flex flex-col min-h-screen bg-background">
         {/* Main scrollable content area */}
         <div className="flex-1">
           {messages.length === 0 ? (

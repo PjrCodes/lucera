@@ -7,31 +7,36 @@
   --font-body: var(--font-lato);
   --font-header: var(--font-urbanist);
 
-  /* Primary (Yellow) */
-  --color-primary-50: #f5faff;
-  --color-primary-100: #e3f0fb;
-  --color-primary-200: #cbe2f7;
-  --color-primary-300: #b3d4f3;
-  --color-primary-400: #9bc6ef;
-  --color-primary-500: #83b8eb;
-  --color-primary-600: #6baae7;
-  --color-primary-700: #539ce3;
-  --color-primary-800: #3b8edf;
-  --color-primary-900: #2370b3;
-  --color-primary-950: #17496c;
+  --color-background: #ffffff;
+  
+  /* Primary (High Contrast Blue) */
+  --color-primary-25: #f2e6f7;
+  --color-primary-35: #e6d4f0;
+  --color-primary-50: #b3a3be;
+  --color-primary-100: #cbbfd2;
+  --color-primary-200: #a48bb2;
+  --color-primary-300: #8b6e99;
+  --color-primary-400: #7e6d8e;
+  --color-primary-500: #4c3b4d;
+  --color-primary-600: #3d2f3e;
+  --color-primary-700: #2e232f;
+  --color-primary-800: #1f171f;
+  --color-primary-900: #120c13;
+  --color-primary-950: #090508;
   --color-primary: var(--color-primary-500);
 
-  /* Secondary (Brown) */
-  --color-secondary-50: #f2e5e7;
-  --color-secondary-100: #dcafb5;
-  --color-secondary-200: #c79092;
-  --color-secondary-300: #b07a6a;
-  --color-secondary-400: #9f666a;
-  --color-secondary-500: #8c4f4f;
-  --color-secondary-600: #6f3d3f;
-  --color-secondary-700: #593032;
-  --color-secondary-800: #432325;
-  --color-secondary-900: #2d1618;
+  /* Secondary (Muted Teal) */
+  --color-secondary-50: #e6f6f7;
+  --color-secondary-100: #c2e7ea;
+  --color-secondary-200: #9fd8dd;
+  --color-secondary-300: #7bc9d0;
+  --color-secondary-400: #57bac3;
+  --color-secondary-500: #3fa6af;
+  --color-secondary-600: #33848b;
+  --color-secondary-700: #276267;
+  --color-secondary-800: #1b4043;
+  --color-secondary-900: #102022;
+  --color-secondary: var(--color-secondary-500);
 
   /* Success */
   --color-success-50: #e6f9f0;
@@ -82,6 +87,8 @@
   --color-danger-900: #b71c1c;
 
   --color-sidebar-border: transparent;
+
+  --contentwidth: var(--container-6xl);
 }
 
 /* SHADCN-UI HAS ADDED SEVERAL CSS VARIABLES FOR THEMING. */
@@ -136,11 +143,11 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --chart-1: var(--color-primary-300);
+  --chart-2: var(--color-primary-400);
+  --chart-3: var(--color-primary-500);
+  --chart-4: var(--color-primary-600);
+  --chart-5: var(--color-primary-800);
   --sidebar: oklch(1 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);

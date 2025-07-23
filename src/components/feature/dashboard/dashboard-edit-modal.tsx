@@ -82,8 +82,8 @@ const SourceDraggableElement = ({
                     isOverlay && !isDropAllowed
                       ? "border-danger-600 bg-danger-100 text-danger-900 cursor-not-allowed shadow-lg"
                       : isOverlay
-                        ? "bg-primary-400 text-primary-950 shadow-lg border-primary-600 cursor-grabbing"
-                        : "bg-primary-300 text-primary-950 shadow-sm hover:shadow-md hover:bg-primary-400 cursor-grab border-primary-600"
+                        ? "bg-primary-400 text-primary-25 shadow-lg border-primary-600 cursor-grabbing"
+                        : "bg-primary-300 text-primary-25 shadow-sm hover:shadow-md hover:bg-primary-400 cursor-grab border-primary-600"
                   }`}
     >
       {
@@ -182,6 +182,17 @@ export default function DashboardEditModal({
     ] || [];
   const leftColumnAllowedTypes = dashboardAcl.column_restrictions.leftColumn;
   const rightColumnAllowedTypes = dashboardAcl.column_restrictions.rightColumn;
+
+  // Get currently used element types
+  const usedElementTypes = new Set([
+    ...leftColumn.map(item => item.type),
+    ...rightColumn.map(item => item.type)
+  ]);
+
+  // Filter out already used element types from available elements
+  const availableElementTypes = roleAllowedElementTypes.filter(
+    elementType => !usedElementTypes.has(elementType)
+  );
 
   useEffect(() => {
     if (isOpen && userId) {
@@ -389,14 +400,15 @@ export default function DashboardEditModal({
 
     if (targetColumnName) {
       if (activeIsSource) {
-        // For source items, check role and column restrictions
+        // For source items, check role, column restrictions, and duplicates
         const isAllowedByRole = roleAllowedElementTypes.includes(elementType);
         const isAllowedInTargetColumn = (
           targetColumnName === "left"
             ? leftColumnAllowedTypes
             : rightColumnAllowedTypes
         ).includes(elementType);
-        isAllowed = isAllowedByRole && isAllowedInTargetColumn;
+        const isNotDuplicate = !usedElementTypes.has(elementType);
+        isAllowed = isAllowedByRole && isAllowedInTargetColumn && isNotDuplicate;
       } else {
         // For existing items
         if (sourceColumn === targetColumnName) {
@@ -404,6 +416,7 @@ export default function DashboardEditModal({
           isAllowed = true;
         } else {
           // Different column - check if element type is allowed in target column
+          // No need to check duplicates since we're moving, not adding
           const isAllowedInTargetColumn = (
             targetColumnName === "left"
               ? leftColumnAllowedTypes
@@ -478,8 +491,9 @@ export default function DashboardEditModal({
             ? leftColumnAllowedTypes
             : rightColumnAllowedTypes
         ).includes(elementTypeFromSource);
+        const isNotDuplicate = !usedElementTypes.has(elementTypeFromSource);
 
-        if (isAllowedByRole && isAllowedInTargetColumn) {
+        if (isAllowedByRole && isAllowedInTargetColumn && isNotDuplicate) {
           addElementToColumn(
             elementTypeFromSource,
             targetColumnName,
@@ -487,7 +501,7 @@ export default function DashboardEditModal({
           );
         } else {
           console.warn(
-            `Element ${elementTypeFromSource} cannot be added to ${targetColumnName}. Role allowed: ${isAllowedByRole}, Column allowed: ${isAllowedInTargetColumn}.`,
+            `Element ${elementTypeFromSource} cannot be added to ${targetColumnName}. Role allowed: ${isAllowedByRole}, Column allowed: ${isAllowedInTargetColumn}, Not duplicate: ${isNotDuplicate}.`,
           );
         }
       }
@@ -716,9 +730,9 @@ export default function DashboardEditModal({
               <h3 className="font-semibold text-center text-primary-900 mb-4">
                 Add Elements (Drag to a column)
               </h3>
-              {roleAllowedElementTypes.length > 0 ? (
+              {availableElementTypes.length > 0 ? (
                 <div className="flex flex-wrap gap-3 p-3 justify-center border-2 border-primary-800 rounded-lg shadow">
-                  {roleAllowedElementTypes.map((elementType) => (
+                  {availableElementTypes.map((elementType) => (
                     <SourceDraggableElement
                       key={`source-${elementType}`}
                       elementType={elementType}
@@ -727,7 +741,10 @@ export default function DashboardEditModal({
                 </div>
               ) : (
                 <p className="text-sm text-primary-700 text-center p-4">
-                  No elements available to add based on your role.
+                  {roleAllowedElementTypes.length === 0
+                    ? "No elements available to add based on your role."
+                    : "All available elements have already been added to your dashboard."
+                  }
                 </p>
               )}
             </div>

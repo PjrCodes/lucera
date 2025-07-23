@@ -201,7 +201,7 @@ export function withAuthorisation(handler: (
 export async function serverComponentRedirectUnauthenticated(): Promise<AuthenticatedSession> {
   const session = await auth();
   if (!session || !session.user || !session.user.id) {
-    redirect("/");
+    redirect("/landing");
   }
   return session as AuthenticatedSession;
 }

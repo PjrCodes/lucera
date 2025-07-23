@@ -309,7 +309,7 @@ export default function LeaderboardComponent({
         {paginationData.records.map((entry) => (
           <div
             key={entry.id}
-            className={`p-4 flex items-center justify-between hover:bg-gray-50 transition-colors ${
+            className={`p-4 flex items-center justify-between bg-white hover:bg-primary-50 transition-colors ${
               entry.isCurrentUser
                 ? "bg-primary-100 border-l-4 border-primary-400"
                 : ""

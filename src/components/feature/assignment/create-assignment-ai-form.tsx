@@ -4,25 +4,24 @@ import { PrimaryButton } from "@/components/core/buttons/primary";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { FileDropInput } from "@/components/core/inputs/file-drop-input";
 import { Dropdown } from "@/components/core/inputs/dropdown";
-import { Course, UserData } from "@/lib/schemas/database";
-import { Session } from "next-auth";
+import { Course } from "@/lib/schemas/database";
 import { useRouter } from "next/navigation";
 
-export default function CreateAssignmentAIForm({
-  // userData,
-  // session,
-  courses,
-  defaultCourseId,
-}: {
-  userData: UserData;
-  session: Session;
+type Props = {
   courses: Course[];
   defaultCourseId?: string;
-}) {
+};
+
+export default function CreateAssignmentAIForm({
+  courses,
+  defaultCourseId,
+}: Props) {
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    "File upload failed: there has been an incident."
+  );
   const router = useRouter();
 
   useEffect(() => {
@@ -50,13 +49,18 @@ export default function CreateAssignmentAIForm({
       });
       if (!result.ok) {
         const errorData = await result.json();
-        setError(errorData.error || "Failed to upload assignment file.");
-        // return;
+        console.error("[COMP/CREATE_ASSIGNMENT: FILE UPLOAD]", errorData);
+        setError("File upload failed: " + errorData.error);
+        return;
       }
-
       const uploadResult = await result.json();
       if (!uploadResult.fileId) {
-        setError("File upload failed. No fileId returned.");
+        console.error(
+          "[COMP/CREATE_ASSIGNMENT: FILE UPLOAD] No fileId returned",
+          uploadResult
+        );
+        setError("File upload failed: No fileId returned.");
+        return;
       }
 
       const magicCreate = await fetch("/api/magic-create/assignment", {
@@ -72,28 +76,30 @@ export default function CreateAssignmentAIForm({
 
       if (!magicCreate.ok) {
         const errorData = await magicCreate.json();
-        setError(errorData.error || "Failed to process content with AI.");
-        // return;
+        console.error("[COMP/CREATE_ASSIGNMENT: MAGIC CREATE]", errorData);
+        setError("Failed to process content with AI: " + errorData.error);
+        return;
       }
 
       const magicResult = await magicCreate.json();
 
       if (magicResult.status !== "success") {
-        setError(magicResult.error || "AI processing failed.");
+        console.error("[COMP/CREATE_ASSIGNMENT: MAGIC RESULT]", magicResult);
+        setError("Failed to process content with AI: " + magicResult.error);
         return;
       }
-      setError(null); // Clear any previous errors
 
+      setError(null); // Clear any previous errors
       const resId = magicResult.contentId;
-      console.log("AI processed content ID:", resId);
       // Redirect to edit page with AI-processed data and file info
       router.push(
         `/edit/assignment/${resId}?courseId=${selectedCourse}&hasFile=true&fileName=${encodeURIComponent(
-          file.name,
-        )}`,
+          file.name
+        )}`
       );
     } catch (error) {
       console.error("Error processing PDF:", error);
+      setError("An error occurred while processing the PDF. Please try again.");
     } finally {
       setIsProcessing(false);
     }
@@ -102,89 +108,94 @@ export default function CreateAssignmentAIForm({
   const handleSkipToEdit = () => {
     if (!selectedCourse) return;
     router.push(
-      `/edit/assignment/new?courseId=${selectedCourse}&hasFile=false`,
+      `/edit/assignment/new?courseId=${selectedCourse}&hasFile=false`
     );
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Create an Assignment</h1>
+    <div className="max-w-(--contentwidth) mx-auto bg-primary-25 shadow-md rounded-xl p-4">
+      <div className="max-w-2xl">
+        <h1 className="text-2xl font-bold mb-6">Create an Assignment</h1>
 
-      {!selectedCourse ? (
-        <div>
-          <label className="block mb-2 font-medium">Select a course:</label>
-          <Dropdown
-            options={courses.map((c) => ({
-              value: c._id.toString(),
-              label: c.name,
-            }))}
-            value={selectedCourse}
-            onChange={setSelectedCourse}
-            placeholder="-- Choose a course --"
-          />
-        </div>
-      ) : (
-        <div className="space-y-6">
+        {!selectedCourse ? (
           <div>
-            <label className="block mb-2 font-medium">Course:</label>
-            <div className="flex items-center gap-2">
-              <span className="font-semibold">
-                {courses.find((c) => c._id.toString() === selectedCourse)?.name}
-              </span>
-              <SecondaryButton
-                type="button"
-                variant="outline"
-                className="text-sm px-2 py-1"
-                onClick={() => setSelectedCourse(null)}
+            <label className="mb-2 font-medium">Select a course:</label>
+            <Dropdown
+              options={courses.map((c) => ({
+                value: c._id.toString(),
+                label: c.name,
+              }))}
+              value={selectedCourse}
+              onChange={setSelectedCourse}
+              placeholder="-- Choose a course --"
+            />
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <div>
+              <label className="block mb-2 font-medium">Course:</label>
+              <div className="flex items-center gap-2">
+                <span className="font-semibold">
+                  {
+                    courses.find((c) => c._id.toString() === selectedCourse)
+                      ?.name
+                  }
+                </span>
+                <SecondaryButton
+                  type="button"
+                  variant="outline"
+                  className="text-sm px-2 py-1"
+                  onClick={() => setSelectedCourse(null)}
+                >
+                  Change
+                </SecondaryButton>
+              </div>
+            </div>
+
+            {error && (
+              <div>
+                <span className="text-red-600">Error: {error}</span>
+              </div>
+            )}
+
+            <div>
+              <label className="block mb-2 font-medium">Upload PDF:</label>
+              <FileDropInput
+                accept="application/pdf"
+                file={file}
+                onFileChange={setFile}
+              />
+              {file && (
+                <div className="mt-1 text-sm text-gray-600">
+                  Selected: {file.name}
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-3">
+              <PrimaryButton
+                onClick={handleUploadAndProcess}
+                disabled={!file || isProcessing}
+                className="w-full"
               >
-                Change
+                {isProcessing
+                  ? "Processing with AI..."
+                  : "✨ Upload & Process with AI"}
+              </PrimaryButton>
+
+              <div className="text-center text-sm text-gray-500">or</div>
+
+              <SecondaryButton
+                onClick={handleSkipToEdit}
+                variant="outline"
+                className="w-full"
+              >
+                Skip to Manual Entry
               </SecondaryButton>
             </div>
           </div>
-
-          {error && (
-            <div>
-              <span className="text-red-600">Error: {error}</span>
-            </div>
-          )}
-
-          <div>
-            <label className="block mb-2 font-medium">Upload PDF:</label>
-            <FileDropInput
-              accept="application/pdf"
-              file={file}
-              onFileChange={setFile}
-            />
-            {file && (
-              <div className="mt-1 text-sm text-gray-600">
-                Selected: {file.name}
-              </div>
-            )}
-          </div>
-
-          <div className="space-y-3">
-            <PrimaryButton
-              onClick={handleUploadAndProcess}
-              disabled={!file || isProcessing}
-              className="w-full"
-            >
-              {isProcessing
-                ? "Processing with AI..."
-                : "✨ Upload & Process with AI"}
-            </PrimaryButton>
-
-            <div className="text-center text-sm text-gray-500">or</div>
-
-            <SecondaryButton
-              onClick={handleSkipToEdit}
-              variant="outline"
-              className="w-full"
-            >
-              Skip to Manual Entry
-            </SecondaryButton>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

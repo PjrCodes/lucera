@@ -1,10 +1,11 @@
 import React from "react";
 import { iconForType } from "../../../../lib/constants"; // Import the icons
 import { PiConfetti } from "react-icons/pi";
-import { PropsForEveryDashboardCard } from "@/lib/interfaces/props";
+import { SessionAndDataProps } from "@/lib/interfaces/props";
 // import { Deadline } from "@/lib/types/lib"; // Import the Deadline type
 import { getUpcomingDeadlines } from "@/lib/database-service/assignment";
 import { getCourseColorStyle } from "@/lib/utils/course-colors";
+import { SquareChartGantt } from "lucide-react";
 
 function formatDate(dateStr: string) {
   if (!dateStr) return "N/A";
@@ -16,12 +17,12 @@ function formatDate(dateStr: string) {
   const nowDateOnly = new Date(
     now.getFullYear(),
     now.getMonth(),
-    now.getDate(),
+    now.getDate()
   );
   const dateOnly = new Date(
     date.getFullYear(),
     date.getMonth(),
-    date.getDate(),
+    date.getDate()
   );
 
   // Calculate difference in days
@@ -100,12 +101,12 @@ const getDeadlineColor = (dateStr: string) => {
   const nowDateOnly = new Date(
     now.getFullYear(),
     now.getMonth(),
-    now.getDate(),
+    now.getDate()
   );
   const dateOnly = new Date(
     date.getFullYear(),
     date.getMonth(),
-    date.getDate(),
+    date.getDate()
   );
 
   // Calculate difference in days
@@ -132,7 +133,7 @@ const getDeadlineColor = (dateStr: string) => {
 
 export default async function UpcomingDeadlines({
   userData,
-}: PropsForEveryDashboardCard) {
+}: SessionAndDataProps) {
   // Create deadlines with varied dates to showcase different colors
   const today = new Date();
 
@@ -224,37 +225,46 @@ export default async function UpcomingDeadlines({
   const deadlines = await getUpcomingDeadlines(userData.id);
 
   return (
-    <div className="bg-primary-100 rounded-lg shadow-md p-4 md:px-6 min-h-[250px]">
-      <h2 className="font-bold mb-4 text-primary-700 flex items-center gap-2 text-lg">
-        UPCOMING DEADLINES
-      </h2>
-      <ul className="space-y-3">
+    <div className="rounded-lg shadow-md p-4 md:px-6 min-h-[250px] border-2 border-primary-100">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+          <SquareChartGantt className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+        </div>
+        <div className="flex flex-col text-sm sm:text-base text-primary-700">
+          <h2 className="font-bold text-primary-700 gap-2 text-lg">
+            Upcoming Deadlines
+          </h2>
+          <p className="text-primary-500">
+            Important deadlines coming up in the next 2 weeks.
+          </p>
+        </div>
+      </div>
+      <ul className="space-y-2">
         {deadlines.map((dl) => {
           const IconComponent = iconForType(dl.type);
           return (
             <li
               key={dl.id}
-              className="flex flex-col md:flex-row items-start md:items-center justify-center gap-2 md:gap-3 bg-white/80 rounded-lg shadow-sm px-3 py-2 hover:shadow-md transition-shadow hover:cursor-pointer"
+              className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-3 bg-primary-100/40 rounded-lg shadow-sm hover:shadow-md transition-shadow hover:cursor-pointer py-2 px-2"
             >
-              <div className="flex-1 flex flex-col md:flex-row md:items-center w-full">
-                <div className="flex items-center gap-2 mb-1 md:mb-0">
-                  <span className="text-xl md:text-3xl mr-1 text-primary-700">
-                    <IconComponent />
-                  </span>
-                  <span className="font-semibold text-primary-700 text-sm md:text-base">
-                    {dl.title}
-                  </span>
+              <div className="flex items-start md:items-center gap-2 md:gap-3">
+                <div className="">
+                  <IconComponent className="w-4 h-4 md:w-5 md:h-5 text-primary-600" />
                 </div>
+                <p className="font-medium text-primary-700 text-sm md:text-base">
+                  {dl.title}
+                </p>
+
                 <span
                   className="self-start md:self-center md:ml-2 px-2 py-0.5 rounded text-xs font-medium"
                   style={getCourseColorStyle(dl.courseColor)}
                 >
-                  {dl.course}
+                  {dl.courseCode}
                 </span>
               </div>
               <span
                 className={`text-xs md:text-sm ${getDeadlineColor(
-                  dl.dueDate,
+                  dl.dueDate
                 )} mt-1 md:mt-0`}
               >
                 {formatDate(dl.dueDate)}
