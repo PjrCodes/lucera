@@ -63,8 +63,9 @@ export default async function Courses({ userData }: SessionAndDataProps) {
     courses.map(async (course) => {
       if (isTeacher) {
         return (
-          (course.completedStudentCount / course.enrolledStudentCount) * 100 ||
-          0
+          Math.round(
+            (course.completedStudentCount / course.enrolledStudentCount) * 100
+          ) || 0
         );
         // return Math.round((20 / 35) * 100); // Placeholder for teacher progress
       } else {

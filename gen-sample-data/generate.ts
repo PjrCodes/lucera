@@ -36,7 +36,7 @@ function randomGrade(): number {
   // Generate realistic grade distribution (70-100, with bias toward higher scores)
   const weights = [0.05, 0.15, 0.25, 0.35, 0.20]; // 70-74, 75-79, 80-84, 85-89, 90-100
   const ranges = [[70, 74], [75, 79], [80, 84], [85, 89], [90, 100]];
-  
+
   const rand = Math.random();
   let cumulative = 0;
   for (let i = 0; i < weights.length; i++) {
@@ -102,7 +102,7 @@ async function main() {
     },
     {
       _id: new ObjectId(),
-      id: "teacher_2", 
+      id: "teacher_2",
       name: "Prof. Michael Chen",
       email: "michael.chen@university.edu",
       emailVerified: true,
@@ -309,7 +309,7 @@ async function main() {
 
   // Insert users into both collections (auth and user_data)
   console.log("Inserting users...");
-  
+
   // Insert into users collection (for auth) - only _id, name, email, emailVerified, image
   const authUsers = [...teacherUsers, ...studentUsers].map(user => ({
     _id: user._id, // ObjectId
@@ -319,8 +319,8 @@ async function main() {
     image: user.image
   }));
   await db.collection("users").insertMany(authUsers);
-  
-  // Insert into user_data collection - id field references users._id  
+
+  // Insert into user_data collection - id field references users._id
   const userDataRecords = [...teacherUsers, ...studentUsers].map(user => ({
     _id: new ObjectId(), // New ObjectId for user_data
     id: user._id.toString(), // String reference to users._id
@@ -332,7 +332,7 @@ async function main() {
     relatedFiles: user.relatedFiles
   }));
   await db.collection("user_data").insertMany(userDataRecords);
-  
+
   // Note: users_and_their_data is a MongoDB view that automatically aggregates
   // data from users and user_data collections, so we don't insert into it
 
@@ -347,7 +347,7 @@ async function main() {
     const fileName = sampleFiles[i];
     const fileId = new ObjectId();
     const userId = i < 5 ? teacherUsers[0]._id.toString() : teacherUsers[1]._id.toString();
-    
+
     fileRecords.push({
       _id: fileId,
       name: fileName,
@@ -367,7 +367,7 @@ async function main() {
   // Create assignments for each course
   console.log("Creating assignments...");
   const assignments: any[] = [];
-  
+
   // ML Course assignments
   const mlAssignments = [
     {
@@ -523,7 +523,7 @@ async function main() {
       if (Math.random() > 0.1) {
         const submittedAt = randomDate(new Date(assignment.startDate), new Date(assignment.dueDate));
         const isGraded = assignment.gradesPublished;
-        
+
         submissions.push({
           _id: new ObjectId(),
           assignmentId: assignment._id.toString(),
@@ -544,7 +544,7 @@ async function main() {
           ][Math.floor(Math.random() * 5)] : null,
           gradedBy: isGraded ? teacherUsers[0]._id.toString() : null,
           gradedAt: isGraded ? randomDate(new Date(assignment.gradeReleaseDate), new Date()) : null,
-          rubricGrades: assignment.grading.method === "rubric" && isGraded ? 
+          rubricGrades: assignment.grading.method === "rubric" && isGraded ?
             assignment.grading.rubric.criteria.map((criteria, index) => ({
               criteriaIndex: index,
               levelRank: Math.floor(Math.random() * 4) + 1,
@@ -562,7 +562,7 @@ async function main() {
       if (Math.random() > 0.15) {
         const submittedAt = randomDate(new Date(assignment.startDate), new Date(assignment.dueDate));
         const isGraded = assignment.gradesPublished;
-        
+
         submissions.push({
           _id: new ObjectId(),
           assignmentId: assignment._id.toString(),
@@ -583,7 +583,7 @@ async function main() {
           ][Math.floor(Math.random() * 5)] : null,
           gradedBy: isGraded ? teacherUsers[1]._id.toString() : null,
           gradedAt: isGraded ? randomDate(new Date(assignment.gradeReleaseDate), new Date()) : null,
-          rubricGrades: assignment.grading.method === "rubric" && isGraded ? 
+          rubricGrades: assignment.grading.method === "rubric" && isGraded ?
             assignment.grading.rubric.criteria.map((criteria, index) => ({
               criteriaIndex: index,
               levelRank: Math.floor(Math.random() * 4) + 1,
@@ -682,11 +682,11 @@ async function main() {
   const announcementReadStatuses: any[] = [];
   announcements.forEach(announcement => {
     const relevantStudents = announcement.courseId === sampleCourses[0]._id.toString() ? mlStudents : gisStudents;
-    
+
     // Random percentage of students have read each announcement
     const readCount = Math.floor(relevantStudents.length * (Math.random() * 0.5 + 0.3)); // 30-80% read rate
     const readStudents = relevantStudents.slice(0, readCount);
-    
+
     readStudents.forEach(student => {
       announcementReadStatuses.push({
         _id: new ObjectId(),
@@ -705,7 +705,7 @@ async function main() {
   // Create some bookmarks
   console.log("Creating bookmarks...");
   const bookmarks: any[] = [];
-  
+
   // Random students bookmark random content
   [...mlStudents, ...gisStudents].forEach(student => {
     // Each student bookmarks 1-3 items
@@ -715,7 +715,7 @@ async function main() {
       ...content.map(c => ({ type: "content", id: c._id.toString() })),
       ...sampleCourses.map(course => ({ type: "course", id: course._id.toString() }))
     ];
-    
+
     // Filter items relevant to student's courses
     const relevantItems = allItems.filter(item => {
       if (item.type === "course") return (student.relatedCourses as string[]).includes(item.id);
@@ -729,7 +729,7 @@ async function main() {
       }
       return false;
     });
-    
+
     for (let i = 0; i < Math.min(bookmarkCount, relevantItems.length); i++) {
       const item = relevantItems[i];
       bookmarks.push({
@@ -751,20 +751,20 @@ async function main() {
   console.log("Creating messages...");
   const messages: any[] = [];
   const messageReadStatuses: any[] = [];
-  
+
   // Teachers send messages to students
   teacherUsers.forEach(teacher => {
     const teacherCourse = sampleCourses.find(course => course.userId === teacher._id.toString());
     if (teacherCourse) {
       const courseStudents = teacher._id.toString() === teacherUsers[0]._id.toString() ? mlStudents : gisStudents;
-      
+
       // Teacher sends 2-5 messages to random students
       const messageCount = Math.floor(Math.random() * 4) + 2;
       for (let i = 0; i < messageCount; i++) {
         const student = randomElement(courseStudents);
         const messageId = new ObjectId();
         const sentAt = randomDate(new Date("2024-08-20"), new Date());
-        
+
         messages.push({
           _id: messageId,
           senderId: teacher._id.toString(),
@@ -779,7 +779,7 @@ async function main() {
           createdAt: sentAt,
           updatedAt: sentAt
         });
-        
+
         // 70% chance the message has been read
         if (Math.random() > 0.3) {
           messageReadStatuses.push({
@@ -793,7 +793,7 @@ async function main() {
       }
     }
   });
-  
+
   // Students send messages to teachers
   [...mlStudents, ...gisStudents].forEach(student => {
     // 40% of students send messages to their teachers
@@ -805,7 +805,7 @@ async function main() {
           if (teacher) {
             const messageId = new ObjectId();
             const sentAt = randomDate(new Date("2024-09-01"), new Date());
-            
+
             messages.push({
               _id: messageId,
               senderId: student._id.toString(),
@@ -820,7 +820,7 @@ async function main() {
               createdAt: sentAt,
               updatedAt: sentAt
             });
-            
+
             // 90% chance teacher has read student messages
             if (Math.random() > 0.1) {
               messageReadStatuses.push({
@@ -836,19 +836,19 @@ async function main() {
       });
     }
   });
-  
+
   // Some student-to-student messages within the same courses
   [...mlStudents, ...gisStudents].forEach(student => {
     if (Math.random() > 0.7) { // 30% of students send peer messages
-      const courseStudents = ((student.relatedCourses as string[]).includes(sampleCourses[0]._id.toString())) ? 
+      const courseStudents = ((student.relatedCourses as string[]).includes(sampleCourses[0]._id.toString())) ?
         mlStudents : gisStudents;
       const otherStudents = courseStudents.filter(s => s._id.toString() !== student._id.toString());
-      
+
       if (otherStudents.length > 0) {
         const peer = randomElement(otherStudents);
         const messageId = new ObjectId();
         const sentAt = randomDate(new Date("2024-09-01"), new Date());
-        
+
         messages.push({
           _id: messageId,
           senderId: student._id.toString(),
@@ -863,7 +863,7 @@ async function main() {
           createdAt: sentAt,
           updatedAt: sentAt
         });
-        
+
         // 60% chance peer has read the message
         if (Math.random() > 0.4) {
           messageReadStatuses.push({
@@ -881,7 +881,7 @@ async function main() {
   if (messages.length > 0) {
     await db.collection("messages").insertMany(messages);
   }
-  
+
   if (messageReadStatuses.length > 0) {
     await db.collection("message_read_status").insertMany(messageReadStatuses);
   }
@@ -940,7 +940,7 @@ async function cleanup() {
   console.log("🧹 Cleaning up sample data...");
 
   // Check if sample data exists
-  const existingUsers = await db.collection("users").findOne({ 
+  const existingUsers = await db.collection("users").findOne({
     name: { $in: ["Dr. Sarah Johnson", "Prof. Michael Chen"] }
   });
   if (!existingUsers) {
@@ -953,7 +953,7 @@ async function cleanup() {
   const sampleUsers = await db.collection("users").find({
     name: { $regex: /(Dr\. Sarah Johnson|Prof\. Michael Chen|Alice Johnson|Bob Smith|Carol Davis|David Wilson|Eva Brown|Frank Miller|Grace Lee|Henry Taylor|Iris Wang|Jack Thompson|Kate Rodriguez|Liam O'Brien|Maya Patel|Noah Kim|Olivia Zhang|Paul Martinez|Quinn Anderson|Rachel Green|Sam Murphy|Tina Liu|Uma Singh|Victor Petrov|Wendy Clark|Xavier Costa|Yuki Tanaka)/ }
   }).toArray();
-  
+
   const sampleUserObjectIds = sampleUsers.map(user => user._id);
   const sampleUserStringIds = sampleUsers.map(user => user._id.toString());
 
@@ -961,7 +961,7 @@ async function cleanup() {
   await db.collection("users").deleteMany({
     _id: { $in: sampleUserObjectIds }
   });
-  
+
   await db.collection("user_data").deleteMany({
     id: { $in: sampleUserStringIds }
   });
@@ -971,7 +971,7 @@ async function cleanup() {
   const sampleCourses = await db.collection("courses").find({
     userId: { $in: sampleUserStringIds }
   }).toArray();
-  
+
   const sampleCourseIds = sampleCourses.map(course => course._id.toString());
 
   await db.collection("courses").deleteMany({
@@ -1046,7 +1046,7 @@ async function cleanup() {
 // Main execution
 async function run() {
   const args = process.argv.slice(2);
-  
+
   if (args.includes('--cleanup') || args.includes('-c')) {
     await cleanup();
   } else {
