@@ -10,7 +10,6 @@ import CourseStudentsCard from "@/components/feature/course/cards/course-student
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   BookOpen,
-  ChartNoAxesColumn,
   ClipboardList,
   Clock,
   FileText,
@@ -49,7 +48,7 @@ export default function CourseTabs({
     <div className="w-full flex flex-col items-center">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         {/* Responsive scrollable tab bar */}
-        <div className="w-full min-w-0 max-w-full min-w-full sm:max-w-6xl mx-auto">
+        <div className="w-full">
           <TabsList className="flex flex-row flex-wrap gap-1 w-full min-w-full bg-primary-100 border border-primary-200 rounded-lg p-1 min-h-fit">
             <TabsTrigger
               value="description"
@@ -60,21 +59,21 @@ export default function CourseTabs({
             </TabsTrigger>
             <TabsTrigger
               value="units"
-              className="data-[state=active]:bg-secondary-50 data-[state=active]:text-secondary-900 text-secondary-700 whitespace-nowrap flex items-center px-3 py-2"
+              className="data-[state=active]:bg-primary-50 data-[state=active]:text-primary-900 text-primary-700 whitespace-nowrap flex items-center px-3 py-2"
             >
               <List className="mr-1" />
               Units
             </TabsTrigger>
             <TabsTrigger
               value="timeline"
-              className="data-[state=active]:bg-info-50 data-[state=active]:text-info-900 text-info-700 whitespace-nowrap flex items-center px-3 py-2"
+              className="data-[state=active]:bg-primary-50 data-[state=active]:text-primary-900 text-primary-700 whitespace-nowrap flex items-center px-3 py-2"
             >
               <Clock className="mr-1" />
               Timeline
             </TabsTrigger>
             <TabsTrigger
               value="assignments"
-              className="data-[state=active]:bg-success-50 data-[state=active]:text-success-900 text-success-700 whitespace-nowrap flex items-center px-3 py-2"
+              className="data-[state=active]:bg-primary-50 data-[state=active]:text-primary-900 text-primary-700 whitespace-nowrap flex items-center px-3 py-2"
             >
               <ClipboardList className="mr-1" />
               Assignments
@@ -95,15 +94,15 @@ export default function CourseTabs({
             </TabsTrigger>
             <TabsTrigger
               value="students"
-              className="data-[state=active]:bg-secondary-50 data-[state=active]:text-secondary-900 text-secondary-700 whitespace-nowrap flex items-center px-3 py-2"
+              className="data-[state=active]:bg-primary-50 data-[state=active]:text-primary-900 text-primary-700 whitespace-nowrap flex items-center px-3 py-2"
             >
               <Users className="mr-1" />
               Students
             </TabsTrigger>{" "}
           </TabsList>
         </div>
-        {/* Content area with only min-h to prevent jumping, no extra box styling */}
-        <div className="w-full min-w-0 max-w-full min-w-full sm:max-w-6xl mx-auto px-2 sm:px-0 mt-2 min-h-[340px] flex flex-col justify-start">
+        {/* Content area with dashboard-style spacing and layout */}
+        <div className="w-full mt-4 min-h-[340px] flex flex-col justify-start">
           <TabsContent value="description">
             <CourseDescription course={course} />
           </TabsContent>
@@ -117,7 +116,6 @@ export default function CourseTabs({
             <CourseAssignmentsCard
               assignments={assignments}
               courseId={courseId}
-              selectedAssignmentId={null}
               isTeacher={isTeacher}
             />
           </TabsContent>

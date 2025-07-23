@@ -1,20 +1,18 @@
 "use client";
 import { AssignmentWithEmbeddedFile } from "@/lib/schemas/database";
-import { FiClipboard, FiChevronRight, FiPlus } from "react-icons/fi";
+import { ClipboardList, ChevronRight, Plus } from "lucide-react";
 import { Ban, MessageSquareOff } from "lucide-react";
 import Link from "next/link";
 
 interface CourseAssignmentsCardProps {
   assignments: AssignmentWithEmbeddedFile[];
   courseId: string;
-  selectedAssignmentId?: string | null;
   isTeacher?: boolean;
 }
 
 export default function CourseAssignmentsCard({
   assignments,
   courseId,
-  selectedAssignmentId,
   isTeacher,
 }: CourseAssignmentsCardProps) {
   const formatDate = (dateString: string | null) => {
@@ -32,33 +30,42 @@ export default function CourseAssignmentsCard({
 
   if (assignments.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
+      <div className="rounded-lg shadow-md p-4 md:px-6 min-h-[250px] border-2 border-primary-100">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-semibold text-primary-900 flex items-center gap-2">
-            <FiClipboard className="w-5 h-5 text-primary-900" />
-            <span>Assignments</span>
-          </h2>
+          <div className="flex items-center gap-3">
+            <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+              <ClipboardList className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+            </div>
+            <div className="flex flex-col text-sm sm:text-base text-primary-700">
+              <h2 className="font-bold text-primary-700 gap-2 text-lg">
+                Assignments
+              </h2>
+              <p className="text-primary-500">
+                Course assignments and tasks.
+              </p>
+            </div>
+          </div>
           {isTeacher && (
-            <Link 
+            <Link
               href={`/create/assignment?courseId=${courseId}`}
               className="inline-flex items-center gap-2 px-3 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
             >
-              <FiPlus className="w-4 h-4" />
+              <Plus className="w-4 h-4" />
               Add Assignment
             </Link>
           )}
         </div>
         <div className="text-center py-8">
-          <FiClipboard className="w-12 h-12 text-primary-300 mx-auto mb-3" />
-          <p className="text-base text-primary-600 mb-4">
+          <ClipboardList className="w-12 h-12 text-primary-300 mx-auto mb-3" />
+          <p className="text-lg text-primary-600 mb-4">
             No assignments available for this course.
           </p>
           {isTeacher && (
-            <Link 
+            <Link
               href={`/create/assignment?courseId=${courseId}`}
               className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
             >
-              <FiPlus className="w-4 h-4" />
+              <Plus className="w-4 h-4" />
               Create First Assignment
             </Link>
           )}
@@ -68,67 +75,63 @@ export default function CourseAssignmentsCard({
   }
 
   return (
-    <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
+    <div className="rounded-lg shadow-md p-4 md:px-6 min-h-[250px] border-2 border-primary-100">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-base font-semibold text-primary-900 flex items-center gap-2">
-          <FiClipboard className="w-5 h-5 text-primary-900" />
-          <span>Assignments</span>
-        </h2>
+        <div className="flex items-center gap-3">
+          <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+            <ClipboardList className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+          </div>
+          <div className="flex flex-col text-sm sm:text-base text-primary-700">
+            <h2 className="font-bold text-primary-700 gap-2 text-lg">
+              Assignments
+            </h2>
+            <p className="text-primary-500">
+              Course assignments and tasks.
+            </p>
+          </div>
+        </div>
         {isTeacher && (
-          <Link 
+          <Link
             href={`/create/assignment?courseId=${courseId}`}
             className="inline-flex items-center gap-2 px-3 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
           >
-            <FiPlus className="w-4 h-4" />
+            <Plus className="w-4 h-4" />
             Add Assignment
           </Link>
         )}
       </div>
-      <div className="space-y-3">
+      <div className="space-y-2">
         {assignments.map((assignment) => {
           const overdue = isOverdue(assignment.dueDate);
           const upcoming = isUpcoming(assignment.startDate);
-          const isSelected = selectedAssignmentId === assignment._id.toString();
 
           return (
             <Link
               key={assignment._id.toString()}
               href={`/view/assignment/${assignment._id.toString()}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`block w-full text-left border-l-4 ${
-                isSelected
-                  ? "border-primary-500 bg-primary-50"
-                  : "border-secondary-300"
-              } pl-4 py-3 hover:bg-primary-50 transition-all duration-200 rounded-r-lg group`}
+              className={`block w-full text-left bg-primary-100/40 rounded-lg shadow-sm hover:shadow-md transition-shadow hover:cursor-pointer py-3 px-4 group`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h4
-                      className={`text-base font-medium ${
-                        isSelected
-                          ? "text-primary-700"
-                          : "text-primary-900 group-hover:text-primary-700"
-                      }`}
-                    >
+                    <h4 className="text-base font-medium text-primary-900 group-hover:text-primary-700">
                       {assignment.title}
                     </h4>
                     {overdue && (
-                      <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">
+                      <span className="px-2 py-1 bg-danger-100 text-danger-800 text-xs font-medium rounded-full">
                         Overdue
                       </span>
                     )}
                     {upcoming && (
-                      <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                      <span className="px-2 py-1 bg-info-100 text-info-800 text-xs font-medium rounded-full">
                         Upcoming
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-4 text-base text-primary-600">
+                  <div className="flex items-center gap-4 text-sm text-primary-600">
                     {assignment.dueDate ? (
                       <span
-                        className={overdue ? "text-red-600 font-medium" : ""}
+                        className={overdue ? "text-danger-600 font-medium" : ""}
                       >
                         Due: {formatDate(assignment.dueDate)}
                       </span>
@@ -139,25 +142,19 @@ export default function CourseAssignmentsCard({
                     {/* Security indicators */}
                     {assignment.blockDownload && (
                       <div className="flex items-center gap-1" title="Download blocked by instructor">
-                        <Ban className="w-3 h-3 text-red-500" />
-                        <span className="text-xs text-red-600">No Download</span>
+                        <Ban className="w-3 h-3 text-danger-500" />
+                        <span className="text-xs text-danger-600">No Download</span>
                       </div>
                     )}
                     {assignment.blockChatbot && (
                       <div className="flex items-center gap-1" title="LISA chatbot blocked for this document">
-                        <MessageSquareOff className="w-3 h-3 text-orange-500" />
-                        <span className="text-xs text-orange-600">No Chat</span>
+                        <MessageSquareOff className="w-3 h-3 text-warning-500" />
+                        <span className="text-xs text-warning-600">No Chat</span>
                       </div>
                     )}
                   </div>
                 </div>
-                <FiChevronRight
-                  className={`w-5 h-5 ${
-                    isSelected
-                      ? "text-primary-600"
-                      : "text-primary-400 group-hover:text-primary-600"
-                  } transition-colors flex-shrink-0`}
-                />
+                <ChevronRight className="w-5 h-5 text-primary-400 group-hover:text-primary-600 transition-colors flex-shrink-0" />
               </div>
             </Link>
           );

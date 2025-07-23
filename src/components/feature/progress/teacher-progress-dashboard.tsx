@@ -580,7 +580,7 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white p-6">
+      <div className="min-h-screen bg-white">
         <div className="max-w-7xl mx-auto space-y-8">
           <div className="bg-white rounded-2xl shadow-lg border border-primary-200 p-8">
             <div className="animate-pulse">
@@ -621,7 +621,7 @@ export default function TeacherProgressDashboard({ userId }: TeacherProgressDash
   }
 
   return (
-    <div className="min-h-screen bg-transparent p-4">
+    <div className="min-h-screen bg-transparent">
       <div className="space-y-4 md:space-y-6">
         {/* Simplified Header */}
         <div className="flex flex-col gap-4 bg-white rounded-xl shadow-sm border border-primary-200 p-4 md:p-6">

@@ -1,4 +1,4 @@
-import { FiMessageSquare } from "react-icons/fi";
+import { MessageSquare } from "lucide-react";
 
 interface PollOrAnnouncement {
   id: number;
@@ -14,16 +14,25 @@ export default function CoursePollsCard({
   pollsAndAnnouncements: PollOrAnnouncement[];
 }) {
   return (
-    <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
-      <h2 className="text-base font-semibold text-primary-900 mb-4 flex items-center gap-2">
-        <FiMessageSquare className="w-5 h-5 text-primary-900" />
-        <span>Polls & Announcements</span>
-      </h2>
-      <div className="space-y-3">
+    <div className="rounded-lg shadow-md p-4 md:px-6 min-h-[250px] border-2 border-primary-100">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+          <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+        </div>
+        <div className="flex flex-col text-sm sm:text-base text-primary-700">
+          <h2 className="font-bold text-primary-700 gap-2 text-lg">
+            Polls & Announcements
+          </h2>
+          <p className="text-primary-500">
+            Course interactions and updates.
+          </p>
+        </div>
+      </div>
+      <div className="space-y-2">
         {pollsAndAnnouncements.map((item) => (
           <div
             key={item.id}
-            className="border-l-4 border-accent-200 pl-3 py-2 hover:bg-primary-50 rounded transition-colors"
+            className="bg-primary-100/40 rounded-lg shadow-sm hover:shadow-md transition-shadow py-3 px-4"
           >
             <h4 className="text-base font-medium text-primary-900 mb-1">
               {item.type === "poll" ? "Poll" : "Announcement"}: {item.question}

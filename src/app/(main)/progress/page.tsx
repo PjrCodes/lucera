@@ -9,7 +9,7 @@ export default async function ProgressPage() {
   const isTeacher = userData.role === "teacher";
 
   return (
-    <main className="p-4">
+    <main className="w-full p-4">
       {/* <h1 className="text-3xl font-bold mb-6 text-center text-primary-700">
         Progress Dashboard
       </h1> */}

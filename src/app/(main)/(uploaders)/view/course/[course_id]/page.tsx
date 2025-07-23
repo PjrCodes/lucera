@@ -109,7 +109,7 @@ export default async function CourseViewPage({
     <>
       <SetHeaderClientComponent title={course.name.toUpperCase()} />
       <div className="min-h-screen bg-background">
-        <div className="max-w-6xl mx-auto p-6">
+        <div className="w-full p-4">
           <div className="mx-auto w-full">
             <CourseHeader
               course={safeCourse}

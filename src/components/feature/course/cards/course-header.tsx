@@ -6,6 +6,7 @@ import { Edit, Bookmark, Brain } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { getCourseColorStyle } from "@/lib/utils/course-colors";
+import { PrimaryButton } from "@/components/core/buttons/primary";
 
 interface CourseHeaderProps {
   course: Course;
@@ -47,20 +48,22 @@ export default function CourseHeader({
   };
 
   return (
-    <div className="bg-linear-to-r from-primary-25 to-primary-50 rounded-xl shadow border border-primary-100 p-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 bg-gradient-to-br from-secondary-400 to-secondary-700 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-            {course.name.charAt(0).toUpperCase()}
+    <div className="flex flex-col gap-4 bg-white rounded-xl shadow-sm border border-primary-200 p-4 md:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-gradient-to-br from-primary-600 to-primary-700 rounded-lg h-12 w-12 flex items-center justify-center">
+            <div className="rounded flex items-center justify-center text-white font-bold text-xl">
+              {course.name.charAt(0).toUpperCase()}
+            </div>
           </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-2xl font-bold text-primary-900">
+          <div>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <h1 className="text-xl sm:text-2xl font-bold text-primary-800">
                 {course.name}
               </h1>
               {course.courseCode && (
                 <span
-                  className="px-3 py-1 text-sm font-medium rounded-full border"
+                  className="px-2 py-1 text-xs sm:text-sm font-medium rounded-full border self-start"
                   style={course.courseColorStyle ? getCourseColorStyle(course.courseColorStyle) : {
                     backgroundColor: '#f3f4f6',
                     color: '#374151',
@@ -71,35 +74,41 @@ export default function CourseHeader({
                 </span>
               )}
             </div>
+            <p className="text-primary-600/80 text-xs sm:text-sm mt-1">
+              Course overview and materials
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <SecondaryButton
-            // variant="outline"
+          <PrimaryButton
+            variant="outline"
             size="sm"
             onClick={handleBookmarkToggle}
             disabled={isTogglingBookmark}
+            className="flex items-center gap-2"
           >
             <Bookmark
               className={`h-4 w-4 ${
-                isBookmarked ? "fill-secondary-200 text-secondary-200" : ""
+                isBookmarked ? "fill-primary-600" : ""
               }`}
             />
-          </SecondaryButton>
+            <span className="hidden sm:inline">{isBookmarked ? "Bookmarked" : "Bookmark"}</span>
+          </PrimaryButton>
           {!isTeacher && (
-            <SecondaryButton size="sm">
+            <PrimaryButton size="sm" asChild>
               <Link href={`/quiz/${course._id}`} className="flex items-center gap-2">
                 <Brain className="h-4 w-4" />
-                Take Quiz
+                <span className="hidden sm:inline">Take Quiz</span>
               </Link>
-            </SecondaryButton>
+            </PrimaryButton>
           )}
           {isTeacher && (
-            <SecondaryButton size="sm">
-              <Link href={`/edit/course/${course._id}`}>
+            <PrimaryButton size="sm" asChild>
+              <Link href={`/edit/course/${course._id}`} className="flex items-center gap-2">
                 <Edit className="h-4 w-4" />
+                <span className="hidden sm:inline">Edit</span>
               </Link>
-            </SecondaryButton>
+            </PrimaryButton>
           )}
         </div>
       </div>

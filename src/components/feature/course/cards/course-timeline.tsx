@@ -1,7 +1,7 @@
 import { Course } from "@/lib/schemas/database";
 import { iconForType } from "@/lib/constants";
 import Link from "next/link";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, Clock } from "lucide-react";
 
 interface CourseTimelineProps {
   course: Course;
@@ -80,26 +80,44 @@ function formatPartialDate(dateStr: string) {
 export default function CourseTimeline({ course }: CourseTimelineProps) {
   if (!course.timeline || course.timeline.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
-        <h2 className="text-base font-semibold text-primary-900 mb-4 flex items-center gap-2">
-          <CalendarDays className="w-5 h-5 text-primary-900" />
-          <span>Timeline</span>
-        </h2>
+      <div className="rounded-lg shadow-md p-4 md:px-6 min-h-[250px] border-2 border-primary-100">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+            <CalendarDays className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+          </div>
+          <div className="flex flex-col text-sm sm:text-base text-primary-700">
+            <h2 className="font-bold text-primary-700 gap-2 text-lg">
+              Course Timeline
+            </h2>
+            <p className="text-primary-500">
+              Important dates and deadlines for this course.
+            </p>
+          </div>
+        </div>
         <div className="text-center py-8 text-primary-600">
-          <div className="text-4xl mb-2">📅</div>
-          <p>No timeline events available</p>
+          <CalendarDays className="w-12 h-12 text-primary-300 mx-auto mb-3" />
+          <p className="text-lg">No timeline events available</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
-      <h2 className="text-base font-semibold text-primary-900 mb-6 flex items-center gap-2">
-        <CalendarDays className="w-5 h-5 text-primary-900" />
-        <span>Timeline</span>
-      </h2>
-      <div className="space-y-4">
+    <div className="rounded-lg shadow-md p-4 md:px-6 min-h-[250px] border-2 border-primary-100">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+          <CalendarDays className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+        </div>
+        <div className="flex flex-col text-sm sm:text-base text-primary-700">
+          <h2 className="font-bold text-primary-700 gap-2 text-lg">
+            Course Timeline
+          </h2>
+          <p className="text-primary-500">
+            Important dates and deadlines for this course.
+          </p>
+        </div>
+      </div>
+      <div className="space-y-3">
         {course.timeline.map((item, idx) => {
           const IconComponent = iconForType(item.type);
           const colorClass = getEventColor(item.type);
@@ -108,7 +126,7 @@ export default function CourseTimeline({ course }: CourseTimelineProps) {
           return (
             <div
               key={idx}
-              className="bg-primary-50 rounded-lg border border-primary-100 p-4"
+              className="bg-primary-100/40 rounded-lg shadow-sm hover:shadow-md transition-shadow hover:cursor-pointer py-3 px-4"
             >
               <div className="flex items-start gap-4">
                 <div
@@ -122,14 +140,18 @@ export default function CourseTimeline({ course }: CourseTimelineProps) {
                       <h3 className="font-medium text-primary-900 truncate">
                         {item.title}
                       </h3>
-                      <div className="flex items-center gap-4 text-base text-primary-600">
-                        <span>
-                          📅 Start: {formatPartialDate(item.startDate)}
-                        </span>
-                        <span>⏰ Due: {formatPartialDate(item.dueDate)}</span>
+                      <div className="flex items-center gap-4 text-sm text-primary-600">
+                        <div className="flex items-center gap-1">
+                          <CalendarDays className="w-4 h-4" />
+                          <span>Start: {formatPartialDate(item.startDate)}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          <span>Due: {formatPartialDate(item.dueDate)}</span>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-end justify-start gap-1 flex-col">
+                    <div className="flex items-end justify-start gap-2 flex-col">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium border ${colorClass}`}
                       >
@@ -138,7 +160,7 @@ export default function CourseTimeline({ course }: CourseTimelineProps) {
                       {item.type === "assignment" ? (
                         <Link
                           href={`/create/assignment?courseId=${course._id.toString()}`}
-                          className="flex items-center text-base underline text-secondary-600 hover:text-secondary-700"
+                          className="flex items-center text-sm underline text-primary-600 hover:text-primary-700"
                         >
                           Create
                         </Link>

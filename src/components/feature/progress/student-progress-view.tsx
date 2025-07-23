@@ -1101,7 +1101,7 @@ export default function StudentProgressView({
     }));
 
     return (
-      <div className="w-full min-h-screen bg-transparent p-4">
+      <div className="w-full min-h-screen bg-transparent">
         <div className="space-y-4 sm:space-y-6">
           {/* Header */}
           <div className="flex flex-col gap-4 bg-white rounded-xl shadow-sm border border-primary-200 p-4 md:p-6">
@@ -1359,7 +1359,7 @@ export default function StudentProgressView({
 
   // Course-Specific Details View
   return (
-    <div className="min-h-screen bg-transparent p-4">
+    <div className="min-h-screen bg-transparent">
       <div className="space-y-4 sm:space-y-6">
         {/* Header - Improved Desktop Layout */}
         <div className="flex flex-col gap-4 bg-white rounded-xl shadow-sm border border-primary-200 p-4 md:p-6">

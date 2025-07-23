@@ -73,12 +73,21 @@ const markdownComponents = {
 
 export default function CourseDescription({ course }: CourseDescriptionProps) {
   return (
-    <div className="bg-white rounded-xl shadow border border-primary-100 p-6 text-wrap max-w-full">
-      <h2 className="text-base font-semibold text-primary-900 mb-4 flex items-center gap-2">
-        <BookText className="w-5 h-5 text-primary-900" />
-        <span>Course Description</span>
-      </h2>
-      <div className="prose prose-sm prose-headings:text-primary-900 prose-p:text-primary-700 prose-li:text-primary-700">
+    <div className="rounded-lg shadow-md p-4 md:px-6 min-h-[250px] border-2 border-primary-100">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+          <BookText className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+        </div>
+        <div className="flex flex-col text-sm sm:text-base text-primary-700">
+          <h2 className="font-bold text-primary-700 gap-2 text-lg">
+            Course Description
+          </h2>
+          <p className="text-primary-500">
+            Overview and details about this course.
+          </p>
+        </div>
+      </div>
+      <div className="prose prose-sm prose-headings:text-primary-900 prose-p:text-primary-700 prose-li:text-primary-700 max-w-none">
         <MyMarkdown components={markdownComponents}>
           {course.description}
         </MyMarkdown>
