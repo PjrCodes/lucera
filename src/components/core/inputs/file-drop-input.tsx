@@ -36,9 +36,9 @@ export function FileDropInput({
   return (
     <div
       className={`border-4 border-dotted rounded-lg px-4 py-10 text-center transition-colors duration-150 bg-transparent
-        border-[#5C2A2B]
-        ${dragActive && !disabled ? "border-[#EFCB7B] bg-primary-50" : ""}
-        ${!disabled ? "hover:border-[#FFD580] focus:border-[#FFD580] outline-none cursor-pointer" : "cursor-not-allowed bg-gray-100"}`}
+        border-primary-700
+        ${dragActive && !disabled ? "border-primary-300 bg-primary-50" : ""}
+        ${!disabled ? "hover:border-primary-400 focus:border-primary-400 outline-none cursor-pointer" : "cursor-not-allowed bg-primary-100"}`}
       onClick={() => !disabled && inputRef.current?.click()}
       onDragEnter={handleDrag}
       onDragOver={handleDrag}
@@ -61,9 +61,9 @@ export function FileDropInput({
         disabled={disabled}
       />
       {file ? (
-        <span className="text-[#5C2A2B] font-medium">{file.name}</span>
+        <span className="text-primary-700 font-medium">{file.name}</span>
       ) : (
-        <span className="text-[#8B5E5E] font-medium">
+        <span className="text-primary-400 font-medium">
           Drag & drop a file here, or click to select
         </span>
       )}

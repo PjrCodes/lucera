@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { Bookmark } from "lucide-react";
+import { PrimaryButton } from "@/components/core/buttons/primary";
 
 interface AssignmentBookmarkButtonProps {
   assignmentId: string;
@@ -21,7 +22,7 @@ export default function AssignmentBookmarkButton({
   // Track when component has mounted to avoid hydration mismatch
   useEffect(() => {
     setHasMounted(true);
-    
+
     // Only check bookmark status if not provided and component has mounted
     if (initialIsBookmarked === undefined) {
       setIsLoading(true);
@@ -46,9 +47,9 @@ export default function AssignmentBookmarkButton({
   // Prevent hydration mismatch by not rendering dynamic content until mounted
   if (!hasMounted) {
     return (
-      <SecondaryButton variant="outline" size="sm" disabled>
+      <PrimaryButton variant="outline" size="sm" disabled>
         <Bookmark className="h-4 w-4" />
-      </SecondaryButton>
+      </PrimaryButton>
     );
   }
 
@@ -79,14 +80,14 @@ export default function AssignmentBookmarkButton({
 
   if (isLoading) {
     return (
-      <SecondaryButton variant="outline" size="sm" disabled>
+      <PrimaryButton variant="outline" size="sm" disabled>
         <Bookmark className="h-4 w-4" />
-      </SecondaryButton>
+      </PrimaryButton>
     );
   }
 
   return (
-    <SecondaryButton
+    <PrimaryButton
       variant="outline"
       size="sm"
       onClick={handleBookmarkToggle}
@@ -97,6 +98,6 @@ export default function AssignmentBookmarkButton({
           isBookmarked ? "fill-secondary-700 text-secondary-700" : ""
         }`}
       />
-    </SecondaryButton>
+    </PrimaryButton>
   );
 }

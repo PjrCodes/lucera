@@ -267,7 +267,9 @@ export default function AssignmentSubmissionForm({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to generate instant feedback");
+        throw new Error(
+          errorData.error || "Failed to generate instant feedback"
+        );
       }
 
       const result = await response.json();
@@ -308,8 +310,8 @@ export default function AssignmentSubmissionForm({
     return (
       <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
         <div className="text-center">
-          <div className="mx-auto flex items-center justify-center w-12 h-12 rounded-full bg-green-100 mb-4">
-            <FiCheck className="w-6 h-6 text-green-600" />
+          <div className="mx-auto flex items-center justify-center w-12 h-12 rounded-full bg-success-200 mb-4">
+            <FiCheck className="w-6 h-6 text-success-800" />
           </div>
           <h3 className="text-lg font-semibold text-primary-900 mb-2">
             Assignment Already Submitted
@@ -333,8 +335,8 @@ export default function AssignmentSubmissionForm({
     return (
       <div className="bg-white rounded-xl shadow border border-primary-100 p-6">
         <div className="text-center">
-          <div className="mx-auto flex items-center justify-center w-12 h-12 rounded-full bg-green-100 mb-4">
-            <FiCheck className="w-6 h-6 text-green-600" />
+          <div className="mx-auto flex items-center justify-center w-12 h-12 rounded-full bg-success-200 mb-4">
+            <FiCheck className="w-6 h-6 text-success-800" />
           </div>
           <h3 className="text-lg font-semibold text-primary-900 mb-2">
             Assignment Submitted Successfully!
@@ -378,7 +380,7 @@ export default function AssignmentSubmissionForm({
             <div className="space-y-2">
               <div className="flex items-center justify-between p-3 bg-primary-50 border border-primary-200 rounded-lg">
                 <div className="flex items-center space-x-2">
-                  <FiCheck className="w-5 h-5 text-green-600" />
+                  <FiCheck className="w-5 h-5 text-success-800" />
                   <span className="text-primary-900 font-medium">
                     {selectedFile.name}
                   </span>
@@ -456,28 +458,41 @@ export default function AssignmentSubmissionForm({
         >
           {isSubmitting ? "Submitting..." : "Submit Assignment"}
         </PrimaryButton>
-        <SecondaryButton
-          variant="outline"
-          onClick={handleInstantFeedback}
-          disabled={
-            isSubmitting ||
-            feedbackLoading ||
-            (assignment.submissionType === "text_entry" && !submissionText.trim()) ||
-            (assignment.submissionType === "file_upload" && !selectedFile)
-          }
-          type="button"
-        >
-          {feedbackLoading ? "Generating..." : "Get Feedback ✨"}
-        </SecondaryButton>
+        {assignment.submissionType === "file_upload" ? (
+          <SecondaryButton
+            variant="outline"
+            onClick={handleInstantFeedback}
+            disabled={isSubmitting || feedbackLoading || !selectedFile}
+            type="button"
+          >
+            {feedbackLoading ? "Generating..." : "Get Feedback ✨"}
+          </SecondaryButton>
+        ) : null}
       </div>
 
       {/* Submission Reminder */}
-      <div className="mt-4 p-3 bg-primary-50 border border-primary-200 rounded-lg">
+      <div
+        className={`mt-4 p-3 border rounded-lg ${
+          isOverdue
+            ? "bg-red-50 border-red-200"
+            : "bg-primary-25 border-primary-200"
+        }`}
+      >
         <div className="flex items-start gap-2">
-          <FiAlertTriangle className="w-5 h-5 text-primary-600 mt-0.5" />
+          <FiAlertTriangle
+            className={`w-5 h-5 mt-0.5 ${
+              isOverdue ? "text-red-600" : "text-primary-600"
+            }`}
+          />
           <div className="text-sm">
-            <p className="font-medium text-primary-800">Submission Reminder</p>
-            <p className="text-primary-700">
+            <p
+              className={`font-medium ${
+                isOverdue ? "text-red-800" : "text-primary-800"
+              }`}
+            >
+              Submission Reminder
+            </p>
+            <p className={isOverdue ? "text-red-700" : "text-primary-700"}>
               {isOverdue
                 ? "This assignment is overdue. Late submissions may be penalized."
                 : assignment.dueDate
