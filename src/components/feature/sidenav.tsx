@@ -78,15 +78,6 @@ export async function AppSidebar() {
               </div>
             </nav>
             <div className="px-4 py-4">
-              {isLoggedIn ? (
-                <Link
-                  href="/settings"
-                  className="flex items-center gap-3 px-4 py-2 text-white hover:bg-primary-500 rounded-md transition-colors mb-4"
-                >
-                  <Settings size={20} />
-                  Settings
-                </Link>
-              ) : null}
               <div className="px-4 text-sm">Powered by Lucera</div>
             </div>
           </div>

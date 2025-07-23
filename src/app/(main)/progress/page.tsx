@@ -9,7 +9,7 @@ export default async function ProgressPage() {
   const isTeacher = userData.role === "teacher";
 
   return (
-    <main className="max-w-7xl mx-auto py-8 px-4">
+    <main className="p-4">
       {/* <h1 className="text-3xl font-bold mb-6 text-center text-primary-700">
         Progress Dashboard
       </h1> */}
@@ -17,9 +17,9 @@ export default async function ProgressPage() {
       {isTeacher ? (
         <TeacherProgressDashboard userId={userData.id} />
       ) : (
-        <div className="max-w-4xl mx-auto">
+        // <div className="max-w-4xl mx-auto">
           <StudentProgressView studentId={userData.id} />
-        </div>
+        // </div>
       )}
     </main>
   );

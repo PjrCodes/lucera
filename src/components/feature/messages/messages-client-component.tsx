@@ -14,6 +14,8 @@ import {
   Edit,
   Trash2,
   Plus,
+  ChevronLeft,
+  ArrowLeft,
 } from "lucide-react";
 import {
   Dialog,
@@ -23,7 +25,7 @@ import {
   DialogFooter,
   DialogDescription
 } from "@/components/ui/dialog";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TextBox } from "@/components/core/inputs/text-box";
 import { TextArea } from "@/components/core/inputs/text-area";
 import { Dropdown } from "@/components/core/inputs/dropdown";
@@ -32,6 +34,7 @@ import { SecondaryButton } from "@/components/core/buttons/secondary";
 import { MultiSelect } from "@/components/core/multi-select";
 import { useAlertDialog } from "@/components/core/alert-dialog";
 import { cn } from "@/lib/utils";
+import { getCourseColorStyle } from "@/lib/utils/course-colors";
 
 // Types for announcements
 interface AnnouncementWithReadStatus {
@@ -92,6 +95,33 @@ const sidebarItems = [
     icon: <Mail className="w-4 h-4" />,
   },
 ];
+
+// Add date formatting function from announcements card
+function formatAnnouncementDate(dateStr: string | Date) {
+  if (!dateStr) return "N/A";
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return "N/A";
+
+  const now = new Date();
+  const diffTime = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+  const diffMinutes = Math.floor(diffTime / (1000 * 60));
+
+  if (diffMinutes < 60) {
+    return diffMinutes <= 1 ? "Just now" : `${diffMinutes} mins ago`;
+  } else if (diffHours < 24) {
+    return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+  } else if (diffDays === 1) {
+    return "Yesterday";
+  } else if (diffDays < 7) {
+    return `${diffDays} days ago`;
+  } else {
+    const day = date.getDate();
+    const month = date.toLocaleString("default", { month: "short" });
+    return `${day} ${month}`;
+  }
+}
 
 export default function MessagesClientComponent({
   session,
@@ -505,60 +535,27 @@ export default function MessagesClientComponent({
   return (
     <>
       <SetHeaderClientComponent title={"MESSAGES"} />
-      <div className="w-full max-w-6xl mx-auto p-0 md:p-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden min-h-[80vh] flex flex-col md:flex-row">
-          {/* Mobile Tab Bar */}
-          <nav className="flex md:hidden sticky top-0 z-10 bg-secondary-50 border-b border-secondary-200">
-            {sidebarItems.map((item) => (
-              <button
-                key={item.key}
-                onClick={() => {
-                  setSelected(item.key as "announcements" | "dms");
-                  setSelectedAnnouncementId(null);
-                  setSelectedConversationUserId(null);
-                }}
-                className={`flex-1 flex flex-col items-center justify-center py-3 text-xs font-medium transition-all duration-200 ${
-                  selected === item.key
-                    ? "bg-secondary-100 text-secondary-800 border-b-2 border-secondary-500"
-                    : "text-secondary-700 hover:bg-secondary-100"
-                }`}
-              >
-                <span
-                  className={`mb-1 ${
-                    selected === item.key
-                      ? "text-secondary-600"
-                      : "text-secondary-500"
-                  }`}
-                >
-                  {item.icon}
-                </span>
-                <span className="relative">
-                  {item.label}
-                  {item.key === "announcements" && !isTeacher &&
-                    announcements.filter((ann) => !ann.isRead).length > 0 && (
-                    <span className="bg-secondary-300 text-secondary-50 text-xs px-2 py-0.5 rounded-full font-medium mt-1">
-                      {announcements.filter((ann) => !ann.isRead).length}
-                    </span>
-                  )}
-                  {item.key === "dms" &&
-                    conversations.reduce((total, conv) => total + conv.unreadCount, 0) > 0 && (
-                    <span className="bg-secondary-300 text-secondary-50 text-xs px-2 py-0.5 rounded-full font-medium mt-1">
-                      {conversations.reduce((total, conv) => total + conv.unreadCount, 0)}
-                    </span>
-                  )}
-                </span>
-              </button>
-            ))}
-          </nav>
-
-          {/* Sidebar for md+ */}
-          <aside className="hidden md:flex w-64 bg-secondary-50 border-r border-secondary-200 flex-col">
-            <div className="p-6 border-b border-secondary-200">
-              <h1 className="text-2xl font-bold text-secondary-700">
-                Messages
-              </h1>
+      <main className="min-h-screen bg-transparent p-4">
+        <div className="space-y-4 md:space-y-6">
+          {/* Simplified Header matching teacher dashboard style */}
+          <div className="flex flex-col gap-4 bg-white rounded-xl shadow-sm border border-primary-200 p-4 md:p-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary-100 rounded-lg">
+                <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-primary-700" />
+              </div>
+              <div>
+                <h1 className="text-xl sm:text-2xl font-bold text-primary-800">Messages</h1>
+                <p className="text-primary-600/80 text-xs sm:text-sm">
+                  Communicate with your classmates and instructors
+                </p>
+              </div>
             </div>
-            <nav className="flex-1 p-4">
+          </div>
+
+          {/* Main Content with Sidebar */}
+          <div className="bg-white rounded-xl shadow-sm border border-primary-200 overflow-hidden min-h-[80vh] flex flex-col md:flex-row">
+            {/* Mobile Tab Bar */}
+            <nav className="flex md:hidden sticky top-0 z-10 bg-primary-50 border-b border-primary-200">
               {sidebarItems.map((item) => (
                 <button
                   key={item.key}
@@ -567,350 +564,441 @@ export default function MessagesClientComponent({
                     setSelectedAnnouncementId(null);
                     setSelectedConversationUserId(null);
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-left transition-all duration-200 ${
+                  className={`flex-1 flex flex-col items-center justify-center py-3 text-xs font-medium transition-all duration-200 ${
                     selected === item.key
-                      ? "cursor-pointer bg-secondary-100 text-secondary-800 font-medium border border-secondary-400"
-                      : "cursor-pointer text-secondary-700 hover:bg-secondary-100 hover:text-secondary-900 border border-transparent"
+                      ? "bg-primary-100 text-primary-800 border-b-2 border-primary-500"
+                      : "text-primary-700 hover:bg-primary-100"
                   }`}
                 >
                   <span
-                    className={`${
+                    className={`mb-1 ${
                       selected === item.key
-                        ? "text-secondary-600"
-                        : "text-secondary-500"
+                        ? "text-primary-600"
+                        : "text-primary-500"
                     }`}
                   >
                     {item.icon}
                   </span>
-                  <span className="flex-1">{item.label}</span>
-                  {item.key === "announcements" && !isTeacher &&
-                    announcements.filter((ann) => !ann.isRead).length > 0 && (
-                    <span className="bg-secondary-300 text-secondary-50 text-xs px-2 py-1 rounded-full font-medium">
-                      {announcements.filter((ann) => !ann.isRead).length}
-                    </span>
-                  )}
-                  {item.key === "dms" &&
-                    conversations.reduce((total, conv) => total + conv.unreadCount, 0) > 0 && (
-                      <span className="bg-secondary-300 text-secondary-50 text-xs px-2 py-1 rounded-full font-medium">
+                  <span className="relative">
+                    {item.label}
+                    {item.key === "announcements" && !isTeacher &&
+                      announcements.filter((ann) => !ann.isRead).length > 0 && (
+                      <span className="bg-primary-500 text-white text-xs px-2 py-0.5 rounded-full font-medium mt-1">
+                        {announcements.filter((ann) => !ann.isRead).length}
+                      </span>
+                    )}
+                    {item.key === "dms" &&
+                      conversations.reduce((total, conv) => total + conv.unreadCount, 0) > 0 && (
+                      <span className="bg-primary-500 text-white text-xs px-2 py-0.5 rounded-full font-medium mt-1">
                         {conversations.reduce((total, conv) => total + conv.unreadCount, 0)}
                       </span>
                     )}
+                  </span>
                 </button>
               ))}
             </nav>
-          </aside>
 
-          {/* Main Content */}
-          <main className="flex-1 bg-gray-50 relative min-h-[60vh] p-2 md:p-6">
-            {/* Announcements List */}
-            {selected === "announcements" && (
-              <section className="h-full overflow-y-auto">
-                <div className="mb-4 md:mb-6 flex justify-between items-center">
-                  <div>
-                    <h2 className="text-xl font-semibold text-primary-800 mb-2">
-                      Announcements
-                    </h2>
-                    <p className="text-primary-600 text-sm">
-                      Important updates from your courses
-                    </p>
-                  </div>
-                  {isTeacher && (
-                    <PrimaryButton onClick={openCreateAnnouncementModal}>
-                      <Plus className="w-4 h-4 mr-2" />
-                      New Announcement
-                    </PrimaryButton>
-                  )}
-                </div>
+            {/* Sidebar for md+ */}
+            <aside className="hidden md:flex w-64 bg-primary-50 border-r border-primary-200 flex-col">
+              <div className="p-6 border-b border-primary-200">
+                <h1 className="text-2xl font-bold text-primary-700">
+                  Messages
+                </h1>
+              </div>
+              <nav className="flex-1 p-4">
+                {sidebarItems.map((item) => (
+                  <button
+                    key={item.key}
+                    onClick={() => {
+                      setSelected(item.key as "announcements" | "dms");
+                      setSelectedAnnouncementId(null);
+                      setSelectedConversationUserId(null);
+                    }}
+                    className={`w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-lg text-left transition-all duration-200 ${
+                      selected === item.key
+                        ? "cursor-pointer bg-primary-100 text-primary-800 font-medium border border-primary-400"
+                        : "cursor-pointer text-primary-700 hover:bg-primary-100 hover:text-primary-900 border border-transparent"
+                    }`}
+                  >
+                    <span
+                      className={`${
+                        selected === item.key
+                          ? "text-primary-600"
+                          : "text-primary-500"
+                      }`}
+                    >
+                      {item.icon}
+                    </span>
+                    <span className="flex-1">{item.label}</span>
+                    {item.key === "announcements" && !isTeacher &&
+                      announcements.filter((ann) => !ann.isRead).length > 0 && (
+                      <span className="bg-primary-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                        {announcements.filter((ann) => !ann.isRead).length}
+                      </span>
+                    )}
+                    {item.key === "dms" &&
+                      conversations.reduce((total, conv) => total + conv.unreadCount, 0) > 0 && (
+                        <span className="bg-primary-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                          {conversations.reduce((total, conv) => total + conv.unreadCount, 0)}
+                        </span>
+                      )}
+                  </button>
+                ))}
+              </nav>
+            </aside>
 
-                {isLoadingAnnouncements ? (
-                  <div className="flex justify-center items-center h-32">
-                    <div className="text-primary-600">Loading announcements...</div>
+            {/* Main Content */}
+            <main className="flex-1 bg-gray-50 relative min-h-[60vh] p-2 md:p-6">
+              {/* Announcements List */}
+              {selected === "announcements" && (
+                <section className="h-full overflow-y-auto">
+                  <div className="mb-4 md:mb-6 flex flex-col gap-3 md:flex-row md:justify-between md:items-center">
+                    <div>
+                      <h2 className="text-xl font-semibold text-primary-800 mb-2">
+                        Announcements
+                      </h2>
+                      <p className="text-primary-600 text-sm">
+                        Important updates from your courses
+                      </p>
+                    </div>
+                    {isTeacher && (
+                      <PrimaryButton onClick={openCreateAnnouncementModal} className="w-full md:w-auto">
+                        <Plus className="w-4 h-4 mr-2" />
+                        New Announcement
+                      </PrimaryButton>
+                    )}
                   </div>
-                ) : announcements.length === 0 ? (
-                  <div className="text-center py-8">
-                    <Megaphone className="w-12 h-12 text-primary-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-primary-800 mb-2">
-                      No announcements yet
-                    </h3>
-                    <p className="text-primary-600">
-                      {isTeacher
-                        ? "Create your first announcement to communicate with students"
-                        : "Your instructors haven't posted any announcements yet"}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {announcements.map((announcement) => (
-                      <Card
-                        key={announcement._id}
-                        className={cn(
-                          "cursor-pointer transition-all duration-200 hover:shadow-md border-2",
-                          selectedAnnouncementId === announcement._id
-                            ? "border-primary-400 bg-primary-100"
-                            : !announcement.isRead && !isTeacher
-                            ? "border-primary-300 bg-primary-50"
-                            : "border-primary-200 bg-white hover:border-primary-300"
-                        )}
-                        onClick={() => {
-                          const newSelectedId = selectedAnnouncementId === announcement._id ? null : announcement._id;
-                          setSelectedAnnouncementId(newSelectedId);
 
-                          // Mark as read when expanded (for students only)
-                          if (newSelectedId && !isTeacher && !announcement.isRead) {
-                            markAnnouncementAsRead(announcement._id);
-                          }
-                        }}
-                      >
-                        <CardHeader className="pb-4">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 mb-2">
-                                <span className="text-xs font-medium text-primary-600 bg-primary-100 px-2 py-1 rounded">
-                                  {announcement.courseCode}
-                                </span>
-                                {!announcement.isRead && !isTeacher && (
-                                  <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
-                                )}
-                              </div>
-                              <h3 className="font-semibold text-primary-900 text-sm mb-1">
+                  {isLoadingAnnouncements ? (
+                    <div className="flex justify-center items-center h-32">
+                      <div className="text-primary-600">Loading announcements...</div>
+                    </div>
+                  ) : announcements.length === 0 ? (
+                    <div className="text-center py-8">
+                      <Megaphone className="w-12 h-12 text-primary-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-primary-800 mb-2">
+                        No announcements yet
+                      </h3>
+                      <p className="text-primary-600">
+                        {isTeacher
+                          ? "Create your first announcement to communicate with students"
+                          : "Your instructors haven't posted any announcements yet"}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {announcements.map((announcement) => {
+                        const isUnread = !announcement.isRead && !isTeacher;
+                        const course = courses.find(c => c._id.toString() === announcement.courseId);
+                        const isExpanded = selectedAnnouncementId === announcement._id;
+
+                        return (
+                          <div
+                            key={announcement._id}
+                            className={`bg-primary-100/40 rounded-lg shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer p-4 ${
+                              isUnread ? "border-l-4 border-primary-500" : ""
+                            } ${
+                              isExpanded
+                                ? "bg-primary-50 border border-primary-300"
+                                : ""
+                            }`}
+                            onClick={() => {
+                              const newSelectedId = isExpanded ? null : announcement._id;
+                              setSelectedAnnouncementId(newSelectedId);
+
+                              // Mark as read when expanded (for students only)
+                              if (newSelectedId && !isTeacher && !announcement.isRead) {
+                                markAnnouncementAsRead(announcement._id);
+                              }
+                            }}
+                          >
+                            <div className="flex items-start justify-between mb-2">
+                              <h3 className="font-semibold text-primary-700 text-base line-clamp-1 flex-1 pr-2">
                                 {announcement.title}
                               </h3>
-                              <p className="text-xs text-primary-600">
-                                {announcement.courseName} • {new Date(announcement.createdAt).toLocaleDateString()}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              {isTeacher && (
-                                <>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      openEditAnnouncementModal(announcement);
-                                    }}
-                                    className="text-secondary-600 hover:text-secondary-800 transition-colors"
-                                  >
-                                    <Edit className="w-4 h-4" />
-                                  </button>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      deleteAnnouncement(announcement._id);
-                                    }}
-                                    className="text-red-600 hover:text-red-800 transition-colors"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </button>
-                                </>
-                              )}
-                              <ChevronDown
-                                className={`w-4 h-4 text-primary-600 transition-transform ${
-                                  selectedAnnouncementId === announcement._id ? "rotate-180" : ""
-                                }`}
-                              />
-                            </div>
-                          </div>
-                        </CardHeader>
-                        {selectedAnnouncementId === announcement._id && (
-                          <CardContent className="pt-0">
-                            <div className="border-t border-primary-200 pt-4">
-                              <div className="prose prose-sm max-w-none text-primary-800">
-                                {announcement.content}
+                              <div className="flex items-center gap-2">
+                                <span
+                                  className="inline-block px-2 py-1 rounded text-xs font-medium"
+                                  style={course ? getCourseColorStyle(course.courseColorStyle) : {}}
+                                >
+                                  {announcement.courseCode}
+                                </span>
+                                {isUnread && (
+                                  <span className="inline-block w-2 h-2 bg-primary-500 rounded-full"></span>
+                                )}
+                                {isTeacher && (
+                                  <>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        openEditAnnouncementModal(announcement);
+                                      }}
+                                      className="text-primary-600 hover:text-primary-800 hover:bg-primary-100 transition-all duration-200 p-2 rounded-lg"
+                                    >
+                                      <Edit className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        deleteAnnouncement(announcement._id);
+                                      }}
+                                      className="text-red-600 hover:text-red-800 hover:bg-red-100 transition-all duration-200 p-2 rounded-lg"
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </button>
+                                  </>
+                                )}
+                                <ChevronDown
+                                  className={`w-4 h-4 text-primary-600 transition-transform ${
+                                    isExpanded ? "rotate-180" : ""
+                                  }`}
+                                />
                               </div>
                             </div>
-                          </CardContent>
-                        )}
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </section>
-            )}
 
-            {/* DMs List */}
-            {selected === "dms" && selectedConversationUserId === null && (
-              <section className="h-full overflow-y-auto">
-                <div className="mb-4 md:mb-6 flex justify-between items-center">
-                  <div>
-                    <h2 className="text-xl font-semibold text-primary-800 mb-2">
-                      Direct Messages
-                    </h2>
-                    <p className="text-primary-600 text-sm">
-                      Private conversations with your instructors and classmates
-                    </p>
-                  </div>
-                  <PrimaryButton onClick={openNewMessageModal}>
-                    <Plus className="w-4 h-4 mr-2" />
-                    New Message
-                  </PrimaryButton>
-                </div>
-
-                {isLoadingConversations ? (
-                  <div className="flex justify-center items-center h-32">
-                    <div className="text-primary-600">Loading conversations...</div>
-                  </div>
-                ) : conversations.length === 0 ? (
-                  <div className="text-center py-8">
-                    <Mail className="w-12 h-12 text-primary-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-primary-800 mb-2">
-                      No conversations yet
-                    </h3>
-                    <p className="text-primary-600 mb-4">
-                      Start a conversation by clicking &quot;New Message&quot;
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {conversations.map((conversation) => (
-                      <Card
-                        key={conversation.conversationId}
-                        className={cn(
-                          "cursor-pointer transition-all duration-200 hover:shadow-md border-2",
-                          conversation.unreadCount > 0
-                            ? "border-primary-400 bg-primary-100"
-                            : "border-primary-200 bg-primary-50 hover:border-primary-300"
-                        )}
-                        onClick={() => setSelectedConversationUserId(conversation.otherUserId)}
-                      >
-                        <CardHeader className="pb-4">
-                          <div className="flex items-center gap-3">
-                            <div className="relative">
-                              <div className="w-10 h-10 rounded-full bg-primary-300 flex items-center justify-center text-primary-800 font-semibold">
-                                {conversation.otherUserName.charAt(0).toUpperCase()}
-                              </div>
-                              {conversation.unreadCount > 0 && (
-                                <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary-600 text-white text-xs rounded-full flex items-center justify-center">
-                                  {conversation.unreadCount}
+                            {/* Content section - always show full content when expanded */}
+                            <div className="text-sm text-primary-600 mb-2">
+                              {isExpanded ? (
+                                <div className="whitespace-pre-wrap leading-relaxed">
+                                  {announcement.content}
+                                </div>
+                              ) : (
+                                <div className="line-clamp-2">
+                                  {announcement.content.length > 120
+                                    ? announcement.content.substring(0, 120) + "..."
+                                    : announcement.content
+                                  }
                                 </div>
                               )}
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center justify-between mb-1">
-                                <span className="font-semibold text-primary-900 text-sm">
-                                  {conversation.otherUserName}
-                                  <span className="text-xs text-primary-600 ml-2">
-                                    ({conversation.otherUserRole})
-                                  </span>
-                                </span>
-                                <span
-                                  suppressHydrationWarning
-                                  className="text-xs text-primary-600"
-                                >
-                                  {new Date(conversation.lastMessageTime).toLocaleDateString()}
-                                </span>
-                              </div>
-                              <p className="text-primary-800 text-sm truncate">
-                                {conversation.lastMessage}
-                              </p>
-                            </div>
-                            <ChevronRight className="w-4 h-4 text-primary-600 flex-shrink-0" />
-                          </div>
-                        </CardHeader>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </section>
-            )}
 
-            {/* DM Chat Screen */}
-            {selected === "dms" && selectedConversationUserId !== null && (
-              <div className="h-[calc(70vh)] flex flex-col bg-white">
-                {/* Chat Header */}
-                <div className="bg-white border-b border-primary-200 px-3 md:px-6 py-3 md:py-4 flex items-center gap-2 md:gap-4">
-                  <button
-                    onClick={() => setSelectedConversationUserId(null)}
-                    className="text-secondary-600 hover:text-secondary-900 transition-colors"
-                    aria-label="Back"
-                  >
-                    ←
-                  </button>
-                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary-300 flex items-center justify-center text-primary-800 font-semibold">
-                    {conversations.find(c => c.otherUserId === selectedConversationUserId)?.otherUserName.charAt(0).toUpperCase() || '?'}
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-secondary-900 text-xs md:text-base">
-                      {conversations.find(c => c.otherUserId === selectedConversationUserId)?.otherUserName || 'Unknown User'}
-                    </h3>
-                    <p className="text-xs text-secondary-600">
-                      {conversations.find(c => c.otherUserId === selectedConversationUserId)?.otherUserRole || 'Unknown Role'}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Chat Messages */}
-                <div className="flex-1 overflow-y-auto p-3 md:p-6 bg-primary-50">
-                  {isLoadingMessages ? (
-                    <div className="flex justify-center items-center h-32">
-                      <div className="text-primary-600">Loading messages...</div>
-                    </div>
-                  ) : (
-                    <div className="max-w-full md:max-w-2xl mx-auto space-y-3 md:space-y-4">
-                      {currentMessages.map((msg) => (
-                        <div
-                          key={msg._id}
-                          className={`flex ${
-                            msg.senderId === session.user.id
-                              ? "justify-end"
-                              : "justify-start"
-                          }`}
-                        >
-                          <div
-                            className={`max-w-[90vw] md:max-w-xs rounded-lg px-3 md:px-4 py-2 md:py-3 shadow-sm ${
-                              msg.senderId === session.user.id
-                                ? "bg-primary-500 text-white"
-                                : "bg-white text-secondary-800 border border-primary-200"
-                            }`}
-                          >
-                            <div className="break-words whitespace-pre-line text-xs md:text-sm leading-relaxed">
-                              {msg.message}
-                            </div>
-                            <div
-                              suppressHydrationWarning
-                              className={`text-xs mt-2 ${
-                                msg.senderId === session.user.id
-                                  ? "text-primary-100"
-                                  : "text-secondary-500"
-                              }`}
-                            >
-                              {new Date(msg.createdAt).toLocaleDateString()}
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-primary-500">
+                                {announcement.courseName}
+                              </span>
+                              <span className="text-xs text-primary-400 whitespace-nowrap">
+                                {formatAnnouncementDate(announcement.createdAt)}
+                              </span>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                      <div ref={chatEndRef} />
+                        );
+                      })}
                     </div>
                   )}
-                </div>
+                </section>
+              )}
 
-                {/* Message Input */}
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    sendMessage();
-                  }}
-                  className="bg-white border-t border-primary-200 p-3 md:p-4"
-                >
-                  <div className="max-w-full md:max-w-2xl mx-auto flex items-center gap-2 md:gap-3">
-                    <TextBox
-                      value={messageInput}
-                      onChange={(value) => setMessageInput(value)}
-                      placeholder="Type your message..."
-                      className="flex-1"
-                    />
-                    <PrimaryButton
-                      type="submit"
-                      disabled={!messageInput.trim() || isSendingMessage}
-                      className="rounded-full h-9 w-9 p-0"
-                    >
-                      <Send className="w-4 h-4" />
+              {/* DMs List */}
+              {selected === "dms" && selectedConversationUserId === null && (
+                <section className="h-full overflow-y-auto">
+                  <div className="mb-4 md:mb-6 flex flex-col gap-3 md:flex-row md:justify-between md:items-center">
+                    <div>
+                      <h2 className="text-xl font-semibold text-primary-800 mb-2">
+                        Direct Messages
+                      </h2>
+                      <p className="text-primary-600 text-sm">
+                        Private conversations with your instructors and classmates
+                      </p>
+                    </div>
+                    <PrimaryButton onClick={openNewMessageModal} className="w-full md:w-auto">
+                      <Plus className="w-4 h-4 mr-2" />
+                      New Message
                     </PrimaryButton>
                   </div>
-                </form>
-              </div>
-            )}
-          </main>
+
+                  {isLoadingConversations ? (
+                    <div className="flex justify-center items-center h-32">
+                      <div className="text-primary-600">Loading conversations...</div>
+                    </div>
+                  ) : conversations.length === 0 ? (
+                    <div className="text-center py-8">
+                      <Mail className="w-12 h-12 text-primary-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-primary-800 mb-2">
+                        No conversations yet
+                      </h3>
+                      <p className="text-primary-600 mb-4">
+                        Start a conversation by clicking &quot;New Message&quot;
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {conversations.map((conversation) => (
+                        <Card
+                          key={conversation.conversationId}
+                          className={cn(
+                            "cursor-pointer transition-all duration-200 hover:shadow-md border-2",
+                            conversation.unreadCount > 0
+                              ? "border-primary-400 bg-primary-100"
+                              : "border-primary-200 bg-primary-50 hover:border-primary-300"
+                          )}
+                          onClick={() => setSelectedConversationUserId(conversation.otherUserId)}
+                        >
+                          <CardHeader className="pb-4">
+                            <div className="flex items-center gap-3">
+                              <div className="relative">
+                                <div className="w-10 h-10 rounded-full bg-primary-300 flex items-center justify-center text-primary-800 font-semibold">
+                                  {conversation.otherUserName.charAt(0).toUpperCase()}
+                                </div>
+                                {conversation.unreadCount > 0 && (
+                                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary-600 text-white text-xs rounded-full flex items-center justify-center">
+                                    {conversation.unreadCount}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="font-semibold text-primary-900 text-sm">
+                                    {conversation.otherUserName}
+                                    <span className="text-xs text-primary-600 ml-2">
+                                      ({conversation.otherUserRole})
+                                    </span>
+                                  </span>
+                                  <span
+                                    suppressHydrationWarning
+                                    className="text-xs text-primary-600"
+                                  >
+                                    {new Date(conversation.lastMessageTime).toLocaleDateString()}
+                                  </span>
+                                </div>
+                                <p className="text-primary-800 text-sm truncate">
+                                  {conversation.lastMessage}
+                                </p>
+                              </div>
+                              <ChevronRight className="w-4 h-4 text-primary-600 flex-shrink-0" />
+                            </div>
+                          </CardHeader>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </section>
+              )}
+
+              {/* DM Chat Screen - Updated styling */}
+              {selected === "dms" && selectedConversationUserId !== null && (
+                <div className="h-[calc(70vh)] flex flex-col bg-white rounded-lg border border-primary-200">
+                  {/* Chat Header */}
+                  <div className="bg-white border-b border-primary-200 px-4 md:px-6 py-3 md:py-4 flex items-center gap-3 md:gap-4 rounded-t-lg">
+                    <button
+                      onClick={() => setSelectedConversationUserId(null)}
+                      className="p-2 text-primary-600 hover:bg-primary-100 rounded-lg transition-colors"
+                      aria-label="Back to conversations"
+                    >
+                      <ArrowLeft className="w-5 h-5" />
+                    </button>
+                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary-200 flex items-center justify-center text-primary-700 font-semibold">
+                      {conversations.find(c => c.otherUserId === selectedConversationUserId)?.otherUserName.charAt(0).toUpperCase() || '?'}
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-primary-800 text-sm md:text-base">
+                        {conversations.find(c => c.otherUserId === selectedConversationUserId)?.otherUserName || 'Unknown User'}
+                      </h3>
+                      <p className="text-xs text-primary-600/70">
+                        {conversations.find(c => c.otherUserId === selectedConversationUserId)?.otherUserRole || 'Unknown Role'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Chat Messages */}
+                  <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-background">
+                    {isLoadingMessages ? (
+                      <div className="flex justify-center items-center h-32">
+                        <div className="flex items-center gap-2 text-primary-600 text-sm">
+                          <div className="w-4 h-4 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+                          Loading messages...
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="max-w-2xl mx-auto space-y-4">
+                        {currentMessages.map((msg) => (
+                          <div
+                            key={msg._id}
+                            className={`flex ${
+                              msg.senderId === session.user.id
+                                ? "justify-end"
+                                : "justify-start"
+                            }`}
+                          >
+                            <div
+                              className={`max-w-xs rounded-lg px-4 py-3 shadow-sm ${
+                                msg.senderId === session.user.id
+                                  ? "bg-primary-600 text-white"
+                                  : "bg-primary-100 text-primary-800 border-l-4 border-primary-300"
+                              }`}
+                            >
+                              <div className="break-words whitespace-pre-line text-sm leading-relaxed">
+                                {msg.message}
+                              </div>
+                              <div className={`text-xs mt-2 opacity-70`}>
+                                {new Date(msg.createdAt).toLocaleTimeString([], {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        <div ref={chatEndRef} />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Message Input - Updated to exactly match LISA styling */}
+                  <div className="border-t border-gray-200 p-4 bg-background">
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        sendMessage();
+                      }}
+                      className="max-w-2xl mx-auto"
+                    >
+                      <div className="flex flex-col bg-primary-35 rounded-2xl border border-gray-300">
+                        <textarea
+                          value={messageInput}
+                          onChange={(e) => setMessageInput(e.target.value)}
+                          placeholder="Message..."
+                          className="rounded-2xl w-full px-4 py-3 resize-none focus:outline-none bg-primary-35 placeholder-primary-500/70 text-primary-500 min-h-[60px] max-h-[200px]"
+                          disabled={isSendingMessage}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                              e.preventDefault();
+                              sendMessage();
+                            }
+                          }}
+                          rows={1}
+                          style={{
+                            height: '60px',
+                            resize: 'none'
+                          }}
+                          onInput={(e) => {
+                            const target = e.target as HTMLTextAreaElement;
+                            target.style.height = '60px';
+                            target.style.height = Math.min(target.scrollHeight, 200) + 'px';
+                          }}
+                        />
+
+                        <div className="flex justify-end p-2">
+                          <button
+                            type="submit"
+                            disabled={!messageInput.trim() || isSendingMessage}
+                            className="flex items-center justify-center w-10 h-10 bg-primary-600 hover:bg-primary-700 disabled:bg-primary-400 disabled:cursor-not-allowed text-white rounded-xl transition-colors"
+                          >
+                            {isSendingMessage ? (
+                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            ) : (
+                              <Send className="w-5 h-5" />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
+            </main>
+          </div>
         </div>
-      </div>
+      </main>
 
       {/* New Message Modal */}
       <Dialog open={showNewMessageModal} onOpenChange={setShowNewMessageModal}>
@@ -955,12 +1043,12 @@ export default function MessagesClientComponent({
 
       {/* Create Announcement Modal */}
       <Dialog open={showCreateAnnouncementModal} onOpenChange={setShowCreateAnnouncementModal}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-white border-primary-200 rounded-lg">
           <DialogHeader>
             <DialogTitle className="text-primary-800 text-xl font-semibold">
               Create New Announcement
             </DialogTitle>
-            <DialogDescription className="text-primary-600">
+            <DialogDescription className="text-primary-600/70">
               Share important information with your students.
             </DialogDescription>
           </DialogHeader>
@@ -1018,12 +1106,12 @@ export default function MessagesClientComponent({
 
       {/* Edit Announcement Modal */}
       <Dialog open={showEditAnnouncementModal} onOpenChange={setShowEditAnnouncementModal}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-white border-primary-200 rounded-lg">
           <DialogHeader>
             <DialogTitle className="text-primary-800 text-xl font-semibold">
               Edit Announcement
             </DialogTitle>
-            <DialogDescription className="text-primary-600">
+            <DialogDescription className="text-primary-600/70">
               Update your announcement details.
             </DialogDescription>
           </DialogHeader>

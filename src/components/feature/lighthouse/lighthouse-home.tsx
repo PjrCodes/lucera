@@ -247,15 +247,17 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
   return (
     <>
       <SetHeaderClientComponent title={"LIGHTHOUSE"} />
-      <main className="min-h-screen bg-background p-6">
-        <div className="max-w-6xl w-full mx-auto">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-3 bg-primary-100 text-primary-800 px-8 py-4 rounded-lg shadow-md border border-primary-200">
-              <Trophy className="w-8 h-8" />
+      <main className="min-h-screen bg-transparent p-4">
+        <div className="space-y-4 md:space-y-6">
+          {/* Simplified Header matching teacher dashboard style */}
+          <div className="flex flex-col gap-4 bg-white rounded-xl shadow-sm border border-primary-200 p-4 md:p-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary-100 rounded-lg">
+                <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-primary-700" />
+              </div>
               <div>
-                <h1 className="text-2xl font-bold">Lighthouse</h1>
-                <p className="text-sm opacity-80">
+                <h1 className="text-xl sm:text-2xl font-bold text-primary-800">Lighthouse</h1>
+                <p className="text-primary-600/80 text-xs sm:text-sm">
                   {isTeacher
                     ? "Monitor student badge achievements and analytics"
                     : "Collect Badges & Climb the Leaderboard!"}
@@ -266,41 +268,55 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
 
           {/* Stats Dashboard - Only for Students */}
           {!isTeacher && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <StatsCard
-                title="University Rank"
-                value={`#${currentRank}`}
-                icon={Trophy}
-                color="secondary"
-                subtitle={`of ${totalStudents.toLocaleString()} students`}
-                clickable={true}
-                onClick={handleLeaderboardClick}
-              />
-              <StatsCard
-                title="Badges Earned"
-                value={`${collectedBadges.filter((b) => b.collected).length}/${collectedBadges.length}`}
-                icon={Users}
-                color="primary"
-                clickable={true}
-                onClick={handleBadgesClick}
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <Card className="bg-white border-primary-200 shadow-sm hover:shadow-md transition-shadow rounded-lg">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-xs sm:text-sm font-semibold text-primary-700">University Rank</CardTitle>
+                  <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                    <Trophy className="h-3 w-3 sm:h-4 sm:w-4 text-primary-600" />
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-2">
+                  <div className="text-xl sm:text-2xl font-bold text-primary-800">#{currentRank}</div>
+                  <p className="text-primary-600/70 text-xs mt-1">of {totalStudents.toLocaleString()} students</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white border-primary-200 shadow-sm hover:shadow-md transition-shadow rounded-lg">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-xs sm:text-sm font-semibold text-primary-700">Badges Earned</CardTitle>
+                  <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                    <Users className="h-3 w-3 sm:h-4 sm:w-4 text-primary-600" />
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-2">
+                  <div className="text-xl sm:text-2xl font-bold text-primary-800">
+                    {collectedBadges.filter((b) => b.collected).length}/{collectedBadges.length}
+                  </div>
+                  <p className="text-primary-600/70 text-xs mt-1">Badges collected</p>
+                </CardContent>
+              </Card>
             </div>
           )}
 
           {/* Teacher Charts Section */}
           {isTeacher && (
-            <div className="flex flex-col gap-6 mb-8 items-center justify-center max-w-6xl">
+            <div className="space-y-4 sm:space-y-6">
               {/* Badge Distribution Histogram */}
-              <Card className="w-fit">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="w-5 h-5" />
-                    Badge Distribution
-                  </CardTitle>
-                  <CardDescription>Number of students by badge count (Engagement levels)</CardDescription>
+              <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
+                <CardHeader className="pb-3 sm:pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                      <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-base sm:text-lg font-semibold text-primary-800">Badge Distribution</CardTitle>
+                      <CardDescription className="text-primary-600/70 text-xs sm:text-sm">Number of students by badge count (Engagement levels)</CardDescription>
+                    </div>
+                  </div>
                 </CardHeader>
-                <CardContent className="w-fit">
-                  <ChartContainer config={chartConfig} className="h-[300px]">
+                <CardContent className="pt-2">
+                  <ChartContainer config={chartConfig} className="h-[300px] md:h-[350px] w-full">
                     <BarChart accessibilityLayer data={badgeDistributionData}>
                       <CartesianGrid vertical={false} />
                       <XAxis
@@ -323,33 +339,37 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
               </Card>
 
               {/* Badge Unlock Timeline */}
-              <Card className="w-fit">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Activity className="w-5 h-5" />
-                    Badge Unlock Timeline
-                  </CardTitle>
-                  <CardDescription>
-                    Cumulative badge unlocks over time
-                    <div className="flex items-center gap-2 mt-2">
-                      <Filter className="w-3 h-3" />
-                      <select
-                        value={selectedTimelineCourse}
-                        onChange={(e) => setSelectedTimelineCourse(e.target.value)}
-                        className="text-xs px-2 py-1 border rounded"
-                      >
-                        <option value="university">All Courses</option>
-                        {courses.map((course) => (
-                          <option key={course.code} value={course.code}>
-                            {course.code}
-                          </option>
-                        ))}
-                      </select>
+              <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
+                <CardHeader className="pb-3 sm:pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                      <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
                     </div>
-                  </CardDescription>
+                    <div className="flex-1">
+                      <CardTitle className="text-base sm:text-lg font-semibold text-primary-800">Badge Unlock Timeline</CardTitle>
+                      <CardDescription className="text-primary-600/70 text-xs sm:text-sm">
+                        Cumulative badge unlocks over time
+                        <div className="flex items-center gap-2 mt-2">
+                          <Filter className="w-3 h-3" />
+                          <select
+                            value={selectedTimelineCourse}
+                            onChange={(e) => setSelectedTimelineCourse(e.target.value)}
+                            className="text-xs px-2 py-1 border border-primary-200 rounded bg-white hover:border-primary-300 transition-colors"
+                          >
+                            <option value="university">All Courses</option>
+                            {courses.map((course) => (
+                              <option key={course.code} value={course.code}>
+                                {course.code}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </CardDescription>
+                    </div>
+                  </div>
                 </CardHeader>
-                <CardContent>
-                  <ChartContainer config={chartConfig} className="h-[300px]">
+                <CardContent className="pt-2">
+                  <ChartContainer config={chartConfig} className="h-[300px] md:h-[350px] w-full">
                     <AreaChart accessibilityLayer data={getCurrentTimelineData()}>
                       <CartesianGrid vertical={false} />
                       <XAxis
@@ -380,16 +400,20 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
               </Card>
 
               {/* Per-Badge Unlock Heatmap */}
-              <Card className="w-fit">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Grid className="w-5 h-5" />
-                    Badge Difficulty Analysis
-                  </CardTitle>
-                  <CardDescription>Total unlocks per badge (difficulty indicator)</CardDescription>
+              <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
+                <CardHeader className="pb-3 sm:pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                      <Grid className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-base sm:text-lg font-semibold text-primary-800">Badge Difficulty Analysis</CardTitle>
+                      <CardDescription className="text-primary-600/70 text-xs sm:text-sm">Total unlocks per badge (difficulty indicator)</CardDescription>
+                    </div>
+                  </div>
                 </CardHeader>
-                <CardContent>
-                  <ChartContainer config={chartConfig} className="h-[300px]">
+                <CardContent className="pt-2">
+                  <ChartContainer config={chartConfig} className="h-[300px] md:h-[350px] w-full">
                     <BarChart accessibilityLayer data={badgeHeatmapData}>
                       <CartesianGrid vertical={false} />
                       <XAxis
@@ -416,16 +440,33 @@ export default function LighthouseHome({ isTeacher }: LighthouseHomeProps) {
           )}
 
           {/* Leaderboard Section */}
-          <div id="leaderboard-section" className="mb-8">
+          <div id="leaderboard-section">
             <LeaderboardComponent isTeacher={isTeacher} />
           </div>
 
           {/* Badges Collection - Only for Students */}
           {!isTeacher && (
-            <BadgeGrid
-              badges={collectedBadges}
-              onBadgeClick={handleBadgeClick}
-            />
+            <div id="badges-section">
+              <Card className="bg-white border-primary-200 shadow-sm rounded-lg">
+                <CardHeader className="">
+                  <div className="flex items-center gap-3">
+                    <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                      <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-base sm:text-lg font-semibold text-primary-800">Badge Collection</CardTitle>
+                      <CardDescription className="text-primary-600/70 text-xs sm:text-sm">Your earned and available badges</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <BadgeGrid
+                    badges={collectedBadges}
+                    onBadgeClick={handleBadgeClick}
+                  />
+                </CardContent>
+              </Card>
+            </div>
           )}
         </div>
       </main>

@@ -15,10 +15,7 @@ interface BadgeGridProps {
 
 const BadgeGrid: React.FC<BadgeGridProps> = ({ badges, onBadgeClick }) => {
   return (
-    <div id="badges-section" className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-lg font-bold text-secondary-800 mb-4">
-        Badge Collection
-      </h2>
+    <div id="badges-section">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {badges.map((badge) => (
           <div

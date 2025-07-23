@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Trophy, Medal, Filter } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -217,44 +218,46 @@ export default function LeaderboardComponent({
   const paginationData = getPaginatedLeaderboard();
 
   const getRankIcon = (rank: number) => {
-    if (rank === 1) return <Trophy className="w-6 h-6 text-primary-500" />;
-    if (rank === 2) return <Medal className="w-6 h-6 text-gray-400" />;
-    if (rank === 3) return <Medal className="w-6 h-6 text-amber-600" />;
+    if (rank === 1) return <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500" />;
+    if (rank === 2) return <Medal className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />;
+    if (rank === 3) return <Medal className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" />;
     return (
-      <span className="w-6 h-6 flex items-center justify-center text-gray-600 font-bold">
+      <span className="w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center text-primary-700 font-bold text-sm sm:text-base">
         #{rank}
       </span>
     );
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <Card className="bg-white border-primary-200 shadow-sm rounded-lg overflow-hidden">
       {/* Header */}
       {showHeader && (
-        <div className="p-4 bg-secondary-100 border-b">
-          <div className="flex items-center justify-between">
+        <CardHeader className="pb-3 sm:pb-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
             <div className="flex items-center gap-3">
-              <Trophy className="w-6 h-6 text-secondary-600" />
+              <div className="p-1.5 sm:p-2 bg-primary-100 rounded-lg">
+                <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+              </div>
               <div>
-                <h2 className="font-bold text-secondary-800">
+                <CardTitle className="text-base sm:text-lg font-semibold text-primary-800">
                   {selectedCourse === "university"
                     ? "University Leaderboard"
                     : `${selectedCourse} Leaderboard`}
-                </h2>
-                <p className="text-sm text-secondary-600 mt-1">
+                </CardTitle>
+                <CardDescription className="text-primary-600/70 text-xs sm:text-sm">
                   Page {paginationData.currentPage} of {paginationData.totalPages} • {paginationData.totalRecords} total students
-                </p>
+                </CardDescription>
               </div>
             </div>
 
             {/* Course Filter */}
             {showCourseFilter && (
-              <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-secondary-600" />
+              <div className="flex items-center gap-2 ml-auto">
+                <Filter className="w-3 h-3 sm:w-4 sm:h-4 text-primary-600" />
                 <select
                   value={selectedCourse}
                   onChange={(e) => handleCourseChange(e.target.value)}
-                  className="px-3 py-1 border rounded-md text-sm"
+                  className="text-xs sm:text-sm px-2 py-1 border border-primary-200 rounded bg-white hover:border-primary-300 transition-colors"
                 >
                   <option value="university">University Wide</option>
                   {courses.map((course) => (
@@ -266,23 +269,25 @@ export default function LeaderboardComponent({
               </div>
             )}
           </div>
-        </div>
+        </CardHeader>
       )}
 
       {/* Course Filter as separate section if header is hidden */}
       {!showHeader && showCourseFilter && (
-        <div className="p-4 border-b bg-gray-50">
-          <div className="flex items-center gap-3">
-            <Filter className="w-5 h-5 text-secondary-600" />
-            <h3 className="font-semibold text-secondary-800">Filter by Course</h3>
+        <div className="p-3 sm:p-4 border-b border-primary-200 bg-primary-50">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-1 bg-primary-100 rounded-lg">
+              <Filter className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
+            </div>
+            <h3 className="font-semibold text-primary-800 text-sm sm:text-base">Filter by Course</h3>
           </div>
-          <div className="flex flex-wrap gap-2 mt-3">
+          <div className="flex flex-wrap gap-2">
             <button
               onClick={() => handleCourseChange("university")}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium transition-colors text-xs sm:text-sm ${
                 selectedCourse === "university"
-                  ? "bg-secondary-500 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  ? "bg-primary-500 text-white shadow-sm"
+                  : "bg-white text-primary-700 hover:bg-primary-100 border border-primary-200"
               }`}
             >
               University Wide
@@ -291,10 +296,10 @@ export default function LeaderboardComponent({
               <button
                 key={course.code}
                 onClick={() => handleCourseChange(course.code)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium transition-colors text-xs sm:text-sm ${
                   selectedCourse === course.code
-                    ? "bg-secondary-500 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-primary-500 text-white shadow-sm"
+                    : "bg-white text-primary-700 hover:bg-primary-100 border border-primary-200"
                 }`}
               >
                 {course.code}
@@ -305,129 +310,149 @@ export default function LeaderboardComponent({
       )}
 
       {/* Leaderboard Entries */}
-      <div className="divide-y divide-gray-100">
-        {paginationData.records.map((entry) => (
-          <div
-            key={entry.id}
-            className={`p-4 flex items-center justify-between bg-white hover:bg-primary-50 transition-colors ${
-              entry.isCurrentUser
-                ? "bg-primary-100 border-l-4 border-primary-400"
-                : ""
-            }`}
-          >
-            <div className="flex items-center gap-4">
-              {getRankIcon(entry.rank)}
-              <div>
-                <h3
-                  className={`font-semibold ${entry.isCurrentUser ? "text-primary-800" : "text-secondary-800"}`}
-                >
-                  {entry.name}
-                  {entry.isCurrentUser && (
-                    <span className="ml-2 text-xs font-normal">
-                      (You)
-                    </span>
-                  )}
-                </h3>
+      <CardContent className="p-0">
+        <div className="divide-y divide-primary-100">
+          {paginationData.records.map((entry, index) => (
+            <div
+              key={entry.id}
+              className={`p-3 sm:p-4 flex items-center justify-between hover:bg-primary-50 transition-colors ${
+                entry.isCurrentUser
+                  ? "bg-primary-100 border-l-4 border-primary-400"
+                  : "bg-white"
+              }`}
+            >
+              <div className="flex items-center gap-3 sm:gap-4">
+                {getRankIcon(entry.rank)}
+                <div>
+                  <h3
+                    className={`font-semibold text-sm sm:text-base ${
+                      entry.isCurrentUser ? "text-primary-800" : "text-primary-700"
+                    }`}
+                  >
+                    {entry.name}
+                    {entry.isCurrentUser && (
+                      <span className="ml-2 text-xs font-normal text-primary-600">
+                        (You)
+                      </span>
+                    )}
+                  </h3>
+                </div>
+              </div>
+              <div className="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm">
+                <div className="text-center">
+                  <div className="font-bold text-primary-800">{entry.badges}</div>
+                  <span className="text-primary-600/70 text-xs">badges</span>
+                </div>
+                <div className="text-center">
+                  <div className="font-bold text-primary-800">{Math.floor(entry.accountAge / 30)}mo</div>
+                  <span className="text-primary-600/70 text-xs">account age</span>
+                </div>
               </div>
             </div>
-            <div className="flex items-center gap-6 text-sm">
-              <div className="text-center">
-                <div className="font-bold">{entry.badges}</div>
-                <span className="text-gray-500 text-xs">badges</span>
-              </div>
-              <div className="text-center">
-                <div className="font-bold">{Math.floor(entry.accountAge / 30)}mo</div>
-                <span className="text-gray-500 text-xs">account age</span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      {/* Pagination Controls */}
-      {paginationData.totalPages > 1 && (
-        <div className="p-4 border-t bg-gray-50">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                />
-              </PaginationItem>
+        {/* Pagination Controls */}
+        {paginationData.totalPages > 1 && (
+          <div className="p-3 sm:p-4 border-t border-primary-200 bg-primary-50/50">
+            <Pagination>
+              <PaginationContent className="gap-1">
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                    className={`text-xs sm:text-sm ${
+                      currentPage === 1
+                        ? "pointer-events-none opacity-50"
+                        : "cursor-pointer hover:bg-primary-100 text-primary-700"
+                    }`}
+                  />
+                </PaginationItem>
 
-              {/* First page */}
-              {currentPage > 2 && (
-                <>
-                  <PaginationItem>
-                    <PaginationLink
-                      onClick={() => handlePageChange(1)}
-                      isActive={currentPage === 1}
-                      className="cursor-pointer"
-                    >
-                      1
-                    </PaginationLink>
-                  </PaginationItem>
-                  {currentPage > 3 && (
+                {/* First page */}
+                {currentPage > 2 && (
+                  <>
                     <PaginationItem>
-                      <PaginationEllipsis />
-                    </PaginationItem>
-                  )}
-                </>
-              )}
-
-              {/* Current page and adjacent pages */}
-              {(() => {
-                const pages = [];
-                const startPage = Math.max(1, currentPage - 1);
-                const endPage = Math.min(paginationData.totalPages, currentPage + 1);
-
-                for (let i = startPage; i <= endPage; i++) {
-                  pages.push(
-                    <PaginationItem key={i}>
                       <PaginationLink
-                        onClick={() => handlePageChange(i)}
-                        isActive={currentPage === i}
-                        className="cursor-pointer"
+                        onClick={() => handlePageChange(1)}
+                        isActive={currentPage === 1}
+                        className="cursor-pointer text-xs sm:text-sm hover:bg-primary-100 text-primary-700"
                       >
-                        {i}
+                        1
                       </PaginationLink>
                     </PaginationItem>
-                  );
-                }
-                return pages;
-              })()}
+                    {currentPage > 3 && (
+                      <PaginationItem>
+                        <PaginationEllipsis className="text-primary-600" />
+                      </PaginationItem>
+                    )}
+                  </>
+                )}
 
-              {/* Last page */}
-              {currentPage < paginationData.totalPages - 1 && (
-                <>
-                  {currentPage < paginationData.totalPages - 2 && (
+                {/* Current page and adjacent pages */}
+                {(() => {
+                  const pages = [];
+                  const startPage = Math.max(1, currentPage - 1);
+                  const endPage = Math.min(paginationData.totalPages, currentPage + 1);
+
+                  for (let i = startPage; i <= endPage; i++) {
+                    pages.push(
+                      <PaginationItem key={i}>
+                        <PaginationLink
+                          onClick={() => handlePageChange(i)}
+                          isActive={currentPage === i}
+                          className={`cursor-pointer text-xs sm:text-sm ${
+                            currentPage === i
+                              ? "bg-primary-500 text-white hover:bg-primary-600"
+                              : "hover:bg-primary-100 text-primary-700"
+                          }`}
+                        >
+                          {i}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  }
+                  return pages;
+                })()}
+
+                {/* Last page */}
+                {currentPage < paginationData.totalPages - 1 && (
+                  <>
+                    {currentPage < paginationData.totalPages - 2 && (
+                      <PaginationItem>
+                        <PaginationEllipsis className="text-primary-600" />
+                      </PaginationItem>
+                    )}
                     <PaginationItem>
-                      <PaginationEllipsis />
+                      <PaginationLink
+                        onClick={() => handlePageChange(paginationData.totalPages)}
+                        isActive={currentPage === paginationData.totalPages}
+                        className={`cursor-pointer text-xs sm:text-sm ${
+                          currentPage === paginationData.totalPages
+                            ? "bg-primary-500 text-white hover:bg-primary-600"
+                            : "hover:bg-primary-100 text-primary-700"
+                        }`}
+                      >
+                        {paginationData.totalPages}
+                      </PaginationLink>
                     </PaginationItem>
-                  )}
-                  <PaginationItem>
-                    <PaginationLink
-                      onClick={() => handlePageChange(paginationData.totalPages)}
-                      isActive={currentPage === paginationData.totalPages}
-                      className="cursor-pointer"
-                    >
-                      {paginationData.totalPages}
-                    </PaginationLink>
-                  </PaginationItem>
-                </>
-              )}
+                  </>
+                )}
 
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() => handlePageChange(Math.min(paginationData.totalPages, currentPage + 1))}
-                  className={currentPage === paginationData.totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
-      )}
-    </div>
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => handlePageChange(Math.min(paginationData.totalPages, currentPage + 1))}
+                    className={`text-xs sm:text-sm ${
+                      currentPage === paginationData.totalPages
+                        ? "pointer-events-none opacity-50"
+                        : "cursor-pointer hover:bg-primary-100 text-primary-700"
+                    }`}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
