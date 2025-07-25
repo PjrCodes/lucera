@@ -86,10 +86,17 @@ An intelligent, no-compromise Learning Management System built for the future of
 - `npm run start` - Start production servers
 - `npm run socket` - Start Socket.io server only
 
-### Project Structure
+### Schema information
 
-TODO
+#### Timeline Items
 
-## Design System
-
-TODO
+"assignment", - createable
+"quiz", - grades addable
+"midsem_exam", - grades addable
+"endsem_exam", - grades addable
+"exam", - grades addable
+"lab_exam", - grades addable
+"other", - nothing
+"project", - grades addable
+"tutorial or workshop", - nothing
+"guest lecture", - nothing
