@@ -34,7 +34,11 @@ An intelligent, no-compromise Learning Management System built for the future of
 - **UI Components**: Radix UI primitives (Soon to be replaced with React Aria)
 - **AI Integration**: Google Gemini API
 
-## Installation
+## Installation and Deployment
+
+This section provides instructions for setting up the project for development and deploying it to a production environment.
+
+### Local Development Setup
 
 1. **Clone the repository**
 
@@ -51,22 +55,35 @@ An intelligent, no-compromise Learning Management System built for the future of
 
 3. **Environment Setup**
 
-   Create a `.env.local` file with the following variables:
+   Create a `.env.local` file in the root of the project and add the following environment variables. These are essential for the application to run correctly.
 
    ```env
    # NextAuth Configuration
+   # A secret key for signing tokens.
    NEXTAUTH_SECRET=your-nextauth-secret
+   # The base URL of the application.
    NEXTAUTH_URL=http://localhost:3000
 
-   # Google OAuth
+   # Google OAuth Credentials
+   # These are required for Google authentication.
    GOOGLE_CLIENT_ID=your-google-client-id
    GOOGLE_CLIENT_SECRET=your-google-client-secret
 
-   # MongoDB
+   # MongoDB Configuration
+   # The connection string for your MongoDB database.
    MONGODB_URI=your-mongodb-connection-string
+   # The name of the database to use.
+   DB_NAME=your-db-name
 
-   # AI Services
-   GOOGLE_GENAI_API_KEY=your-genai-api-key
+   # AI and Vector Database Services
+   # API key for Google Gemini.
+   GEMINI_API_KEY=your-gemini-api-key
+   # API key for Pinecone.
+   PINECONE_API_KEY=your-pinecone-api-key
+
+   # Frontend Configuration
+   # The origin of the frontend application for CORS in the socket server.
+   FRONTEND_ORIGIN=http://localhost:3000
    ```
 
 4. **Start Development Server**
@@ -75,16 +92,26 @@ An intelligent, no-compromise Learning Management System built for the future of
    npm run dev
    ```
 
-   This starts both the Next.js development server and the Socket.io server concurrently.
+   This command starts both the Next.js development server and the Socket.io server concurrently, enabling all features of the application.
+
+### Production Deployment
+
+For production, it is recommended to deploy the Next.js application and the Socket.io server separately.
+
+- **Next.js Application**: Can be deployed to platforms like Vercel, which is optimized for Next.js.
+- **Socket.io Server**: Should be deployed as a long-running Node.js service on a platform like Heroku, AWS, or a traditional VPS.
+
+**Important**: Ensure that all environment variables listed above are set in your production environment. The `NEXTAUTH_URL` and `FRONTEND_ORIGIN` variables should be updated to match your production domain.
 
 ## Development
 
 ### Available Scripts
 
-- `npm run dev` - Start development servers (Next.js + Socket.io)
-- `npm run build` - Build for production
-- `npm run start` - Start production servers
-- `npm run socket` - Start Socket.io server only
+- `npm run dev` - Starts both the Next.js and Socket.io development servers.
+- `npm run build` - Builds the Next.js application for production.
+- `npm run start` - Starts the production Next.js server.
+- `npm run socket` - Starts only the Socket.io server, useful for isolated development or production.
+- `npm run gensample` - Generates sample data for development purposes. This script populates the database with sample courses, assignments, and other entities to facilitate testing and development.
 
 ### Schema information
 

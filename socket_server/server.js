@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 
 const path = require("path");
+// Load environment variables from .env.local file for the socket server.
 const envPath = path.resolve(__dirname, "../.env.local");
 require("dotenv").config({ path: envPath });
 
@@ -11,6 +12,8 @@ const { MongoClient } = require("mongodb");
 const app = express();
 const server = http.createServer(app);
 
+// Initialize Socket.io server with CORS configuration.
+// The FRONTEND_ORIGIN environment variable is required for security.
 const io = new Server(server, {
   cors: {
     origin: process.env.FRONTEND_ORIGIN,
@@ -26,6 +29,8 @@ io.on("connection", (socket) => {
   });
 });
 
+// This function sets up a MongoDB change stream to listen for new messages.
+// It requires MONGODB_URI and DB_NAME environment variables.
 async function startMongoChangeStream() {
   console.log("MONGODB_URI:", process.env.MONGODB_URI);
   console.log("DB_NAME:", process.env.DB_NAME);
@@ -75,3 +80,4 @@ server.listen(4000, () => {
   console.log("Socket server running on http://localhost:4000");
   startMongoChangeStream().catch(console.error);
 });
+

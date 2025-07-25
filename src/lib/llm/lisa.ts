@@ -1,3 +1,5 @@
+// This file contains the core logic for LISA (Lucera's Intelligent Student Assistant).
+// It handles query augmentation, document retrieval, and response generation.
 import { GoogleGenAI, Type } from "@google/genai";
 import { ChatRequest } from "../schemas/api";
 import fs from "fs";
@@ -5,8 +7,6 @@ import { retrieveDocuments } from "../pinecone";
 import { Hit } from "@pinecone-database/pinecone/dist/pinecone-generated-ts-fetch/db_data";
 import { Course } from "../schemas/database";
 import { getCourseById } from "../database-service/courses";
-// import { chunkit } from 'semantic-chunking';
-// import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 
 const queryAugmentationUserPrompt = fs.readFileSync(
   "./src/appdata/prompts/query_augmentation/user.txt",
@@ -18,6 +18,8 @@ const chatUserPrompt = fs.readFileSync(
   "utf-8"
 );
 
+// This function augments the user's query with synonyms to improve search results.
+// It uses the Google Gemini LLM and requires the GEMINI_API_KEY.
 export async function synonymAugmentation(query: string): Promise<string> {
   const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
@@ -74,6 +76,8 @@ export async function synonymAugmentation(query: string): Promise<string> {
   return query;
 }
 
+// This function generates a response from LISA based on the user's query and retrieved documents.
+// It also requires the GEMINI_API_KEY.
 async function getLisasResponse(
   query: string,
   documents: string[]
@@ -139,6 +143,7 @@ async function getLisasResponse(
   }
 }
 
+// This function retrieves document data from Pinecone hits and formats it for the LLM.
 async function getDocData(hits: Hit[]): Promise<string[]> {
   // retrieve actual document text from hit.id
   const docs = [];
@@ -195,6 +200,8 @@ async function getDocData(hits: Hit[]): Promise<string[]> {
   return finalDocs;
 }
 
+// This is the main entry point for the LISA chatbot.
+// It orchestrates the entire process of query augmentation, document retrieval, and response generation.
 export async function callLisa(context: ChatRequest) {
   // const { toolChosen, toPlot }  = await orchestrator(context);
   // If no tools chosen -> default response
@@ -222,6 +229,8 @@ export async function callLisa(context: ChatRequest) {
   return { answer };
 }
 
+// This utility function re-chunks an array of text into smaller pieces based on word count.
+// This is useful for preparing text for the LLM.
 export async function reChunkOnWordCount(
   textArray: string[],
   count: number = 1000

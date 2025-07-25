@@ -1,5 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 
+// This function is a generic wrapper for making calls to the Google Gemini LLM.
+// It handles schema-based responses and file uploads.
 export async function callLLMWithSchema(
   responseSchema: object,
   systemPrompt: string,
@@ -11,6 +13,7 @@ export async function callLLMWithSchema(
   } | null,
 ): Promise<string> {
   const ai = new GoogleGenAI({
+    // The GEMINI_API_KEY is required for authentication with the Google GenAI service.
     apiKey: process.env.GEMINI_API_KEY,
   });
   const config = {
@@ -52,6 +55,7 @@ export async function callLLMWithSchema(
 
   let llmTextResponse = "";
   try {
+    // The function streams the response from the LLM to handle large outputs efficiently.
     const response = await ai.models.generateContentStream({
       model,
       config,

@@ -50,7 +50,8 @@ function randomGrade(): number {
 }
 
 async function main() {
-  // Check if we're in the right directory
+  // This script is for development purposes to populate the database with sample data.
+  // It requires the MONGODB_URI environment variable to connect to the database.
   if (!process.env.MONGODB_URI) {
     throw new Error("MONGODB_URI is not defined in environment variables");
   }

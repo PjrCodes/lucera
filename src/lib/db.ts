@@ -1,6 +1,8 @@
-// This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
+// This module handles the MongoDB connection.
+// It follows the recommended approach from Vercel for Next.js applications.
 import { MongoClient, ServerApiVersion } from "mongodb";
 
+// The MONGODB_URI environment variable is required to connect to the database.
 if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
 }
@@ -16,6 +18,8 @@ const options = {
 
 let client: MongoClient;
 
+// In development, a global variable is used to preserve the client
+// across hot-reloads. This prevents creating a new connection on every change.
 if (process.env.NODE_ENV === "development") {
   // In development mode, use a global variable so that the value
   // is preserved across module reloads caused by HMR (Hot Module Replacement).
@@ -29,10 +33,9 @@ if (process.env.NODE_ENV === "development") {
   }
   client = globalWithMongo._mongoClient;
 } else {
-  // In production mode, it's best to not use a global variable.
+  // In production, a new client is created for each server instance.
   client = new MongoClient(uri, options);
 }
 
-// Export a module-scoped MongoClient. By doing this in a
-// separate module, the client can be shared across functions.
+// Export a module-scoped MongoClient to be shared across the application.
 export default client;

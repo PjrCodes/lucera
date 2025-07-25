@@ -1,10 +1,14 @@
+// This module provides functions for interacting with the Pinecone vector database.
+// It handles index retrieval, document addition, and document retrieval.
 import { Pinecone } from "@pinecone-database/pinecone";
 import { ChatRequest } from "./schemas/api";
 
+// The PINECONE_API_KEY is required for authentication with the Pinecone service.
 const pc = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY || "",
 });
 
+// This function retrieves a Pinecone index by name and host.
 export async function getPineconeIndex(indexName: string, host: string) {
   try {
     const index = pc.index(indexName, host);
@@ -15,6 +19,7 @@ export async function getPineconeIndex(indexName: string, host: string) {
   }
 }
 
+// This function adds syllabus content to the Pinecone index.
 export async function addManySyllabusContent(
   ids: string[],
   texts: string[],
@@ -56,6 +61,7 @@ export async function addManySyllabusContent(
   }
 }
 
+// This function adds course content to the Pinecone index.
 export async function addManyCourseContent(
   ids: string[],
   texts: string[],
@@ -91,6 +97,7 @@ export async function addManyCourseContent(
   }
 }
 
+// This function retrieves documents from Pinecone based on a query and context.
 export async function retrieveDocuments(query: string, context: ChatRequest) {
   try {
     const index = (
@@ -130,6 +137,7 @@ export async function retrieveDocuments(query: string, context: ChatRequest) {
   }
 }
 
+// This function updates the security metadata for content in Pinecone.
 export async function updateContentSecurityMetadata(
   contentId: string,
   blockChatbot: boolean
@@ -191,6 +199,7 @@ export async function updateContentSecurityMetadata(
   }
 }
 
+// This function updates the security metadata for assignments in Pinecone.
 export async function updateAssignmentSecurityMetadata(
   assignmentId: string,
   blockChatbot: boolean
