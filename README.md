@@ -2,6 +2,8 @@
 
 An intelligent, no-compromise Learning Management System built for the future of education. Lucera combines modern web technologies with AI capabilities to create an intuitive learning experience for both students and teachers.
 
+![Lucera Screenshot](pictures/lucera_screenshot.png)
+
 ## Features
 
 ### Core Features
@@ -24,6 +26,8 @@ An intelligent, no-compromise Learning Management System built for the future of
 - **Instant Feedback** - AI-driven feedback on assignments and quizzes
 - **Automated Insights** - Progress analysis and learning recommendations
 
+![RAG Architecture](pictures/rag_chatbot.png)
+
 ## Technology Stack
 
 - **Frontend**: Next.js 15, React 19, TypeScript
@@ -33,6 +37,8 @@ An intelligent, no-compromise Learning Management System built for the future of
 - **Real-time**: Socket.io listening to MongoDB Change Streams for live features
 - **UI Components**: Radix UI primitives (Soon to be replaced with React Aria)
 - **AI Integration**: Google Gemini API
+
+![Technology Stack Diagram](pictures/tech_stack.png)
 
 ## Installation and Deployment
 
